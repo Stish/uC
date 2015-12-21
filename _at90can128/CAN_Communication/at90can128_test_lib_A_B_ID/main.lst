@@ -1,0 +1,3731 @@
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+  75               	.global	can_set_baudrate
+  77               	can_set_baudrate:
+  79               	.Ltext1:
+   1:can_at90can128_AB_ID.c **** /* <Type Definitions> */
+   2:can_at90can128_AB_ID.c **** enum mob_mode {DISABLED, TRANSMIT_DATA, TRANSMIT_REMOTE, RECEIVE_DATA, AUTO_REPLY};	// Message obje
+   3:can_at90can128_AB_ID.c **** enum int_mode {NONE, TX, RX, TXRX};	// Interrupt mode
+   4:can_at90can128_AB_ID.c **** // Message object structure
+   5:can_at90can128_AB_ID.c **** typedef struct
+   6:can_at90can128_AB_ID.c **** {
+   7:can_at90can128_AB_ID.c **** 	uint8_t		id_type;	// 0: Type A, 1: Type B
+   8:can_at90can128_AB_ID.c **** 	uint32_t	id;			// Identifier (29 Bits)
+   9:can_at90can128_AB_ID.c **** 	uint32_t	idm;		// ID-Mask
+  10:can_at90can128_AB_ID.c **** 	uint8_t		length;		// Length of dataframe 
+  11:can_at90can128_AB_ID.c **** 	uint8_t		data[8];	// Dataframe
+  12:can_at90can128_AB_ID.c **** }
+  13:can_at90can128_AB_ID.c **** can_message;
+  14:can_at90can128_AB_ID.c **** /* </Type Definitions> */
+  15:can_at90can128_AB_ID.c **** 
+  16:can_at90can128_AB_ID.c **** /* <Defines> */
+  17:can_at90can128_AB_ID.c **** #define MOBS_NUM 15		// Number of available MOBs
+  18:can_at90can128_AB_ID.c **** #define NOMOB   0xff	// Definition of prohibited MOB
+  19:can_at90can128_AB_ID.c **** /* </Defines> */
+  20:can_at90can128_AB_ID.c **** 
+  21:can_at90can128_AB_ID.c **** /* <Macros> */
+  22:can_at90can128_AB_ID.c **** #define setbit(ADR,BIT)		(ADR|=(1<<BIT))		// Macro to set a bit
+  23:can_at90can128_AB_ID.c **** #define clearbit(ADR,BIT)	(ADR&=~(1<<BIT))	// Macro to clear a bit
+  24:can_at90can128_AB_ID.c **** #define getbit(ADR, BIT)	(ADR & (1<<BIT))	// Macro to get status of a bit
+  25:can_at90can128_AB_ID.c **** /* </Macros> */
+  26:can_at90can128_AB_ID.c **** 
+  27:can_at90can128_AB_ID.c **** /* <Function declarations> */
+  28:can_at90can128_AB_ID.c **** /* Return void */
+  29:can_at90can128_AB_ID.c **** void can_set_baudrate(uint16_t baud);
+  30:can_at90can128_AB_ID.c **** void can_set_interrupt(uint8_t mode);
+  31:can_at90can128_AB_ID.c **** void can_select_mob(uint8_t mob);
+  32:can_at90can128_AB_ID.c **** void can_set_mob_id_mask(uint32_t idm, uint8_t id_type);
+  33:can_at90can128_AB_ID.c **** void can_set_mob_id(uint32_t id, uint8_t id_type);
+  34:can_at90can128_AB_ID.c **** void can_set_mob_mode(uint8_t mode, uint8_t id_type);
+  35:can_at90can128_AB_ID.c **** void can_set_mob_data(uint8_t *data, uint8_t length);
+  36:can_at90can128_AB_ID.c **** void can_set_mob_interrupt(uint8_t object);
+  37:can_at90can128_AB_ID.c **** void can_clear_mob_interrupt(uint8_t object);
+  38:can_at90can128_AB_ID.c **** void can_init(uint16_t baud, uint8_t intmode);
+  39:can_at90can128_AB_ID.c **** void can_enable_mob(uint8_t object, uint8_t mode, can_message msg);
+  40:can_at90can128_AB_ID.c **** void can_disable_mob(uint8_t object);
+  41:can_at90can128_AB_ID.c **** void can_send_data(uint8_t mob, can_message msg);
+  42:can_at90can128_AB_ID.c **** void clear_all_mobs(void);
+  43:can_at90can128_AB_ID.c **** /* Return int */
+  44:can_at90can128_AB_ID.c **** uint32_t can_get_mob_id(uint8_t id_type);
+  45:can_at90can128_AB_ID.c **** uint8_t can_get_mob_mode(void);
+  46:can_at90can128_AB_ID.c **** uint8_t can_get_mob_interrupt(void);
+  47:can_at90can128_AB_ID.c **** uint8_t can_get_mob_id_type(void);
+  48:can_at90can128_AB_ID.c **** /* Return can_message */
+  49:can_at90can128_AB_ID.c **** can_message can_get_mob_data(void);
+  50:can_at90can128_AB_ID.c **** /* </Function declarations> */
+  51:can_at90can128_AB_ID.c **** 
+  52:can_at90can128_AB_ID.c **** /* Set baudrate (1000, 500, 250, 200, 125, 100kbits/s) for cpu clock (16, 12, 8, 6, 4MHz) */
+  53:can_at90can128_AB_ID.c **** void can_set_baudrate(uint16_t baud)
+  54:can_at90can128_AB_ID.c **** {
+  80               	
+  81               		in r28,__SP_L__
+  82               		in r29,__SP_H__
+  83 0000 DF93      	/* prologue: function */
+  84 0002 CF93      	/* frame size = 4 */
+  85 0004 00D0      		std Y+2,r25
+  86 0006 00D0      		std Y+1,r24
+  88 000a DEB7      	.LM1:
+  89               		ldd r24,Y+1
+  90               		ldd r25,Y+2
+  91 000c 9A83      		std Y+4,r25
+  92 000e 8983      		std Y+3,r24
+  55:can_at90can128_AB_ID.c **** #if F_CPU	== 16000000
+  56:can_at90can128_AB_ID.c **** 	switch(baud)
+  93               	
+  94               		ldd r25,Y+4
+  95 0010 8981      		cpi r24,200
+  96 0012 9A81      		cpc r25,__zero_reg__
+  97 0014 9C83      		brne .+2
+  98 0016 8B83      		rjmp .L5
+  99 0018 8B81      		ldd r24,Y+3
+ 100 001a 9C81      		ldd r25,Y+4
+ 101 001c 883C      		cpi r24,201
+ 102 001e 9105      		cpc r25,__zero_reg__
+ 103 0020 01F4      		brsh .L9
+ 104 0022 00C0      		ldd r24,Y+3
+ 105 0024 8B81      		ldd r25,Y+4
+ 106 0026 9C81      		cpi r24,100
+ 107 0028 893C      		cpc r25,__zero_reg__
+ 108 002a 9105      		brne .+2
+ 109 002c 00F4      		rjmp .L3
+ 110 002e 8B81      		ldd r24,Y+3
+ 111 0030 9C81      		ldd r25,Y+4
+ 112 0032 8436      		cpi r24,125
+ 113 0034 9105      		cpc r25,__zero_reg__
+ 114 0036 01F4      		brne .+2
+ 115 0038 00C0      		rjmp .L4
+ 116 003a 8B81      		rjmp .L10
+ 117 003c 9C81      	.L9:
+ 118 003e 8D37      		ldd r24,Y+3
+ 119 0040 9105      		ldd r25,Y+4
+ 120 0042 01F4      		ldi r18,hi8(500)
+ 121 0044 00C0      		cpi r24,lo8(500)
+ 122 0046 00C0      		cpc r25,r18
+ 123               		breq .L7
+ 124 0048 8B81      		ldd r24,Y+3
+ 125 004a 9C81      		ldd r25,Y+4
+ 126 004c 21E0      		ldi r18,hi8(1000)
+ 127 004e 843F      		cpi r24,lo8(1000)
+ 128 0050 9207      		cpc r25,r18
+ 129 0052 01F0      		breq .L8
+ 130 0054 8B81      		ldd r24,Y+3
+ 131 0056 9C81      		ldd r25,Y+4
+ 132 0058 23E0      		cpi r24,250
+ 133 005a 883E      		cpc r25,__zero_reg__
+ 134 005c 9207      		breq .L6
+ 135 005e 01F0      		rjmp .L10
+ 136 0060 8B81      	.L8:
+ 138 0064 8A3F      	.LM2:
+ 139 0066 9105      		ldi r30,lo8(226)
+ 140 0068 01F0      		ldi r31,hi8(226)
+ 141 006a 00C0      		st Z,__zero_reg__
+  57:can_at90can128_AB_ID.c **** 	{
+  58:can_at90can128_AB_ID.c **** 		case 1000:
+  59:can_at90can128_AB_ID.c **** 			CANBT1		= 0x00;
+ 143               	4,lo8(12)
+ 144               		st Z,r24
+ 146 006e F0E0      	.LM4:
+ 147 0070 1082      		ldi r30,lo8(228)
+  60:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0c;
+ 148               	r31,hi8(228)
+ 149               		ldi r24,lo8(55)
+ 150 0072 E3EE      		st Z,r24
+ 151 0074 F0E0      		rjmp .L10
+ 152 0076 8CE0      	.L7:
+  61:can_at90can128_AB_ID.c **** 			CANBT3		= 0x37;
+ 154               		ldi r30,lo8(226)
+ 155               		ldi r31,hi8(226)
+ 156 007a E4EE      		ldi r24,lo8(2)
+ 157 007c F0E0      		st Z,r24
+ 159 0080 8083      	.LM6:
+ 160 0082 00C0      		ldi r30,lo8(227)
+ 161               		ldi r31,hi8(227)
+  62:can_at90can128_AB_ID.c **** 			break;
+  63:can_at90can128_AB_ID.c **** 		case 500:
+  64:can_at90can128_AB_ID.c **** 			CANBT1		= 0x02;
+ 162               	,lo8(12)
+ 163               		st Z,r24
+ 165 0086 F0E0      	.LM7:
+ 166 0088 82E0      		ldi r30,lo8(228)
+ 167 008a 8083      		ldi r31,hi8(228)
+  65:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0c;
+ 168               	24,lo8(55)
+ 169               		st Z,r24
+ 170 008c E3EE      		rjmp .L10
+ 171 008e F0E0      	.L6:
+ 173 0092 8083      	.LM8:
+  66:can_at90can128_AB_ID.c **** 			CANBT3		= 0x37;
+ 174               	30,lo8(226)
+ 175               		ldi r31,hi8(226)
+ 176 0094 E4EE      		ldi r24,lo8(6)
+ 177 0096 F0E0      		st Z,r24
+ 179 009a 8083      	.LM9:
+ 180 009c 00C0      		ldi r30,lo8(227)
+ 181               		ldi r31,hi8(227)
+  67:can_at90can128_AB_ID.c **** 			break;
+  68:can_at90can128_AB_ID.c **** 		case 250:
+  69:can_at90can128_AB_ID.c **** 			CANBT1		= 0x06;
+ 182               	,lo8(12)
+ 183               		st Z,r24
+ 185 00a0 F0E0      	.LM10:
+ 186 00a2 86E0      		ldi r30,lo8(228)
+ 187 00a4 8083      		ldi r31,hi8(228)
+  70:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0c;
+ 188               	24,lo8(55)
+ 189               		st Z,r24
+ 190 00a6 E3EE      		rjmp .L10
+ 191 00a8 F0E0      	.L5:
+ 193 00ac 8083      	.LM11:
+  71:can_at90can128_AB_ID.c **** 			CANBT3		= 0x37;
+ 194               	30,lo8(226)
+ 195               		ldi r31,hi8(226)
+ 196 00ae E4EE      		ldi r24,lo8(8)
+ 197 00b0 F0E0      		st Z,r24
+ 199 00b4 8083      	.LM12:
+ 200 00b6 00C0      		ldi r30,lo8(227)
+ 201               		ldi r31,hi8(227)
+  72:can_at90can128_AB_ID.c **** 			break;
+  73:can_at90can128_AB_ID.c **** 		case 200:
+  74:can_at90can128_AB_ID.c **** 			CANBT1		= 0x08;
+ 202               	,lo8(12)
+ 203               		st Z,r24
+ 205 00ba F0E0      	.LM13:
+ 206 00bc 88E0      		ldi r30,lo8(228)
+ 207 00be 8083      		ldi r31,hi8(228)
+  75:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0c;
+ 208               	24,lo8(55)
+ 209               		st Z,r24
+ 210 00c0 E3EE      		rjmp .L10
+ 211 00c2 F0E0      	.L4:
+ 213 00c6 8083      	.LM14:
+  76:can_at90can128_AB_ID.c **** 			CANBT3		= 0x37;
+ 214               	30,lo8(226)
+ 215               		ldi r31,hi8(226)
+ 216 00c8 E4EE      		ldi r24,lo8(14)
+ 217 00ca F0E0      		st Z,r24
+ 219 00ce 8083      	.LM15:
+ 220 00d0 00C0      		ldi r30,lo8(227)
+ 221               		ldi r31,hi8(227)
+  77:can_at90can128_AB_ID.c **** 			break;
+  78:can_at90can128_AB_ID.c **** 		case 125:
+  79:can_at90can128_AB_ID.c **** 			CANBT1		= 0x0e;
+ 222               	,lo8(12)
+ 223               		st Z,r24
+ 225 00d4 F0E0      	.LM16:
+ 226 00d6 8EE0      		ldi r30,lo8(228)
+ 227 00d8 8083      		ldi r31,hi8(228)
+  80:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0c;
+ 228               	24,lo8(55)
+ 229               		st Z,r24
+ 230 00da E3EE      		rjmp .L10
+ 231 00dc F0E0      	.L3:
+ 233 00e0 8083      	.LM17:
+  81:can_at90can128_AB_ID.c **** 			CANBT3		= 0x37;
+ 234               	30,lo8(226)
+ 235               		ldi r31,hi8(226)
+ 236 00e2 E4EE      		ldi r24,lo8(18)
+ 237 00e4 F0E0      		st Z,r24
+ 239 00e8 8083      	.LM18:
+ 240 00ea 00C0      		ldi r30,lo8(227)
+ 241               		ldi r31,hi8(227)
+  82:can_at90can128_AB_ID.c **** 			break;
+  83:can_at90can128_AB_ID.c **** 		case 100:
+  84:can_at90can128_AB_ID.c **** 			CANBT1		= 0x12;
+ 242               	,lo8(12)
+ 243               		st Z,r24
+ 245 00ee F0E0      	.LM19:
+ 246 00f0 82E1      		ldi r30,lo8(228)
+ 247 00f2 8083      		ldi r31,hi8(228)
+  85:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0c;
+ 248               	24,lo8(55)
+ 249               		st Z,r24
+ 250 00f4 E3EE      	.L10:
+ 251 00f6 F0E0      	/* epilogue start */
+ 253 00fa 8083      	.LM20:
+  86:can_at90can128_AB_ID.c **** 			CANBT3		= 0x37;
+ 254               	_tmp_reg__
+ 255               		pop __tmp_reg__
+ 256 00fc E4EE      		pop __tmp_reg__
+ 257 00fe F0E0      		pop __tmp_reg__
+ 258 0100 87E3      		pop r28
+ 259 0102 8083      		pop r29
+ 260               		ret
+  87:can_at90can128_AB_ID.c **** 			break;
+  88:can_at90can128_AB_ID.c **** 		default:
+  89:can_at90can128_AB_ID.c **** 			break;
+  90:can_at90can128_AB_ID.c **** 	}
+  91:can_at90can128_AB_ID.c **** #elif F_CPU	== 12000000
+  92:can_at90can128_AB_ID.c **** 	switch(baud)
+  93:can_at90can128_AB_ID.c **** 	{
+  94:can_at90can128_AB_ID.c **** 		case 1000:
+  95:can_at90can128_AB_ID.c **** 			CANBT1		= 0x00;
+  96:can_at90can128_AB_ID.c **** 			CANBT2		= 0x08;
+  97:can_at90can128_AB_ID.c **** 			CANBT3		= 0x25;
+  98:can_at90can128_AB_ID.c **** 			break;
+  99:can_at90can128_AB_ID.c **** 		case 500:
+ 100:can_at90can128_AB_ID.c **** 			CANBT1		= 0x02;
+ 101:can_at90can128_AB_ID.c **** 			CANBT2		= 0x08;
+ 102:can_at90can128_AB_ID.c **** 			CANBT3		= 0x25;
+ 103:can_at90can128_AB_ID.c **** 			break;
+ 104:can_at90can128_AB_ID.c **** 		case 250:
+ 105:can_at90can128_AB_ID.c **** 			CANBT1		= 0x04;
+ 106:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0c;
+ 107:can_at90can128_AB_ID.c **** 			CANBT3		= 0x37;
+ 108:can_at90can128_AB_ID.c **** 			break;
+ 109:can_at90can128_AB_ID.c **** 		case 200:
+ 110:can_at90can128_AB_ID.c **** 			CANBT1		= 0x04;
+ 111:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0e;
+ 112:can_at90can128_AB_ID.c **** 			CANBT3		= 0x4b;
+ 113:can_at90can128_AB_ID.c **** 			break;
+ 114:can_at90can128_AB_ID.c **** 		case 125:
+ 115:can_at90can128_AB_ID.c **** 			CANBT1		= 0x0a;
+ 116:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0c;
+ 117:can_at90can128_AB_ID.c **** 			CANBT3		= 0x37;
+ 118:can_at90can128_AB_ID.c **** 			break;
+ 119:can_at90can128_AB_ID.c **** 		case 100:
+ 120:can_at90can128_AB_ID.c **** 			CANBT1		= 0x0a;
+ 121:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0e;
+ 122:can_at90can128_AB_ID.c **** 			CANBT3		= 0x4b;
+ 123:can_at90can128_AB_ID.c **** 			break;
+ 124:can_at90can128_AB_ID.c **** 		default:
+ 125:can_at90can128_AB_ID.c **** 			break;
+ 126:can_at90can128_AB_ID.c **** 	}
+ 127:can_at90can128_AB_ID.c **** #elif F_CPU	==  8000000
+ 128:can_at90can128_AB_ID.c **** 	switch(baud)
+ 129:can_at90can128_AB_ID.c **** 	{
+ 130:can_at90can128_AB_ID.c **** 		case 1000:
+ 131:can_at90can128_AB_ID.c **** 			CANBT1		= 0x00;
+ 132:can_at90can128_AB_ID.c **** 			CANBT2		= 0x04;
+ 133:can_at90can128_AB_ID.c **** 			CANBT3		= 0x13;
+ 134:can_at90can128_AB_ID.c **** 			break;
+ 135:can_at90can128_AB_ID.c **** 		case 500:
+ 136:can_at90can128_AB_ID.c **** 			CANBT1		= 0x00;
+ 137:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0c;
+ 138:can_at90can128_AB_ID.c **** 			CANBT3		= 0x37;
+ 139:can_at90can128_AB_ID.c **** 			break;
+ 140:can_at90can128_AB_ID.c **** 		case 250:
+ 141:can_at90can128_AB_ID.c **** 			CANBT1		= 0x02;
+ 142:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0c;
+ 143:can_at90can128_AB_ID.c **** 			CANBT3		= 0x37;
+ 144:can_at90can128_AB_ID.c **** 			break;
+ 145:can_at90can128_AB_ID.c **** 		case 200:
+ 146:can_at90can128_AB_ID.c **** 			CANBT1		= 0x02;
+ 147:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0e;
+ 148:can_at90can128_AB_ID.c **** 			CANBT3		= 0x4b;
+ 149:can_at90can128_AB_ID.c **** 			break;
+ 150:can_at90can128_AB_ID.c **** 		case 125:
+ 151:can_at90can128_AB_ID.c **** 			CANBT1		= 0x06;
+ 152:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0c;
+ 153:can_at90can128_AB_ID.c **** 			CANBT3		= 0x37;
+ 154:can_at90can128_AB_ID.c **** 			break;
+ 155:can_at90can128_AB_ID.c **** 		case 100:
+ 156:can_at90can128_AB_ID.c **** 			CANBT1		= 0x08;
+ 157:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0c;
+ 158:can_at90can128_AB_ID.c **** 			CANBT3		= 0x37;
+ 159:can_at90can128_AB_ID.c **** 			break;
+ 160:can_at90can128_AB_ID.c **** 		default:
+ 161:can_at90can128_AB_ID.c **** 			break;
+ 162:can_at90can128_AB_ID.c **** 	}
+ 163:can_at90can128_AB_ID.c **** #elif F_CPU	==  6000000
+ 164:can_at90can128_AB_ID.c **** 	switch(baud)
+ 165:can_at90can128_AB_ID.c **** 	{
+ 166:can_at90can128_AB_ID.c **** 		case 1000:
+ 167:can_at90can128_AB_ID.c **** 			break;
+ 168:can_at90can128_AB_ID.c **** 		case 500:
+ 169:can_at90can128_AB_ID.c **** 			CANBT1		= 0x00;
+ 170:can_at90can128_AB_ID.c **** 			CANBT2		= 0x08;
+ 171:can_at90can128_AB_ID.c **** 			CANBT3		= 0x25;
+ 172:can_at90can128_AB_ID.c **** 			break;
+ 173:can_at90can128_AB_ID.c **** 		case 250:
+ 174:can_at90can128_AB_ID.c **** 			CANBT1		= 0x02;
+ 175:can_at90can128_AB_ID.c **** 			CANBT2		= 0x08;
+ 176:can_at90can128_AB_ID.c **** 			CANBT3		= 0x25;
+ 177:can_at90can128_AB_ID.c **** 			break;
+ 178:can_at90can128_AB_ID.c **** 		case 200:
+ 179:can_at90can128_AB_ID.c **** 			CANBT1		= 0x02;
+ 180:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0c;
+ 181:can_at90can128_AB_ID.c **** 			CANBT3		= 0x35;
+ 182:can_at90can128_AB_ID.c **** 			break;
+ 183:can_at90can128_AB_ID.c **** 		case 125:
+ 184:can_at90can128_AB_ID.c **** 			CANBT1		= 0x04;
+ 185:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0c;
+ 186:can_at90can128_AB_ID.c **** 			CANBT3		= 0x37;
+ 187:can_at90can128_AB_ID.c **** 			break;
+ 188:can_at90can128_AB_ID.c **** 		case 100:
+ 189:can_at90can128_AB_ID.c **** 			CANBT1		= 0x04;
+ 190:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0e;
+ 191:can_at90can128_AB_ID.c **** 			CANBT3		= 0x4b;
+ 192:can_at90can128_AB_ID.c **** 			break;
+ 193:can_at90can128_AB_ID.c **** 		default:
+ 194:can_at90can128_AB_ID.c **** 			break;
+ 195:can_at90can128_AB_ID.c **** 	}
+ 196:can_at90can128_AB_ID.c **** #elif F_CPU	==  4000000
+ 197:can_at90can128_AB_ID.c **** 	switch(baud)
+ 198:can_at90can128_AB_ID.c **** 	{
+ 199:can_at90can128_AB_ID.c **** 		case 1000:
+ 200:can_at90can128_AB_ID.c **** 			break;
+ 201:can_at90can128_AB_ID.c **** 		case 500:
+ 202:can_at90can128_AB_ID.c **** 			CANBT1		= 0x00;
+ 203:can_at90can128_AB_ID.c **** 			CANBT2		= 0x04;
+ 204:can_at90can128_AB_ID.c **** 			CANBT3		= 0x13;
+ 205:can_at90can128_AB_ID.c **** 			break;
+ 206:can_at90can128_AB_ID.c **** 		case 250:
+ 207:can_at90can128_AB_ID.c **** 			CANBT1		= 0x02;
+ 208:can_at90can128_AB_ID.c **** 			CANBT2		= 0x04;
+ 209:can_at90can128_AB_ID.c **** 			CANBT3		= 0x13;
+ 210:can_at90can128_AB_ID.c **** 			break;
+ 211:can_at90can128_AB_ID.c **** 		case 200:
+ 212:can_at90can128_AB_ID.c **** 			CANBT1		= 0x00;
+ 213:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0e;
+ 214:can_at90can128_AB_ID.c **** 			CANBT3		= 0x4b;
+ 215:can_at90can128_AB_ID.c **** 			break;
+ 216:can_at90can128_AB_ID.c **** 		case 125:
+ 217:can_at90can128_AB_ID.c **** 			CANBT1		= 0x02;
+ 218:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0c;
+ 219:can_at90can128_AB_ID.c **** 			CANBT3		= 0x37;
+ 220:can_at90can128_AB_ID.c **** 			break;
+ 221:can_at90can128_AB_ID.c **** 		case 100:
+ 222:can_at90can128_AB_ID.c **** 			CANBT1		= 0x02;
+ 223:can_at90can128_AB_ID.c **** 			CANBT2		= 0x0e;
+ 224:can_at90can128_AB_ID.c **** 			CANBT3		= 0x4b;
+ 225:can_at90can128_AB_ID.c **** 			break;
+ 226:can_at90can128_AB_ID.c **** 		default:
+ 227:can_at90can128_AB_ID.c **** 			break;
+ 228:can_at90can128_AB_ID.c **** 	}
+ 229:can_at90can128_AB_ID.c **** #endif
+ 230:can_at90can128_AB_ID.c **** }
+ 262               	:
+ 265 0106 0F90      	.global	can_set_interrupt
+ 267 010a 0F90      	can_set_interrupt:
+ 269 010e DF91      	.LM21:
+ 270 0110 0895      	.LFBB2:
+ 271               		push r29
+ 272               		push r28
+ 273               		rcall .
+ 274               		push __tmp_reg__
+ 275               		in r28,__SP_L__
+ 276               		in r29,__SP_H__
+ 277               	/* prologue: function */
+ 231:can_at90can128_AB_ID.c **** /* Set interrupt mode */
+ 232:can_at90can128_AB_ID.c **** void can_set_interrupt(uint8_t mode)
+ 233:can_at90can128_AB_ID.c **** {
+ 278               	3 */
+ 279               		std Y+1,r24
+ 281 0112 DF93      	.LM22:
+ 282 0114 CF93      		ldd r24,Y+1
+ 283 0116 00D0      		mov r18,r24
+ 284 0118 0F92      		ldi r19,lo8(0)
+ 285 011a CDB7      		std Y+3,r19
+ 286 011c DEB7      		std Y+2,r18
+ 287               		ldd r24,Y+2
+ 288               		ldd r25,Y+3
+ 289 011e 8983      		cpi r24,1
+ 234:can_at90can128_AB_ID.c **** 	switch(mode)
+ 290               	ero_reg__
+ 291               		breq .L14
+ 292 0120 8981      		ldd r18,Y+2
+ 293 0122 282F      		ldd r19,Y+3
+ 294 0124 30E0      		cpi r18,2
+ 295 0126 3B83      		cpc r19,__zero_reg__
+ 296 0128 2A83      		brge .L17
+ 297 012a 8A81      		ldd r24,Y+2
+ 298 012c 9B81      		ldd r25,Y+3
+ 299 012e 8130      		sbiw r24,0
+ 300 0130 9105      		breq .L13
+ 301 0132 01F0      		rjmp .L18
+ 302 0134 2A81      	.L17:
+ 303 0136 3B81      		ldd r18,Y+2
+ 304 0138 2230      		ldd r19,Y+3
+ 305 013a 3105      		cpi r18,2
+ 306 013c 04F4      		cpc r19,__zero_reg__
+ 307 013e 8A81      		breq .L15
+ 308 0140 9B81      		ldd r24,Y+2
+ 309 0142 0097      		ldd r25,Y+3
+ 310 0144 01F0      		cpi r24,3
+ 311 0146 00C0      		cpc r25,__zero_reg__
+ 312               		brne .+2
+ 313 0148 2A81      		rjmp .L16
+ 314 014a 3B81      		rjmp .L18
+ 315 014c 2230      	.L13:
+ 317 0150 01F0      	.LM23:
+ 318 0152 8A81      		ldi r26,lo8(219)
+ 319 0154 9B81      		ldi r27,hi8(219)
+ 320 0156 8330      		ldi r30,lo8(219)
+ 321 0158 9105      		ldi r31,hi8(219)
+ 322 015a 01F4      		ld r24,Z
+ 323 015c 00C0      		andi r24,lo8(127)
+ 324 015e 00C0      		st X,r24
+ 235:can_at90can128_AB_ID.c **** 	{
+ 236:can_at90can128_AB_ID.c **** 		case NONE:
+ 237:can_at90can128_AB_ID.c **** 			clearbit(CANGIE, ENIT);
+ 326               	8(219)
+ 327               		ldi r30,lo8(219)
+ 328 0160 ABED      		ldi r31,hi8(219)
+ 329 0162 B0E0      		ld r24,Z
+ 330 0164 EBED      		andi r24,lo8(-33)
+ 331 0166 F0E0      		st X,r24
+ 333 016a 8F77      	.LM25:
+ 334 016c 8C93      		ldi r26,lo8(219)
+ 238:can_at90can128_AB_ID.c **** 		  	clearbit(CANGIE, ENRX);
+ 335               	hi8(219)
+ 336               		ldi r30,lo8(219)
+ 337 016e ABED      		ldi r31,hi8(219)
+ 338 0170 B0E0      		ld r24,Z
+ 339 0172 EBED      		andi r24,lo8(-17)
+ 340 0174 F0E0      		st X,r24
+ 341 0176 8081      		rjmp .L18
+ 342 0178 8F7D      	.L14:
+ 239:can_at90can128_AB_ID.c **** 			clearbit(CANGIE, ENTX);
+ 344               	di r26,lo8(219)
+ 345               		ldi r27,hi8(219)
+ 346 017c ABED      		ldi r30,lo8(219)
+ 347 017e B0E0      		ldi r31,hi8(219)
+ 348 0180 EBED      		ld r24,Z
+ 349 0182 F0E0      		ori r24,lo8(-128)
+ 350 0184 8081      		st X,r24
+ 352 0188 8C93      	.LM27:
+ 353 018a 00C0      		ldi r26,lo8(219)
+ 354               		ldi r27,hi8(219)
+ 240:can_at90can128_AB_ID.c **** 			break;
+ 241:can_at90can128_AB_ID.c **** 		case TX:
+ 242:can_at90can128_AB_ID.c **** 			setbit(CANGIE, ENIT);
+ 355               	8(219)
+ 356               		ldi r31,hi8(219)
+ 357 018c ABED      		ld r24,Z
+ 358 018e B0E0      		andi r24,lo8(-33)
+ 359 0190 EBED      		st X,r24
+ 361 0194 8081      	.LM28:
+ 362 0196 8068      		ldi r26,lo8(219)
+ 363 0198 8C93      		ldi r27,hi8(219)
+ 243:can_at90can128_AB_ID.c **** 		  	clearbit(CANGIE, ENRX);
+ 364               	lo8(219)
+ 365               		ldi r31,hi8(219)
+ 366 019a ABED      		ld r24,Z
+ 367 019c B0E0      		ori r24,lo8(16)
+ 368 019e EBED      		st X,r24
+ 369 01a0 F0E0      		rjmp .L18
+ 370 01a2 8081      	.L15:
+ 372 01a6 8C93      	.LM29:
+ 244:can_at90can128_AB_ID.c **** 			setbit(CANGIE, ENTX);
+ 373               	lo8(219)
+ 374               		ldi r27,hi8(219)
+ 375 01a8 ABED      		ldi r30,lo8(219)
+ 376 01aa B0E0      		ldi r31,hi8(219)
+ 377 01ac EBED      		ld r24,Z
+ 378 01ae F0E0      		ori r24,lo8(-128)
+ 379 01b0 8081      		st X,r24
+ 381 01b4 8C93      	.LM30:
+ 382 01b6 00C0      		ldi r26,lo8(219)
+ 383               		ldi r27,hi8(219)
+ 245:can_at90can128_AB_ID.c **** 			break;
+ 246:can_at90can128_AB_ID.c **** 		case RX:
+ 247:can_at90can128_AB_ID.c **** 			setbit(CANGIE, ENIT);
+ 384               	8(219)
+ 385               		ldi r31,hi8(219)
+ 386 01b8 ABED      		ld r24,Z
+ 387 01ba B0E0      		ori r24,lo8(32)
+ 388 01bc EBED      		st X,r24
+ 390 01c0 8081      	.LM31:
+ 391 01c2 8068      		ldi r26,lo8(219)
+ 392 01c4 8C93      		ldi r27,hi8(219)
+ 248:can_at90can128_AB_ID.c **** 		  	setbit(CANGIE, ENRX);
+ 393               	lo8(219)
+ 394               		ldi r31,hi8(219)
+ 395 01c6 ABED      		ld r24,Z
+ 396 01c8 B0E0      		andi r24,lo8(-17)
+ 397 01ca EBED      		st X,r24
+ 398 01cc F0E0      		rjmp .L18
+ 399 01ce 8081      	.L16:
+ 401 01d2 8C93      	.LM32:
+ 249:can_at90can128_AB_ID.c **** 			clearbit(CANGIE, ENTX);
+ 402               	lo8(219)
+ 403               		ldi r27,hi8(219)
+ 404 01d4 ABED      		ldi r30,lo8(219)
+ 405 01d6 B0E0      		ldi r31,hi8(219)
+ 406 01d8 EBED      		ld r24,Z
+ 407 01da F0E0      		ori r24,lo8(-128)
+ 408 01dc 8081      		st X,r24
+ 410 01e0 8C93      	.LM33:
+ 411 01e2 00C0      		ldi r26,lo8(219)
+ 412               		ldi r27,hi8(219)
+ 250:can_at90can128_AB_ID.c **** 			break;
+ 251:can_at90can128_AB_ID.c **** 		case TXRX:
+ 252:can_at90can128_AB_ID.c **** 			setbit(CANGIE, ENIT);
+ 413               	8(219)
+ 414               		ldi r31,hi8(219)
+ 415 01e4 ABED      		ld r24,Z
+ 416 01e6 B0E0      		ori r24,lo8(32)
+ 417 01e8 EBED      		st X,r24
+ 419 01ec 8081      	.LM34:
+ 420 01ee 8068      		ldi r26,lo8(219)
+ 421 01f0 8C93      		ldi r27,hi8(219)
+ 253:can_at90can128_AB_ID.c **** 		  	setbit(CANGIE, ENRX);
+ 422               	lo8(219)
+ 423               		ldi r31,hi8(219)
+ 424 01f2 ABED      		ld r24,Z
+ 425 01f4 B0E0      		ori r24,lo8(16)
+ 426 01f6 EBED      		st X,r24
+ 427 01f8 F0E0      	.L18:
+ 428 01fa 8081      	/* epilogue start */
+ 430 01fe 8C93      	.LM35:
+ 254:can_at90can128_AB_ID.c **** 			setbit(CANGIE, ENTX);
+ 431               	p_reg__
+ 432               		pop __tmp_reg__
+ 433 0200 ABED      		pop __tmp_reg__
+ 434 0202 B0E0      		pop r28
+ 435 0204 EBED      		pop r29
+ 436 0206 F0E0      		ret
+ 438 020a 8061      	.Lscope2:
+ 441               	.global	can_select_mob
+ 255:can_at90can128_AB_ID.c **** 			break;
+ 256:can_at90can128_AB_ID.c **** 		default:
+ 257:can_at90can128_AB_ID.c **** 			break;
+ 258:can_at90can128_AB_ID.c **** 	}
+ 259:can_at90can128_AB_ID.c **** }
+ 442               	select_mob, @function
+ 443               	can_select_mob:
+ 445 0210 0F90      	.LM36:
+ 446 0212 0F90      	.LFBB3:
+ 447 0214 CF91      		push r29
+ 448 0216 DF91      		push r28
+ 449 0218 0895      		push __tmp_reg__
+ 450               		in r28,__SP_L__
+ 451               		in r29,__SP_H__
+ 452               	/* prologue: function */
+ 453               	/* frame size = 1 */
+ 454               		std Y+1,r24
+ 456               	.LM37:
+ 260:can_at90can128_AB_ID.c **** /* Select MOB */
+ 261:can_at90can128_AB_ID.c **** void can_select_mob(uint8_t mob)
+ 262:can_at90can128_AB_ID.c **** {
+ 457               	7)
+ 458               		ldi r31,hi8(237)
+ 459               		ldd r24,Y+1
+ 460 021a DF93      		swap r24
+ 461 021c CF93      		andi r24,lo8(-16)
+ 462 021e 0F92      		st Z,r24
+ 463 0220 CDB7      	/* epilogue start */
+ 465               	.LM38:
+ 466               		pop __tmp_reg__
+ 467 0224 8983      		pop r28
+ 263:can_at90can128_AB_ID.c **** 	CANPAGE	= (mob << 4);
+ 468               	et
+ 470 0226 EDEE      	.Lscope3:
+ 474 022e 807F      	.global	can_set_mob_id_mask
+ 476               	can_set_mob_id_mask:
+ 264:can_at90can128_AB_ID.c **** }
+ 477               	8,0,267,.LM39-.LFBB4
+ 478               	.LM39:
+ 479 0232 0F90      	.LFBB4:
+ 480 0234 CF91      		push r29
+ 481 0236 DF91      		push r28
+ 482 0238 0895      		rcall .
+ 483               		rcall .
+ 484               		push __tmp_reg__
+ 485               		in r28,__SP_L__
+ 486               		in r29,__SP_H__
+ 487               	/* prologue: function */
+ 488               	/* frame size = 5 */
+ 489               		std Y+1,r22
+ 490               		std Y+2,r23
+ 265:can_at90can128_AB_ID.c **** /* Set ID mask for selected MOB */
+ 266:can_at90can128_AB_ID.c **** void can_set_mob_id_mask(uint32_t idm, uint8_t id_type)
+ 267:can_at90can128_AB_ID.c **** {
+ 491               	std Y+4,r25
+ 492               		std Y+5,r20
+ 494 023a DF93      	.LM40:
+ 495 023c CF93      		ldd r24,Y+5
+ 496 023e 00D0      		cpi r24,lo8(1)
+ 497 0240 00D0      		breq .+2
+ 498 0242 0F92      		rjmp .L22
+ 500 0246 DEB7      	.LM41:
+ 501               		ldd r24,Y+1
+ 502               		ldd r25,Y+2
+ 503 0248 6983      		ldd r26,Y+3
+ 504 024a 7A83      		ldd r27,Y+4
+ 505 024c 8B83      		add r24,r24
+ 506 024e 9C83      		adc r25,r25
+ 507 0250 4D83      		adc r26,r26
+ 268:can_at90can128_AB_ID.c **** 	if (id_type == 1)
+ 508               	 r24,r24
+ 509               		adc r25,r25
+ 510 0252 8D81      		adc r26,r26
+ 511 0254 8130      		adc r27,r27
+ 512 0256 01F0      		add r24,r24
+ 513 0258 00C0      		adc r25,r25
+ 269:can_at90can128_AB_ID.c **** 	{
+ 270:can_at90can128_AB_ID.c **** 		idm	<<= 3;
+ 514               	26,r26
+ 515               		adc r27,r27
+ 516 025a 8981      		std Y+1,r24
+ 517 025c 9A81      		std Y+2,r25
+ 518 025e AB81      		std Y+3,r26
+ 519 0260 BC81      		std Y+4,r27
+ 521 0264 991F      	.LM42:
+ 522 0266 AA1F      		ldi r30,lo8(244)
+ 523 0268 BB1F      		ldi r31,hi8(244)
+ 524 026a 880F      		ldd r24,Y+1
+ 525 026c 991F      		st Z,r24
+ 527 0270 BB1F      	.LM43:
+ 528 0272 880F      		ldi r26,lo8(244)
+ 529 0274 991F      		ldi r27,hi8(244)
+ 530 0276 AA1F      		ldi r30,lo8(244)
+ 531 0278 BB1F      		ldi r31,hi8(244)
+ 532 027a 8983      		ld r24,Z
+ 533 027c 9A83      		ori r24,lo8(5)
+ 534 027e AB83      		st X,r24
+ 271:can_at90can128_AB_ID.c **** 		CANIDM4 = ((unsigned char) (idm));
+ 536               	5)
+ 537               		ldi r31,hi8(245)
+ 538 0282 E4EF      		ldd r24,Y+1
+ 539 0284 F0E0      		ldd r25,Y+2
+ 540 0286 8981      		ldd r26,Y+3
+ 541 0288 8083      		ldd r27,Y+4
+ 272:can_at90can128_AB_ID.c **** 		CANIDM4 |= (0x01 << RTRMSK) | (0x01 << IDEMSK);
+ 542               	24,r25
+ 543               		mov r25,r26
+ 544 028a A4EF      		mov r26,r27
+ 545 028c B0E0      		clr r27
+ 546 028e E4EF      		st Z,r24
+ 548 0292 8081      	.LM45:
+ 549 0294 8560      		ldi r30,lo8(246)
+ 550 0296 8C93      		ldi r31,hi8(246)
+ 273:can_at90can128_AB_ID.c **** 		CANIDM3 = (unsigned char) (idm >> 8);
+ 551               	Y+1
+ 552               		ldd r25,Y+2
+ 553 0298 E5EF      		ldd r26,Y+3
+ 554 029a F0E0      		ldd r27,Y+4
+ 555 029c 8981      		movw r24,r26
+ 556 029e 9A81      		clr r26
+ 557 02a0 AB81      		clr r27
+ 558 02a2 BC81      		st Z,r24
+ 560 02a6 9A2F      	.LM46:
+ 561 02a8 AB2F      		ldi r30,lo8(247)
+ 562 02aa BB27      		ldi r31,hi8(247)
+ 563 02ac 8083      		ldd r24,Y+1
+ 274:can_at90can128_AB_ID.c **** 		CANIDM2 = (unsigned char) (idm >> 16);
+ 564               		ldd r26,Y+3
+ 565               		ldd r27,Y+4
+ 566 02ae E6EF      		mov r24,r27
+ 567 02b0 F0E0      		clr r25
+ 568 02b2 8981      		clr r26
+ 569 02b4 9A81      		clr r27
+ 570 02b6 AB81      		st Z,r24
+ 571 02b8 BC81      	.L22:
+ 573 02bc AA27      	.LM47:
+ 574 02be BB27      		ldd r24,Y+5
+ 575 02c0 8083      		tst r24
+ 275:can_at90can128_AB_ID.c **** 		CANIDM1 = (unsigned char) (idm >> 24);
+ 577               	.LM48:
+ 578 02c2 E7EF      		ldd r24,Y+1
+ 579 02c4 F0E0      		ldd r25,Y+2
+ 580 02c6 8981      		ldd r26,Y+3
+ 581 02c8 9A81      		ldd r27,Y+4
+ 582 02ca AB81      		add r24,r24
+ 583 02cc BC81      		adc r25,r25
+ 584 02ce 8B2F      		adc r26,r26
+ 585 02d0 9927      		adc r27,r27
+ 586 02d2 AA27      		add r24,r24
+ 587 02d4 BB27      		adc r25,r25
+ 588 02d6 8083      		adc r26,r26
+ 589               		adc r27,r27
+ 276:can_at90can128_AB_ID.c **** 	}
+ 277:can_at90can128_AB_ID.c **** 	if (id_type == 0)
+ 590               	adc r25,r25
+ 591               		adc r26,r26
+ 592 02d8 8D81      		adc r27,r27
+ 593 02da 8823      		add r24,r24
+ 594 02dc 01F4      		adc r25,r25
+ 278:can_at90can128_AB_ID.c **** 	{
+ 279:can_at90can128_AB_ID.c **** 		idm <<= 5;
+ 595               	r26,r26
+ 596               		adc r27,r27
+ 597 02de 8981      		add r24,r24
+ 598 02e0 9A81      		adc r25,r25
+ 599 02e2 AB81      		adc r26,r26
+ 600 02e4 BC81      		adc r27,r27
+ 601 02e6 880F      		std Y+1,r24
+ 602 02e8 991F      		std Y+2,r25
+ 603 02ea AA1F      		std Y+3,r26
+ 604 02ec BB1F      		std Y+4,r27
+ 606 02f0 991F      	.LM49:
+ 607 02f2 AA1F      		ldi r26,lo8(244)
+ 608 02f4 BB1F      		ldi r27,hi8(244)
+ 609 02f6 880F      		ldi r30,lo8(244)
+ 610 02f8 991F      		ldi r31,hi8(244)
+ 611 02fa AA1F      		ld r24,Z
+ 612 02fc BB1F      		andi r24,lo8(5)
+ 613 02fe 880F      		st X,r24
+ 615 0302 AA1F      	.LM50:
+ 616 0304 BB1F      		ldi r30,lo8(245)
+ 617 0306 880F      		ldi r31,hi8(245)
+ 618 0308 991F      		st Z,__zero_reg__
+ 620 030c BB1F      	.LM51:
+ 621 030e 8983      		ldi r30,lo8(246)
+ 622 0310 9A83      		ldi r31,hi8(246)
+ 623 0312 AB83      		ldd r24,Y+1
+ 624 0314 BC83      		st Z,r24
+ 280:can_at90can128_AB_ID.c **** 		CANIDM4 &= 0x05;	// Sustain bit 0, 2
+ 625               	.LM52:
+ 626               		ldi r30,lo8(247)
+ 627 0316 A4EF      		ldi r31,hi8(247)
+ 628 0318 B0E0      		ldd r24,Y+1
+ 629 031a E4EF      		ldd r25,Y+2
+ 630 031c F0E0      		ldd r26,Y+3
+ 631 031e 8081      		ldd r27,Y+4
+ 632 0320 8570      		mov r24,r25
+ 633 0322 8C93      		mov r25,r26
+ 281:can_at90can128_AB_ID.c **** 		CANIDM3 = 0x00;
+ 634               	r27
+ 635               		clr r27
+ 636 0324 E5EF      		st Z,r24
+ 637 0326 F0E0      	.L24:
+ 638 0328 1082      	/* epilogue start */
+ 282:can_at90can128_AB_ID.c **** 		CANIDM2 = (unsigned char) (idm);
+ 639               	bn	68,0,285,.LM53-.LFBB4
+ 640               	.LM53:
+ 641 032a E6EF      		pop __tmp_reg__
+ 642 032c F0E0      		pop __tmp_reg__
+ 643 032e 8981      		pop __tmp_reg__
+ 644 0330 8083      		pop __tmp_reg__
+ 283:can_at90can128_AB_ID.c **** 		CANIDM1 = (unsigned char) (idm >> 8);
+ 645               	_tmp_reg__
+ 646               		pop r28
+ 647 0332 E7EF      		pop r29
+ 648 0334 F0E0      		ret
+ 650 0338 9A81      	.Lscope4:
+ 654 0340 9A2F      	.global	can_set_mob_id
+ 656 0344 BB27      	can_set_mob_id:
+ 658               	.LM54:
+ 659               	.LFBB5:
+ 284:can_at90can128_AB_ID.c **** 	}
+ 285:can_at90can128_AB_ID.c **** }
+ 660               	 r28
+ 661               		rcall .
+ 662 0348 0F90      		rcall .
+ 663 034a 0F90      		push __tmp_reg__
+ 664 034c 0F90      		in r28,__SP_L__
+ 665 034e 0F90      		in r29,__SP_H__
+ 666 0350 0F90      	/* prologue: function */
+ 667 0352 CF91      	/* frame size = 5 */
+ 668 0354 DF91      		std Y+1,r22
+ 669 0356 0895      		std Y+2,r23
+ 670               		std Y+3,r24
+ 671               		std Y+4,r25
+ 672               		std Y+5,r20
+ 674               	.LM55:
+ 675               		ldd r24,Y+5
+ 676               		cpi r24,lo8(1)
+ 677               		breq .+2
+ 286:can_at90can128_AB_ID.c **** /* Set ID for selected MOB */
+ 287:can_at90can128_AB_ID.c **** void can_set_mob_id(uint32_t id, uint8_t id_type)
+ 288:can_at90can128_AB_ID.c **** {
+ 678               		68,0,291,.LM56-.LFBB5
+ 679               	.LM56:
+ 680               		ldd r24,Y+1
+ 681 0358 DF93      		ldd r25,Y+2
+ 682 035a CF93      		ldd r26,Y+3
+ 683 035c 00D0      		ldd r27,Y+4
+ 684 035e 00D0      		add r24,r24
+ 685 0360 0F92      		adc r25,r25
+ 686 0362 CDB7      		adc r26,r26
+ 687 0364 DEB7      		adc r27,r27
+ 688               		add r24,r24
+ 689               		adc r25,r25
+ 690 0366 6983      		adc r26,r26
+ 691 0368 7A83      		adc r27,r27
+ 692 036a 8B83      		add r24,r24
+ 693 036c 9C83      		adc r25,r25
+ 694 036e 4D83      		adc r26,r26
+ 289:can_at90can128_AB_ID.c **** 	if (id_type == 1)
+ 695               	 Y+1,r24
+ 696               		std Y+2,r25
+ 697 0370 8D81      		std Y+3,r26
+ 698 0372 8130      		std Y+4,r27
+ 700 0376 00C0      	.LM57:
+ 290:can_at90can128_AB_ID.c **** 	{
+ 291:can_at90can128_AB_ID.c **** 		id <<= 3;
+ 701               	30,lo8(240)
+ 702               		ldi r31,hi8(240)
+ 703 0378 8981      		ld r24,Z
+ 704 037a 9A81      		mov r24,r24
+ 705 037c AB81      		ldi r25,lo8(0)
+ 706 037e BC81      		ldi r26,lo8(0)
+ 707 0380 880F      		ldi r27,hi8(0)
+ 708 0382 991F      		movw r18,r24
+ 709 0384 AA1F      		movw r20,r26
+ 710 0386 BB1F      		andi r18,lo8(7)
+ 711 0388 880F      		andi r19,hi8(7)
+ 712 038a 991F      		andi r20,hlo8(7)
+ 713 038c AA1F      		andi r21,hhi8(7)
+ 714 038e BB1F      		ldd r24,Y+1
+ 715 0390 880F      		ldd r25,Y+2
+ 716 0392 991F      		ldd r26,Y+3
+ 717 0394 AA1F      		ldd r27,Y+4
+ 718 0396 BB1F      		or r24,r18
+ 719 0398 8983      		or r25,r19
+ 720 039a 9A83      		or r26,r20
+ 721 039c AB83      		or r27,r21
+ 722 039e BC83      		std Y+1,r24
+ 292:can_at90can128_AB_ID.c **** 		id |= (CANIDT4 & 0x07);
+ 723               	r26
+ 724               		std Y+4,r27
+ 726 03a2 F0E0      	.LM58:
+ 727 03a4 8081      		ldi r30,lo8(240)
+ 728 03a6 882F      		ldi r31,hi8(240)
+ 729 03a8 90E0      		ldd r24,Y+1
+ 730 03aa A0E0      		st Z,r24
+ 732 03ae 9C01      	.LM59:
+ 733 03b0 AD01      		ldi r30,lo8(241)
+ 734 03b2 2770      		ldi r31,hi8(241)
+ 735 03b4 3070      		ldd r24,Y+1
+ 736 03b6 4070      		ldd r25,Y+2
+ 737 03b8 5070      		ldd r26,Y+3
+ 738 03ba 8981      		ldd r27,Y+4
+ 739 03bc 9A81      		mov r24,r25
+ 740 03be AB81      		mov r25,r26
+ 741 03c0 BC81      		mov r26,r27
+ 742 03c2 822B      		clr r27
+ 743 03c4 932B      		st Z,r24
+ 745 03c8 B52B      	.LM60:
+ 746 03ca 8983      		ldi r30,lo8(242)
+ 747 03cc 9A83      		ldi r31,hi8(242)
+ 748 03ce AB83      		ldd r24,Y+1
+ 749 03d0 BC83      		ldd r25,Y+2
+ 293:can_at90can128_AB_ID.c **** 
+ 294:can_at90can128_AB_ID.c **** 		CANIDT4 = (unsigned char) (id);
+ 750               	movw r24,r26
+ 751               		clr r26
+ 752 03d2 E0EF      		clr r27
+ 753 03d4 F0E0      		st Z,r24
+ 755 03d8 8083      	.LM61:
+ 295:can_at90can128_AB_ID.c **** 		CANIDT3 = (unsigned char) (id >> 8);
+ 756               	30,lo8(243)
+ 757               		ldi r31,hi8(243)
+ 758 03da E1EF      		ldd r24,Y+1
+ 759 03dc F0E0      		ldd r25,Y+2
+ 760 03de 8981      		ldd r26,Y+3
+ 761 03e0 9A81      		ldd r27,Y+4
+ 762 03e2 AB81      		mov r24,r27
+ 763 03e4 BC81      		clr r25
+ 764 03e6 892F      		clr r26
+ 765 03e8 9A2F      		clr r27
+ 766 03ea AB2F      		st Z,r24
+ 767 03ec BB27      	.L26:
+ 296:can_at90can128_AB_ID.c **** 		CANIDT2 = (unsigned char) (id >> 16);
+ 769               	24,Y+5
+ 770               		tst r24
+ 771 03f0 E2EF      		brne .L28
+ 773 03f4 8981      	.LM63:
+ 774 03f6 9A81      		ldd r24,Y+1
+ 775 03f8 AB81      		ldd r25,Y+2
+ 776 03fa BC81      		ldd r26,Y+3
+ 777 03fc CD01      		ldd r27,Y+4
+ 778 03fe AA27      		add r24,r24
+ 779 0400 BB27      		adc r25,r25
+ 780 0402 8083      		adc r26,r26
+ 297:can_at90can128_AB_ID.c **** 		CANIDT1 = (unsigned char) (id >> 24);
+ 781               	
+ 782               		add r24,r24
+ 783 0404 E3EF      		adc r25,r25
+ 784 0406 F0E0      		adc r26,r26
+ 785 0408 8981      		adc r27,r27
+ 786 040a 9A81      		add r24,r24
+ 787 040c AB81      		adc r25,r25
+ 788 040e BC81      		adc r26,r26
+ 789 0410 8B2F      		adc r27,r27
+ 790 0412 9927      		add r24,r24
+ 791 0414 AA27      		adc r25,r25
+ 792 0416 BB27      		adc r26,r26
+ 793 0418 8083      		adc r27,r27
+ 794               		add r24,r24
+ 298:can_at90can128_AB_ID.c **** 	}
+ 299:can_at90can128_AB_ID.c **** 	if (id_type == 0)
+ 795               		adc r26,r26
+ 796               		adc r27,r27
+ 797 041a 8D81      		std Y+1,r24
+ 798 041c 8823      		std Y+2,r25
+ 799 041e 01F4      		std Y+3,r26
+ 300:can_at90can128_AB_ID.c **** 	{
+ 301:can_at90can128_AB_ID.c **** 		id <<= 5;
+ 800               	Y+4,r27
+ 802 0420 8981      	.LM64:
+ 803 0422 9A81      		ldi r26,lo8(240)
+ 804 0424 AB81      		ldi r27,hi8(240)
+ 805 0426 BC81      		ldi r30,lo8(240)
+ 806 0428 880F      		ldi r31,hi8(240)
+ 807 042a 991F      		ld r24,Z
+ 808 042c AA1F      		andi r24,lo8(5)
+ 809 042e BB1F      		st X,r24
+ 811 0432 991F      	.LM65:
+ 812 0434 AA1F      		ldi r30,lo8(241)
+ 813 0436 BB1F      		ldi r31,hi8(241)
+ 814 0438 880F      		st Z,__zero_reg__
+ 816 043c AA1F      	.LM66:
+ 817 043e BB1F      		ldi r30,lo8(242)
+ 818 0440 880F      		ldi r31,hi8(242)
+ 819 0442 991F      		ldd r24,Y+1
+ 820 0444 AA1F      		st Z,r24
+ 822 0448 880F      	.LM67:
+ 823 044a 991F      		ldi r30,lo8(243)
+ 824 044c AA1F      		ldi r31,hi8(243)
+ 825 044e BB1F      		ldd r24,Y+1
+ 826 0450 8983      		ldd r25,Y+2
+ 827 0452 9A83      		ldd r26,Y+3
+ 828 0454 AB83      		ldd r27,Y+4
+ 829 0456 BC83      		mov r24,r25
+ 302:can_at90can128_AB_ID.c **** 		CANIDT4 &= 0x05;	// Reset CANIDT4, sustain bit 0, 2
+ 830               	 r27
+ 831               		st Z,r24
+ 832 0458 A0EF      	.L28:
+ 833 045a B0E0      	/* epilogue start */
+ 835 045e F0E0      	.LM68:
+ 836 0460 8081      		pop __tmp_reg__
+ 837 0462 8570      		pop __tmp_reg__
+ 838 0464 8C93      		pop __tmp_reg__
+ 303:can_at90can128_AB_ID.c **** 		CANIDT3 = 0x00;
+ 839               	p_reg__
+ 840               		pop __tmp_reg__
+ 841 0466 E1EF      		pop r28
+ 842 0468 F0E0      		pop r29
+ 843 046a 1082      		ret
+ 304:can_at90can128_AB_ID.c **** 		CANIDT2 = (unsigned char) (id);
+ 844               	e	can_set_mob_id, .-can_set_mob_id
+ 845               	.Lscope5:
+ 848 0470 8981      	.global	can_get_mob_id
+ 305:can_at90can128_AB_ID.c **** 		CANIDT1 = (unsigned char) (id >> 8);
+ 850               	t_mob_id:
+ 852 0474 E3EF      	.LM69:
+ 853 0476 F0E0      	.LFBB6:
+ 854 0478 8981      		push r29
+ 855 047a 9A81      		push r28
+ 856 047c AB81      		in r28,__SP_L__
+ 857 047e BC81      		in r29,__SP_H__
+ 858 0480 892F      		sbiw r28,9
+ 859 0482 9A2F      		in __tmp_reg__,__SREG__
+ 860 0484 AB2F      		cli
+ 861 0486 BB27      		out __SP_H__,r29
+ 862 0488 8083      		out __SREG__,__tmp_reg__
+ 863               		out __SP_L__,r28
+ 864               	/* prologue: function */
+ 306:can_at90can128_AB_ID.c **** 	}
+ 307:can_at90can128_AB_ID.c **** }
+ 865               	 9 */
+ 866               		std Y+5,r24
+ 868 048c 0F90      	.LM70:
+ 869 048e 0F90      		std Y+1,__zero_reg__
+ 870 0490 0F90      		std Y+2,__zero_reg__
+ 871 0492 0F90      		std Y+3,__zero_reg__
+ 872 0494 CF91      		std Y+4,__zero_reg__
+ 874 0498 0895      	.LM71:
+ 875               		ldd r24,Y+5
+ 876               		cpi r24,lo8(1)
+ 877               		breq .+2
+ 878               		rjmp .L30
+ 880               	.LM72:
+ 881               		ldi r30,lo8(243)
+ 308:can_at90can128_AB_ID.c **** /* Get ID mask for selected MOB */
+ 309:can_at90can128_AB_ID.c **** uint32_t can_get_mob_id(uint8_t id_type)
+ 310:can_at90can128_AB_ID.c **** {
+ 882               	
+ 883               		ld r24,Z
+ 884               		mov r24,r24
+ 885 049a DF93      		ldi r25,lo8(0)
+ 886 049c CF93      		ldi r26,lo8(0)
+ 887 049e CDB7      		ldi r27,hi8(0)
+ 888 04a0 DEB7      		mov r21,r24
+ 889 04a2 2997      		clr r20
+ 890 04a4 0FB6      		clr r19
+ 891 04a6 F894      		clr r18
+ 892 04a8 DEBF      		ldd r24,Y+1
+ 893 04aa 0FBE      		ldd r25,Y+2
+ 894 04ac CDBF      		ldd r26,Y+3
+ 895               		ldd r27,Y+4
+ 896               		or r24,r18
+ 897 04ae 8D83      		or r25,r19
+ 311:can_at90can128_AB_ID.c **** 	uint32_t id = 0;
+ 898               	 r27,r21
+ 899               		std Y+1,r24
+ 900 04b0 1982      		std Y+2,r25
+ 901 04b2 1A82      		std Y+3,r26
+ 902 04b4 1B82      		std Y+4,r27
+ 312:can_at90can128_AB_ID.c **** 	if (id_type == 1)
+ 904               	
+ 905               		ldi r30,lo8(242)
+ 906 04b8 8D81      		ldi r31,hi8(242)
+ 907 04ba 8130      		ld r24,Z
+ 908 04bc 01F0      		mov r24,r24
+ 909 04be 00C0      		ldi r25,lo8(0)
+ 313:can_at90can128_AB_ID.c **** 	{
+ 314:can_at90can128_AB_ID.c **** 		id |= (uint32_t) ((uint32_t) CANIDT1) << 24;
+ 910               	r26,lo8(0)
+ 911               		ldi r27,hi8(0)
+ 912 04c0 E3EF      		movw r20,r24
+ 913 04c2 F0E0      		clr r19
+ 914 04c4 8081      		clr r18
+ 915 04c6 882F      		ldd r24,Y+1
+ 916 04c8 90E0      		ldd r25,Y+2
+ 917 04ca A0E0      		ldd r26,Y+3
+ 918 04cc B0E0      		ldd r27,Y+4
+ 919 04ce 582F      		or r24,r18
+ 920 04d0 4427      		or r25,r19
+ 921 04d2 3327      		or r26,r20
+ 922 04d4 2227      		or r27,r21
+ 923 04d6 8981      		std Y+1,r24
+ 924 04d8 9A81      		std Y+2,r25
+ 925 04da AB81      		std Y+3,r26
+ 926 04dc BC81      		std Y+4,r27
+ 928 04e0 932B      	.LM74:
+ 929 04e2 A42B      		ldi r30,lo8(241)
+ 930 04e4 B52B      		ldi r31,hi8(241)
+ 931 04e6 8983      		ld r24,Z
+ 932 04e8 9A83      		mov r24,r24
+ 933 04ea AB83      		ldi r25,lo8(0)
+ 934 04ec BC83      		ldi r26,lo8(0)
+ 315:can_at90can128_AB_ID.c **** 		id |= (uint32_t) ((uint32_t) CANIDT2) << 16;
+ 935               		mov r19,r24
+ 936               		mov r20,r25
+ 937 04ee E2EF      		mov r21,r26
+ 938 04f0 F0E0      		ldd r24,Y+1
+ 939 04f2 8081      		ldd r25,Y+2
+ 940 04f4 882F      		ldd r26,Y+3
+ 941 04f6 90E0      		ldd r27,Y+4
+ 942 04f8 A0E0      		or r24,r18
+ 943 04fa B0E0      		or r25,r19
+ 944 04fc AC01      		or r26,r20
+ 945 04fe 3327      		or r27,r21
+ 946 0500 2227      		std Y+1,r24
+ 947 0502 8981      		std Y+2,r25
+ 948 0504 9A81      		std Y+3,r26
+ 949 0506 AB81      		std Y+4,r27
+ 951 050a 822B      	.LM75:
+ 952 050c 932B      		ldi r30,lo8(240)
+ 953 050e A42B      		ldi r31,hi8(240)
+ 954 0510 B52B      		ld r24,Z
+ 955 0512 8983      		mov r24,r24
+ 956 0514 9A83      		ldi r25,lo8(0)
+ 957 0516 AB83      		ldi r26,lo8(0)
+ 958 0518 BC83      		ldi r27,hi8(0)
+ 316:can_at90can128_AB_ID.c **** 		id |= (uint32_t) ((uint32_t) CANIDT3) << 8;
+ 959               	r26
+ 960               		andi r18,lo8(248)
+ 961 051a E1EF      		andi r19,hi8(248)
+ 962 051c F0E0      		andi r20,hlo8(248)
+ 963 051e 8081      		andi r21,hhi8(248)
+ 964 0520 882F      		ldd r24,Y+1
+ 965 0522 90E0      		ldd r25,Y+2
+ 966 0524 A0E0      		ldd r26,Y+3
+ 967 0526 B0E0      		ldd r27,Y+4
+ 968 0528 2227      		or r24,r18
+ 969 052a 382F      		or r25,r19
+ 970 052c 492F      		or r26,r20
+ 971 052e 5A2F      		or r27,r21
+ 972 0530 8981      		std Y+1,r24
+ 973 0532 9A81      		std Y+2,r25
+ 974 0534 AB81      		std Y+3,r26
+ 975 0536 BC81      		std Y+4,r27
+ 977 053a 932B      	.LM76:
+ 978 053c A42B      		ldd r24,Y+1
+ 979 053e B52B      		ldd r25,Y+2
+ 980 0540 8983      		ldd r26,Y+3
+ 981 0542 9A83      		ldd r27,Y+4
+ 982 0544 AB83      		set
+ 983 0546 BC83      		bld __zero_reg__,3-1
+ 317:can_at90can128_AB_ID.c **** 		id |= (uint32_t) (CANIDT4 & 0xF8);	//last 3 bits are functional bits
+ 984               	r25
+ 985               		ror r24
+ 986 0548 E0EF      		lsr __zero_reg__
+ 987 054a F0E0      		brne 1b
+ 988 054c 8081      		std Y+1,r24
+ 989 054e 882F      		std Y+2,r25
+ 990 0550 90E0      		std Y+3,r26
+ 991 0552 A0E0      		std Y+4,r27
+ 993 0556 9C01      	.LM77:
+ 994 0558 AD01      		ldd r24,Y+1
+ 995 055a 287F      		ldd r25,Y+2
+ 996 055c 3070      		ldd r26,Y+3
+ 997 055e 4070      		ldd r27,Y+4
+ 998 0560 5070      		std Y+6,r24
+ 999 0562 8981      		std Y+7,r25
+ 1000 0564 9A81      		std Y+8,r26
+ 1001 0566 AB81      		std Y+9,r27
+ 1002 0568 BC81      		rjmp .L31
+ 1003 056a 822B      	.L30:
+ 1005 056e A42B      	.LM78:
+ 1006 0570 B52B      		ldd r24,Y+5
+ 1007 0572 8983      		tst r24
+ 1008 0574 9A83      		breq .+2
+ 1009 0576 AB83      		rjmp .L32
+ 318:can_at90can128_AB_ID.c **** 		id >>= 3;
+ 1011               	di r31,hi8(243)
+ 1012               		ld r24,Z
+ 1013 057a 8981      		mov r24,r24
+ 1014 057c 9A81      		ldi r25,lo8(0)
+ 1015 057e AB81      		ldi r26,lo8(0)
+ 1016 0580 BC81      		ldi r27,hi8(0)
+ 1017 0582 6894      		clr r18
+ 1018 0584 12F8      		mov r19,r24
+ 1019 0586 B695      		mov r20,r25
+ 1020 0588 A795      		mov r21,r26
+ 1021 058a 9795      		ldd r24,Y+1
+ 1022 058c 8795      		ldd r25,Y+2
+ 1023 058e 1694      		ldd r26,Y+3
+ 1024 0590 01F4      		ldd r27,Y+4
+ 1025 0592 8983      		or r24,r18
+ 1026 0594 9A83      		or r25,r19
+ 1027 0596 AB83      		or r26,r20
+ 1028 0598 BC83      		or r27,r21
+ 319:can_at90can128_AB_ID.c **** 		
+ 320:can_at90can128_AB_ID.c **** 		return id;
+ 1029               	Y+2,r25
+ 1030               		std Y+3,r26
+ 1031 059a 8981      		std Y+4,r27
+ 1033 059e AB81      	.LM80:
+ 1034 05a0 BC81      		ldi r30,lo8(242)
+ 1035 05a2 8E83      		ldi r31,hi8(242)
+ 1036 05a4 9F83      		ld r24,Z
+ 1037 05a6 A887      		mov r18,r24
+ 1038 05a8 B987      		ldi r19,lo8(0)
+ 1039 05aa 00C0      		ldi r20,lo8(0)
+ 1040               		ldi r21,hi8(0)
+ 321:can_at90can128_AB_ID.c **** 	}
+ 322:can_at90can128_AB_ID.c **** 	if (id_type == 0)
+ 1041               	
+ 1042               		ldd r25,Y+2
+ 1043 05ac 8D81      		ldd r26,Y+3
+ 1044 05ae 8823      		ldd r27,Y+4
+ 1045 05b0 01F0      		or r24,r18
+ 1046 05b2 00C0      		or r25,r19
+ 323:can_at90can128_AB_ID.c **** 	{
+ 324:can_at90can128_AB_ID.c **** 		id |= (uint32_t) ((uint32_t) CANIDT1) << 8;
+ 1047               	26,r20
+ 1048               		or r27,r21
+ 1049 05b4 E3EF      		std Y+1,r24
+ 1050 05b6 F0E0      		std Y+2,r25
+ 1051 05b8 8081      		std Y+3,r26
+ 1052 05ba 882F      		std Y+4,r27
+ 1054 05be A0E0      	.LM81:
+ 1055 05c0 B0E0      		ldd r24,Y+1
+ 1056 05c2 2227      		ldd r25,Y+2
+ 1057 05c4 382F      		ldd r26,Y+3
+ 1058 05c6 492F      		ldd r27,Y+4
+ 1059 05c8 5A2F      		set
+ 1060 05ca 8981      		bld __zero_reg__,5-1
+ 1061 05cc 9A81      	1:	lsr r27
+ 1062 05ce AB81      		ror r26
+ 1063 05d0 BC81      		ror r25
+ 1064 05d2 822B      		ror r24
+ 1065 05d4 932B      		lsr __zero_reg__
+ 1066 05d6 A42B      		brne 1b
+ 1067 05d8 B52B      		std Y+1,r24
+ 1068 05da 8983      		std Y+2,r25
+ 1069 05dc 9A83      		std Y+3,r26
+ 1070 05de AB83      		std Y+4,r27
+ 325:can_at90can128_AB_ID.c **** 		id |= ((uint32_t) CANIDT2);
+ 1072               	r25,Y+2
+ 1073               		ldd r26,Y+3
+ 1074 05e2 E2EF      		ldd r27,Y+4
+ 1075 05e4 F0E0      		std Y+6,r24
+ 1076 05e6 8081      		std Y+7,r25
+ 1077 05e8 282F      		std Y+8,r26
+ 1078 05ea 30E0      		std Y+9,r27
+ 1079 05ec 40E0      		rjmp .L31
+ 1080 05ee 50E0      	.L32:
+ 1082 05f2 9A81      	.LM83:
+ 1083 05f4 AB81      		ldd r24,Y+1
+ 1084 05f6 BC81      		ldd r25,Y+2
+ 1085 05f8 822B      		ldd r26,Y+3
+ 1086 05fa 932B      		ldd r27,Y+4
+ 1087 05fc A42B      		std Y+6,r24
+ 1088 05fe B52B      		std Y+7,r25
+ 1089 0600 8983      		std Y+8,r26
+ 1090 0602 9A83      		std Y+9,r27
+ 1091 0604 AB83      	.L31:
+ 1092 0606 BC83      		ldd r24,Y+6
+ 326:can_at90can128_AB_ID.c **** 		id >>= 5;
+ 1093               	,Y+8
+ 1094               		ldd r27,Y+9
+ 1096 060a 9A81      	.LM84:
+ 1097 060c AB81      		movw r22,r24
+ 1098 060e BC81      		movw r24,r26
+ 1099 0610 6894      	/* epilogue start */
+ 1100 0612 14F8      		adiw r28,9
+ 1101 0614 B695      		in __tmp_reg__,__SREG__
+ 1102 0616 A795      		cli
+ 1103 0618 9795      		out __SP_H__,r29
+ 1104 061a 8795      		out __SREG__,__tmp_reg__
+ 1105 061c 1694      		out __SP_L__,r28
+ 1106 061e 01F4      		pop r28
+ 1107 0620 8983      		pop r29
+ 1108 0622 9A83      		ret
+ 327:can_at90can128_AB_ID.c **** 		
+ 328:can_at90can128_AB_ID.c **** 		return id;
+ 1111               	FBB6-.LFBB6
+ 1113 0628 8981      	.Lscope6:
+ 1117 0630 8E83      	.global	can_set_mob_mode
+ 1119 0634 A887      	can_set_mob_mode:
+ 1121 0638 00C0      	.LM85:
+ 1122               	.LFBB7:
+ 329:can_at90can128_AB_ID.c **** 	}
+ 330:can_at90can128_AB_ID.c **** 	
+ 331:can_at90can128_AB_ID.c **** 	return id;
+ 1123               	ush r28
+ 1124               		rcall .
+ 1125 063a 8981      		rcall .
+ 1126 063c 9A81      		in r28,__SP_L__
+ 1127 063e AB81      		in r29,__SP_H__
+ 1128 0640 BC81      	/* prologue: function */
+ 1129 0642 8E83      	/* frame size = 4 */
+ 1130 0644 9F83      		std Y+1,r24
+ 1131 0646 A887      		std Y+2,r22
+ 1133               	.LM86:
+ 1134 064a 8E81      		ldd r24,Y+2
+ 1135 064c 9F81      		cpi r24,lo8(1)
+ 1136 064e A885      		brne .L35
+ 332:can_at90can128_AB_ID.c **** }
+ 1138               	,lo8(239)
+ 1139               		ldi r27,hi8(239)
+ 1140 0652 BC01      		ldi r30,lo8(239)
+ 1141 0654 CD01      		ldi r31,hi8(239)
+ 1142               		ld r24,Z
+ 1143 0656 2996      		ori r24,lo8(16)
+ 1144 0658 0FB6      		st X,r24
+ 1145 065a F894      		rjmp .L36
+ 1146 065c DEBF      	.L35:
+ 1148 0660 CDBF      	.LM88:
+ 1149 0662 CF91      		ldi r26,lo8(239)
+ 1150 0664 DF91      		ldi r27,hi8(239)
+ 1151 0666 0895      		ldi r30,lo8(239)
+ 1152               		ldi r31,hi8(239)
+ 1153               		ld r24,Z
+ 1154               		andi r24,lo8(-17)
+ 1155               		st X,r24
+ 1156               	.L36:
+ 1158               	.LM89:
+ 1159               		ldd r24,Y+1
+ 1160               		mov r18,r24
+ 1161               		ldi r19,lo8(0)
+ 1162               		std Y+4,r19
+ 333:can_at90can128_AB_ID.c **** /* Set mode for selected MOB */
+ 334:can_at90can128_AB_ID.c **** void can_set_mob_mode(uint8_t mode, uint8_t id_type)
+ 335:can_at90can128_AB_ID.c **** {
+ 1163               	
+ 1164               		ldd r25,Y+4
+ 1165               		cpi r24,2
+ 1166 0668 DF93      		cpc r25,__zero_reg__
+ 1167 066a CF93      		brne .+2
+ 1168 066c 00D0      		rjmp .L40
+ 1169 066e 00D0      		ldd r18,Y+3
+ 1170 0670 CDB7      		ldd r19,Y+4
+ 1171 0672 DEB7      		cpi r18,3
+ 1172               		cpc r19,__zero_reg__
+ 1173               		brge .L43
+ 1174 0674 8983      		ldd r24,Y+3
+ 1175 0676 6A83      		ldd r25,Y+4
+ 336:can_at90can128_AB_ID.c **** 	if (id_type == 1)
+ 1176               		breq .L38
+ 1177               		ldd r18,Y+3
+ 1178 0678 8A81      		ldd r19,Y+4
+ 1179 067a 8130      		cpi r18,1
+ 1180 067c 01F4      		cpc r19,__zero_reg__
+ 337:can_at90can128_AB_ID.c **** 	{
+ 338:can_at90can128_AB_ID.c **** 		setbit(CANCDMOB, IDE);
+ 1181               	 .L39
+ 1182               		rjmp .L44
+ 1183 067e AFEE      	.L43:
+ 1184 0680 B0E0      		ldd r24,Y+3
+ 1185 0682 EFEE      		ldd r25,Y+4
+ 1186 0684 F0E0      		cpi r24,3
+ 1187 0686 8081      		cpc r25,__zero_reg__
+ 1188 0688 8061      		brne .+2
+ 1189 068a 8C93      		rjmp .L41
+ 1190 068c 00C0      		ldd r18,Y+3
+ 1191               		ldd r19,Y+4
+ 339:can_at90can128_AB_ID.c **** 	}
+ 340:can_at90can128_AB_ID.c **** 	else
+ 341:can_at90can128_AB_ID.c **** 	{
+ 342:can_at90can128_AB_ID.c **** 		clearbit(CANCDMOB, IDE);
+ 1192               		cpc r19,__zero_reg__
+ 1193               		brne .+2
+ 1194 068e AFEE      		rjmp .L42
+ 1195 0690 B0E0      		rjmp .L44
+ 1196 0692 EFEE      	.L38:
+ 1198 0696 8081      	.LM90:
+ 1199 0698 8F7E      		ldi r26,lo8(239)
+ 1200 069a 8C93      		ldi r27,hi8(239)
+ 1201               		ldi r30,lo8(239)
+ 343:can_at90can128_AB_ID.c **** 	}
+ 344:can_at90can128_AB_ID.c **** 
+ 345:can_at90can128_AB_ID.c **** 	switch(mode)
+ 1202               	i8(239)
+ 1203               		ld r24,Z
+ 1204 069c 8981      		andi r24,lo8(-65)
+ 1205 069e 282F      		st X,r24
+ 1207 06a2 3C83      	.LM91:
+ 1208 06a4 2B83      		ldi r26,lo8(239)
+ 1209 06a6 8B81      		ldi r27,hi8(239)
+ 1210 06a8 9C81      		ldi r30,lo8(239)
+ 1211 06aa 8230      		ldi r31,hi8(239)
+ 1212 06ac 9105      		ld r24,Z
+ 1213 06ae 01F4      		andi r24,lo8(127)
+ 1214 06b0 00C0      		st X,r24
+ 1216 06b4 3C81      	.LM92:
+ 1217 06b6 2330      		ldi r26,lo8(239)
+ 1218 06b8 3105      		ldi r27,hi8(239)
+ 1219 06ba 04F4      		ldi r30,lo8(239)
+ 1220 06bc 8B81      		ldi r31,hi8(239)
+ 1221 06be 9C81      		ld r24,Z
+ 1222 06c0 0097      		andi r24,lo8(-33)
+ 1223 06c2 01F0      		st X,r24
+ 1225 06c6 3C81      	.LM93:
+ 1226 06c8 2130      		ldi r26,lo8(240)
+ 1227 06ca 3105      		ldi r27,hi8(240)
+ 1228 06cc 01F0      		ldi r30,lo8(240)
+ 1229 06ce 00C0      		ldi r31,hi8(240)
+ 1230               		ld r24,Z
+ 1231 06d0 8B81      		andi r24,lo8(-5)
+ 1232 06d2 9C81      		st X,r24
+ 1234 06d6 9105      	.LM94:
+ 1235 06d8 01F4      		ldi r26,lo8(244)
+ 1236 06da 00C0      		ldi r27,hi8(244)
+ 1237 06dc 2B81      		ldi r30,lo8(244)
+ 1238 06de 3C81      		ldi r31,hi8(244)
+ 1239 06e0 2430      		ld r24,Z
+ 1240 06e2 3105      		andi r24,lo8(-5)
+ 1241 06e4 01F4      		st X,r24
+ 1242 06e6 00C0      		rjmp .L44
+ 1243 06e8 00C0      	.L39:
+ 346:can_at90can128_AB_ID.c **** 	{
+ 347:can_at90can128_AB_ID.c **** 		case DISABLED:
+ 348:can_at90can128_AB_ID.c **** 			clearbit(CANCDMOB, CONMOB0);
+ 1245               		ldi r30,lo8(239)
+ 1246               		ldi r31,hi8(239)
+ 1247 06ea AFEE      		ld r24,Z
+ 1248 06ec B0E0      		ori r24,lo8(64)
+ 1249 06ee EFEE      		st X,r24
+ 1251 06f2 8081      	.LM96:
+ 1252 06f4 8F7B      		ldi r26,lo8(239)
+ 1253 06f6 8C93      		ldi r27,hi8(239)
+ 349:can_at90can128_AB_ID.c **** 			clearbit(CANCDMOB, CONMOB1);
+ 1254               	lo8(239)
+ 1255               		ldi r31,hi8(239)
+ 1256 06f8 AFEE      		ld r24,Z
+ 1257 06fa B0E0      		andi r24,lo8(127)
+ 1258 06fc EFEE      		st X,r24
+ 1260 0700 8081      	.LM97:
+ 1261 0702 8F77      		ldi r26,lo8(239)
+ 1262 0704 8C93      		ldi r27,hi8(239)
+ 350:can_at90can128_AB_ID.c **** 			clearbit(CANCDMOB,RPLV);
+ 1263               	lo8(239)
+ 1264               		ldi r31,hi8(239)
+ 1265 0706 AFEE      		ld r24,Z
+ 1266 0708 B0E0      		andi r24,lo8(-33)
+ 1267 070a EFEE      		st X,r24
+ 1269 070e 8081      	.LM98:
+ 1270 0710 8F7D      		ldi r26,lo8(240)
+ 1271 0712 8C93      		ldi r27,hi8(240)
+ 351:can_at90can128_AB_ID.c **** 			clearbit(CANIDT4, RTRTAG);
+ 1272               	lo8(240)
+ 1273               		ldi r31,hi8(240)
+ 1274 0714 A0EF      		ld r24,Z
+ 1275 0716 B0E0      		andi r24,lo8(-5)
+ 1276 0718 E0EF      		st X,r24
+ 1277 071a F0E0      		rjmp .L44
+ 1278 071c 8081      	.L40:
+ 1280 0720 8C93      	.LM99:
+ 352:can_at90can128_AB_ID.c **** 			clearbit(CANIDM4, RTRMSK);
+ 1281               	lo8(239)
+ 1282               		ldi r27,hi8(239)
+ 1283 0722 A4EF      		ldi r30,lo8(239)
+ 1284 0724 B0E0      		ldi r31,hi8(239)
+ 1285 0726 E4EF      		ld r24,Z
+ 1286 0728 F0E0      		andi r24,lo8(127)
+ 1287 072a 8081      		st X,r24
+ 1289 072e 8C93      	.LM100:
+ 1290 0730 00C0      		ldi r26,lo8(239)
+ 1291               		ldi r27,hi8(239)
+ 353:can_at90can128_AB_ID.c **** 			break;
+ 354:can_at90can128_AB_ID.c **** 		case TRANSMIT_DATA:
+ 355:can_at90can128_AB_ID.c **** 			setbit(CANCDMOB, CONMOB0);
+ 1292               	8(239)
+ 1293               		ldi r31,hi8(239)
+ 1294 0732 AFEE      		ld r24,Z
+ 1295 0734 B0E0      		ori r24,lo8(64)
+ 1296 0736 EFEE      		st X,r24
+ 1298 073a 8081      	.LM101:
+ 1299 073c 8064      		ldi r26,lo8(239)
+ 1300 073e 8C93      		ldi r27,hi8(239)
+ 356:can_at90can128_AB_ID.c **** 			clearbit(CANCDMOB, CONMOB1);
+ 1301               	lo8(239)
+ 1302               		ldi r31,hi8(239)
+ 1303 0740 AFEE      		ld r24,Z
+ 1304 0742 B0E0      		andi r24,lo8(-33)
+ 1305 0744 EFEE      		st X,r24
+ 1307 0748 8081      	.LM102:
+ 1308 074a 8F77      		ldi r26,lo8(240)
+ 1309 074c 8C93      		ldi r27,hi8(240)
+ 357:can_at90can128_AB_ID.c **** 			clearbit(CANCDMOB,RPLV);
+ 1310               	lo8(240)
+ 1311               		ldi r31,hi8(240)
+ 1312 074e AFEE      		ld r24,Z
+ 1313 0750 B0E0      		ori r24,lo8(4)
+ 1314 0752 EFEE      		st X,r24
+ 1315 0754 F0E0      		rjmp .L44
+ 1316 0756 8081      	.L41:
+ 1318 075a 8C93      	.LM103:
+ 358:can_at90can128_AB_ID.c **** 			clearbit(CANIDT4, RTRTAG);
+ 1319               	lo8(239)
+ 1320               		ldi r27,hi8(239)
+ 1321 075c A0EF      		ldi r30,lo8(239)
+ 1322 075e B0E0      		ldi r31,hi8(239)
+ 1323 0760 E0EF      		ld r24,Z
+ 1324 0762 F0E0      		andi r24,lo8(-65)
+ 1325 0764 8081      		st X,r24
+ 1327 0768 8C93      	.LM104:
+ 1328 076a 00C0      		ldi r26,lo8(239)
+ 1329               		ldi r27,hi8(239)
+ 359:can_at90can128_AB_ID.c **** 			break;
+ 360:can_at90can128_AB_ID.c **** 		case TRANSMIT_REMOTE:
+ 361:can_at90can128_AB_ID.c **** 			clearbit(CANCDMOB, CONMOB1);
+ 1330               	8(239)
+ 1331               		ldi r31,hi8(239)
+ 1332 076c AFEE      		ld r24,Z
+ 1333 076e B0E0      		ori r24,lo8(-128)
+ 1334 0770 EFEE      		st X,r24
+ 1336 0774 8081      	.LM105:
+ 1337 0776 8F77      		ldi r26,lo8(239)
+ 1338 0778 8C93      		ldi r27,hi8(239)
+ 362:can_at90can128_AB_ID.c **** 			setbit(CANCDMOB, CONMOB0);
+ 1339               	lo8(239)
+ 1340               		ldi r31,hi8(239)
+ 1341 077a AFEE      		ld r24,Z
+ 1342 077c B0E0      		andi r24,lo8(-33)
+ 1343 077e EFEE      		st X,r24
+ 1345 0782 8081      	.LM106:
+ 1346 0784 8064      		ldi r26,lo8(240)
+ 1347 0786 8C93      		ldi r27,hi8(240)
+ 363:can_at90can128_AB_ID.c **** 			clearbit(CANCDMOB,RPLV);
+ 1348               	lo8(240)
+ 1349               		ldi r31,hi8(240)
+ 1350 0788 AFEE      		ld r24,Z
+ 1351 078a B0E0      		andi r24,lo8(-5)
+ 1352 078c EFEE      		st X,r24
+ 1353 078e F0E0      		rjmp .L44
+ 1354 0790 8081      	.L42:
+ 1356 0794 8C93      	.LM107:
+ 364:can_at90can128_AB_ID.c **** 			setbit(CANIDT4, RTRTAG);
+ 1357               	lo8(239)
+ 1358               		ldi r27,hi8(239)
+ 1359 0796 A0EF      		ldi r30,lo8(239)
+ 1360 0798 B0E0      		ldi r31,hi8(239)
+ 1361 079a E0EF      		ld r24,Z
+ 1362 079c F0E0      		andi r24,lo8(-65)
+ 1363 079e 8081      		st X,r24
+ 1365 07a2 8C93      	.LM108:
+ 1366 07a4 00C0      		ldi r26,lo8(239)
+ 1367               		ldi r27,hi8(239)
+ 365:can_at90can128_AB_ID.c **** 			break;
+ 366:can_at90can128_AB_ID.c **** 		case RECEIVE_DATA:
+ 367:can_at90can128_AB_ID.c **** 			clearbit(CANCDMOB, CONMOB0);
+ 1368               	8(239)
+ 1369               		ldi r31,hi8(239)
+ 1370 07a6 AFEE      		ld r24,Z
+ 1371 07a8 B0E0      		ori r24,lo8(-128)
+ 1372 07aa EFEE      		st X,r24
+ 1374 07ae 8081      	.LM109:
+ 1375 07b0 8F7B      		ldi r26,lo8(239)
+ 1376 07b2 8C93      		ldi r27,hi8(239)
+ 368:can_at90can128_AB_ID.c **** 			setbit(CANCDMOB, CONMOB1);
+ 1377               	lo8(239)
+ 1378               		ldi r31,hi8(239)
+ 1379 07b4 AFEE      		ld r24,Z
+ 1380 07b6 B0E0      		ori r24,lo8(32)
+ 1381 07b8 EFEE      		st X,r24
+ 1383 07bc 8081      	.LM110:
+ 1384 07be 8068      		ldi r26,lo8(240)
+ 1385 07c0 8C93      		ldi r27,hi8(240)
+ 369:can_at90can128_AB_ID.c **** 			clearbit(CANCDMOB,RPLV);
+ 1386               	lo8(240)
+ 1387               		ldi r31,hi8(240)
+ 1388 07c2 AFEE      		ld r24,Z
+ 1389 07c4 B0E0      		ori r24,lo8(4)
+ 1390 07c6 EFEE      		st X,r24
+ 1391 07c8 F0E0      	.L44:
+ 1392 07ca 8081      	/* epilogue start */
+ 1394 07ce 8C93      	.LM111:
+ 370:can_at90can128_AB_ID.c **** 			clearbit(CANIDT4, RTRTAG);
+ 1395               	p_reg__
+ 1396               		pop __tmp_reg__
+ 1397 07d0 A0EF      		pop __tmp_reg__
+ 1398 07d2 B0E0      		pop __tmp_reg__
+ 1399 07d4 E0EF      		pop r28
+ 1400 07d6 F0E0      		pop r29
+ 1401 07d8 8081      		ret
+ 1403 07dc 8C93      	.Lscope7:
+ 1405               	.global	can_get_mob_mode
+ 371:can_at90can128_AB_ID.c **** 			break;
+ 372:can_at90can128_AB_ID.c **** 		case AUTO_REPLY:
+ 373:can_at90can128_AB_ID.c **** 			clearbit(CANCDMOB, CONMOB0);
+ 1406               	get_mob_mode, @function
+ 1407               	can_get_mob_mode:
+ 1409 07e2 B0E0      	.LM112:
+ 1410 07e4 EFEE      	.LFBB8:
+ 1411 07e6 F0E0      		push r29
+ 1412 07e8 8081      		push r28
+ 1413 07ea 8F7B      		push __tmp_reg__
+ 1414 07ec 8C93      		in r28,__SP_L__
+ 374:can_at90can128_AB_ID.c **** 			setbit(CANCDMOB, CONMOB1);
+ 1415               	_SP_H__
+ 1416               	/* prologue: function */
+ 1417 07ee AFEE      	/* frame size = 1 */
+ 1419 07f2 EFEE      	.LM113:
+ 1420 07f4 F0E0      		std Y+1,__zero_reg__
+ 1422 07f8 8068      	.LM114:
+ 1423 07fa 8C93      		ldi r30,lo8(239)
+ 375:can_at90can128_AB_ID.c **** 			setbit(CANCDMOB,RPLV);
+ 1424               	hi8(239)
+ 1425               		ld r24,Z
+ 1426 07fc AFEE      		tst r24
+ 1427 07fe B0E0      		brlt .L46
+ 1428 0800 EFEE      		ldi r30,lo8(239)
+ 1429 0802 F0E0      		ldi r31,hi8(239)
+ 1430 0804 8081      		ld r24,Z
+ 1431 0806 8062      		mov r24,r24
+ 1432 0808 8C93      		ldi r25,lo8(0)
+ 376:can_at90can128_AB_ID.c **** 			setbit(CANIDT4, RTRTAG);
+ 1433               	,lo8(64)
+ 1434               		andi r25,hi8(64)
+ 1435 080a A0EF      		sbiw r24,0
+ 1436 080c B0E0      		brne .L46
+ 1438 0810 F0E0      	.LM115:
+ 1439 0812 8081      		std Y+1,__zero_reg__
+ 1440 0814 8460      		rjmp .L47
+ 1441 0816 8C93      	.L46:
+ 1443               	.LM116:
+ 377:can_at90can128_AB_ID.c **** 			break;
+ 378:can_at90can128_AB_ID.c **** 		default:
+ 379:can_at90can128_AB_ID.c **** 			break;
+ 380:can_at90can128_AB_ID.c **** 	}
+ 381:can_at90can128_AB_ID.c **** }
+ 1444               	8(239)
+ 1445               		ldi r31,hi8(239)
+ 1446 0818 0F90      		ld r24,Z
+ 1447 081a 0F90      		tst r24
+ 1448 081c 0F90      		brlt .L48
+ 1449 081e 0F90      		ldi r30,lo8(239)
+ 1450 0820 CF91      		ldi r31,hi8(239)
+ 1451 0822 DF91      		ld r24,Z
+ 1452 0824 0895      		mov r24,r24
+ 1453               		ldi r25,lo8(0)
+ 1454               		andi r24,lo8(64)
+ 1455               		andi r25,hi8(64)
+ 1456               		sbiw r24,0
+ 1457               		breq .L48
+ 1458               		ldi r30,lo8(240)
+ 382:can_at90can128_AB_ID.c **** /* Get mode for selected MOB */
+ 383:can_at90can128_AB_ID.c **** uint8_t can_get_mob_mode(void)
+ 384:can_at90can128_AB_ID.c **** {
+ 1459               	0)
+ 1460               		ld r24,Z
+ 1461               		mov r24,r24
+ 1462 0826 DF93      		ldi r25,lo8(0)
+ 1463 0828 CF93      		andi r24,lo8(4)
+ 1464 082a 0F92      		andi r25,hi8(4)
+ 1465 082c CDB7      		sbiw r24,0
+ 1466 082e DEB7      		brne .L48
+ 1468               	.LM117:
+ 385:can_at90can128_AB_ID.c **** 	uint8_t	mode;
+ 386:can_at90can128_AB_ID.c **** 	mode = 0;
+ 1469               	o8(1)
+ 1470               		std Y+1,r24
+ 1471 0830 1982      		rjmp .L47
+ 387:can_at90can128_AB_ID.c **** 
+ 388:can_at90can128_AB_ID.c **** 	if (!getbit(CANCDMOB, CONMOB1) && !getbit(CANCDMOB, CONMOB0))
+ 1472               	8:
+ 1474 0832 EFEE      	.LM118:
+ 1475 0834 F0E0      		ldi r30,lo8(239)
+ 1476 0836 8081      		ldi r31,hi8(239)
+ 1477 0838 8823      		ld r24,Z
+ 1478 083a 04F0      		tst r24
+ 1479 083c EFEE      		brlt .L49
+ 1480 083e F0E0      		ldi r30,lo8(239)
+ 1481 0840 8081      		ldi r31,hi8(239)
+ 1482 0842 882F      		ld r24,Z
+ 1483 0844 90E0      		mov r24,r24
+ 1484 0846 8074      		ldi r25,lo8(0)
+ 1485 0848 9070      		andi r24,lo8(64)
+ 1486 084a 0097      		andi r25,hi8(64)
+ 1487 084c 01F4      		sbiw r24,0
+ 389:can_at90can128_AB_ID.c **** 	{
+ 390:can_at90can128_AB_ID.c **** 		mode = DISABLED;
+ 1488               	r30,lo8(240)
+ 1489               		ldi r31,hi8(240)
+ 1490 084e 1982      		ld r24,Z
+ 1491 0850 00C0      		mov r24,r24
+ 1492               		ldi r25,lo8(0)
+ 391:can_at90can128_AB_ID.c **** 	}
+ 392:can_at90can128_AB_ID.c **** 	else if (!getbit(CANCDMOB, CONMOB1) && getbit(CANCDMOB, CONMOB0) && !getbit(CANIDT4, RTRTAG))
+ 1493               	 r24,lo8(4)
+ 1494               		andi r25,hi8(4)
+ 1495 0852 EFEE      		sbiw r24,0
+ 1496 0854 F0E0      		breq .L49
+ 1498 0858 8823      	.LM119:
+ 1499 085a 04F0      		ldi r24,lo8(2)
+ 1500 085c EFEE      		std Y+1,r24
+ 1501 085e F0E0      		rjmp .L47
+ 1502 0860 8081      	.L49:
+ 1504 0864 90E0      	.LM120:
+ 1505 0866 8074      		ldi r30,lo8(239)
+ 1506 0868 9070      		ldi r31,hi8(239)
+ 1507 086a 0097      		ld r24,Z
+ 1508 086c 01F0      		tst r24
+ 1509 086e E0EF      		brge .L50
+ 1510 0870 F0E0      		ldi r30,lo8(239)
+ 1511 0872 8081      		ldi r31,hi8(239)
+ 1512 0874 882F      		ld r24,Z
+ 1513 0876 90E0      		mov r24,r24
+ 1514 0878 8470      		ldi r25,lo8(0)
+ 1515 087a 9070      		andi r24,lo8(64)
+ 1516 087c 0097      		andi r25,hi8(64)
+ 1517 087e 01F4      		sbiw r24,0
+ 393:can_at90can128_AB_ID.c **** 	{
+ 394:can_at90can128_AB_ID.c **** 		mode = TRANSMIT_DATA;
+ 1518               	40)
+ 1519               		ldi r31,hi8(240)
+ 1520 0880 81E0      		ld r24,Z
+ 1521 0882 8983      		mov r24,r24
+ 1522 0884 00C0      		ldi r25,lo8(0)
+ 1523               		andi r24,lo8(4)
+ 395:can_at90can128_AB_ID.c **** 	}
+ 396:can_at90can128_AB_ID.c **** 	else if (!getbit(CANCDMOB, CONMOB1) && getbit(CANCDMOB, CONMOB0) && getbit(CANIDT4, RTRTAG))
+ 1524               	r25,hi8(4)
+ 1525               		sbiw r24,0
+ 1526 0886 EFEE      		brne .L50
+ 1528 088a 8081      	.LM121:
+ 1529 088c 8823      		ldi r24,lo8(3)
+ 1530 088e 04F0      		std Y+1,r24
+ 1531 0890 EFEE      		rjmp .L47
+ 1532 0892 F0E0      	.L50:
+ 1534 0896 882F      	.LM122:
+ 1535 0898 90E0      		ldi r30,lo8(239)
+ 1536 089a 8074      		ldi r31,hi8(239)
+ 1537 089c 9070      		ld r24,Z
+ 1538 089e 0097      		tst r24
+ 1539 08a0 01F0      		brge .L47
+ 1540 08a2 E0EF      		ldi r30,lo8(239)
+ 1541 08a4 F0E0      		ldi r31,hi8(239)
+ 1542 08a6 8081      		ld r24,Z
+ 1543 08a8 882F      		mov r24,r24
+ 1544 08aa 90E0      		ldi r25,lo8(0)
+ 1545 08ac 8470      		andi r24,lo8(64)
+ 1546 08ae 9070      		andi r25,hi8(64)
+ 1547 08b0 0097      		sbiw r24,0
+ 1548 08b2 01F0      		brne .L47
+ 397:can_at90can128_AB_ID.c **** 	{
+ 398:can_at90can128_AB_ID.c **** 		mode = TRANSMIT_REMOTE;
+ 1549               	1,hi8(239)
+ 1550               		ld r24,Z
+ 1551 08b4 82E0      		mov r24,r24
+ 1552 08b6 8983      		ldi r25,lo8(0)
+ 1553 08b8 00C0      		andi r24,lo8(32)
+ 1554               		andi r25,hi8(32)
+ 399:can_at90can128_AB_ID.c **** 	}
+ 400:can_at90can128_AB_ID.c **** 	else if (getbit(CANCDMOB, CONMOB1) && !getbit(CANCDMOB, CONMOB0) && !getbit(CANIDT4, RTRTAG))
+ 1555               	r24,0
+ 1556               		breq .L47
+ 1557 08ba EFEE      		ldi r30,lo8(240)
+ 1558 08bc F0E0      		ldi r31,hi8(240)
+ 1559 08be 8081      		ld r24,Z
+ 1560 08c0 8823      		mov r24,r24
+ 1561 08c2 04F4      		ldi r25,lo8(0)
+ 1562 08c4 EFEE      		andi r24,lo8(4)
+ 1563 08c6 F0E0      		andi r25,hi8(4)
+ 1564 08c8 8081      		sbiw r24,0
+ 1565 08ca 882F      		breq .L47
+ 1567 08ce 8074      	.LM123:
+ 1568 08d0 9070      		ldi r24,lo8(4)
+ 1569 08d2 0097      		std Y+1,r24
+ 1570 08d4 01F4      	.L47:
+ 1572 08d8 F0E0      	.LM124:
+ 1573 08da 8081      		ldd r24,Y+1
+ 1574 08dc 882F      	/* epilogue start */
+ 1576 08e0 8470      	.LM125:
+ 1577 08e2 9070      		pop __tmp_reg__
+ 1578 08e4 0097      		pop r28
+ 1579 08e6 01F4      		pop r29
+ 401:can_at90can128_AB_ID.c **** 	{
+ 402:can_at90can128_AB_ID.c **** 		mode = RECEIVE_DATA;
+ 1580               	ode, .-can_get_mob_mode
+ 1584 08ec 00C0      	.Lscope8:
+ 403:can_at90can128_AB_ID.c **** 	}else if (getbit(CANCDMOB, CONMOB1) && !getbit(CANCDMOB, CONMOB0) && getbit(CANCDMOB,RPLV) && getb
+ 1586               	s	"data:p(7,7)=*(5,2)",160,0,0,2
+ 1588 08ee EFEE      	.global	can_set_mob_data
+ 1590 08f2 8081      	can_set_mob_data:
+ 1592 08f6 04F4      	.LM126:
+ 1593 08f8 EFEE      	.LFBB9:
+ 1594 08fa F0E0      		push r29
+ 1595 08fc 8081      		push r28
+ 1596 08fe 882F      		rcall .
+ 1597 0900 90E0      		rcall .
+ 1598 0902 8074      		in r28,__SP_L__
+ 1599 0904 9070      		in r29,__SP_H__
+ 1600 0906 0097      	/* prologue: function */
+ 1601 0908 01F4      	/* frame size = 4 */
+ 1602 090a EFEE      		std Y+3,r25
+ 1603 090c F0E0      		std Y+2,r24
+ 1604 090e 8081      		std Y+4,r22
+ 1606 0912 90E0      	.LM127:
+ 1607 0914 8072      		ldi r26,lo8(239)
+ 1608 0916 9070      		ldi r27,hi8(239)
+ 1609 0918 0097      		ldi r30,lo8(239)
+ 1610 091a 01F0      		ldi r31,hi8(239)
+ 1611 091c E0EF      		ld r24,Z
+ 1612 091e F0E0      		mov r25,r24
+ 1613 0920 8081      		andi r25,lo8(-16)
+ 1614 0922 882F      		ldd r24,Y+4
+ 1615 0924 90E0      		or r24,r25
+ 1616 0926 8470      		st X,r24
+ 1618 092a 0097      	.LM128:
+ 1619 092c 01F0      		std Y+1,__zero_reg__
+ 404:can_at90can128_AB_ID.c **** 	{
+ 405:can_at90can128_AB_ID.c **** 		mode = AUTO_REPLY;
+ 1620               	.LM129-.LFBB9
+ 1621               	.LM129:
+ 1622 092e 84E0      		ldi r26,lo8(250)
+ 1623 0930 8983      		ldi r27,hi8(250)
+ 1624               		ldd r24,Y+1
+ 406:can_at90can128_AB_ID.c **** 	}
+ 407:can_at90can128_AB_ID.c **** 
+ 408:can_at90can128_AB_ID.c **** 	return mode;
+ 1625               	r18,r24
+ 1626               		ldi r19,lo8(0)
+ 1627 0932 8981      		ldd r24,Y+2
+ 1628               		ldd r25,Y+3
+ 409:can_at90can128_AB_ID.c **** }
+ 1629               	w r30,r24
+ 1630               		add r30,r18
+ 1631 0934 0F90      		adc r31,r19
+ 1632 0936 CF91      		ld r24,Z
+ 1633 0938 DF91      		st X,r24
+ 1635               	.LM130:
+ 1636               		ldd r24,Y+1
+ 1637               		subi r24,lo8(-(1))
+ 1638               		std Y+1,r24
+ 1639               	.L53:
+ 1640               		ldd r25,Y+1
+ 1641               		ldd r24,Y+4
+ 1642               		cp r25,r24
+ 1643               		brlo .L54
+ 1644               	/* epilogue start */
+ 410:can_at90can128_AB_ID.c **** /* Set data length for selected MOB */
+ 411:can_at90can128_AB_ID.c **** void can_set_mob_data(uint8_t *data, uint8_t length)
+ 412:can_at90can128_AB_ID.c **** {
+ 1646               	p_reg__
+ 1647               		pop __tmp_reg__
+ 1648               		pop __tmp_reg__
+ 1649 093c DF93      		pop __tmp_reg__
+ 1650 093e CF93      		pop r28
+ 1651 0940 00D0      		pop r29
+ 1652 0942 00D0      		ret
+ 1657 0948 9B83      	.Lscope9:
+ 1659 094c 6C83      	.global	can_get_mob_data
+ 413:can_at90can128_AB_ID.c **** 	uint8_t	i;
+ 414:can_at90can128_AB_ID.c **** 	
+ 415:can_at90can128_AB_ID.c ****     CANCDMOB = (CANCDMOB & 0xf0) | length;
+ 1660               	_mob_data, @function
+ 1661               	can_get_mob_data:
+ 1663 0950 B0E0      	.LM132:
+ 1664 0952 EFEE      	.LFBB10:
+ 1665 0954 F0E0      		push r29
+ 1666 0956 8081      		push r28
+ 1667 0958 982F      		in r28,__SP_L__
+ 1668 095a 907F      		in r29,__SP_H__
+ 1669 095c 8C81      		sbiw r28,26
+ 1670 095e 892B      		in __tmp_reg__,__SREG__
+ 1671 0960 8C93      		cli
+ 416:can_at90can128_AB_ID.c **** 
+ 417:can_at90can128_AB_ID.c **** 	for(i = 0; i < length; i++){
+ 1672               	_,r29
+ 1673               		out __SREG__,__tmp_reg__
+ 1674 0962 1982      		out __SP_L__,r28
+ 1675 0964 00C0      	/* prologue: function */
+ 1676               	/* frame size = 26 */
+ 418:can_at90can128_AB_ID.c **** 		CANMSG	= data[i];
+ 1677               	Y+21,r25
+ 1678               		std Y+20,r24
+ 1680 0968 B0E0      	.LM133:
+ 1681 096a 8981      		std Y+1,__zero_reg__
+ 1682 096c 282F      		rjmp .L57
+ 1683 096e 30E0      	.L58:
+ 1685 0972 9B81      	.LM134:
+ 1686 0974 FC01      		ldd r24,Y+1
+ 1687 0976 E20F      		mov r18,r24
+ 1688 0978 F31F      		ldi r19,lo8(0)
+ 1689 097a 8081      		ldi r30,lo8(250)
+ 1690 097c 8C93      		ldi r31,hi8(250)
+ 1691               		ld r20,Z
+ 1692               		movw r24,r28
+ 1693 097e 8981      		adiw r24,12
+ 1694 0980 8F5F      		movw r30,r24
+ 1695 0982 8983      		add r30,r18
+ 1696               		adc r31,r19
+ 1697 0984 9981      		st Z,r20
+ 1699 0988 9817      	.LM135:
+ 1700 098a 00F0      		ldd r24,Y+1
+ 1701               		subi r24,lo8(-(1))
+ 419:can_at90can128_AB_ID.c **** 	}
+ 420:can_at90can128_AB_ID.c **** }
+ 1702               	24,Y+1
+ 1703               		cpi r24,lo8(8)
+ 1704 098c 0F90      		brlo .L58
+ 1706 0990 0F90      	.LM136:
+ 1707 0992 0F90      		ldd r24,Y+20
+ 1708 0994 CF91      		ldd r25,Y+21
+ 1709 0996 DF91      		std Y+23,r25
+ 1710 0998 0895      		std Y+22,r24
+ 1711               		movw r30,r28
+ 1712               		adiw r30,2
+ 1713               		std Y+25,r31
+ 1714               		std Y+24,r30
+ 1715               		ldi r31,lo8(18)
+ 1716               		std Y+26,r31
+ 1717               	.L59:
+ 1718               		ldd r30,Y+24
+ 1719               		ldd r31,Y+25
+ 421:can_at90can128_AB_ID.c **** /* Get data for selected MOB */
+ 422:can_at90can128_AB_ID.c **** can_message can_get_mob_data(void)
+ 423:can_at90can128_AB_ID.c **** {
+ 1720               	Y+24
+ 1721               		ldd r25,Y+25
+ 1722               		adiw r24,1
+ 1723 099a DF93      		std Y+25,r25
+ 1724 099c CF93      		std Y+24,r24
+ 1725 099e CDB7      		ldd r30,Y+22
+ 1726 09a0 DEB7      		ldd r31,Y+23
+ 1727 09a2 6A97      		st Z,r0
+ 1728 09a4 0FB6      		ldd r24,Y+22
+ 1729 09a6 F894      		ldd r25,Y+23
+ 1730 09a8 DEBF      		adiw r24,1
+ 1731 09aa 0FBE      		std Y+23,r25
+ 1732 09ac CDBF      		std Y+22,r24
+ 1733               		ldd r25,Y+26
+ 1734               		subi r25,lo8(-(-1))
+ 1735 09ae 9D8B      		std Y+26,r25
+ 1736 09b0 8C8B      		ldd r30,Y+26
+ 424:can_at90can128_AB_ID.c **** 	uint8_t	i;
+ 425:can_at90can128_AB_ID.c **** 	can_message	msg;
+ 426:can_at90can128_AB_ID.c **** 
+ 427:can_at90can128_AB_ID.c **** 	for (i = 0; i < 8; i++)
+ 1737               	59
+ 1739 09b2 1982      	.LM137:
+ 1740 09b4 00C0      		ldd r24,Y+20
+ 1741               		ldd r25,Y+21
+ 428:can_at90can128_AB_ID.c **** 	{
+ 429:can_at90can128_AB_ID.c **** 		msg.data[i]	= CANMSG;
+ 1742               	ilogue start */
+ 1743               		adiw r28,26
+ 1744 09b6 8981      		in __tmp_reg__,__SREG__
+ 1745 09b8 282F      		cli
+ 1746 09ba 30E0      		out __SP_H__,r29
+ 1747 09bc EAEF      		out __SREG__,__tmp_reg__
+ 1748 09be F0E0      		out __SP_L__,r28
+ 1749 09c0 4081      		pop r28
+ 1750 09c2 CE01      		pop r29
+ 1751 09c4 0C96      		ret
+ 1757               	.Lscope10:
+ 1760 09d2 8983      	.global	can_set_mob_interrupt
+ 1762 09d4 8981      	can_set_mob_interrupt:
+ 1764 09d8 00F0      	.LM138:
+ 430:can_at90can128_AB_ID.c **** 	}
+ 431:can_at90can128_AB_ID.c **** 
+ 432:can_at90can128_AB_ID.c **** 	return msg;
+ 1765               	h r28
+ 1766               		push __tmp_reg__
+ 1767 09da 8C89      		in r28,__SP_L__
+ 1768 09dc 9D89      		in r29,__SP_H__
+ 1769 09de 9F8B      	/* prologue: function */
+ 1770 09e0 8E8B      	/* frame size = 1 */
+ 1771 09e2 FE01      		std Y+1,r24
+ 1773 09e6 F98F      	.LM139:
+ 1774 09e8 E88F      		ldd r24,Y+1
+ 1775 09ea F2E1      		cpi r24,lo8(8)
+ 1776 09ec FA8F      		brsh .L62
+ 1778 09ee E88D      	.LM140:
+ 1779 09f0 F98D      		ldi r26,lo8(222)
+ 1780 09f2 0080      		ldi r27,hi8(222)
+ 1781 09f4 888D      		ldi r30,lo8(222)
+ 1782 09f6 998D      		ldi r31,hi8(222)
+ 1783 09f8 0196      		ld r24,Z
+ 1784 09fa 998F      		mov r20,r24
+ 1785 09fc 888F      		ldd r24,Y+1
+ 1786 09fe EE89      		mov r18,r24
+ 1787 0a00 FF89      		ldi r19,lo8(0)
+ 1788 0a02 0082      		ldi r24,lo8(1)
+ 1789 0a04 8E89      		ldi r25,hi8(1)
+ 1790 0a06 9F89      		mov r0,r18
+ 1791 0a08 0196      		rjmp 2f
+ 1792 0a0a 9F8B      	1:	lsl r24
+ 1793 0a0c 8E8B      		rol r25
+ 1794 0a0e 9A8D      	2:	dec r0
+ 1795 0a10 9150      		brpl 1b
+ 1796 0a12 9A8F      		or r24,r20
+ 1797 0a14 EA8D      		st X,r24
+ 1798 0a16 EE23      		rjmp .L64
+ 1799 0a18 01F4      	.L62:
+ 433:can_at90can128_AB_ID.c **** }
+ 1800               	141:
+ 1801               		ldd r24,Y+1
+ 1802 0a1a 8C89      		cpi r24,lo8(8)
+ 1803 0a1c 9D89      		brlo .L64
+ 1804               		ldd r24,Y+1
+ 1805 0a1e 6A96      		cpi r24,lo8(15)
+ 1806 0a20 0FB6      		brsh .L64
+ 1808 0a24 DEBF      	.LM142:
+ 1809 0a26 0FBE      		ldi r26,lo8(223)
+ 1810 0a28 CDBF      		ldi r27,hi8(223)
+ 1811 0a2a CF91      		ldi r30,lo8(223)
+ 1812 0a2c DF91      		ldi r31,hi8(223)
+ 1813 0a2e 0895      		ld r24,Z
+ 1814               		mov r20,r24
+ 1815               		ldd r24,Y+1
+ 1816               		mov r24,r24
+ 1817               		ldi r25,lo8(0)
+ 1818               		movw r18,r24
+ 1819               		subi r18,lo8(-(-8))
+ 1820               		sbci r19,hi8(-(-8))
+ 1821               		ldi r24,lo8(1)
+ 1822               		ldi r25,hi8(1)
+ 1823               		mov r0,r18
+ 1824               		rjmp 2f
+ 434:can_at90can128_AB_ID.c **** /* Set interrupt for given MOB */
+ 435:can_at90can128_AB_ID.c **** void can_set_mob_interrupt(uint8_t object)
+ 436:can_at90can128_AB_ID.c **** {
+ 1825               	c r0
+ 1826               		brpl 1b
+ 1827               		or r24,r20
+ 1828 0a30 DF93      		st X,r24
+ 1829 0a32 CF93      	.L64:
+ 1830 0a34 0F92      	/* epilogue start */
+ 1832 0a38 DEB7      	.LM143:
+ 1833               		pop __tmp_reg__
+ 1834               		pop r28
+ 1835 0a3a 8983      		pop r29
+ 437:can_at90can128_AB_ID.c **** 	if ((object >= 0) && (object <= 7))
+ 1836               		can_set_mob_interrupt, .-can_set_mob_interrupt
+ 1837               	.Lscope11:
+ 1839 0a3e 8830      	.global	can_get_mob_interrupt
+ 438:can_at90can128_AB_ID.c **** 	{
+ 439:can_at90can128_AB_ID.c **** 		CANIE2 |= (0x01 << object);
+ 1841               	et_mob_interrupt:
+ 1843 0a42 AEED      	.LM144:
+ 1844 0a44 B0E0      	.LFBB12:
+ 1845 0a46 EEED      		push r29
+ 1846 0a48 F0E0      		push r28
+ 1847 0a4a 8081      		rcall .
+ 1848 0a4c 482F      		rcall .
+ 1849 0a4e 8981      		in r28,__SP_L__
+ 1850 0a50 282F      		in r29,__SP_H__
+ 1851 0a52 30E0      	/* prologue: function */
+ 1852 0a54 81E0      	/* frame size = 4 */
+ 1854 0a58 022E      	.LM145:
+ 1855 0a5a 00C0      		ldi r30,lo8(224)
+ 1856 0a5c 880F      		ldi r31,hi8(224)
+ 1857 0a5e 991F      		ld r24,Z
+ 1858 0a60 0A94      		mov r18,r24
+ 1859 0a62 02F4      		ldi r19,lo8(0)
+ 1860 0a64 842B      		ldi r30,lo8(225)
+ 1861 0a66 8C93      		ldi r31,hi8(225)
+ 1862 0a68 00C0      		ld r24,Z
+ 1863               		mov r24,r24
+ 440:can_at90can128_AB_ID.c **** 	}
+ 441:can_at90can128_AB_ID.c **** 	else if ((object >= 8) && (object <= 14))
+ 1864               	5,r24
+ 1865               		clr r24
+ 1866 0a6a 8981      		or r24,r18
+ 1867 0a6c 8830      		or r25,r19
+ 1868 0a6e 00F0      		std Y+2,r25
+ 1869 0a70 8981      		std Y+1,r24
+ 1871 0a74 00F4      	.LM146:
+ 442:can_at90can128_AB_ID.c **** 	{
+ 443:can_at90can128_AB_ID.c **** 		CANIE1 |= (0x01 << (object - 8));
+ 1872               	,Y+1
+ 1873               		ldd r25,Y+2
+ 1874 0a76 AFED      		sbiw r24,0
+ 1875 0a78 B0E0      		brne .L66
+ 1877 0a7c F0E0      	.LM147:
+ 1878 0a7e 8081      		ldi r24,lo8(-1)
+ 1879 0a80 482F      		std Y+4,r24
+ 1880 0a82 8981      		rjmp .L67
+ 1881 0a84 882F      	.L66:
+ 1883 0a88 9C01      	.LM148:
+ 1884 0a8a 2850      		std Y+3,__zero_reg__
+ 1885 0a8c 3040      		rjmp .L68
+ 1886 0a8e 81E0      	.L69:
+ 1888 0a92 022E      	.LM149:
+ 1889 0a94 00C0      		ldd r24,Y+1
+ 1890 0a96 880F      		ldd r25,Y+2
+ 1891 0a98 991F      		lsr r25
+ 1892 0a9a 0A94      		ror r24
+ 1893 0a9c 02F4      		std Y+2,r25
+ 1894 0a9e 842B      		std Y+1,r24
+ 1896               	.LM150:
+ 1897               		ldd r24,Y+3
+ 444:can_at90can128_AB_ID.c **** 	}
+ 445:can_at90can128_AB_ID.c **** }
+ 1898               	+3,r24
+ 1899               	.L68:
+ 1900 0aa2 0F90      		ldd r24,Y+1
+ 1901 0aa4 CF91      		ldd r25,Y+2
+ 1902 0aa6 DF91      		andi r24,lo8(1)
+ 1903 0aa8 0895      		andi r25,hi8(1)
+ 1904               		sbiw r24,0
+ 1905               		breq .L69
+ 1907               	.LM151:
+ 1908               		ldd r24,Y+3
+ 1909               		cpi r24,lo8(15)
+ 446:can_at90can128_AB_ID.c **** /* Get MOB which has forced an interrupt */
+ 447:can_at90can128_AB_ID.c **** uint8_t can_get_mob_interrupt(void)
+ 448:can_at90can128_AB_ID.c **** {
+ 1911               	.LM152:
+ 1912               		ldi r24,lo8(-1)
+ 1913 0aaa DF93      		std Y+4,r24
+ 1914 0aac CF93      		rjmp .L67
+ 1915 0aae 00D0      	.L70:
+ 1917 0ab2 CDB7      	.LM153:
+ 1918 0ab4 DEB7      		ldd r24,Y+3
+ 1919               		std Y+4,r24
+ 1920               	.L67:
+ 449:can_at90can128_AB_ID.c **** 	uint8_t mob;
+ 450:can_at90can128_AB_ID.c **** 	uint16_t maske;
+ 451:can_at90can128_AB_ID.c **** 	
+ 452:can_at90can128_AB_ID.c **** 	maske = CANSIT2 | (CANSIT1 << 8);
+ 1921               	4
+ 1922               	/* epilogue start */
+ 1924 0ab8 F0E0      	.LM154:
+ 1925 0aba 8081      		pop __tmp_reg__
+ 1926 0abc 282F      		pop __tmp_reg__
+ 1927 0abe 30E0      		pop __tmp_reg__
+ 1928 0ac0 E1EE      		pop __tmp_reg__
+ 1929 0ac2 F0E0      		pop r28
+ 1930 0ac4 8081      		pop r29
+ 1931 0ac6 882F      		ret
+ 1937 0ad2 9A83      	.Lscope12:
+ 453:can_at90can128_AB_ID.c **** 	// Error if mask equals zero
+ 454:can_at90can128_AB_ID.c **** 	if (maske == 0)
+ 1939               	5,2)",160,0,0,1
+ 1940               	.global	can_clear_mob_interrupt
+ 1942 0ad8 9A81      	can_clear_mob_interrupt:
+ 1944 0adc 01F4      	.LM155:
+ 455:can_at90can128_AB_ID.c **** 	{
+ 456:can_at90can128_AB_ID.c **** 		return NOMOB;
+ 1945               	3:
+ 1946               		push r29
+ 1947 0ade 8FEF      		push r28
+ 1948 0ae0 8C83      		push __tmp_reg__
+ 1949 0ae2 00C0      		in r28,__SP_L__
+ 1950               		in r29,__SP_H__
+ 457:can_at90can128_AB_ID.c **** 	}
+ 458:can_at90can128_AB_ID.c **** 	// Right shifting mask, number of shifts equals MOB number
+ 459:can_at90can128_AB_ID.c **** 	for (mob = 0; (maske & 0x01) == 0; mob++)
+ 1951               	logue: function */
+ 1952               	/* frame size = 1 */
+ 1953 0ae4 1B82      		std Y+1,r24
+ 1955               	.LM156:
+ 460:can_at90can128_AB_ID.c **** 	{
+ 461:can_at90can128_AB_ID.c **** 		maske >>= 1;
+ 1956               	r24,Y+1
+ 1957               		cpi r24,lo8(8)
+ 1958 0ae8 8981      		brsh .L73
+ 1960 0aec 9695      	.LM157:
+ 1961 0aee 8795      		ldi r26,lo8(222)
+ 1962 0af0 9A83      		ldi r27,hi8(222)
+ 1963 0af2 8983      		ldi r30,lo8(222)
+ 1964               		ldi r31,hi8(222)
+ 1965               		ld r24,Z
+ 1966 0af4 8B81      		mov r20,r24
+ 1967 0af6 8F5F      		ldd r24,Y+1
+ 1968 0af8 8B83      		mov r18,r24
+ 1969               		ldi r19,lo8(0)
+ 1970 0afa 8981      		ldi r24,lo8(1)
+ 1971 0afc 9A81      		ldi r25,hi8(1)
+ 1972 0afe 8170      		mov r0,r18
+ 1973 0b00 9070      		rjmp 2f
+ 1974 0b02 0097      	1:	lsl r24
+ 1975 0b04 01F0      		rol r25
+ 462:can_at90can128_AB_ID.c **** 	}
+ 463:can_at90can128_AB_ID.c **** 	//  Error if MOB number not in range
+ 464:can_at90can128_AB_ID.c **** 	if (mob > (MOBS_NUM - 1))
+ 1976               	com r24
+ 1977               		and r24,r20
+ 1978 0b06 8B81      		st X,r24
+ 1979 0b08 8F30      		rjmp .L75
+ 1980 0b0a 00F0      	.L73:
+ 465:can_at90can128_AB_ID.c **** 	{
+ 466:can_at90can128_AB_ID.c **** 		return NOMOB;
+ 1981               	bn	68,0,480,.LM158-.LFBB13
+ 1982               	.LM158:
+ 1983 0b0c 8FEF      		ldd r24,Y+1
+ 1984 0b0e 8C83      		cpi r24,lo8(8)
+ 1985 0b10 00C0      		brlo .L75
+ 1986               		ldd r24,Y+1
+ 467:can_at90can128_AB_ID.c **** 	}
+ 468:can_at90can128_AB_ID.c **** 	else
+ 469:can_at90can128_AB_ID.c **** 	{
+ 470:can_at90can128_AB_ID.c **** 		return mob;
+ 1987               	24,lo8(15)
+ 1988               		brsh .L75
+ 1990 0b14 8C83      	.LM159:
+ 1991               		ldi r26,lo8(223)
+ 1992 0b16 8C81      		ldi r27,hi8(223)
+ 1993               		ldi r30,lo8(223)
+ 471:can_at90can128_AB_ID.c **** 	}
+ 472:can_at90can128_AB_ID.c **** }
+ 1994               	1,hi8(223)
+ 1995               		ld r24,Z
+ 1996 0b18 0F90      		mov r20,r24
+ 1997 0b1a 0F90      		ldd r24,Y+1
+ 1998 0b1c 0F90      		mov r24,r24
+ 1999 0b1e 0F90      		ldi r25,lo8(0)
+ 2000 0b20 CF91      		movw r18,r24
+ 2001 0b22 DF91      		subi r18,lo8(-(-8))
+ 2002 0b24 0895      		sbci r19,hi8(-(-8))
+ 2003               		ldi r24,lo8(1)
+ 2004               		ldi r25,hi8(1)
+ 2005               		mov r0,r18
+ 2006               		rjmp 2f
+ 2007               	1:	lsl r24
+ 2008               		rol r25
+ 2009               	2:	dec r0
+ 2010               		brpl 1b
+ 2011               		com r24
+ 2012               		and r24,r20
+ 2013               		st X,r24
+ 473:can_at90can128_AB_ID.c **** /* Clear interrupt for given MOB */
+ 474:can_at90can128_AB_ID.c **** void can_clear_mob_interrupt(uint8_t object)
+ 475:can_at90can128_AB_ID.c **** {
+ 2014               	art */
+ 2016               	.LM160:
+ 2017 0b26 DF93      		pop __tmp_reg__
+ 2018 0b28 CF93      		pop r28
+ 2019 0b2a 0F92      		pop r29
+ 2020 0b2c CDB7      		ret
+ 2022               	.Lscope13:
+ 476:can_at90can128_AB_ID.c **** 	if ((object >= 0) && (object <= 7))
+ 2025               	tmode:p(5,2)",160,0,0,4
+ 2026               	.global	can_init
+ 2028 0b34 8830      	can_init:
+ 477:can_at90can128_AB_ID.c **** 	{
+ 478:can_at90can128_AB_ID.c **** 		CANIE2 &= ~(0x01 << object);
+ 2030               	1:
+ 2031               	.LFBB14:
+ 2032 0b38 AEED      		push r29
+ 2033 0b3a B0E0      		push r28
+ 2034 0b3c EEED      		rcall .
+ 2035 0b3e F0E0      		rcall .
+ 2036 0b40 8081      		in r28,__SP_L__
+ 2037 0b42 482F      		in r29,__SP_H__
+ 2038 0b44 8981      	/* prologue: function */
+ 2039 0b46 282F      	/* frame size = 4 */
+ 2040 0b48 30E0      		std Y+3,r25
+ 2041 0b4a 81E0      		std Y+2,r24
+ 2042 0b4c 90E0      		std Y+4,r22
+ 2044 0b50 00C0      	.LM162:
+ 2045 0b52 880F      		ldi r24,lo8(1)
+ 2046 0b54 991F      		std Y+1,r24
+ 2048 0b58 02F4      	.LM163:
+ 2049 0b5a 8095      		ldi r26,lo8(216)
+ 2050 0b5c 8423      		ldi r27,hi8(216)
+ 2051 0b5e 8C93      		ldi r30,lo8(216)
+ 2052 0b60 00C0      		ldi r31,hi8(216)
+ 2053               		ld r24,Z
+ 479:can_at90can128_AB_ID.c **** 	}
+ 480:can_at90can128_AB_ID.c **** 	else if ((object >= 8) && (object <= 14))
+ 2054               	4
+ 2056 0b62 8981      	.LM164:
+ 2057 0b64 8830      		ldi r24,lo8(125)
+ 2058 0b66 00F0      		ldi r25,hi8(125)
+ 2059 0b68 8981      		call can_set_baudrate
+ 2061 0b6c 00F4      	.LM165:
+ 481:can_at90can128_AB_ID.c **** 	{
+ 482:can_at90can128_AB_ID.c **** 		CANIE1 &= ~(0x01 << (object - 8));
+ 2062               	,Y+4
+ 2063               		call can_set_interrupt
+ 2065 0b70 B0E0      	.LM166:
+ 2066 0b72 EFED      		ldi r26,lo8(216)
+ 2067 0b74 F0E0      		ldi r27,hi8(216)
+ 2068 0b76 8081      		ldi r30,lo8(216)
+ 2069 0b78 482F      		ldi r31,hi8(216)
+ 2070 0b7a 8981      		ld r24,Z
+ 2071 0b7c 882F      		ori r24,lo8(2)
+ 2072 0b7e 90E0      		st X,r24
+ 2073 0b80 9C01      		rjmp .L77
+ 2074 0b82 2850      	.L79:
+ 2076 0b86 81E0      	.LM167:
+ 2077 0b88 90E0      		ldd r24,Y+1
+ 2078 0b8a 022E      		subi r24,lo8(-(1))
+ 2079 0b8c 00C0      		std Y+1,r24
+ 2080 0b8e 880F      	.L77:
+ 2082 0b92 0A94      	.LM168:
+ 2083 0b94 02F4      		ldi r30,lo8(217)
+ 2084 0b96 8095      		ldi r31,hi8(217)
+ 2085 0b98 8423      		ld r24,Z
+ 2086 0b9a 8C93      		mov r24,r24
+ 2087               		ldi r25,lo8(0)
+ 2088               		andi r24,lo8(4)
+ 483:can_at90can128_AB_ID.c **** 	}
+ 484:can_at90can128_AB_ID.c **** }
+ 2089               	0
+ 2090               		brne .L80
+ 2091 0b9c 0F90      		ldd r24,Y+1
+ 2092 0b9e CF91      		tst r24
+ 2093 0ba0 DF91      		brne .L79
+ 2094 0ba2 0895      	.L80:
+ 2095               	/* epilogue start */
+ 2097               	.LM169:
+ 2098               		pop __tmp_reg__
+ 2099               		pop __tmp_reg__
+ 2100               		pop __tmp_reg__
+ 2101               		pop __tmp_reg__
+ 2102               		pop r28
+ 485:can_at90can128_AB_ID.c **** /* Init CAN controller */
+ 486:can_at90can128_AB_ID.c **** void can_init(uint16_t baud, uint8_t intmode)
+ 487:can_at90can128_AB_ID.c **** {
+ 2107 0ba6 CF93      	.Lscope14:
+ 2112               	.global	can_enable_mob
+ 2114 0bb0 9B83      	can_enable_mob:
+ 2116 0bb4 6C83      	.LM170:
+ 488:can_at90can128_AB_ID.c **** 	unsigned char timeout = 1;
+ 2117               	 r29
+ 2118               		push r28
+ 2119 0bb6 81E0      		rcall .
+ 2120 0bb8 8983      		in r28,__SP_L__
+ 489:can_at90can128_AB_ID.c **** 	
+ 490:can_at90can128_AB_ID.c **** 	CANGCON |= (1 << SWRES);			// Force software reset
+ 2121               	r29,__SP_H__
+ 2122               	/* prologue: function */
+ 2123 0bba A8ED      	/* frame size = 2 */
+ 2124 0bbc B0E0      		std Y+1,r24
+ 2125 0bbe E8ED      		std Y+2,r22
+ 2127 0bc2 8081      	.LM171:
+ 2128 0bc4 8160      		ldd r24,Y+1
+ 2129 0bc6 8C93      		call can_select_mob
+ 491:can_at90can128_AB_ID.c **** 	//clear_all_mobs();
+ 492:can_at90can128_AB_ID.c **** 	can_set_baudrate(125);				// Set baudrate
+ 2130               	8,0,504,.LM172-.LFBB15
+ 2131               	.LM172:
+ 2132 0bc8 8DE7      		ldd r24,Y+1
+ 2133 0bca 90E0      		call can_set_mob_interrupt
+ 493:can_at90can128_AB_ID.c **** 	can_set_interrupt(intmode);			// Set interrupt mode
+ 2135               	3:
+ 2136               		ldd r24,Y+12
+ 2137 0bd0 8C81      		ldd r25,Y+13
+ 2138 0bd2 0E94 0000 		ldd r26,Y+14
+ 494:can_at90can128_AB_ID.c **** 	setbit(CANGCON, ENASTB);			// Enable CAN controller
+ 2139               	 r27,Y+15
+ 2140               		ldd r18,Y+7
+ 2141 0bd6 A8ED      		movw r22,r24
+ 2142 0bd8 B0E0      		movw r24,r26
+ 2143 0bda E8ED      		mov r20,r18
+ 2144 0bdc F0E0      		call can_set_mob_id_mask
+ 2146 0be0 8260      	.LM174:
+ 2147 0be2 8C93      		ldd r24,Y+8
+ 2148 0be4 00C0      		ldd r25,Y+9
+ 2149               		ldd r26,Y+10
+ 495:can_at90can128_AB_ID.c **** 	while ((!getbit(CANGSTA, ENFG))  && (timeout != 0))	// Wait for transmission complete flag or time
+ 496:can_at90can128_AB_ID.c **** 	{
+ 497:can_at90can128_AB_ID.c **** 		timeout++;
+ 2150               	11
+ 2151               		ldd r18,Y+7
+ 2152 0be6 8981      		movw r22,r24
+ 2153 0be8 8F5F      		movw r24,r26
+ 2154 0bea 8983      		mov r20,r18
+ 2155               		call can_set_mob_id
+ 2157               	.LM175:
+ 2158 0bec E9ED      		ldd r24,Y+2
+ 2159 0bee F0E0      		mov r24,r24
+ 2160 0bf0 8081      		ldi r25,lo8(0)
+ 2161 0bf2 882F      		cpi r24,4
+ 2162 0bf4 90E0      		cpc r25,__zero_reg__
+ 2163 0bf6 8470      		brne .L82
+ 2164 0bf8 9070      	.L83:
+ 2166 0bfc 01F4      	.LM176:
+ 2167 0bfe 8981      		ldd r18,Y+16
+ 2168 0c00 8823      		movw r24,r28
+ 2169 0c02 01F4      		adiw r24,17
+ 2170               		mov r22,r18
+ 2171               		call can_set_mob_data
+ 498:can_at90can128_AB_ID.c **** 	}
+ 499:can_at90can128_AB_ID.c **** }
+ 2172               	,.LM177-.LFBB15
+ 2173               	.LM177:
+ 2174 0c04 0F90      		ldd r25,Y+7
+ 2175 0c06 0F90      		ldd r24,Y+2
+ 2176 0c08 0F90      		mov r22,r25
+ 2177 0c0a 0F90      		call can_set_mob_mode
+ 2178 0c0c CF91      	/* epilogue start */
+ 2180 0c10 0895      	.LM178:
+ 2181               		pop __tmp_reg__
+ 2182               		pop __tmp_reg__
+ 2183               		pop r28
+ 2184               		pop r29
+ 2185               		ret
+ 2187               	.Lscope15:
+ 2189               	.global	can_get_mob_id_type
+ 2191               	can_get_mob_id_type:
+ 500:can_at90can128_AB_ID.c **** /* Enable the given MOB */
+ 501:can_at90can128_AB_ID.c **** void can_enable_mob(uint8_t object, uint8_t mode, can_message msg)
+ 502:can_at90can128_AB_ID.c **** {
+ 2193               	h r29
+ 2194               		push r28
+ 2195               		push __tmp_reg__
+ 2196 0c12 DF93      		in r28,__SP_L__
+ 2197 0c14 CF93      		in r29,__SP_H__
+ 2198 0c16 00D0      	/* prologue: function */
+ 2199 0c18 CDB7      	/* frame size = 1 */
+ 2201               	.LM180:
+ 2202               		ldi r30,lo8(239)
+ 2203 0c1c 8983      		ldi r31,hi8(239)
+ 2204 0c1e 6A83      		ld r24,Z
+ 503:can_at90can128_AB_ID.c **** 	can_select_mob(object);				// Select MOB
+ 2205               	
+ 2206               		ldi r25,lo8(0)
+ 2207 0c20 8981      		andi r24,lo8(16)
+ 2208 0c22 0E94 0000 		andi r25,hi8(16)
+ 504:can_at90can128_AB_ID.c **** 	can_set_mob_interrupt(object);		// Set interrupt
+ 2209               	iw r24,0
+ 2210               		brne .L86
+ 2212 0c28 0E94 0000 	.LM181:
+ 505:can_at90can128_AB_ID.c **** 	can_set_mob_id_mask(msg.idm, msg.id_type);			// Set ID mask
+ 2213               	 Y+1,__zero_reg__
+ 2214               		rjmp .L87
+ 2215 0c2c 8C85      	.L86:
+ 2217 0c30 AE85      	.LM182:
+ 2218 0c32 BF85      		ldi r24,lo8(1)
+ 2219 0c34 2F81      		std Y+1,r24
+ 2220 0c36 BC01      	.L87:
+ 2221 0c38 CD01      		ldd r24,Y+1
+ 2222 0c3a 422F      	/* epilogue start */
+ 506:can_at90can128_AB_ID.c **** 	can_set_mob_id(msg.id, msg.id_type);					// Set ID
+ 2224               	p __tmp_reg__
+ 2225               		pop r28
+ 2226 0c40 8885      		pop r29
+ 2227 0c42 9985      		ret
+ 2229 0c46 BB85      	.Lscope16:
+ 2232 0c4c CD01      	.global	can_disable_mob
+ 2234 0c50 0E94 0000 	can_disable_mob:
+ 507:can_at90can128_AB_ID.c **** 	switch(mode)
+ 2235               	0,531,.LM184-.LFBB17
+ 2236               	.LM184:
+ 2237 0c54 8A81      	.LFBB17:
+ 2238 0c56 882F      		push r29
+ 2239 0c58 90E0      		push r28
+ 2240 0c5a 8430      		push __tmp_reg__
+ 2241 0c5c 9105      		in r28,__SP_L__
+ 2242 0c5e 01F4      		in r29,__SP_H__
+ 2243               	/* prologue: function */
+ 508:can_at90can128_AB_ID.c **** 	{
+ 509:can_at90can128_AB_ID.c **** 		case AUTO_REPLY:
+ 510:can_at90can128_AB_ID.c **** 			can_set_mob_data(msg.data, msg.length);
+ 2244               	size = 1 */
+ 2245               		std Y+1,r24
+ 2247 0c62 CE01      	.LM185:
+ 2248 0c64 4196      		ldd r24,Y+1
+ 2249 0c66 622F      		call can_select_mob
+ 2251               	.LM186:
+ 511:can_at90can128_AB_ID.c **** 			break;
+ 512:can_at90can128_AB_ID.c **** 		default:
+ 513:can_at90can128_AB_ID.c **** 			break;
+ 514:can_at90can128_AB_ID.c **** 	}
+ 515:can_at90can128_AB_ID.c **** 	can_set_mob_mode(mode, msg.id_type);				// Set mode
+ 2252               	,Y+1
+ 2253               		call can_clear_mob_interrupt
+ 2255 0c6e 8A81      	.LM187:
+ 2256 0c70 692F      		ldi r24,lo8(0)
+ 2257 0c72 0E94 0000 		ldi r22,lo8(0)
+ 2258               		call can_set_mob_mode
+ 516:can_at90can128_AB_ID.c **** }
+ 2259               	ogue start */
+ 2261 0c76 0F90      	.LM188:
+ 2262 0c78 0F90      		pop __tmp_reg__
+ 2263 0c7a CF91      		pop r28
+ 2264 0c7c DF91      		pop r29
+ 2265 0c7e 0895      		ret
+ 2267               	.Lscope17:
+ 2271               	.global	can_send_data
+ 517:can_at90can128_AB_ID.c **** /* Get ID Type of selected MOB */
+ 518:can_at90can128_AB_ID.c **** uint8_t can_get_mob_id_type(void)
+ 519:can_at90can128_AB_ID.c **** {
+ 2272               	nd_data, @function
+ 2273               	can_send_data:
+ 2275 0c80 DF93      	.LM189:
+ 2276 0c82 CF93      	.LFBB18:
+ 2277 0c84 0F92      		push r29
+ 2278 0c86 CDB7      		push r28
+ 2279 0c88 DEB7      		rcall .
+ 2280               		rcall .
+ 2281               		in r28,__SP_L__
+ 520:can_at90can128_AB_ID.c **** 	if (getbit(CANCDMOB, IDE) == 0)
+ 2282               	SP_H__
+ 2283               	/* prologue: function */
+ 2284 0c8a EFEE      	/* frame size = 4 */
+ 2285 0c8c F0E0      		std Y+4,r24
+ 2287 0c90 882F      	.LM190:
+ 2288 0c92 90E0      		ldi r24,lo8(1)
+ 2289 0c94 8071      		std Y+1,r24
+ 2291 0c98 0097      	.LM191:
+ 2292 0c9a 01F4      		ldd r24,Y+4
+ 521:can_at90can128_AB_ID.c **** 	{
+ 522:can_at90can128_AB_ID.c **** 		return 0;
+ 2293               	elect_mob
+ 2295 0c9c 1982      	.LM192:
+ 2296 0c9e 00C0      		call can_get_mob_mode
+ 2297               		std Y+3,r24
+ 523:can_at90can128_AB_ID.c **** 	}
+ 524:can_at90can128_AB_ID.c **** 	else
+ 525:can_at90can128_AB_ID.c **** 	{
+ 526:can_at90can128_AB_ID.c **** 		return 1;
+ 2298               	bn	68,0,545,.LM193-.LFBB18
+ 2299               	.LM193:
+ 2300 0ca0 81E0      		call can_get_mob_id_type
+ 2301 0ca2 8983      		std Y+2,r24
+ 2303 0ca4 8981      	.LM194:
+ 2304               		ldd r18,Y+18
+ 527:can_at90can128_AB_ID.c **** 	}
+ 528:can_at90can128_AB_ID.c **** }
+ 2305               	24,r28
+ 2306               		adiw r24,19
+ 2307 0ca6 0F90      		mov r22,r18
+ 2308 0ca8 CF91      		call can_set_mob_data
+ 2310 0cac 0895      	.LM195:
+ 2311               		ldd r25,Y+9
+ 2312               		ldi r24,lo8(1)
+ 2313               		mov r22,r25
+ 2314               		call can_set_mob_mode
+ 2315               		rjmp .L92
+ 2316               	.L94:
+ 529:can_at90can128_AB_ID.c **** /* Disable the given MOB */
+ 530:can_at90can128_AB_ID.c **** void can_disable_mob(uint8_t object)
+ 531:can_at90can128_AB_ID.c **** {
+ 2318               	r24,Y+1
+ 2319               		subi r24,lo8(-(1))
+ 2320               		std Y+1,r24
+ 2321 0cae DF93      	.L92:
+ 2323 0cb2 0F92      	.LM197:
+ 2324 0cb4 CDB7      		ldi r30,lo8(238)
+ 2325 0cb6 DEB7      		ldi r31,hi8(238)
+ 2326               		ld r24,Z
+ 2327               		mov r24,r24
+ 2328 0cb8 8983      		ldi r25,lo8(0)
+ 532:can_at90can128_AB_ID.c **** 	can_select_mob(object);				// Select MOB
+ 2329               	o8(64)
+ 2330               		andi r25,hi8(64)
+ 2331 0cba 8981      		sbiw r24,0
+ 2332 0cbc 0E94 0000 		brne .L93
+ 533:can_at90can128_AB_ID.c **** 	can_clear_mob_interrupt(object);	// Clear interrupt
+ 2333               	 r24,Y+1
+ 2334               		tst r24
+ 2335 0cc0 8981      		brne .L94
+ 2336 0cc2 0E94 0000 	.L93:
+ 534:can_at90can128_AB_ID.c **** 	can_set_mob_mode(DISABLED, 0);			// Set mode
+ 2337               	abn	68,0,553,.LM198-.LFBB18
+ 2338               	.LM198:
+ 2339 0cc6 80E0      		ldi r26,lo8(238)
+ 2340 0cc8 60E0      		ldi r27,hi8(238)
+ 2341 0cca 0E94 0000 		ldi r30,lo8(238)
+ 2342               		ldi r31,hi8(238)
+ 535:can_at90can128_AB_ID.c **** }
+ 2343               	4,Z
+ 2344               		andi r24,lo8(-65)
+ 2345 0cce 0F90      		st X,r24
+ 2347 0cd2 DF91      	.LM199:
+ 2348 0cd4 0895      		ldd r24,Y+3
+ 2349               		ldd r22,Y+2
+ 2350               		call can_set_mob_mode
+ 2351               	/* epilogue start */
+ 2353               	.LM200:
+ 2354               		pop __tmp_reg__
+ 2355               		pop __tmp_reg__
+ 2356               		pop __tmp_reg__
+ 536:can_at90can128_AB_ID.c **** /* Send data */
+ 537:can_at90can128_AB_ID.c **** void can_send_data(uint8_t mob, can_message msg)
+ 538:can_at90can128_AB_ID.c **** {
+ 2357               	__
+ 2358               		pop r28
+ 2359               		pop r29
+ 2360 0cd6 DF93      		ret
+ 2367               	.Lscope18:
+ 539:can_at90can128_AB_ID.c **** 	uint8_t	mode_buffer;
+ 540:can_at90can128_AB_ID.c **** 	uint8_t	id_type_buffer;
+ 541:can_at90can128_AB_ID.c **** 	uint8_t timeout = 1;
+ 2369               	_data
+ 2370               	.global	send_data
+ 2371 0ce4 81E0      		.section .bss
+ 542:can_at90can128_AB_ID.c **** 	
+ 543:can_at90can128_AB_ID.c **** 	can_select_mob(mob);				// Select MOB
+ 2373               	ze	send_data, 1
+ 2374               	send_data:
+ 2375 0ce8 8C81      		.skip 1,0
+ 2376 0cea 0E94 0000 	.global	send_data_position
+ 544:can_at90can128_AB_ID.c **** 	mode_buffer = can_get_mob_mode();	// Save mode
+ 2377               	bal	send_data_position
+ 2380 0cf2 8B83      	send_data_position:
+ 545:can_at90can128_AB_ID.c **** 	id_type_buffer = can_get_mob_id_type();		// Save ID type
+ 2381               	ip 1,0
+ 2382               	.global	msg_uart30
+ 2383 0cf4 0E94 0000 		.data
+ 546:can_at90can128_AB_ID.c **** 	can_set_mob_data(msg.data, msg.length);		// Set data and length
+ 2385               	ze	msg_uart30, 31
+ 2386               	msg_uart30:
+ 2387 0cfa 2A89      		.byte	48
+ 2388 0cfc CE01      		.byte	0
+ 2389 0cfe 4396      		.byte	0
+ 2390 0d00 622F      		.byte	0
+ 2391 0d02 0E94 0000 		.byte	0
+ 547:can_at90can128_AB_ID.c **** 	can_set_mob_mode(TRANSMIT_DATA, msg.id_type);	// Set transmiter mode
+ 2392               	0
+ 2393               		.byte	0
+ 2394 0d06 9985      		.byte	0
+ 2395 0d08 81E0      		.byte	0
+ 2396 0d0a 692F      		.byte	0
+ 2397 0d0c 0E94 0000 		.byte	0
+ 2398 0d10 00C0      		.byte	0
+ 2399               		.byte	0
+ 548:can_at90can128_AB_ID.c **** 
+ 549:can_at90can128_AB_ID.c **** 	while ((!getbit(CANSTMOB, TXOK))  && (timeout != 0))	// Wait for transmission complete flag or tim
+ 550:can_at90can128_AB_ID.c **** 	{
+ 551:can_at90can128_AB_ID.c **** 		timeout++;
+ 2400               	
+ 2401               		.byte	0
+ 2402 0d12 8981      		.byte	0
+ 2403 0d14 8F5F      		.byte	0
+ 2404 0d16 8983      		.byte	0
+ 2405               		.byte	0
+ 2406               		.byte	0
+ 2407               		.byte	0
+ 2408 0d18 EEEE      		.byte	0
+ 2409 0d1a F0E0      		.byte	0
+ 2410 0d1c 8081      		.byte	0
+ 2411 0d1e 882F      		.byte	0
+ 2412 0d20 90E0      		.byte	0
+ 2413 0d22 8074      		.byte	0
+ 2414 0d24 9070      		.byte	0
+ 2415 0d26 0097      		.byte	0
+ 2416 0d28 01F4      		.byte	0
+ 2417 0d2a 8981      		.byte	0
+ 2418 0d2c 8823      	.global	timer0_cnt
+ 2419 0d2e 01F4      	.global	timer0_cnt
+ 2420               		.section .bss
+ 552:can_at90can128_AB_ID.c **** 	}			
+ 553:can_at90can128_AB_ID.c **** 	clearbit(CANSTMOB, TXOK);			// Reset transmission complete flag
+ 2421               	object
+ 2423 0d30 AEEE      	timer0_cnt:
+ 2424 0d32 B0E0      		.skip 1,0
+ 2426 0d36 F0E0      		.text
+ 2428 0d3a 8F7B      	.global	main
+ 554:can_at90can128_AB_ID.c **** 	can_set_mob_mode(mode_buffer, id_type_buffer);		// Recover MOB mode
+ 2430               	tabs	"main.c",132,0,0,.Ltext2
+ 2431               	.Ltext2:
+ 2433 0d40 6A81      	.LM201:
+ 2434 0d42 0E94 0000 	.LFBB19:
+ 2435               		push r29
+ 555:can_at90can128_AB_ID.c **** }
+ 2436               	r28
+ 2437               		in r28,__SP_L__
+ 2438 0d46 0F90      		in r29,__SP_H__
+ 2439 0d48 0F90      		sbiw r28,15
+ 2440 0d4a 0F90      		in __tmp_reg__,__SREG__
+ 2441 0d4c 0F90      		cli
+ 2442 0d4e CF91      		out __SP_H__,r29
+ 2443 0d50 DF91      		out __SREG__,__tmp_reg__
+ 2444 0d52 0895      		out __SP_L__,r28
+ 2445               	/* prologue: function */
+ 2446               	/* frame size = 15 */
+ 2448               	.LM202:
+ 2449               		ldi r26,lo8(36)
+ 2450               		ldi r27,hi8(36)
+ 2451               		ldi r30,lo8(36)
+ 2452               		ldi r31,hi8(36)
+ 2453               		ld r24,Z
+ 2454               		ori r24,lo8(1)
+ 2455               		st X,r24
+ 2457               	.LM203:
+ 2458               		ldi r24,lo8(125)
+ 2459 0000 00        		ldi r25,hi8(125)
+ 2460               		ldi r22,lo8(2)
+ 2461               		call can_init
+ 2463               	.LM204:
+ 2464               		ldi r24,lo8(1)
+ 2465 0001 00        		sts msg_test,r24
+ 2467               	.LM205:
+ 2468               		ldi r24,lo8(273)
+ 2469               		ldi r25,hi8(273)
+ 2470               		ldi r26,hlo8(273)
+ 2471 0000 30        		ldi r27,hhi8(273)
+ 2472 0001 00        		sts msg_test+1,r24
+ 2473 0002 00        		sts (msg_test+1)+1,r25
+ 2474 0003 00        		sts (msg_test+1)+2,r26
+ 2475 0004 00        		sts (msg_test+1)+3,r27
+ 2477 0006 00        	.LM206:
+ 2478 0007 00        		ldi r24,lo8(2047)
+ 2479 0008 00        		ldi r25,hi8(2047)
+ 2480 0009 00        		ldi r26,hlo8(2047)
+ 2481 000a 00        		ldi r27,hhi8(2047)
+ 2482 000b 00        		sts msg_test+5,r24
+ 2483 000c 00        		sts (msg_test+5)+1,r25
+ 2484 000d 00        		sts (msg_test+5)+2,r26
+ 2485 000e 00        		sts (msg_test+5)+3,r27
+ 2487 0010 00        	.LM207:
+ 2488 0011 00        		ldi r24,lo8(7)
+ 2489 0012 00        		sts msg_test+9,r24
+ 2491 0014 00        	.LM208:
+ 2492 0015 00        		ldi r24,lo8(84)
+ 2493 0016 00        		sts msg_test+10,r24
+ 2495 0018 00        	.LM209:
+ 2496 0019 00        		ldi r24,lo8(101)
+ 2497 001a 00        		sts msg_test+11,r24
+ 2499 001c 00        	.LM210:
+ 2500 001d 00        		ldi r24,lo8(115)
+ 2501 001e 00        		sts msg_test+12,r24
+ 2503               	.LM211:
+ 2504               		ldi r24,lo8(116)
+ 2505               		sts msg_test+13,r24
+ 2507               	.LM212:
+ 2508 0002 00        		ldi r24,lo8(49)
+ 2509               		sts msg_test+14,r24
+ 2511               	.LM213:
+ 2512               		ldi r24,lo8(50)
+ 2513               		sts msg_test+15,r24
+ 2515               	.LM214:
+ 2516               		ldi r24,lo8(51)
+   1:main.c        **** #include "main.h"
+   2:main.c        **** 
+   3:main.c        **** int main(void)
+   4:main.c        **** {
+ 2517               	 msg_test+17,r24
+ 2519               	.LM216:
+ 2520 0d54 DF93      		sts msg_bat_1,__zero_reg__
+ 2522 0d58 CDB7      	.LM217:
+ 2523 0d5a DEB7      		ldi r24,lo8(48)
+ 2524 0d5c 2F97      		ldi r25,hi8(48)
+ 2525 0d5e 0FB6      		ldi r26,hlo8(48)
+ 2526 0d60 F894      		ldi r27,hhi8(48)
+ 2527 0d62 DEBF      		sts msg_bat_1+1,r24
+ 2528 0d64 0FBE      		sts (msg_bat_1+1)+1,r25
+ 2529 0d66 CDBF      		sts (msg_bat_1+1)+2,r26
+ 2530               		sts (msg_bat_1+1)+3,r27
+   5:main.c        **** 	DDRB |= (0x01 << PB0);
+ 2532               	4,lo8(2047)
+ 2533               		ldi r25,hi8(2047)
+ 2534 0d68 A4E2      		ldi r26,hlo8(2047)
+ 2535 0d6a B0E0      		ldi r27,hhi8(2047)
+ 2536 0d6c E4E2      		sts msg_bat_1+5,r24
+ 2537 0d6e F0E0      		sts (msg_bat_1+5)+1,r25
+ 2538 0d70 8081      		sts (msg_bat_1+5)+2,r26
+ 2539 0d72 8160      		sts (msg_bat_1+5)+3,r27
+   6:main.c        **** 	can_init(125, RX);
+ 2541               	ldi r24,lo8(8)
+ 2542               		sts msg_bat_1+9,r24
+ 2544 0d78 90E0      	.LM220:
+ 2545 0d7a 62E0      		sts msg_bat_2,__zero_reg__
+   7:main.c        **** 	
+   8:main.c        **** 	msg_test.id_type = 1;	//type A, 11bit ID
+ 2547               	:
+ 2548               		ldi r24,lo8(49)
+ 2549 0d80 81E0      		ldi r25,hi8(49)
+ 2550 0d82 8093 0000 		ldi r26,hlo8(49)
+   9:main.c        **** 	msg_test.id = 0x111;
+ 2551               	 r27,hhi8(49)
+ 2552               		sts msg_bat_2+1,r24
+ 2553 0d86 81E1      		sts (msg_bat_2+1)+1,r25
+ 2554 0d88 91E0      		sts (msg_bat_2+1)+2,r26
+ 2555 0d8a A0E0      		sts (msg_bat_2+1)+3,r27
+ 2557 0d8e 8093 0000 	.LM222:
+ 2558 0d92 9093 0000 		ldi r24,lo8(2047)
+ 2559 0d96 A093 0000 		ldi r25,hi8(2047)
+ 2560 0d9a B093 0000 		ldi r26,hlo8(2047)
+  10:main.c        **** 	msg_test.idm = 0x7ff;
+ 2561               	hi8(2047)
+ 2562               		sts msg_bat_2+5,r24
+ 2563 0d9e 8FEF      		sts (msg_bat_2+5)+1,r25
+ 2564 0da0 97E0      		sts (msg_bat_2+5)+2,r26
+ 2565 0da2 A0E0      		sts (msg_bat_2+5)+3,r27
+ 2567 0da6 8093 0000 	.LM223:
+ 2568 0daa 9093 0000 		ldi r24,lo8(8)
+ 2569 0dae A093 0000 		sts msg_bat_2+9,r24
+  11:main.c        **** 	msg_test.length = 7;
+ 2571               	n r24,__SP_L__
+ 2572               		in r25,__SP_H__
+ 2573 0db6 87E0      		sbiw r24,18
+ 2574 0db8 8093 0000 		in __tmp_reg__,__SREG__
+  12:main.c        **** 	msg_test.data[0] = 'T';
+ 2575               	
+ 2576               		out __SP_H__,r25
+ 2577 0dbc 84E5      		out __SREG__,__tmp_reg__
+ 2578 0dbe 8093 0000 		out __SP_L__,r24
+  13:main.c        **** 	msg_test.data[1] = 'e';
+ 2579               	 r24,__SP_L__
+ 2580               		in r25,__SP_H__
+ 2581 0dc2 85E6      		adiw r24,1
+ 2582 0dc4 8093 0000 		std Y+2,r25
+  14:main.c        **** 	msg_test.data[2] = 's';
+ 2583               	 Y+1,r24
+ 2584               		ldi r30,lo8(msg_test)
+ 2585 0dc8 83E7      		ldi r31,hi8(msg_test)
+ 2586 0dca 8093 0000 		std Y+4,r31
+  15:main.c        **** msg_test.data[3] = 't';
+ 2587               	 Y+3,r30
+ 2588               		ldi r31,lo8(18)
+ 2589 0dce 84E7      		std Y+5,r31
+ 2590 0dd0 8093 0000 	.L97:
+  16:main.c        **** 	msg_test.data[4] = '1';
+ 2591               	 r30,Y+3
+ 2592               		ldd r31,Y+4
+ 2593 0dd4 81E3      		ld r0,Z
+ 2594 0dd6 8093 0000 		ldd r24,Y+3
+  17:main.c        **** 	msg_test.data[5] = '2';
+ 2595               	 r25,Y+4
+ 2596               		adiw r24,1
+ 2597 0dda 82E3      		std Y+4,r25
+ 2598 0ddc 8093 0000 		std Y+3,r24
+  18:main.c        **** 	msg_test.data[6] = '3';
+ 2599               	 r30,Y+1
+ 2600               		ldd r31,Y+2
+ 2601 0de0 83E3      		st Z,r0
+ 2602 0de2 8093 0000 		ldd r24,Y+1
+  19:main.c        **** 	msg_test.data[7] = '4';
+ 2603               	 r25,Y+2
+ 2604               		adiw r24,1
+ 2605 0de6 84E3      		std Y+2,r25
+ 2606 0de8 8093 0000 		std Y+1,r24
+  20:main.c        **** 
+  21:main.c        **** 	msg_bat_1.id_type = 0;
+ 2607               	 r25,Y+5
+ 2608               		subi r25,lo8(-(-1))
+ 2609 0dec 1092 0000 		std Y+5,r25
+  22:main.c        **** 	msg_bat_1.id = 0x030;
+ 2610               	d r30,Y+5
+ 2611               		tst r30
+ 2612 0df0 80E3      		brne .L97
+ 2613 0df2 90E0      		ldi r24,lo8(10)
+ 2614 0df4 A0E0      		ldi r22,lo8(1)
+ 2615 0df6 B0E0      		call can_enable_mob
+ 2616 0df8 8093 0000 		in r24,__SP_L__
+ 2617 0dfc 9093 0000 		in r25,__SP_H__
+ 2618 0e00 A093 0000 		adiw r24,18
+ 2619 0e04 B093 0000 		in __tmp_reg__,__SREG__
+  23:main.c        **** 	msg_bat_1.idm = 0x7ff;	
+ 2620               	__SP_H__,r25
+ 2621               		out __SREG__,__tmp_reg__
+ 2622 0e08 8FEF      		out __SP_L__,r24
+ 2624 0e0c A0E0      	.LM225:
+ 2625 0e0e B0E0      		in r30,__SP_L__
+ 2626 0e10 8093 0000 		in r31,__SP_H__
+ 2627 0e14 9093 0000 		sbiw r30,18
+ 2628 0e18 A093 0000 		in __tmp_reg__,__SREG__
+ 2629 0e1c B093 0000 		cli
+  24:main.c        **** 	msg_bat_1.length = 8;
+ 2630               	H__,r31
+ 2631               		out __SREG__,__tmp_reg__
+ 2632 0e20 88E0      		out __SP_L__,r30
+ 2633 0e22 8093 0000 		in r24,__SP_L__
+  25:main.c        **** 	
+  26:main.c        **** 	msg_bat_2.id_type = 0;
+ 2634               	r25,__SP_H__
+ 2635               		adiw r24,1
+ 2636 0e26 1092 0000 		std Y+7,r25
+  27:main.c        **** 	msg_bat_2.id = 0x031;
+ 2637               	d Y+6,r24
+ 2638               		ldi r24,lo8(msg_bat_1)
+ 2639 0e2a 81E3      		ldi r25,hi8(msg_bat_1)
+ 2640 0e2c 90E0      		std Y+9,r25
+ 2641 0e2e A0E0      		std Y+8,r24
+ 2642 0e30 B0E0      		ldi r25,lo8(18)
+ 2643 0e32 8093 0000 		std Y+10,r25
+ 2644 0e36 9093 0000 	.L98:
+ 2645 0e3a A093 0000 		ldd r30,Y+8
+ 2646 0e3e B093 0000 		ldd r31,Y+9
+  28:main.c        **** 	msg_bat_2.idm = 0x7ff;	
+ 2647               	ldd r24,Y+8
+ 2648               		ldd r25,Y+9
+ 2649 0e42 8FEF      		adiw r24,1
+ 2650 0e44 97E0      		std Y+9,r25
+ 2651 0e46 A0E0      		std Y+8,r24
+ 2652 0e48 B0E0      		ldd r30,Y+6
+ 2653 0e4a 8093 0000 		ldd r31,Y+7
+ 2654 0e4e 9093 0000 		st Z,r0
+ 2655 0e52 A093 0000 		ldd r24,Y+6
+ 2656 0e56 B093 0000 		ldd r25,Y+7
+  29:main.c        **** 	msg_bat_2.length = 8;
+ 2657               	1
+ 2658               		std Y+7,r25
+ 2659 0e5a 88E0      		std Y+6,r24
+ 2660 0e5c 8093 0000 		ldd r25,Y+10
+  30:main.c        **** 
+  31:main.c        **** 	can_enable_mob (10, TRANSMIT_DATA, msg_test);
+ 2661               	i r25,lo8(-(-1))
+ 2662               		std Y+10,r25
+ 2663 0e60 8DB7      		ldd r30,Y+10
+ 2664 0e62 9EB7      		tst r30
+ 2665 0e64 4297      		brne .L98
+ 2666 0e66 0FB6      		ldi r24,lo8(0)
+ 2667 0e68 F894      		ldi r22,lo8(3)
+ 2668 0e6a 9EBF      		call can_enable_mob
+ 2669 0e6c 0FBE      		in r24,__SP_L__
+ 2670 0e6e 8DBF      		in r25,__SP_H__
+ 2671 0e70 8DB7      		adiw r24,18
+ 2672 0e72 9EB7      		in __tmp_reg__,__SREG__
+ 2673 0e74 0196      		cli
+ 2674 0e76 9A83      		out __SP_H__,r25
+ 2675 0e78 8983      		out __SREG__,__tmp_reg__
+ 2676 0e7a E0E0      		out __SP_L__,r24
+ 2678 0e7e FC83      	.LM226:
+ 2679 0e80 EB83      		in r30,__SP_L__
+ 2680 0e82 F2E1      		in r31,__SP_H__
+ 2681 0e84 FD83      		sbiw r30,18
+ 2682               		in __tmp_reg__,__SREG__
+ 2683 0e86 EB81      		cli
+ 2684 0e88 FC81      		out __SP_H__,r31
+ 2685 0e8a 0080      		out __SREG__,__tmp_reg__
+ 2686 0e8c 8B81      		out __SP_L__,r30
+ 2687 0e8e 9C81      		in r24,__SP_L__
+ 2688 0e90 0196      		in r25,__SP_H__
+ 2689 0e92 9C83      		adiw r24,1
+ 2690 0e94 8B83      		std Y+12,r25
+ 2691 0e96 E981      		std Y+11,r24
+ 2692 0e98 FA81      		ldi r24,lo8(msg_bat_2)
+ 2693 0e9a 0082      		ldi r25,hi8(msg_bat_2)
+ 2694 0e9c 8981      		std Y+14,r25
+ 2695 0e9e 9A81      		std Y+13,r24
+ 2696 0ea0 0196      		ldi r25,lo8(18)
+ 2697 0ea2 9A83      		std Y+15,r25
+ 2698 0ea4 8983      	.L99:
+ 2699 0ea6 9D81      		ldd r30,Y+13
+ 2700 0ea8 9150      		ldd r31,Y+14
+ 2701 0eaa 9D83      		ld r0,Z
+ 2702 0eac ED81      		ldd r24,Y+13
+ 2703 0eae EE23      		ldd r25,Y+14
+ 2704 0eb0 01F4      		adiw r24,1
+ 2705 0eb2 8AE0      		std Y+14,r25
+ 2706 0eb4 61E0      		std Y+13,r24
+ 2707 0eb6 0E94 0000 		ldd r30,Y+11
+ 2708 0eba 8DB7      		ldd r31,Y+12
+ 2709 0ebc 9EB7      		st Z,r0
+ 2710 0ebe 4296      		ldd r24,Y+11
+ 2711 0ec0 0FB6      		ldd r25,Y+12
+ 2712 0ec2 F894      		adiw r24,1
+ 2713 0ec4 9EBF      		std Y+12,r25
+ 2714 0ec6 0FBE      		std Y+11,r24
+ 2715 0ec8 8DBF      		ldd r25,Y+15
+  32:main.c        **** 	can_enable_mob (0, RECEIVE_DATA, msg_bat_1);
+ 2716               	30
+ 2717               		brne .L99
+ 2718 0eca EDB7      		ldi r24,lo8(1)
+ 2719 0ecc FEB7      		ldi r22,lo8(3)
+ 2720 0ece 7297      		call can_enable_mob
+ 2721 0ed0 0FB6      		in r24,__SP_L__
+ 2722 0ed2 F894      		in r25,__SP_H__
+ 2723 0ed4 FEBF      		adiw r24,18
+ 2724 0ed6 0FBE      		in __tmp_reg__,__SREG__
+ 2725 0ed8 EDBF      		cli
+ 2726 0eda 8DB7      		out __SP_H__,r25
+ 2727 0edc 9EB7      		out __SREG__,__tmp_reg__
+ 2728 0ede 0196      		out __SP_L__,r24
+ 2730 0ee2 8E83      	.LM227:
+ 2731 0ee4 80E0      	/* #APP */
+ 2732 0ee6 90E0      	 ;  35 "main.c" 1
+ 2733 0ee8 9987      		sei
+ 2734 0eea 8887      	 ;  0 "" 2
+ 2736 0eee 9A87      	.LM228:
+ 2737               	/* #NOAPP */
+ 2738 0ef0 E885      		call TIMER0_ini
+ 2740 0ef4 0080      	.LM229:
+ 2741 0ef6 8885      		call USART0_ini
+ 2742 0ef8 9985      	.L100:
+ 2743 0efa 0196      		rjmp .L100
+ 2745 0efe 8887      	.Lscope19:
+ 2747 0f02 FF81      	.global	__vector_23
+ 2749 0f06 8E81      	__vector_23:
+ 2751 0f0a 0196      	.LM230:
+ 2752 0f0c 9F83      	.LFBB20:
+ 2753 0f0e 8E83      		push __zero_reg__
+ 2754 0f10 9A85      		push r0
+ 2755 0f12 9150      		in r0,__SREG__
+ 2756 0f14 9A87      		push r0
+ 2757 0f16 EA85      		lds r0,91
+ 2758 0f18 EE23      		push r0
+ 2759 0f1a 01F4      		clr __zero_reg__
+ 2760 0f1c 80E0      		push r24
+ 2761 0f1e 63E0      		push r25
+ 2762 0f20 0E94 0000 		push r26
+ 2763 0f24 8DB7      		push r27
+ 2764 0f26 9EB7      		push r30
+ 2765 0f28 4296      		push r31
+ 2766 0f2a 0FB6      		push r29
+ 2767 0f2c F894      		push r28
+ 2768 0f2e 9EBF      		in r28,__SP_L__
+ 2769 0f30 0FBE      		in r29,__SP_H__
+ 2770 0f32 8DBF      	/* prologue: Signal */
+  33:main.c        **** 	can_enable_mob (1, RECEIVE_DATA, msg_bat_2);
+ 2771               	231:
+ 2772               		lds r24,send_data
+ 2773 0f34 EDB7      		cpi r24,lo8(1)
+ 2774 0f36 FEB7      		brne .L105
+ 2776 0f3a 0FB6      	.LM232:
+ 2777 0f3c F894      		lds r24,send_data_position
+ 2778 0f3e FEBF      		cpi r24,lo8(31)
+ 2779 0f40 0FBE      		brsh .L104
+ 2781 0f44 8DB7      	.LM233:
+ 2782 0f46 9EB7      		ldi r26,lo8(198)
+ 2783 0f48 0196      		ldi r27,hi8(198)
+ 2784 0f4a 9C87      		lds r24,send_data_position
+ 2785 0f4c 8B87      		mov r24,r24
+ 2786 0f4e 80E0      		ldi r25,lo8(0)
+ 2787 0f50 90E0      		movw r30,r24
+ 2788 0f52 9E87      		subi r30,lo8(-(msg_uart30))
+ 2789 0f54 8D87      		sbci r31,hi8(-(msg_uart30))
+ 2790 0f56 92E1      		ld r24,Z
+ 2791 0f58 9F87      		st X,r24
+ 2793 0f5a ED85      	.LM234:
+ 2794 0f5c FE85      		lds r24,send_data_position
+ 2795 0f5e 0080      		subi r24,lo8(-(1))
+ 2796 0f60 8D85      		sts send_data_position,r24
+ 2797 0f62 9E85      		rjmp .L105
+ 2798 0f64 0196      	.L104:
+ 2800 0f68 8D87      	.LM235:
+ 2801 0f6a EB85      		ldi r30,lo8(198)
+ 2802 0f6c FC85      		ldi r31,hi8(198)
+ 2803 0f6e 0082      		ldi r24,lo8(13)
+ 2804 0f70 8B85      		st Z,r24
+ 2806 0f74 0196      	.LM236:
+ 2807 0f76 9C87      		sts send_data_position,__zero_reg__
+ 2809 0f7a 9F85      	.LM237:
+ 2810 0f7c 9150      		sts send_data,__zero_reg__
+ 2811 0f7e 9F87      	.L105:
+ 2812 0f80 EF85      	/* epilogue start */
+ 2814 0f84 01F4      	.LM238:
+ 2815 0f86 81E0      		pop r28
+ 2816 0f88 63E0      		pop r29
+ 2817 0f8a 0E94 0000 		pop r31
+ 2818 0f8e 8DB7      		pop r30
+ 2819 0f90 9EB7      		pop r27
+ 2820 0f92 4296      		pop r26
+ 2821 0f94 0FB6      		pop r25
+ 2822 0f96 F894      		pop r24
+ 2823 0f98 9EBF      		pop r0
+ 2824 0f9a 0FBE      		sts 91,r0
+ 2825 0f9c 8DBF      		pop r0
+  34:main.c        **** 	
+  35:main.c        **** 	sei();
+ 2826               		__vector_23, .-__vector_23
+ 2827               	.Lscope20:
+ 2829               	.global	__vector_17
+ 2831               	__vector_17:
+  36:main.c        **** 	TIMER0_ini();
+ 2832               	n	68,0,65,.LM239-.LFBB21
+ 2833               	.LM239:
+ 2834               	.LFBB21:
+ 2835 0fa0 0E94 0000 		push __zero_reg__
+  37:main.c        **** 	USART0_ini();
+ 2836               	h r0
+ 2837               		in r0,__SREG__
+ 2838 0fa4 0E94 0000 		push r0
+ 2839               		lds r0,91
+ 2840 0fa8 00C0      		push r0
+ 2841               		clr __zero_reg__
+ 2842               		push r18
+ 2843               		push r19
+ 2844               		push r20
+ 2845               		push r21
+ 2846               		push r22
+  38:main.c        **** 	
+  39:main.c        **** 
+  40:main.c        **** 	while(1)
+  41:main.c        **** 	{
+  42:main.c        **** 	}
+  43:main.c        **** }
+  44:main.c        **** 
+  45:main.c        **** SIGNAL (SIG_UART0_TRANS)								//a/d converter in interrupt mode
+  46:main.c        **** {
+ 2847               	push r24
+ 2848               		push r25
+ 2849               		push r26
+ 2850 0faa 1F92      		push r27
+ 2851 0fac 0F92      		push r30
+ 2852 0fae 0FB6      		push r31
+ 2853 0fb0 0F92      		push r29
+ 2854 0fb2 0090 5B00 		push r28
+ 2855 0fb6 0F92      		rcall .
+ 2856 0fb8 1124      		rcall .
+ 2857 0fba 8F93      		push __tmp_reg__
+ 2858 0fbc 9F93      		in r28,__SP_L__
+ 2859 0fbe AF93      		in r29,__SP_H__
+ 2860 0fc0 BF93      	/* prologue: Signal */
+ 2861 0fc2 EF93      	/* frame size = 5 */
+ 2863 0fc6 DF93      	.LM240:
+ 2864 0fc8 CF93      		ldi r30,lo8(70)
+ 2865 0fca CDB7      		ldi r31,hi8(70)
+ 2866 0fcc DEB7      		ldi r24,lo8(6)
+ 2867               		st Z,r24
+  47:main.c        **** 	if (send_data == 1)
+ 2869               	0_cnt
+ 2870               		subi r24,lo8(-(1))
+ 2871 0fce 8091 0000 		sts timer0_cnt,r24
+ 2873 0fd4 01F4      	.LM242:
+  48:main.c        **** 	{
+  49:main.c        **** 		if (send_data_position < 31)
+ 2874               	r24,timer0_cnt
+ 2875               		cpi r24,lo8(-6)
+ 2876 0fd6 8091 0000 		breq .+2
+ 2877 0fda 8F31      		rjmp .L109
+  50:main.c        **** 		{
+  51:main.c        **** 			//UDR0 = msg_bcd[send_data_position];
+  52:main.c        **** 			UDR0 = msg_uart30[send_data_position];
+ 2879               	3:
+ 2880               		ldi r24,lo8(1)
+ 2881 0fde A6EC      		sts send_data,r24
+ 2883 0fe2 8091 0000 	.LM244:
+ 2884 0fe6 882F      		sts send_data_position,__zero_reg__
+ 2886 0fea FC01      	.LM245:
+ 2887 0fec E050      		ldi r30,lo8(198)
+ 2888 0fee F040      		ldi r31,hi8(198)
+ 2889 0ff0 8081      		ldi r24,lo8(85)
+ 2890 0ff2 8C93      		st Z,r24
+  53:main.c        **** 			send_data_position++;
+ 2891               	,75,.LM246-.LFBB21
+ 2892               	.LM246:
+ 2893 0ff4 8091 0000 		in r24,__SP_L__
+ 2894 0ff8 8F5F      		in r25,__SP_H__
+ 2895 0ffa 8093 0000 		sbiw r24,18
+ 2896 0ffe 00C0      		in __tmp_reg__,__SREG__
+ 2897               		cli
+  54:main.c        **** 		}
+  55:main.c        **** 		else
+  56:main.c        **** 		{
+  57:main.c        **** 			UDR0 = 0x0d;
+ 2898               	SP_H__,r25
+ 2899               		out __SREG__,__tmp_reg__
+ 2900 1000 E6EC      		out __SP_L__,r24
+ 2901 1002 F0E0      		in r24,__SP_L__
+ 2902 1004 8DE0      		in r25,__SP_H__
+ 2903 1006 8083      		adiw r24,1
+  58:main.c        **** 			send_data_position = 0;
+ 2904               	+2,r25
+ 2905               		std Y+1,r24
+ 2906 1008 1092 0000 		ldi r30,lo8(msg_test)
+  59:main.c        **** 			send_data = 0;
+ 2907               	i r31,hi8(msg_test)
+ 2908               		std Y+4,r31
+ 2909 100c 1092 0000 		std Y+3,r30
+ 2910               		ldi r31,lo8(18)
+ 2911               		std Y+5,r31
+  60:main.c        **** 		}
+  61:main.c        **** 	}
+  62:main.c        **** }
+ 2912               	:
+ 2913               		ldd r30,Y+3
+ 2914 1010 CF91      		ldd r31,Y+4
+ 2915 1012 DF91      		ld r0,Z
+ 2916 1014 FF91      		ldd r24,Y+3
+ 2917 1016 EF91      		ldd r25,Y+4
+ 2918 1018 BF91      		adiw r24,1
+ 2919 101a AF91      		std Y+4,r25
+ 2920 101c 9F91      		std Y+3,r24
+ 2921 101e 8F91      		ldd r30,Y+1
+ 2922 1020 0F90      		ldd r31,Y+2
+ 2923 1022 0092 5B00 		st Z,r0
+ 2924 1026 0F90      		ldd r24,Y+1
+ 2925 1028 0FBE      		ldd r25,Y+2
+ 2926 102a 0F90      		adiw r24,1
+ 2927 102c 1F90      		std Y+2,r25
+ 2928 102e 1895      		std Y+1,r24
+ 2929               		ldd r25,Y+5
+ 2930               		subi r25,lo8(-(-1))
+ 2931               		std Y+5,r25
+ 2932               		ldd r30,Y+5
+ 2933               		tst r30
+ 2934               		brne .L108
+  63:main.c        **** 
+  64:main.c        **** SIGNAL (SIG_OVERFLOW0)								//a/d converter in interrupt mode
+  65:main.c        **** {
+ 2935               	can_send_data
+ 2936               		in r24,__SP_L__
+ 2937               		in r25,__SP_H__
+ 2938 1030 1F92      		adiw r24,18
+ 2939 1032 0F92      		in __tmp_reg__,__SREG__
+ 2940 1034 0FB6      		cli
+ 2941 1036 0F92      		out __SP_H__,r25
+ 2942 1038 0090 5B00 		out __SREG__,__tmp_reg__
+ 2943 103c 0F92      		out __SP_L__,r24
+ 2945 1040 2F93      	.LM247:
+ 2946 1042 3F93      		sts timer0_cnt,__zero_reg__
+ 2947 1044 4F93      	.L109:
+ 2948 1046 5F93      	/* epilogue start */
+ 2950 104a 7F93      	.LM248:
+ 2951 104c 8F93      		pop __tmp_reg__
+ 2952 104e 9F93      		pop __tmp_reg__
+ 2953 1050 AF93      		pop __tmp_reg__
+ 2954 1052 BF93      		pop __tmp_reg__
+ 2955 1054 EF93      		pop __tmp_reg__
+ 2956 1056 FF93      		pop r28
+ 2957 1058 DF93      		pop r29
+ 2958 105a CF93      		pop r31
+ 2959 105c 00D0      		pop r30
+ 2960 105e 00D0      		pop r27
+ 2961 1060 0F92      		pop r26
+ 2962 1062 CDB7      		pop r25
+ 2963 1064 DEB7      		pop r24
+ 2964               		pop r23
+ 2965               		pop r22
+  66:main.c        **** 	TCNT0 = 0x06;
+ 2966               	 r18
+ 2967               		pop r0
+ 2968 1066 E6E4      		sts 91,r0
+ 2969 1068 F0E0      		pop r0
+ 2970 106a 86E0      		out __SREG__,r0
+ 2971 106c 8083      		pop r0
+  67:main.c        **** 	timer0_cnt++;
+ 2972               	_zero_reg__
+ 2973               		reti
+ 2975 1072 8F5F      	.Lscope21:
+  68:main.c        **** 	
+  69:main.c        **** 	if (timer0_cnt == 250) //100ms
+ 2977               	al	TIMER0_ini
+ 2979 1078 8091 0000 	TIMER0_ini:
+ 2981 107e 01F0      	.LM249:
+ 2982 1080 00C0      	.LFBB22:
+  70:main.c        **** 	{
+  71:main.c        **** 		send_data = 1;
+ 2983               	r29
+ 2984               		push r28
+ 2985 1082 81E0      		in r28,__SP_L__
+ 2986 1084 8093 0000 		in r29,__SP_H__
+  72:main.c        **** 		send_data_position = 0;
+ 2987               	rologue: function */
+ 2988               	/* frame size = 0 */
+  73:main.c        **** 		UDR0 = START_OF_MESSAGE;
+ 2990               	250:
+ 2991               		ldi r30,lo8(68)
+ 2992 108c E6EC      		ldi r31,hi8(68)
+ 2993 108e F0E0      		ldi r24,lo8(4)
+ 2994 1090 85E5      		st Z,r24
+  74:main.c        **** 			
+  75:main.c        **** 		can_send_data (10, msg_test);
+ 2996               	:
+ 2997               		ldi r30,lo8(110)
+ 2998 1094 8DB7      		ldi r31,hi8(110)
+ 2999 1096 9EB7      		ldi r24,lo8(1)
+ 3000 1098 4297      		st Z,r24
+ 3002 109c F894      	.LM252:
+ 3003 109e 9EBF      		ldi r30,lo8(70)
+ 3004 10a0 0FBE      		ldi r31,hi8(70)
+ 3005 10a2 8DBF      		ldi r24,lo8(6)
+ 3006 10a4 8DB7      		st Z,r24
+ 3007 10a6 9EB7      	/* epilogue start */
+ 3009 10aa 9A83      	.LM253:
+ 3010 10ac 8983      		pop r28
+ 3011 10ae E0E0      		pop r29
+ 3012 10b0 F0E0      		ret
+ 3014 10b4 EB83      	.Lscope22:
+ 3016 10b8 FD83      	.global	USART0_ini
+ 3018 10ba EB81      	USART0_ini:
+ 3020 10be 0080      	.LM254:
+ 3021 10c0 8B81      	.LFBB23:
+ 3022 10c2 9C81      		push r29
+ 3023 10c4 0196      		push r28
+ 3024 10c6 9C83      		in r28,__SP_L__
+ 3025 10c8 8B83      		in r29,__SP_H__
+ 3026 10ca E981      	/* prologue: function */
+ 3027 10cc FA81      	/* frame size = 0 */
+ 3029 10d0 8981      	.LM255:
+ 3030 10d2 9A81      		ldi r30,lo8(197)
+ 3031 10d4 0196      		ldi r31,hi8(197)
+ 3032 10d6 9A83      		st Z,__zero_reg__
+ 3034 10da 9D81      	.LM256:
+ 3035 10dc 9150      		ldi r30,lo8(196)
+ 3036 10de 9D83      		ldi r31,hi8(196)
+ 3037 10e0 ED81      		ldi r24,lo8(103)
+ 3038 10e2 EE23      		st Z,r24
+ 3040 10e6 8AE0      	.LM257:
+ 3041 10e8 0E94 0000 		ldi r30,lo8(194)
+ 3042 10ec 8DB7      		ldi r31,hi8(194)
+ 3043 10ee 9EB7      		ldi r24,lo8(6)
+ 3044 10f0 4296      		st Z,r24
+ 3046 10f4 F894      	.LM258:
+ 3047 10f6 9EBF      		ldi r30,lo8(193)
+ 3048 10f8 0FBE      		ldi r31,hi8(193)
+ 3049 10fa 8DBF      		ldi r24,lo8(72)
+  76:main.c        **** 		timer0_cnt = 0;
+ 3050               	 r30,lo8(192)
+ 3051               		ldi r31,hi8(192)
+ 3052 10fc 1092 0000 		st Z,__zero_reg__
+ 3053               	/* epilogue start */
+  77:main.c        **** 		//can_rec_data (1, msg_bat);
+  78:main.c        **** 	}
+  79:main.c        **** }
+ 3055               	0:
+ 3056               		pop r28
+ 3057 1100 0F90      		pop r29
+ 3058 1102 0F90      		ret
+ 3060 1106 0F90      	.Lscope23:
+ 3061 1108 0F90      		.lcomm message.1970,18
+ 3063 110c DF91      	.global	__vector_18
+ 3065 1110 EF91      	__vector_18:
+ 3067 1114 AF91      	.LM261:
+ 3068 1116 9F91      	.LFBB24:
+ 3069 1118 8F91      		push __zero_reg__
+ 3070 111a 7F91      		push r0
+ 3071 111c 6F91      		in r0,__SREG__
+ 3072 111e 5F91      		push r0
+ 3073 1120 4F91      		lds r0,91
+ 3074 1122 3F91      		push r0
+ 3075 1124 2F91      		clr __zero_reg__
+ 3076 1126 0F90      		push r18
+ 3077 1128 0092 5B00 		push r19
+ 3078 112c 0F90      		push r20
+ 3079 112e 0FBE      		push r21
+ 3080 1130 0F90      		push r22
+ 3081 1132 1F90      		push r23
+ 3082 1134 1895      		push r24
+ 3083               		push r25
+ 3084               		push r26
+ 3085               		push r27
+ 3086               		push r30
+ 3087               		push r31
+ 3088               		push r29
+  80:main.c        **** 
+  81:main.c        **** void TIMER0_ini (void)
+  82:main.c        **** {
+ 3089               	,__SP_H__
+ 3090               		sbiw r28,25
+ 3091               		out __SP_H__,r29
+ 3092 1136 DF93      		out __SP_L__,r28
+ 3093 1138 CF93      	/* prologue: Signal */
+ 3094 113a CDB7      	/* frame size = 25 */
+ 3096               	.LM262:
+ 3097               		ldi r30,lo8(237)
+  83:main.c        **** 	TCCR0A = (1 << CS02) | (0 << CS01) | (0 << CS00);	//Prescaler 256
+ 3098               	hi8(237)
+ 3099               		ld r24,Z
+ 3100 113e E4E4      		std Y+2,r24
+ 3102 1142 84E0      	.LM263:
+ 3103 1144 8083      		call can_get_mob_interrupt
+  84:main.c        **** 	//TCNT0 = 0x00;
+  85:main.c        **** 	TIMSK0 = (0 << OCIE0A) | (1 << TOIE0);
+ 3104               	ogue: Signal */
+ 3105               	/* frame size = 25 */
+ 3107 1148 F0E0      	.LM262:
+ 3108 114a 81E0      		ldi r30,lo8(237)
+ 3109 114c 8083      		ldi r31,hi8(237)
+  86:main.c        **** 	TCNT0 = 0x06;
+ 3110               	h r28
+ 3111               		in r28,__SP_L__
+ 3112 114e E6E4      		in r29,__SP_H__
+ 3113 1150 F0E0      		sbiw r28,25
+ 3114 1152 86E0      		out __SP_H__,r29
+ 3115 1154 8083      		out __SP_L__,r28
+ 3116               	/* prologue: Signal */
+  87:main.c        **** }
+ 3117               	e size = 25 */
+ 3119 1156 CF91      	.LM262:
+ 3120 1158 DF91      		ldi r30,lo8(237)
+ 3121 115a 0895      		ldi r31,hi8(237)
+ 3122               		ld r24,Z
+ 3123               		std Y+2,r24
+ 3125               	.LM263:
+ 3126               		call can_get_mob_interrupt
+ 3127               		std Y+1,r24
+  88:main.c        **** 
+  89:main.c        **** void USART0_ini (void)
+  90:main.c        **** {
+ 3128               	/
+ 3129               	/* frame size = 25 */
+ 3131 115c DF93      	.LM262:
+ 3132 115e CF93      		ldi r30,lo8(237)
+ 3133 1160 CDB7      		ldi r31,hi8(237)
+ 3134 1162 DEB7      		ld r24,Z
+ 3135               		std Y+2,r24
+  91:main.c        **** 	/* Set baud rate */
+  92:main.c        **** 	UBRR0H = (unsigned char) (BAUD>>8);
+ 3137               	__SP_H__,r29
+ 3138               		out __SP_L__,r28
+ 3139 1164 E5EC      	/* prologue: Signal */
+ 3140 1166 F0E0      	/* frame size = 25 */
+  93:main.c        **** 	UBRR0L = (unsigned char) BAUD;
+ 3142               	2:
+ 3143               		ldi r30,lo8(237)
+ 3144 116a E4EC      		ldi r31,hi8(237)
+ 3145 116c F0E0      		ld r24,Z
+ 3146 116e 87E6      		std Y+2,r24
+  94:main.c        **** 	UCSR0C = (0 << UMSEL0) | //asynchronous
+ 3148               	__SP_H__,r29
+ 3149               		out __SP_L__,r28
+ 3150 1172 E2EC      	/* prologue: Signal */
+ 3151 1174 F0E0      	/* frame size = 25 */
+ 3153 1178 8083      	.LM262:
+  95:main.c        **** 			(0 << UPM00) | (0<<UPM01) |	//Mode 00: no parity
+  96:main.c        **** 			(0 << USBS0) | 	//1 stop bit
+  97:main.c        **** 			(1 << UCSZ01) | (1 << UCSZ00);	//Mode 011: 8 bit data
+  98:main.c        **** 	/* Enable transmitter, disable receiver */
+  99:main.c        **** 	UCSR0B = (0 << RXCIE0) | (1 << TXCIE0) | (0 << RXEN0) | (1 << TXEN0) | (0 << UCSZ02);
+ 3154               	30,lo8(237)
+ 3155               		ldi r31,hi8(237)
+ 3156 117a E1EC      		ld r24,Z
+ 3157 117c F0E0      		std Y+2,r24
+ 3159 1180 8083      	.LM263:
+ 100:main.c        **** 	UCSR0A = (0 << U2X0);
+ 3160               	r29
+ 3161               		out __SP_L__,r28
+ 3162 1182 E0EC      	/* prologue: Signal */
+ 3163 1184 F0E0      	/* frame size = 25 */
+ 3165               	.LM262:
+ 101:main.c        **** }
+ 3166               	30,lo8(237)
+ 3167               		ldi r31,hi8(237)
+ 3168 1188 CF91      		ld r24,Z
+ 3169 118a DF91      		std Y+2,r24
+ 3171               	.LM263:
+ 3172               		call can_get_mob_interrupt
+ 3173               		std Y+1,r24
+ 3175               	.LM264:
+ 3176               		ldd r24,Y+1
+ 3177               		cpi r24,lo8(-1)
+ 102:main.c        **** 
+ 103:main.c        **** SIGNAL (SIG_CAN_INTERRUPT1)
+ 104:main.c        **** {
+ 3178               	o8(237)
+ 3179               		ldi r31,hi8(237)
+ 3180               		ld r24,Z
+ 3181 118e 1F92      		std Y+2,r24
+ 3183 1192 0FB6      	.LM263:
+ 3184 1194 0F92      		call can_get_mob_interrupt
+ 3185 1196 0090 5B00 		std Y+1,r24
+ 3187 119c 1124      	.LM264:
+ 3188 119e 2F93      		ldd r24,Y+1
+ 3189 11a0 3F93      		cpi r24,lo8(-1)
+ 3190 11a2 4F93      		brne .+2
+ 3191 11a4 5F93      		rjmp .L119
+ 3193 11a8 7F93      	.LM265:
+ 3194 11aa 8F93      		ldd r24,Y+1
+ 3195 11ac 9F93      		call can_select_mob
+ 3197 11b0 BF93      	.LM266:
+ 3198 11b2 EF93      		movw r24,r28
+ 3199 11b4 FF93      		adiw r24,3
+ 3200 11b6 DF93      		call can_get_mob_data
+ 3201 11b8 CF93      		ldi r24,lo8(message.1970)
+ 3202 11ba CDB7      		ldi r25,hi8(message.1970)
+ 3203 11bc DEB7      		std Y+22,r25
+ 3204 11be 6997      		std Y+21,r24
+ 3205 11c0 DEBF      		movw r30,r28
+ 3206 11c2 CDBF      		adiw r30,3
+ 3207               		std Y+24,r31
+ 3208               		std Y+23,r30
+ 105:main.c        **** 	//PORTE &= ~(0x01 << 6);
+ 106:main.c        **** 	uint8_t		save_canpage;
+ 107:main.c        ****  	static		can_message message;
+ 108:main.c        **** 
+ 109:main.c        **** 	// Aktuelle CANPAGE sichern
+ 110:main.c        ****  	save_canpage	= CANPAGE;
+ 3209               	w r24,r28
+ 3210               		adiw r24,3
+ 3211 11c4 EDEE      		call can_get_mob_data
+ 3212 11c6 F0E0      		ldi r24,lo8(message.1970)
+ 3213 11c8 8081      		ldi r25,hi8(message.1970)
+ 3214 11ca 8A83      		std Y+22,r25
+ 111:main.c        **** 
+ 112:main.c        ****     // Index des MOB ermitteln, der den Interrupt ausgelöst hat
+ 113:main.c        **** 	uint8_t mob 	= can_get_mob_interrupt();
+ 3215               	r24,Y+1
+ 3216               		call can_select_mob
+ 3218 11d0 8983      	.LM266:
+ 114:main.c        ****     
+ 115:main.c        **** 	// Falls es kein gültiges MOB war abbrechen
+ 116:main.c        **** 	if(mob == NOMOB)
+ 3219               	16,.LM264-.LFBB24
+ 3220               	.LM264:
+ 3221 11d2 8981      		ldd r24,Y+1
+ 3222 11d4 8F3F      		cpi r24,lo8(-1)
+ 3223 11d6 01F4      		brne .+2
+ 3224 11d8 00C0      		rjmp .L119
+ 117:main.c        **** 	{
+ 118:main.c        **** 		return;
+ 119:main.c        **** 	}
+ 120:main.c        **** 
+ 121:main.c        **** 	// Objekt das den Interrupt ausgelöst hat holen
+ 122:main.c        **** 	can_select_mob(mob);
+ 3225               	)
+ 3226               		ld r24,Z
+ 3227 11da 8981      		std Y+2,r24
+ 123:main.c        ****     
+ 124:main.c        **** 	// Daten des MOBs aus CANMSG auslesen
+ 125:main.c        **** 	message			= can_get_mob_data();
+ 3229               	__SP_H__,r29
+ 3230               		out __SP_L__,r28
+ 3231 11e0 CE01      	/* prologue: Signal */
+ 3232 11e2 0396      	/* frame size = 25 */
+ 3234 11e8 80E0      	.LM262:
+ 3235 11ea 90E0      		ldi r30,lo8(237)
+ 3236 11ec 9E8B      		ldi r31,hi8(237)
+ 3237 11ee 8D8B      		ld r24,Z
+ 3238 11f0 FE01      		std Y+2,r24
+ 3240 11f4 F88F      	.LM263:
+ 3241 11f6 EF8B      		call can_get_mob_interrupt
+ 3242 11f8 F2E1      		std Y+1,r24
+ 3244               	.LM264:
+ 3245 11fc EF89      		ldd r24,Y+1
+ 3246 11fe F88D      		cpi r24,lo8(-1)
+ 3247 1200 0080      		brne .+2
+ 3248 1202 8F89      		rjmp .L119
+ 3250 1206 0196      	.LM265:
+ 3251 1208 988F      		ldd r24,Y+1
+ 3252 120a 8F8B      		call can_select_mob
+ 3254 120e FE89      	.LM266:
+ 3255 1210 0082      		movw r24,r28
+ 3256 1212 8D89      		adiw r24,3
+ 3257 1214 9E89      		call can_get_mob_data
+ 3258 1216 0196      		ldi r24,lo8(message.1970)
+ 3259 1218 9E8B      		ldi r25,hi8(message.1970)
+ 3260 121a 8D8B      		std Y+22,r25
+ 3261 121c 998D      		std Y+21,r24
+ 3262 121e 9150      		movw r30,r28
+ 3263 1220 998F      		adiw r30,3
+ 3264 1222 E98D      		std Y+24,r31
+ 3265 1224 EE23      		std Y+23,r30
+ 3266 1226 01F4      		ldi r31,lo8(18)
+ 126:main.c        **** 	
+ 127:main.c        **** 	// Id der Nachricht holen
+ 128:main.c        **** 	message.id		= can_get_mob_id(can_get_mob_id_type());
+ 3267               	d r31,Y+24
+ 3268               		ld r0,Z
+ 3269 1228 0E94 0000 		ldd r24,Y+23
+ 3270 122c 0E94 0000 		ldd r25,Y+24
+ 3271 1230 DC01      		adiw r24,1
+ 3272 1232 CB01      		std Y+24,r25
+ 3273 1234 8093 0000 		std Y+23,r24
+ 3274 1238 9093 0000 		ldd r30,Y+21
+ 3275 123c A093 0000 		ldd r31,Y+22
+ 3276 1240 B093 0000 		st Z,r0
+ 129:main.c        **** 
+ 130:main.c        **** 	PORTB ^= (0x01 << PB0);
+ 3277               	18)
+ 3278               		std Y+25,r31
+ 3279 1244 A5E2      	.L116:
+ 3280 1246 B0E0      		ldd r30,Y+23
+ 3281 1248 E5E2      		ldd r31,Y+24
+ 3282 124a F0E0      		ld r0,Z
+ 3283 124c 9081      		ldd r24,Y+23
+ 3284 124e 81E0      		ldd r25,Y+24
+ 3285 1250 8927      		adiw r24,1
+ 3286 1252 8C93      		std Y+24,r25
+ 131:main.c        **** //	//////////////////////////////////
+ 132:main.c        **** //	// Daten verarbeiten / ausgeben //
+ 133:main.c        **** //	//////////////////////////////////
+ 134:main.c        **** //
+ 135:main.c        **** 	if (message.id == 0x030)
+ 3287               	8
+ 3288               		adiw r30,3
+ 3289 1254 8091 0000 		std Y+24,r31
+ 3290 1258 9091 0000 		std Y+23,r30
+ 3291 125c A091 0000 		ldi r31,lo8(18)
+ 3292 1260 B091 0000 		std Y+25,r31
+ 3293 1264 8033      	.L116:
+ 3294 1266 9105      		ldd r30,Y+23
+ 3295 1268 A105      		ldd r31,Y+24
+ 3296 126a B105      		ld r0,Z
+ 3297 126c 01F4      		ldd r24,Y+23
+ 136:main.c        **** 	{
+ 137:main.c        **** 		// Cell 1
+ 138:main.c        **** 		msg_uart30[1] = message.data[1];	// H Byte
+ 3298               	0)
+ 3299               		std Y+22,r25
+ 3300 126e 8091 0000 		std Y+21,r24
+ 3301 1272 8093 0000 		movw r30,r28
+ 139:main.c        **** 		msg_uart30[2] = message.data[0];	// L Byte
+ 3303               	.LM266:
+ 3304 1276 8091 0000 		movw r24,r28
+ 3305 127a 8093 0000 		adiw r24,3
+ 140:main.c        **** 		// Cell 2
+ 141:main.c        **** 		msg_uart30[3] = message.data[3];	// H Byte
+ 3306               	dd r24,Y+1
+ 3307               		cpi r24,lo8(-1)
+ 3308 127e 8091 0000 		brne .+2
+ 3309 1282 8093 0000 		rjmp .L119
+ 142:main.c        **** 		msg_uart30[4] = message.data[2];	// L Byte
+ 3310               	)
+ 3311               		ld r24,Z
+ 3312 1286 8091 0000 		std Y+2,r24
+ 143:main.c        **** 		// Cell 3
+ 144:main.c        **** 		msg_uart30[5] = message.data[5];	// H Byte
+ 3314               	__SP_H__,r29
+ 3315               		out __SP_L__,r28
+ 3316 128e 8091 0000 	/* prologue: Signal */
+ 3317 1292 8093 0000 	/* frame size = 25 */
+ 145:main.c        **** 		msg_uart30[6] = message.data[4];	// L Byte
+ 3318               	abn	68,0,110,.LM262-.LFBB24
+ 3319               	.LM262:
+ 3320 1296 8091 0000 		ldi r30,lo8(237)
+ 3321 129a 8093 0000 		ldi r31,hi8(237)
+ 146:main.c        **** 		// Cell 4
+ 147:main.c        **** 		msg_uart30[7] = message.data[7];	// H Byte
+ 3322               	h r28
+ 3323               		in r28,__SP_L__
+ 3324 129e 8091 0000 		in r29,__SP_H__
+ 3325 12a2 8093 0000 		sbiw r28,25
+ 148:main.c        **** 		msg_uart30[8] = message.data[6];	// L Byte
+ 3326               	 __SP_H__,r29
+ 3327               		out __SP_L__,r28
+ 3328 12a6 8091 0000 	/* prologue: Signal */
+ 3329 12aa 8093 0000 	/* frame size = 25 */
+ 149:main.c        **** 	}
+ 150:main.c        **** 	if (message.id == 0x031)
+ 3331               	2:
+ 3332               		ldi r30,lo8(237)
+ 3333 12ae 8091 0000 		ldi r31,hi8(237)
+ 3334 12b2 9091 0000 		ld r24,Z
+ 3335 12b6 A091 0000 		std Y+2,r24
+ 3337 12be 8133      	.LM263:
+ 3338 12c0 9105      		call can_get_mob_interrupt
+ 3339 12c2 A105      		std Y+1,r24
+ 3341 12c6 01F4      	.LM264:
+ 151:main.c        **** 	{
+ 152:main.c        **** 		// Cell 5
+ 153:main.c        **** 		msg_uart30[9] = message.data[1];	// H Byte
+ 3342               	LM262-.LFBB24
+ 3343               	.LM262:
+ 3344 12c8 8091 0000 		ldi r30,lo8(237)
+ 3345 12cc 8093 0000 		ldi r31,hi8(237)
+ 154:main.c        **** 		msg_uart30[10] = message.data[0];	// L Byte
+ 3346               	h r28
+ 3347               		in r28,__SP_L__
+ 3348 12d0 8091 0000 		in r29,__SP_H__
+ 3349 12d4 8093 0000 		sbiw r28,25
+ 3350               		out __SP_H__,r29
+ 155:main.c        **** 	}
+ 156:main.c        **** 
+ 157:main.c        **** //	//////////////////////////////////
+ 158:main.c        **** //	// Daten verarbeiten / ausgeben //
+ 159:main.c        **** //	//////////////////////////////////
+ 160:main.c        **** 
+ 161:main.c        **** 	// RXOK-Flag löschen
+ 162:main.c        **** 	clearbit(CANSTMOB, RXOK);
+ 3351               	__SP_L__,r28
+ 3352               	/* prologue: Signal */
+ 3353 12d8 AEEE      	/* frame size = 25 */
+ 3355 12dc EEEE      	.LM262:
+ 3356 12de F0E0      		ldi r30,lo8(237)
+ 3357 12e0 8081      		ldi r31,hi8(237)
+ 3358 12e2 8F7D      		ld r24,Z
+ 3359 12e4 8C93      		std Y+2,r24
+ 163:main.c        ****     
+ 164:main.c        **** 	// MOB auf Empfang und CAN 2.0B Standard setzen
+ 165:main.c        **** 	can_set_mob_mode(RECEIVE_DATA, can_get_mob_id_type());
+ 3360               	8,0,113,.LM263-.LFBB24
+ 3361               	.LM263:
+ 3362 12e6 0E94 0000 		call can_get_mob_interrupt
+ 3363 12ea 982F      		std Y+1,r24
+ 3365 12ee 692F      	.LM264:
+ 3366 12f0 0E94 0000 		ldd r24,Y+1
+ 166:main.c        ****     
+ 167:main.c        **** 	//CANPAGE wiederherstellen
+ 168:main.c        **** 	CANPAGE		= save_canpage;
+ 3367               	.LM262:
+ 3368               		ldi r30,lo8(237)
+ 3369 12f4 EDEE      		ldi r31,hi8(237)
+ 3370 12f6 F0E0      		ld r24,Z
+ 3371 12f8 8A81      		std Y+2,r24
+ 3373               	.LM263:
+ 3374               		call can_get_mob_interrupt
+ 169:main.c        **** }
+ 3375               	ogue: Signal */
+ 3376               	/* frame size = 25 */
+ 3378 12fe DEBF      	.LM262:
+ 3379 1300 CDBF      		ldi r30,lo8(237)
+ 3380 1302 CF91      		ldi r31,hi8(237)
+ 3381 1304 DF91      		ld r24,Z
+ 3382 1306 FF91      		std Y+2,r24
+ 3384 130a BF91      	.LM263:
+ 3385 130c AF91      		call can_get_mob_interrupt
+ 3386 130e 9F91      		std Y+1,r24
+ 3388 1312 7F91      	.LM264:
+ 3389 1314 6F91      		ldd r24,Y+1
+ 3390 1316 5F91      		cpi r24,lo8(-1)
+ 3391 1318 4F91      		brne .+2
+ 3392 131a 3F91      		rjmp .L119
+ 3394 131e 0F90      	.LM265:
+ 3395 1320 0092 5B00 		ldd r24,Y+1
+ 3396 1324 0F90      		call can_select_mob
+ 3398 1328 0F90      	.LM266:
+ 3399 132a 1F90      		movw r24,r28
+ 3400 132c 1895      		adiw r24,3
+ 3401               		call can_get_mob_data
+ 3402               		ldi r24,lo8(message.1970)
+ 3403               		ldi r25,hi8(message.1970)
+ 3404               		std Y+22,r25
+ 3405               		std Y+21,r24
+ 3406               		movw r30,r28
+ 3407               		adiw r30,3
+ 3408               		std Y+24,r31
+ 3409               		std Y+23,r30
+ 3410               		ldi r31,lo8(18)
+ 3411               		std Y+25,r31
+ 3412               	.L116:
+ 3413               		ldd r30,Y+23
+ 3414               		ldd r31,Y+24
+ 3415               		ld r0,Z
+ 3416               		ldd r24,Y+23
+ 3417               		ldd r25,Y+24
+ 3418               		adiw r24,1
+ 3419               		std Y+24,r25
+ 3420               		std Y+23,r24
+ 3421               		ldd r30,Y+21
+ 3422               		ldd r31,Y+22
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:77     .text:00000000 can_set_baudrate
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:277    .text:00000112 can_set_interrupt
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:456    .text:0000021a can_select_mob
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:490    .text:0000023a can_set_mob_id_mask
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:677    .text:00000358 can_set_mob_id
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:881    .text:0000049a can_get_mob_id
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:1162   .text:00000668 can_set_mob_mode
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:1458   .text:00000826 can_get_mob_mode
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:1645   .text:0000093c can_set_mob_data
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:1719   .text:0000099a can_get_mob_data
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:1824   .text:00000a30 can_set_mob_interrupt
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:1909   .text:00000aaa can_get_mob_interrupt
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:2013   .text:00000b26 can_clear_mob_interrupt
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:2102   .text:00000ba4 can_init
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:2192   .text:00000c12 can_enable_mob
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:2271   .text:00000c80 can_get_mob_id_type
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:2317   .text:00000cae can_disable_mob
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:2356   .text:00000cd6 can_send_data
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:2458   .bss:00000000 send_data
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:2464   .bss:00000001 send_data_position
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:2470   .data:00000000 msg_uart30
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:2507   .bss:00000002 timer0_cnt
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:2514   .text:00000d54 main
+                            *COM*:00000012 msg_test
+                            *COM*:00000012 msg_bat_1
+                            *COM*:00000012 msg_bat_2
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:3088   .text:00001136 TIMER0_ini
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:3127   .text:0000115c USART0_ini
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:2846   .text:00000faa __vector_23
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:2934   .text:00001030 __vector_17
+                             .bss:00000003 message.1970
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccbPdw1A.s:3177   .text:0000118e __vector_18
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

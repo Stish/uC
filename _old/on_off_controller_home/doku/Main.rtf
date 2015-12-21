@@ -1,0 +1,838 @@
+{\rtf1\ansi\deff0\deftab720{\fonttbl{\f0\fnil\fcharset0 Courier New;}{\f1\fnil\fcharset0 Lucida Console;}}{\colortbl\red0\green0\blue0;\red0\green127\blue0;\red63\green112\blue63;\red0\green127\blue127;\red0\green0\blue127;\red127\green0\blue127;\red128\green64\blue128;\red127\green127\blue0;\red63\green127\blue63;\red176\green0\blue64;\red48\green96\blue160;\red128\green64\blue32;}
+\f0\fs20\cf0 \f1\cf1 //======================================================\tab \tab \par
+//============= \tab \tab Hardware Setup\tab ================\par
+//======================================================\par
+// Display Data Port\par
+\cf7 #define LCD_DATA_DDR\tab DDRC\par
+#define LCD_DATA_PORT\tab PORTC\par
+#define LCD_DATA_PIN\tab PINC\par
+\cf1 // Display Control Port\par
+\cf7 #define LCD_CTRL_DDR\tab DDRA\par
+#define LCD_CTRL_PORT\tab PORTA\par
+\cf1 // Display Control Pins\par
+\cf7 #define LCD_CTRL_RS\tab 7\par
+#define LCD_CTRL_RW\tab 5\par
+#define LCD_CTRL_E\tab 6\par
+\cf1 // Display Size\par
+\cf7 #define LCD_WIDTH\tab 160\par
+#define LCD_HEIGHT\tab 80\par
+\cf1 // Touch Control\par
+\cf7 #define TOUCH_DIGIT_OUT_PORT 'a'\par
+#define TOUCH_DIGIT_OUT_PIN 0\par
+#define TOUCH_ANA_PORT 'f'\par
+\cf1 // System Control\par
+\cf7 #define SYS_SUPPLY_PORT 'd'\par
+#define SYS_SUPPLY_PIN 0\par
+\cf1 //======================================================\tab \tab \par
+//============= \tab \tab Program Setup\tab ================\par
+//======================================================\par
+\cf7 #define PIC_POS_FLAME_FLAKE_X 40\tab \tab \tab \tab \cf1 //origin pos x for flame/flake picture\par
+\cf7 #define PIC_POS_FLAME_FLAKE_Y 1\tab \tab \tab \tab \tab \cf1 //origin pos y for flame/flake picture\par
+\cf7 #define AD_PIN 0\tab \tab \tab \tab \tab \tab \tab \tab \cf1 //connect to ad0\par
+\cf0 \par
+\cf7 #define FLAME_AND_FLAKE_ON\tab \tab \tab \tab \tab \tab \cf1 //show flame/flake for heating/cooling process\par
+\cf7 #define GRAD_ON\tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //show ° sign in front of Celsius\par
+\cf7 #define COVER_ON\tab \tab \tab \tab \tab \tab \tab \tab \cf1 //show cover screen\par
+\cf7 #define SHOW_AD_VALUE\tab \tab \tab \tab \tab \tab \tab \cf1 //automatically update of current temperature\par
+\cf7 #define LIVE_DIAGRAM_ON\tab \tab \tab \tab \tab \tab \tab \cf1 //constantly refreshing the graph in the diagram\par
+\cf0 \par
+\cf7 #include "lib/io_fct.c"\tab \tab \tab \tab \tab \tab \tab \cf1 //library for input/output functions\par
+\cf7 #include "lib/LC7981.c"\tab \tab \tab \tab \tab \tab \tab \cf1 //library for gfx LCD functions\par
+\cf7 #include "lib/delay.c"\tab \tab \tab \tab \tab \tab \tab \cf1 //library for delay function\par
+\cf7 #include <avr/signal.h>\tab \tab \tab \tab \tab \tab \tab \cf1 //library for interrupt functions\par
+\cf7 #include <avr/interrupt.h>\tab \tab \tab \tab \tab \tab \cf1 //library for interrupt functions\par
+\cf7 #include <math.h>\tab \tab \tab \tab \tab \tab \tab \tab \cf1 //library for mathematic functions\par
+\cf7 #include "lib/touch_pictures.c"\tab \tab \tab \tab \tab \cf1 //library for cover picture function\par
+\cf0 \par
+\cf4\b void\cf0\b0  \f0 clr_diagram\f1\b (\cf4 void\cf0 );\b0 \tab \tab \tab \tab \tab \tab \cf1 //clear diagram array\par
+\cf4\b void\cf0\b0  \f0 draw_diagram\f1\b (\cf4 void\cf0 );\b0 \tab \tab \tab \tab \tab \tab \cf1 //draw the graph on the display\par
+\cf4\b void\cf0\b0  \f0 draw_line\f1\b (\cf4 unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 x_start\f1\b ,\b0  \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 y_start\f1\b ,\b0  \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 x_end\f1\b ,\b0  \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 y_end\f1\b ,\b0  \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 draw\f1\b );\b0 \tab \cf1 //connect to points with a line\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 get_touch_y\f1\b (\cf4 void\cf0 );\b0 \tab \tab \tab \tab \cf1 //returns y coordinate of touch point in pixel\par
+\cf4\b unsigned\cf0\b0  \cf4\b int\cf0\b0  \f0 get_touch_x\f1\b (\cf4 unsigned\cf0\b0  \cf4\b int\cf0\b0  \f0 y\f1\b );\b0 \tab \cf1 //returns x coordinate of touch point in pixel\par
+\cf4\b void\cf0\b0  \f0 call_input_mode_screen\f1\b (\cf4 void\cf0 );\b0 \tab \tab \tab \tab \cf1 //calls the input mode selection screen\tab \par
+\cf4\b void\cf0\b0  \f0 call_num_pad_mode\f1\b (\cf4 void\cf0 );\b0 \tab \tab \tab \tab \tab \cf1 //calls the num pad mode for input\tab \par
+\cf4\b void\cf0\b0  \f0 call_slider_mode\f1\b (\cf4 void\cf0 );\b0 \tab \tab \tab \tab \tab \cf1 //calls the slider mode for input\tab \par
+\cf4\b void\cf0\b0  \f0 draw_layout\f1\b (\cf4 void\cf0 );\b0 \tab \tab \tab \tab \tab \tab \cf1 //draws the layout of the controller screen\par
+\cf0 \par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 diagram\f1\b [\cf3\b0 80\cf0\b ];\b0 \tab \tab \tab \tab \tab \cf1 //array for meassured points\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 val_ad_bcd\f1\b [\cf3\b0 3\cf0\b ]\b0  \b =\b0  \cf5 "00"\cf0\b ;\b0 \tab \tab \tab \cf1 //ad value string\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 val_min_bcd\f1\b [\cf3\b0 3\cf0\b ]\b0  \b =\b0  \cf5 "00"\cf0\b ;\b0 \tab \tab \tab \cf1 //min value string\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 val_max_bcd\f1\b [\cf3\b0 3\cf0\b ]\b0  \b =\b0  \cf5 "00"\cf0\b ;\b0 \tab \tab \tab \cf1 //max value string\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 val_refr_bcd\f1\b [\cf3\b0 7\cf0\b ]\b0  \b =\b0  \cf5 "0000ms"\cf0\b ;\b0 \tab \tab \cf1 //refresh time string\par
+\cf0 \par
+\cf4\b unsigned\cf0\b0  \cf4\b int\cf0\b0  \f0 val_ad\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \cf1 //ad value decimal\par
+\cf4\b unsigned\cf0\b0  \cf4\b int\cf0\b0  \f0 val_min\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \cf1 //min value decimal\par
+\cf4\b unsigned\cf0\b0  \cf4\b int\cf0\b0  \f0 val_max\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \cf1 //max value decimal\par
+\cf4\b unsigned\cf0\b0  \cf4\b int\cf0\b0  \f0 val_refr\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \cf1 //refresh time decimal\par
+//============= \tab VAR generell\tab \tab ================\par
+\cf4\b unsigned\cf0\b0  \cf4\b int\cf0\b0  \f0 buffer_touch_ad_x\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \cf1 //buffer for ad values x\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 buffer_touch_ad_y\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \cf1 //buffer for ad values y\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 selected_mode\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \cf1 //input mode - 2 slider, 1 num pad\par
+//============= \tab VAR Slider Input\tab ================\tab \par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 bar_1_height\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \cf1 //height bar 1 - min value\tab \par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 val_min_bar\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \cf1 //min value\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 bar_2_height\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \cf1 //height bar 2 - max value\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 val_max_bar\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \cf1 //max value\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 bar_3_height\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \cf1 //height bar 3 - refresh time\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 val_refr_bar\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \cf1 //refresh time\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 button_pressed\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \cf1 //button pressed - 1 yes, 0 no - also used for num pad\par
+//============= \tab VAR Num Pad Input\tab ================\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 num_pad_pressed\f1\b [\cf3\b0 12\cf0\b ]\b0  \b =\b0  \b \{\cf3\b0 0\cf0\b ,\cf3\b0 0\cf0\b ,\cf3\b0 0\cf0\b ,\cf3\b0 0\cf0\b ,\cf3\b0 0\cf0\b ,\cf3\b0 0\cf0\b ,\cf3\b0 0\cf0\b ,\cf3\b0 0\cf0\b ,\cf3\b0 0\cf0\b ,\cf3\b0 0\cf0\b ,\cf3\b0 0\cf0\b ,\cf3\b0 0\cf0\b \};\b0 \tab \cf1 //num pad buttons control\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 num_input_min_temp\f1\b [\cf3\b0 3\cf0\b ]\b0  \b =\b0  \cf5 "00"\cf0\b ;\b0 \tab \cf1 //input string min value\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 num_input_max_temp\f1\b [\cf3\b0 3\cf0\b ]\b0  \b =\b0  \cf5 "00"\cf0\b ;\b0 \tab \cf1 //input string max value\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 num_input_refr_time\f1\b [\cf3\b0 7\cf0\b ]\b0  \b =\b0  \cf5 "0000ms"\cf0\b ;\b0 \tab \cf1 //input string refresh time\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 num_pad_value_control\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \cf1 //input for diff. values - 0 min, 1 max, 2, refr time, 3 error check\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 num_pad_input_recognised\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \cf1 //help var for num pad input detection\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 num_pad_cursor_pos\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \cf1 //cursor position for input\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 i_count\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \tab \cf1 //help var for num pad input detection\par
+\cf0 \par
+\f0 SIGNAL\f1  \b (\f0\b0 SIG_ADC\f1\b )\b0 \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //a/d converter in interrupt mode\par
+\cf0\b \{\b0 \par
+\tab \f0 val_ad\f1  \b =\b0  \f0 ADCL\f1\b ;\b0 \par
+\tab \f0 val_ad\f1  \b |=\b0  \b (\f0\b0 ADCH\f1\b <<\cf3\b0 8\cf0\b );\b0 \par
+\b \}\b0 \par
+\par
+\cf4\b int\cf0\b0  \f0 main\f1\b (\cf4 void\cf0 )\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //main program\par
+\cf0\b \{\b0 \par
+\cf1 //============= \tab VAR generell\tab \tab ================\par
+\cf0 \tab \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 x_pix\f1\b ,\b0  \f0 y_pix\f1\b ,\b0  \f0 i\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \cf1 //x & y position of meassured point, counter var\par
+\cf0 \tab \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 buffer_x_pix\f1  \b =\b0  \cf3 0\cf0\b ;\b0  \tab \tab \tab \cf1 //buffer for x_pix\par
+\cf0 \tab \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 buffer_y_pix\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \cf1 //buffer for y_pix\par
+//============= \tab Flake and Flame\tab \tab ================\par
+\cf7 #ifdef FLAME_AND_FLAKE_ON\par
+\cf0 \tab \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 flake_drawn\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \cf1 //flake was drawn = 1, not = 0\par
+\cf0 \tab \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 flame_drawn\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \cf1 //flame was drawn = 1, not = 0\par
+\cf7 #endif\par
+\cf1 //============= \tab \tab Init LCD\tab \tab ================\tab \par
+\cf0 \tab \f0 lcd_graphics_init\f1\b ();\b0 \tab \tab \tab \tab \tab \tab \cf1 //init LCD\par
+\cf0 \tab \f0 lcd_graphics_clear\f1\b ();\b0 \tab \tab \tab \tab \tab \tab \cf1 //clear LCD\par
+\cf0 \tab \f0 init_out_pin\f1\b (\f0\b0 TOUCH_DIGIT_OUT_PORT\f1\b ,\b0  \f0 TOUCH_DIGIT_OUT_PIN\f1\b );\b0 \tab \tab \tab \tab \tab \tab \cf1 //porta - pin0 as output for touchscreen\par
+\cf0 \tab \f0 init_out_pin\f1\b (\f0\b0 SYS_SUPPLY_PORT\f1\b ,\b0  \f0 SYS_SUPPLY_PIN\f1\b );\b0 \tab \cf1 //portd - pin0 as output for system supply (r-c)\par
+\cf0 \tab \f0 reset_pin\f1\b (\f0\b0 SYS_SUPPLY_PORT\f1\b ,\b0  \f0 SYS_SUPPLY_PIN\f1\b );\b0 \tab \tab \cf1 //reset power supply of system (r-c)\par
+\cf7 #ifdef COVER_ON\par
+\cf1 //============= \tab \tab Cover Picture\tab ================\par
+\cf0 \tab \f0 draw_pic\f1\b ();\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //draw cover picture and wait for touch input\par
+\cf0 \tab \cf4\b while\cf0\b0  \b (!((\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 1\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 160\cf0\b )))\b0 \par
+\tab \b \{\b0 \par
+\tab \tab \f0 buffer_touch_ad_y\f1  \b =\b0  \f0 get_touch_y\f1\b ();\b0 \par
+\tab \tab \f0 buffer_touch_ad_x\f1  \b =\b0  \f0 get_touch_x\f1\b (\f0\b0 buffer_touch_ad_y\f1\b );\b0 \par
+\tab \b \}\b0 \par
+\tab \f0 lcd_graphics_clear\f1\b ();\b0 \tab \tab \tab \tab \tab \tab \cf1 //clear display\par
+\cf7 #endif\par
+\cf1 //=============\tab Input Mode Selection\tab ================\tab \par
+\cf0 \tab \f0 call_input_mode_screen\f1\b ();\b0 \tab \tab \tab \tab \tab \cf1 //input selection screens appears: 1 num pad mode, 2 slider mode\par
+\cf0 \tab \cf4\b if\cf0\b0  \b (\f0\b0 selected_mode\f1  \b ==\b0  \cf3 1\cf0\b )\b0 \par
+\tab \tab \f0 call_num_pad_mode\f1\b ();\b0 \tab \tab \tab \tab \tab \cf1 //num pad screen apperas\par
+\cf0 \tab \cf4\b if\cf0\b0  \b (\f0\b0 selected_mode\f1  \b ==\b0  \cf3 2\cf0\b )\b0 \par
+\tab \tab \f0 call_slider_mode\f1\b ();\b0 \tab \tab \tab \tab \tab \tab \cf1 //slider screen appears\par
+//============= \tab Controller Screen\tab ================\par
+\cf0 \tab \f0 draw_layout\f1\b ();\b0 \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //draw controller layout\par
+//============= \tab Init a/d converter\tab ================\par
+\cf0 \tab \f0 sei\f1\b ();\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //global interrupt enable on\par
+\cf0 \tab \f0 ADMUX\f1  \b =\b0  \cf3 0x40\cf0\b |\f0\b0 AD_PIN\f1\b ;\b0 \tab \tab \tab \tab \tab \tab \cf1 //connect to AD_PIN\par
+\cf0 \tab \f0 ADCSRA\f1  \b =\b0  \cf3 0x9e\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //enable ad converter\par
+\cf0 \tab \f0 ADCSRA\f1  \b |=\b0  \cf3 0x60\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //start converter\par
+//============= \tab \tab Program\tab \tab \tab ================\par
+\cf0 \tab \f0 x_pix\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //pixel x position\par
+\cf0 \tab \f0 y_pix\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //pixel y positio\par
+\cf0 \tab \f0 clr_diagram\f1\b ();\b0 \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //clear data array\par
+\cf0 \tab \f0 init_out_pin\f1\b (\f0\b0 TOUCH_DIGIT_OUT_PORT\f1\b ,\b0  \f0 TOUCH_DIGIT_OUT_PIN\f1\b );\b0 \tab \tab \tab \tab \tab \tab \cf1 //touch control pin\par
+\cf0 \par
+\tab \cf4\b while\cf0\b0  \b (\cf3\b0 1\cf0\b )\b0 \par
+\tab \b \{\b0 \par
+\tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 x_pix\f1  \b <=\b0  \cf3 79\cf0\b )\b0 \par
+\tab \tab \b \{\b0 \par
+\tab \tab \tab \f0 diagram\f1\b [\f0\b0 x_pix\f1\b ]\b0  \b =\b0  \f0 y_pix\f1\b ;\b0 \par
+\cf7 #ifdef LIVE_DIAGRAM_ON\par
+\cf0 \tab \tab \tab \f0 draw_line\f1\b (\f0\b0 buffer_x_pix\f1  \b +\b0  \cf3 75\cf0\b ,\b0  \b (-\cf3\b0 1\cf0\b *(\cf4 signed\cf0\b0  \cf4\b int\cf0 )\f0\b0 buffer_y_pix\f1\b )\b0  \b +\b0  \cf3 74\cf0\b ,\b0  \f0 x_pix\f1  \b +\b0  \cf3 75\cf0\b ,\b0  \b (-\cf3\b0 1\cf0\b *(\cf4 signed\cf0\b0  \cf4\b int\cf0 )\f0\b0 y_pix\f1\b )\b0  \b +\b0  \cf3 74\cf0\b ,\b0  \cf3 1\cf0\b );\b0 \par
+\cf7 #endif\par
+\cf0 \tab \tab \tab \f0 y_pix\f1  \b =\b0  \f0 round\f1\b (((\cf4 long\cf0\b0  \cf4\b int\cf0 )\f0\b0 val_ad\f1\b *\cf3\b0 118\cf0\b *\cf3\b0 489\cf0\b )\b0  \b /\b0  \cf3 1000000\cf0\b );\b0 \par
+\tab \tab \tab \f0 buffer_x_pix\f1  \b =\b0  \f0 x_pix\f1\b ;\b0 \par
+\tab \tab \tab \f0 buffer_y_pix\f1  \b =\b0  \f0 y_pix\f1\b ;\b0 \par
+\tab \tab \tab \f0 x_pix\f1\b ++;\b0 \par
+\tab \tab \b \}\b0 \par
+\tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 x_pix\f1  \b ==\b0  \cf3 80\cf0\b )\b0 \par
+\tab \tab \b \{\b0 \par
+\tab \tab \tab \cf1 //draw_diagram();\par
+\cf7 #ifdef LIVE_DIAGRAM_ON\par
+\cf0 \tab \tab \tab \f0 clr_diagram\f1\b ();\b0 \par
+\tab \tab \cf1 //============= \tab \tab Min/Max Level\tab ================\par
+\cf0 \tab \tab \tab \cf4\b for\cf0\b0  \b (\f0\b0 i\f1  \b =\b0  \cf3 73\cf0\b ;\b0  \f0 i\f1  \b <=\b0  \cf3 154\cf0\b ;\b0  \f0 i\f1\b ++)\b0 \par
+\tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \cf4\b if\cf0\b0  \b (!(\f0\b0 i\f1\b %\cf3\b0 3\cf0\b ))\b0 \par
+\tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\f0\b0 i\f1\b ,\b0  \cf3 14\cf0\b +\f0\b0 round\f1\b (\cf3\b0 60\cf0  \b -\b0  \f0 bar_2_height\f1  \b *\b0  \cf3 118\cf0  \b /\b0  \cf3 100\cf0\b ),\b0  \f0 PIXEL_ON\f1\b );\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\f0\b0 i\f1\b ,\b0  \cf3 14\cf0\b +\f0\b0 round\f1\b (\cf3\b0 60\cf0  \b -\b0  \f0 bar_1_height\f1  \b *\b0  \cf3 118\cf0  \b /\b0  \cf3 100\cf0\b ),\b0  \f0 PIXEL_ON\f1\b );\b0 \par
+\tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \f0 x_pix\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \f0 buffer_x_pix\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\cf7 #endif\par
+#ifndef LIVE_DIAGRAM_ON\par
+\cf0 \tab \tab \tab \f0 draw_diagram\f1\b ();\b0 \par
+\cf7 #endif\par
+\cf0 \tab \tab \b \}\b0 \par
+\tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 val_ad\f1  \b <=\b0  \f0 val_min\f1\b )\b0 \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //current temperature <= min level\par
+\cf0 \tab \tab \b \{\b0 \par
+\tab \tab \tab \f0 set_pin\f1\b (\f0\b0 SYS_SUPPLY_PORT\f1\b ,\b0  \f0 SYS_SUPPLY_PIN\f1\b );\b0 \tab \tab \cf1 //feeding system with heat (current on)\par
+\cf7 #ifdef FLAME_AND_FLAKE_ON\par
+\cf0 \tab \tab \tab \cf4\b if\cf0\b0  \b (!(\f0\b0 flame_drawn\f1\b ))\b0 \tab \tab \tab \tab \tab \tab \tab \cf1 //draw flame, if not allready drawn\par
+\cf0 \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \f0 draw_flame\f1\b ();\b0 \par
+\tab \tab \tab \tab \f0 flame_drawn\f1  \b =\b0  \cf3 1\cf0\b ;\b0 \par
+\tab \tab \tab \tab \f0 flake_drawn\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \b \}\b0 \par
+\cf7 #endif\par
+\cf0 \tab \tab \b \}\b0 \par
+\tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 val_ad\f1  \b >=\b0  \f0 val_max\f1\b ))\b0 \tab \tab \tab \tab \tab \tab \tab \cf1 //current temperature >= max level\par
+\cf0 \tab \tab \b \{\b0 \par
+\tab \tab \tab \f0 reset_pin\f1\b (\f0\b0 SYS_SUPPLY_PORT\f1\b ,\b0  \f0 SYS_SUPPLY_PIN\f1\b );\b0 \tab \cf1 //turn off heating, cooling (current of)\par
+\cf7 #ifdef FLAME_AND_FLAKE_ON\par
+\cf0 \tab \tab \tab \cf4\b if\cf0\b0  \b (!(\f0\b0 flake_drawn\f1\b ))\b0 \tab \tab \tab \tab \tab \tab \tab \cf1 //draw flake, if not allready drawn\par
+\cf0 \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \f0 draw_flake\f1\b ();\b0 \par
+\tab \tab \tab \tab \f0 flake_drawn\f1  \b =\b0  \cf3 1\cf0\b ;\b0 \par
+\tab \tab \tab \tab \f0 flame_drawn\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \b \}\b0 \par
+\cf7 #endif\par
+\cf0 \tab \tab \b \}\b0 \par
+\cf7 #ifdef SHOW_AD_VALUE\par
+\cf0 \tab \tab \f0 val_ad_bcd\f1\b [\cf3\b0 0\cf0\b ]\b0  \b =\b0  \b ((\f0\b0 round\f1\b (((\cf4 long\cf0\b0  \cf4\b int\cf0 )\f0\b0 val_ad\f1  \b *\b0  \cf3 968\cf0\b )\b0  \b /\b0  \cf3 10000\cf0\b ))\b0  \b /\b0  \cf3 10\cf0\b )\b0  \b +\b0  \cf3 48\cf0\b ;\b0 \tab \tab \cf1 //integer to bcd\par
+\cf0 \tab \tab \f0 val_ad_bcd\f1\b [\cf3\b0 1\cf0\b ]\b0  \b =\b0  \b ((\cf4 int\cf0 )(\f0\b0 round\f1\b (((\cf4 long\cf0\b0  \cf4\b int\cf0 )\f0\b0 val_ad\f1  \b *\b0  \cf3 968\cf0\b )\b0  \b /\b0  \cf3 10000\cf0\b ))%\cf3\b0 10\cf0\b )\b0  \b +\b0  \cf3 48\cf0\b ;\b0 \tab \cf1 //integer to bcd\par
+\cf0 \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 13\cf0\b ,\b0  \cf3 14\cf0\b ,\b0  \f0 val_ad_bcd\f1\b );\b0 \tab \tab \cf1 //draw current temperature on screen\par
+\cf7 #endif\par
+\cf0 \tab \tab \f0 delay_ms\f1\b (\f0\b0 val_refr\f1\b );\b0 \tab \tab \tab \tab \tab \tab \cf1 //wait for the given time\par
+\cf0 \tab \b \}\b0 \par
+\b \}\b0 \tab \par
+\par
+\cf4\b void\cf0\b0  \f0 call_input_mode_screen\f1\b (\cf4 void\cf0 )\b0 \par
+\b \{\b0 \par
+\cf1 //======================================================\tab \tab \par
+//============= \tab \tab Input Mode\tab \tab ================\par
+//======================================================\par
+\cf0 \tab \f0 g_draw_rectangle\f1\b (\cf3\b0 0\cf0\b ,\b0  \cf3 0\cf0\b ,\b0  \cf3 160\cf0\b ,\b0  \cf3 80\cf0\b );\b0 \tab \tab \tab \tab \cf1 //frame\par
+\cf0 \tab \f0 g_draw_string\f1\b (\cf3\b0 17\cf0\b ,\b0  \cf3 11\cf0\b ,\b0  \cf5 "Please select a mode:"\cf0\b );\b0 \par
+\cf1 //============= \tab \tab num pad mode\tab ================\tab \par
+\cf0 \tab \f0 g_draw_rectangle\f1\b (\cf3\b0 5\cf0\b ,\b0  \cf3 30\cf0\b ,\b0  \cf3 150\cf0\b ,\b0  \cf3 20\cf0\b );\b0 \tab \tab \tab \tab \cf1 //frame\par
+\cf0 \tab \f0 g_draw_string\f1\b (\cf3\b0 27\cf0\b ,\b0  \cf3 36\cf0\b ,\b0  \cf5 "Num Pad Input Mode"\cf0\b );\b0 \par
+\cf1 //============= \tab \tab slider mode\tab \tab ================\par
+\cf0 \tab \f0 g_draw_rectangle\f1\b (\cf3\b0 5\cf0\b ,\b0  \cf3 55\cf0\b ,\b0  \cf3 150\cf0\b ,\b0  \cf3 20\cf0\b );\b0 \tab \tab \tab \tab \cf1 //frame\par
+\cf0 \tab \f0 g_draw_string\f1\b (\cf3\b0 30\cf0\b ,\b0  \cf3 61\cf0\b ,\b0  \cf5 "Slider Input Mode"\cf0\b );\b0 \tab \par
+\tab \par
+\tab \f0 delay_ms\f1\b (\cf3\b0 1000\cf0\b );\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //wait for touch refresh\par
+\cf0 \tab \f0 buffer_touch_ad_x\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \f0 buffer_touch_ad_y\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \f0 button_pressed\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \par
+\tab \cf4\b while\cf0\b0  \b (\f0\b0 button_pressed\f1  \b <=\b0  \cf3 3\cf0\b )\b0 \tab \tab \tab \tab \tab \cf1 //wait for user choice (long press on touch)\par
+\cf0 \tab \b \{\b0 \par
+\tab \tab \f0 buffer_touch_ad_y\f1  \b =\b0  \f0 get_touch_y\f1\b ();\b0 \par
+\tab \tab \f0 buffer_touch_ad_x\f1  \b =\b0  \f0 get_touch_x\f1\b (\f0\b0 buffer_touch_ad_y\f1\b );\b0 \par
+\tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >\b0  \cf3 160\cf0\b )\b0 \par
+\tab \tab \tab \f0 buffer_touch_ad_x\f1  \b =\b0  \cf3 160\cf0\b ;\b0 \par
+\tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b ==\b0  \cf3 0\cf0\b )\b0 \par
+\tab \tab \tab \f0 buffer_touch_ad_y\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\cf1 //============= \tab \tab num pad mode\tab ================\tab \tab \tab \par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 30\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 50\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 2\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 152\cf0\b ))\b0 \par
+\tab \tab \b \{\b0 \par
+\tab \tab \tab \f0 selected_mode\f1  \b =\b0  \cf3 1\cf0\b ;\b0 \par
+\tab \tab \tab \f0 button_pressed\f1\b ++;\b0 \par
+\tab \tab \b \}\b0 \par
+\tab \tab \cf4\b else\cf0\b0  \par
+\tab \tab \b \{\b0 \par
+\cf1 //============= \tab \tab slider mode\tab \tab ================\par
+\cf0 \tab \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 55\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 80\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 2\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 152\cf0\b ))\b0 \par
+\tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \f0 selected_mode\f1  \b =\b0  \cf3 2\cf0\b ;\b0 \par
+\tab \tab \tab \tab \f0 button_pressed\f1\b ++;\b0 \par
+\tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \tab \f0 button_pressed\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \b \}\b0 \par
+\tab \b \}\b0 \par
+\b \}\b0 \par
+\par
+\cf4\b void\cf0\b0  \f0 call_num_pad_mode\f1\b (\cf4 void\cf0 )\b0 \par
+\b \{\b0 \par
+\cf1 //======================================================\tab \tab \par
+//============= \tab \tab Num Pad mode\tab ================\par
+//======================================================\par
+\cf0 \tab \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 i\f1\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //counting var\par
+//============= \tab \tab Layout\tab \tab \tab ================\par
+\cf0 \tab \f0 lcd_graphics_clear\f1\b ();\b0 \tab \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 0\cf0\b ,\b0  \cf3 0\cf0\b ,\b0  \cf3 160\cf0\b ,\b0  \cf3 80\cf0\b );\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 0\cf0\b ,\b0  \cf3 0\cf0\b ,\b0  \cf3 160\cf0\b ,\b0  \cf3 23\cf0\b );\b0 \par
+\tab \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 0\cf0\b ,\b0  \cf3 22\cf0\b ,\b0  \cf3 30\cf0\b ,\b0  \cf3 20\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 12\cf0\b ,\b0  \cf3 28\cf0\b ,\b0  \cf5 "1"\cf0\b );\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 0\cf0\b ,\b0  \cf3 41\cf0\b ,\b0  \cf3 30\cf0\b ,\b0  \cf3 20\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 12\cf0\b ,\b0  \cf3 48\cf0\b ,\b0  \cf5 "2"\cf0\b );\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 0\cf0\b ,\b0  \cf3 60\cf0\b ,\b0  \cf3 30\cf0\b ,\b0  \cf3 20\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 12\cf0\b ,\b0  \cf3 67\cf0\b ,\b0  \cf5 "3"\cf0\b );\b0 \par
+\tab \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 43\cf0\b ,\b0  \cf3 22\cf0\b ,\b0  \cf3 30\cf0\b ,\b0  \cf3 20\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 55\cf0\b ,\b0  \cf3 28\cf0\b ,\b0  \cf5 "4"\cf0\b );\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 43\cf0\b ,\b0  \cf3 41\cf0\b ,\b0  \cf3 30\cf0\b ,\b0  \cf3 20\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 55\cf0\b ,\b0  \cf3 48\cf0\b ,\b0  \cf5 "5"\cf0\b );\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 43\cf0\b ,\b0  \cf3 60\cf0\b ,\b0  \cf3 30\cf0\b ,\b0  \cf3 20\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 55\cf0\b ,\b0  \cf3 67\cf0\b ,\b0  \cf5 "6"\cf0\b );\b0 \par
+\tab \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 86\cf0\b ,\b0  \cf3 22\cf0\b ,\b0  \cf3 30\cf0\b ,\b0  \cf3 20\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 98\cf0\b ,\b0  \cf3 28\cf0\b ,\b0  \cf5 "7"\cf0\b );\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 86\cf0\b ,\b0  \cf3 41\cf0\b ,\b0  \cf3 30\cf0\b ,\b0  \cf3 20\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 98\cf0\b ,\b0  \cf3 48\cf0\b ,\b0  \cf5 "8"\cf0\b );\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 86\cf0\b ,\b0  \cf3 60\cf0\b ,\b0  \cf3 30\cf0\b ,\b0  \cf3 20\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 98\cf0\b ,\b0  \cf3 67\cf0\b ,\b0  \cf5 "9"\cf0\b );\b0 \par
+\par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 130\cf0\b ,\b0  \cf3 22\cf0\b ,\b0  \cf3 30\cf0\b ,\b0  \cf3 20\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 142\cf0\b ,\b0  \cf3 28\cf0\b ,\b0  \cf5 "0"\cf0\b );\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 130\cf0\b ,\b0  \cf3 41\cf0\b ,\b0  \cf3 30\cf0\b ,\b0  \cf3 20\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 139\cf0\b ,\b0  \cf3 48\cf0\b ,\b0  \cf5 "Ok"\cf0\b );\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 130\cf0\b ,\b0  \cf3 60\cf0\b ,\b0  \cf3 30\cf0\b ,\b0  \cf3 20\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 139\cf0\b ,\b0  \cf3 67\cf0\b ,\b0  \cf5 "<-"\cf0\b );\b0 \par
+\cf1 //============= \tab \tab /layout\tab \tab \tab ================\tab \par
+\cf0 \tab \f0 num_pad_cursor_pos\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \cf1 //position of cursor at start\par
+\cf0 \tab \par
+\tab \cf4\b while\cf0 (\f0\b0 num_pad_value_control\f1  \b !=\b0  \cf3 4\cf0\b )\b0 \tab \tab \tab \tab \cf1 //wait for complete input\par
+\cf0 \tab \b \{\b0 \par
+\tab \tab \f0 buffer_touch_ad_y\f1  \b =\b0  \f0 get_touch_y\f1\b ();\b0 \par
+\tab \tab \f0 buffer_touch_ad_x\f1  \b =\b0  \f0 get_touch_x\f1\b (\f0\b0 buffer_touch_ad_y\f1\b );\b0 \par
+\tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >\b0  \cf3 160\cf0\b )\b0 \par
+\tab \tab \tab \f0 buffer_touch_ad_x\f1  \b =\b0  \cf3 160\cf0\b ;\b0 \par
+\tab \tab \par
+\tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b ==\b0  \cf3 0\cf0\b )\b0 \par
+\tab \tab \tab \f0 buffer_touch_ad_y\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \par
+\cf1 //============= Buttons pressed check\tab ================\tab \tab \par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 20\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 40\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 30\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 50\cf0\b ))\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 1\cf0\b ]++;\b0 \par
+\tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 1\cf0\b ]\b0  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \cf1 //g_draw_string(100, 2, "1");\par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 41\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 61\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 30\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 50\cf0\b ))\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 2\cf0\b ]++;\b0 \par
+\tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 2\cf0\b ]\b0  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \cf1 //g_draw_string(100, 2, "2");\par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 62\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 80\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 30\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 60\cf0\b ))\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 3\cf0\b ]++;\b0 \par
+\tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 3\cf0\b ]\b0  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \cf1 //g_draw_string(100, 2, "3");\par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 20\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 40\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 60\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 80\cf0\b ))\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 4\cf0\b ]++;\b0 \par
+\tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 4\cf0\b ]\b0  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \cf1 //g_draw_string(100, 2, "4");\par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 41\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 61\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 60\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 80\cf0\b ))\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 5\cf0\b ]++;\b0 \par
+\tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 5\cf0\b ]\b0  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \cf1 //g_draw_string(100, 2, "5");\par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 62\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 80\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 80\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 100\cf0\b ))\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 6\cf0\b ]++;\b0 \par
+\tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 6\cf0\b ]\b0  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \cf1 //g_draw_string(100, 2, "6");\par
+\cf0 \tab \tab \tab \par
+\tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 20\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 40\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 90\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 130\cf0\b ))\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 7\cf0\b ]++;\b0 \par
+\tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 7\cf0\b ]\b0  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \cf1 //g_draw_string(100, 2, "7");\par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 41\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 61\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 90\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 130\cf0\b ))\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 8\cf0\b ]++;\b0 \par
+\tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 8\cf0\b ]\b0  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \cf1 //g_draw_string(100, 2, "8");\par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 62\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 80\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 110\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 130\cf0\b ))\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 9\cf0\b ]++;\b0 \par
+\tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 9\cf0\b ]\b0  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \cf1 //g_draw_string(100, 2, "9");\par
+\cf0 \tab \tab \tab \par
+\tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 20\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 40\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 140\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 160\cf0\b ))\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 0\cf0\b ]++;\b0 \par
+\tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 0\cf0\b ]\b0  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \cf1 //g_draw_string(100, 2, "0");\par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 41\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 61\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 140\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 160\cf0\b ))\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 10\cf0\b ]++;\b0 \par
+\tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 10\cf0\b ]\b0  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \cf1 //g_draw_string(100, 2, "r");\par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 62\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 80\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 140\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 160\cf0\b ))\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 11\cf0\b ]++;\b0 \par
+\tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \f0 num_pad_pressed\f1\b [\cf3\b0 11\cf0\b ]\b0  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \cf1 //g_draw_string(100, 2, "b");\par
+//============= /Buttons pressed check\tab ================\tab \tab \par
+//============= Display diff msgs \tab \tab ================\tab \tab \par
+\cf0 \tab \tab \cf4\b switch\cf0\b0  \b (\f0\b0 num_pad_value_control\f1\b )\b0 \par
+\tab \tab \b \{\b0 \par
+\tab \tab \tab \cf4\b case\cf0\b0  \cf3 0\cf0\b :\b0 \tab \cf1 //min temp input\par
+\cf0 \tab \tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 5\cf0\b ,\b0  \cf3 7\cf0\b ,\b0  \cf5 "Enter min. Temp: "\cf0\b );\b0 \par
+\tab \tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 107\cf0\b ,\b0  \cf3 7\cf0\b ,\b0  \f0 num_input_min_temp\f1\b );\b0 \par
+\tab \tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 125\cf0\b ,\b0  \cf3 7\cf0\b ,\b0  \cf5 "C"\cf0\b );\b0 \par
+\cf7 #ifdef GRAD_ON\par
+\cf0 \tab \tab \tab \tab \f0 draw_grad\f1\b (\cf3\b0 119\cf0\b ,\b0  \cf3 6\cf0\b );\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //draw ° sign in foront of C\par
+\cf7 #endif\par
+\cf0 \tab \tab \tab \tab \cf4\b break\cf0 ;\b0 \par
+\tab \tab \tab \cf4\b case\cf0\b0  \cf3 1\cf0\b :\b0 \tab \cf1 //max temp input\par
+\cf0 \tab \tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 5\cf0\b ,\b0  \cf3 7\cf0\b ,\b0  \cf5 "Enter max. Temp: "\cf0\b );\b0 \par
+\tab \tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 107\cf0\b ,\b0  \cf3 7\cf0\b ,\b0  \f0 num_input_max_temp\f1\b );\b0 \par
+\tab \tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 125\cf0\b ,\b0  \cf3 7\cf0\b ,\b0  \cf5 "C"\cf0\b );\b0 \par
+\cf7 #ifdef GRAD_ON\par
+\cf0 \tab \tab \tab \tab \f0 draw_grad\f1\b (\cf3\b0 119\cf0\b ,\b0  \cf3 6\cf0\b );\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //draw ° sign in foront of C\par
+\cf7 #endif\par
+\cf0 \tab \tab \tab \tab \cf4\b break\cf0 ;\b0 \par
+\tab \tab \tab \cf4\b case\cf0\b0  \cf3 2\cf0\b :\b0 \tab \cf1 //refresh time input\par
+\cf0 \tab \tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 5\cf0\b ,\b0  \cf3 7\cf0\b ,\b0  \cf5 "Enter ref. Time: "\cf0\b );\b0 \par
+\tab \tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 107\cf0\b ,\b0  \cf3 7\cf0\b ,\b0  \f0 num_input_refr_time\f1\b );\b0 \par
+\tab \tab \tab \tab \cf4\b break\cf0 ;\b0 \par
+\tab \tab \tab \cf4\b case\cf0\b0  \cf3 3\cf0\b :\b0 \par
+\tab \tab \tab \tab \f0 val_min\f1  \b =\b0  \b (\f0\b0 num_input_min_temp\f1\b [\cf3\b0 0\cf0\b ]\b0  \b -\b0  \cf3 48\cf0\b )*\cf3\b0 10\cf0\b ;\b0 \tab \tab \tab \tab \tab \cf1 //bcd to integer\par
+\cf0 \tab \tab \tab \tab \f0 val_min\f1  \b +=\b0  \b (\f0\b0 num_input_min_temp\f1\b [\cf3\b0 1\cf0\b ]\b0  \b -\b0  \cf3 48\cf0\b )*\cf3\b0 1\cf0\b ;\b0 \tab \tab \tab \tab \tab \cf1 //bcd to integer\par
+\cf0 \par
+\tab \tab \tab \tab \f0 val_max\f1  \b =\b0  \b (\f0\b0 num_input_max_temp\f1\b [\cf3\b0 0\cf0\b ]\b0  \b -\b0  \cf3 48\cf0\b )*\cf3\b0 10\cf0\b ;\b0 \tab \tab \tab \tab \tab \cf1 //bcd to integer\par
+\cf0 \tab \tab \tab \tab \f0 val_max\f1  \b +=\b0  \b (\f0\b0 num_input_max_temp\f1\b [\cf3\b0 1\cf0\b ]\b0  \b -\b0  \cf3 48\cf0\b )*\cf3\b0 1\cf0\b ;\b0 \tab \tab \tab \tab \tab \cf1 //bcd to integer\par
+\cf0 \tab \tab \tab \tab \par
+\tab \tab \tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 val_max\f1  \b <\b0  \f0 val_min\f1\b )\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //error check, max temp should be >= min temp\par
+\cf0 \tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 5\cf0\b ,\b0  \cf3 7\cf0\b ,\b0  \cf5 "Error: Min > Max Temp!  "\cf0\b );\b0 \tab \tab \cf1 //show error msg\par
+\cf0 \tab \tab \tab \tab \tab \f0 delay_ms\f1\b (\cf3\b0 3000\cf0\b );\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //short wait for reading error msg\par
+\cf0 \tab \tab \tab \tab \tab \f0 num_pad_value_control\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //reset input and start with min temp\tab \tab \tab \tab \tab \par
+\cf0 \tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \f0 val_refr\f1  \b =\b0  \b (\f0\b0 num_input_refr_time\f1\b [\cf3\b0 0\cf0\b ]\b0  \b -\b0  \cf3 48\cf0\b )*\cf3\b0 1000\cf0\b ;\b0 \tab \tab \tab \cf1 //bcd to integer\par
+\cf0 \tab \tab \tab \tab \tab \f0 val_refr\f1  \b +=\b0  \b (\f0\b0 num_input_refr_time\f1\b [\cf3\b0 1\cf0\b ]\b0  \b -\b0  \cf3 48\cf0\b )*\cf3\b0 100\cf0\b ;\b0 \tab \tab \tab \cf1 //bcd to integer\par
+\cf0 \tab \tab \tab \tab \tab \f0 val_refr\f1  \b +=\b0  \b (\f0\b0 num_input_refr_time\f1\b [\cf3\b0 2\cf0\b ]\b0  \b -\b0  \cf3 48\cf0\b )*\cf3\b0 10\cf0\b ;\b0 \tab \tab \tab \cf1 //bcd to integer\par
+\cf0 \tab \tab \tab \tab \tab \f0 val_refr\f1  \b +=\b0  \b (\f0\b0 num_input_refr_time\f1\b [\cf3\b0 3\cf0\b ]\b0  \b -\b0  \cf3 48\cf0\b )*\cf3\b0 1\cf0\b ;\b0 \tab \tab \tab \cf1 //bcd to integer\par
+\cf0 \tab \tab \tab \tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 val_refr\f1  \b >\b0  \cf3 1000\cf0\b )\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //error check, max refresh time = 1000ms\par
+\cf0 \tab \tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 5\cf0\b ,\b0  \cf3 7\cf0\b ,\b0  \cf5 "Error: Ref Time > 1000! "\cf0\b );\b0 \tab \cf1 //show error msg\par
+\cf0 \tab \tab \tab \tab \tab \tab \f0 delay_ms\f1\b (\cf3\b0 3000\cf0\b );\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //short wait for reading error msg\par
+\cf0 \tab \tab \tab \tab \tab \tab \f0 num_pad_value_control\f1  \b =\b0  \cf3 2\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \cf1 //reset input and start with refresh time\par
+\cf0 \tab \tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \tab \f0 bar_1_height\f1  \b =\b0  \b (\f0\b0 val_min\f1  \b +\b0  \cf3 1\cf0\b )\b0  \b /\b0  \cf3 2\cf0\b ;\b0 \tab \tab \tab \tab \tab \cf1 //later used for level line in diagram\par
+\cf0 \tab \tab \tab \tab \tab \tab \f0 bar_2_height\f1  \b =\b0  \b (\f0\b0 val_max\f1  \b +\b0  \cf3 1\cf0\b )\b0  \b /\b0  \cf3 2\cf0\b ;\b0 \tab \tab \tab \tab \tab \cf1 //later used for level line in diagram\par
+\cf0 \tab \tab \tab \tab \tab \tab \f0 num_pad_value_control\f1  \b =\b0  \cf3 4\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \cf1 //leaving while loop\par
+\cf0 \tab \tab \tab \tab \tab \tab \f0 val_min\f1  \b =\b0  \f0 round\f1\b (((\cf4 long\cf0\b0  \cf4\b int\cf0 )\f0\b0 val_min\f1\b *\cf3\b0 10000\cf0\b )/\cf3\b0 968\cf0\b );\b0 \tab \cf1 //converts grad celsius (0-99) to 10bit\par
+\cf0 \tab \tab \tab \tab \tab \tab \f0 val_max\f1  \b =\b0  \f0 round\f1\b (((\cf4 long\cf0\b0  \cf4\b int\cf0 )\f0\b0 val_max\f1\b *\cf3\b0 10000\cf0\b )/\cf3\b0 968\cf0\b );\b0 \tab \cf1 //converts grad celsius (0-99) to 10bit\par
+\cf0 \tab \tab \tab \tab \tab \tab \cf4\b for\cf0\b0  \b (\f0\b0 i\f1  \b =\b0  \cf3 0\cf0\b ;\b0  \f0 i\f1  \b <=\b0  \cf3 3\cf0\b ;\b0  \f0 i\f1\b ++)\b0 \par
+\tab \tab \tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \f0 val_refr_bcd\f1\b [\f0\b0 i\f1\b ]\b0  \b =\b0  \f0 num_input_refr_time\f1\b [\f0\b0 i\f1\b ];\b0 \tab \tab \cf1 //new string for displaying in main screen\par
+\cf0 \tab \tab \tab \tab \tab \tab \tab \f0 val_min_bcd\f1\b [\f0\b0 i\f1\b ]\b0  \b =\b0  \f0 num_input_min_temp\f1\b [\f0\b0 i\f1\b ];\b0 \tab \tab \cf1 //new string for displaying in main screen\par
+\cf0 \tab \tab \tab \tab \tab \tab \tab \f0 val_max_bcd\f1\b [\f0\b0 i\f1\b ]\b0  \b =\b0  \f0 num_input_max_temp\f1\b [\f0\b0 i\f1\b ];\b0 \tab \tab \cf1 //new string for displaying in main screen\par
+\cf0 \tab \tab \tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \tab \tab \b \}\b0 \tab \par
+\tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \tab \cf4\b break\cf0 ;\b0 \par
+\tab \tab \b \}\b0 \par
+\cf1 //============= debouncing & press detection ================\tab \tab \par
+\cf0 \tab \tab \f0 i_count\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \cf4\b for\cf0\b0  \b (\f0\b0 i\f1  \b =\b0  \cf3 0\cf0\b ;\b0  \f0 i\f1  \b <=\b0  \cf3 11\cf0\b ;\b0  \f0 i\f1\b ++)\b0 \par
+\tab \tab \b \{\b0 \par
+\tab \tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 num_pad_pressed\f1\b [\f0\b0 i\f1\b ]\b0  \b >=\b0  \cf3 2\cf0\b )\b0 \par
+\tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \f0 i_count\f1\b ++;\b0 \par
+\tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 num_pad_pressed\f1\b [\f0\b0 i\f1\b ]\b0  \b >=\b0  \cf3 2\cf0\b )\b0  \b &&\b0  \b !(\f0\b0 num_pad_input_recognised\f1\b ))\b0 \par
+\tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \f0 num_pad_input_recognised\f1  \b =\b0  \cf3 1\cf0\b ;\b0 \par
+\tab \tab \tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 i\f1  \b ==\b0  \cf3 10\cf0\b )\b0 \tab \tab \cf1 //ok button\par
+\cf0 \tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \f0 num_pad_value_control\f1\b ++;\b0 \par
+\tab \tab \tab \tab \tab \f0 num_pad_cursor_pos\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \tab \cf4\b else\cf0\b0  \cf4\b if\cf0\b0  \b (\f0\b0 i\f1  \b ==\b0  \cf3 11\cf0\b )\b0 \tab \cf1 //<- button\par
+\cf0 \tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 num_pad_value_control\f1  \b !=\b0  \cf3 0\cf0\b )\b0 \par
+\tab \tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \tab \f0 num_pad_value_control\f1\b --;\b0 \par
+\tab \tab \tab \tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 107\cf0\b ,\b0  \cf3 7\cf0\b ,\b0  \cf5 "      "\cf0\b );\b0 \par
+\tab \tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \tab \tab \f0 num_pad_cursor_pos\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \tab \cf4\b else\cf0\b0  \par
+\tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \cf4\b switch\cf0\b0  \b (\f0\b0 num_pad_value_control\f1\b )\b0 \par
+\tab \tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \tab \cf4\b case\cf0\b0  \cf3 0\cf0\b :\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \f0 num_input_min_temp\f1\b [\f0\b0 num_pad_cursor_pos\f1\b ]\b0  \b =\b0  \f0 i\f1\b +\cf3\b0 48\cf0\b ;\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \f0 num_pad_cursor_pos\f1\b ++;\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 num_pad_cursor_pos\f1  \b ==\b0  \cf3 2\cf0\b )\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \tab \f0 num_pad_cursor_pos\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \cf4\b break\cf0 ;\b0 \par
+\tab \tab \tab \tab \tab \tab \cf4\b case\cf0\b0  \cf3 1\cf0\b :\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \f0 num_input_max_temp\f1\b [\f0\b0 num_pad_cursor_pos\f1\b ]\b0  \b =\b0  \f0 i\f1\b +\cf3\b0 48\cf0\b ;\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \f0 num_pad_cursor_pos\f1\b ++;\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 num_pad_cursor_pos\f1  \b ==\b0  \cf3 2\cf0\b )\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \tab \f0 num_pad_cursor_pos\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \cf4\b break\cf0 ;\b0 \par
+\tab \tab \tab \tab \tab \tab \cf4\b case\cf0\b0  \cf3 2\cf0\b :\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \f0 num_input_refr_time\f1\b [\f0\b0 num_pad_cursor_pos\f1\b ]\b0  \b =\b0  \f0 i\f1\b +\cf3\b0 48\cf0\b ;\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \f0 num_pad_cursor_pos\f1\b ++;\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 num_pad_cursor_pos\f1  \b ==\b0  \cf3 4\cf0\b )\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \tab \f0 num_pad_cursor_pos\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \cf4\b break\cf0 ;\b0 \par
+\tab \tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \b \}\b0 \par
+\tab \tab \b \}\b0 \par
+\tab \tab \par
+\tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 i_count\f1  \b ==\b0  \cf3 0\cf0\b )\b0 \par
+\tab \tab \tab \f0 num_pad_input_recognised\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \par
+\tab \tab \cf4\b for\cf0\b0  \b (\f0\b0 i\f1  \b =\b0  \cf3 0\cf0\b ;\b0  \f0 i\f1  \b <=\b0  \cf3 40\cf0\b ;\b0  \f0 i\f1\b ++)\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //clear cursor line\par
+\cf0 \tab \tab \b \{\b0 \par
+\tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 105\cf0\b +\f0\b0 i\f1\b ,\b0  \cf3 16\cf0\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \b \}\b0 \par
+\tab \tab \f0 g_draw_horizontal_line\f1\b (\cf3\b0 107\cf0  \b +\b0  \b (\f0\b0 num_pad_cursor_pos\f1\b *\cf3\b0 6\cf0\b ),\b0  \cf3 16\cf0\b ,\b0  \cf3 5\cf0\b );\b0 \tab \tab \cf1 //drawing cursor at cursor position\par
+\cf0 \tab \b \}\b0 \par
+\b \}\b0 \par
+\par
+\cf4\b void\cf0\b0  \f0 call_slider_mode\f1\b (\cf4 void\cf0 )\b0 \par
+\b \{\b0 \par
+\cf1 //======================================================\tab \tab \par
+//============= \tab \tab Slider mode\tab \tab ================\par
+//======================================================\par
+\cf0 \tab \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 i\f1\b ;\b0 \par
+\cf1 //============= \tab \tab Layout \tab \tab \tab ================\par
+\cf0 \tab \f0 lcd_graphics_clear\f1\b ();\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 0\cf0\b ,\b0  \cf3 0\cf0\b ,\b0  \cf3 160\cf0\b ,\b0  \cf3 80\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 7\cf0\b ,\b0  \cf3 70\cf0\b ,\b0  \cf5 "Min"\cf0\b );\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 10\cf0\b ,\b0  \cf3 15\cf0\b ,\b0  \cf3 9\cf0\b ,\b0  \cf3 52\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 52\cf0\b ,\b0  \cf3 70\cf0\b ,\b0  \cf5 "Max"\cf0\b );\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 55\cf0\b ,\b0  \cf3 15\cf0\b ,\b0  \cf3 9\cf0\b ,\b0  \cf3 52\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 90\cf0\b ,\b0  \cf3 70\cf0\b ,\b0  \cf5 "T_refr"\cf0\b );\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 100\cf0\b ,\b0  \cf3 15\cf0\b ,\b0  \cf3 9\cf0\b ,\b0  \cf3 52\cf0\b );\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 132\cf0\b ,\b0  \cf3 63\cf0\b ,\b0  \cf3 25\cf0\b ,\b0  \cf3 15\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 139\cf0\b ,\b0  \cf3 67\cf0\b ,\b0  \cf5 "Ok"\cf0\b );\b0 \par
+\tab \par
+\tab \f0 button_pressed\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \par
+\tab \cf4\b while\cf0 ((\f0\b0 button_pressed\f1  \b <=\b0  \cf3 2\cf0\b ))\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //wait for complete input\par
+\cf0 \tab \b \{\b0 \par
+\tab \tab \f0 buffer_touch_ad_y\f1  \b =\b0  \f0 get_touch_y\f1\b ();\b0 \par
+\tab \tab \f0 buffer_touch_ad_x\f1  \b =\b0  \f0 get_touch_x\f1\b (\f0\b0 buffer_touch_ad_y\f1\b );\b0 \par
+\tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b >\b0  \cf3 160\cf0\b )\b0 \par
+\tab \tab \tab \f0 buffer_touch_ad_x\f1  \b =\b0  \cf3 160\cf0\b ;\b0 \par
+\tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b ==\b0  \cf3 0\cf0\b )\b0 \par
+\tab \tab \tab \f0 buffer_touch_ad_y\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\cf1 //============= \tab \tab Bar 1 \tab \tab \tab ================\par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 20\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 50\cf0\b ))\b0 \par
+\tab \tab \b \{\b0 \par
+\tab \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 17\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 67\cf0\b ))\b0 \par
+\tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b <\b0  \cf3 17\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b >\b0  \cf3 10\cf0\b ))\b0 \par
+\tab \tab \tab \tab \tab \f0 buffer_touch_ad_y\f1  \b =\b0  \cf3 17\cf0\b ;\b0 \par
+\tab \tab \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >\b0  \cf3 67\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <\b0  \cf3 74\cf0\b ))\b0 \par
+\tab \tab \tab \tab \tab \f0 buffer_touch_ad_y\f1  \b =\b0  \cf3 67\cf0\b ;\b0 \tab \tab \tab \tab \par
+\tab \tab \tab \tab \f0 bar_1_height\f1  \b =\b0  \cf3 50\cf0\b -(\f0\b0 buffer_touch_ad_y\f1\b -\cf3\b0 17\cf0\b );\b0 \tab \tab \tab \cf1 //getting heigth of bar (touch input)\par
+\cf0 \tab \tab \tab \tab \cf4\b for\cf0\b0  \b (\f0\b0 i\f1  \b =\b0  \cf3 17\cf0\b ;\b0  \f0 i\f1  \b <\b0  \f0 buffer_touch_ad_y\f1\b -\cf3\b0 1\cf0\b ;\b0  \f0 i\f1\b ++)\b0 \tab \tab \tab \cf1 //clear bar\par
+\cf0 \tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 12\cf0\b ,\b0  \f0 i\f1\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 13\cf0\b ,\b0  \f0 i\f1\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 14\cf0\b ,\b0  \f0 i\f1\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 15\cf0\b ,\b0  \f0 i\f1\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 16\cf0\b ,\b0  \f0 i\f1\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \tab \cf4\b for\cf0\b0  \b (\f0\b0 i\f1  \b =\b0  \cf3 12\cf0\b ;\b0  \f0 i\f1  \b <=\b0  \cf3 16\cf0\b ;\b0  \f0 i\f1\b ++)\b0 \tab \tab \tab \tab \tab \tab \tab \cf1 //draw bar\par
+\cf0 \tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \f0 g_draw_vertical_line\f1\b (\f0\b0 i\f1\b ,\b0  \f0 buffer_touch_ad_y\f1\b ,\b0  \f0 bar_1_height\f1\b );\b0 \par
+\tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \tab \f0 val_min\f1  \b =\b0  \f0 round\f1\b (((\cf4 long\cf0\b0  \cf4\b int\cf0 )\f0\b0 bar_1_height\f1  \b *\b0  \cf3 10000\cf0\b )/\cf3\b0 489\cf0\b );\b0 \par
+\tab \tab \tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 bar_1_height\f1  \b !=\b0  \cf3 0\cf0\b )\b0 \par
+\tab \tab \tab \tab \tab \f0 val_min_bar\f1  \b =\b0  \b (\f0\b0 bar_1_height\f1\b *\cf3\b0 2\cf0\b )\b0  \b -\b0  \cf3 1\cf0\b ;\b0 \par
+\tab \tab \tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \tab \tab \f0 val_min_bar\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \tab \f0 val_min_bcd\f1\b [\cf3\b0 0\cf0\b ]\b0  \b =\b0  \b (\f0\b0 val_min_bar\f1\b /\cf3\b0 10\cf0\b )+\cf3\b0 48\cf0\b ;\b0 \tab \tab \tab \tab \cf1 //integer to bcd\par
+\cf0 \tab \tab \tab \tab \f0 val_min_bar\f1  \b %=\b0  \cf3 10\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //integer to bcd\par
+\cf0 \tab \tab \tab \tab \f0 val_min_bcd\f1\b [\cf3\b0 1\cf0\b ]\b0  \b =\b0  \f0 val_min_bar\f1\b +\cf3\b0 48\cf0\b ;\b0 \tab \tab \tab \tab \tab \cf1 //integer to bcd\par
+\cf0 \tab \tab \tab \b \}\b0 \par
+\tab \tab \b \}\b0 \par
+\cf1 //============= \tab \tab Bar 2 \tab \tab \tab ================\par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 73\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 87\cf0\b ))\b0 \par
+\tab \tab \b \{\b0 \par
+\tab \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 17\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 67\cf0\b ))\b0 \par
+\tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b <\b0  \cf3 17\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b >\b0  \cf3 10\cf0\b ))\b0 \par
+\tab \tab \tab \tab \tab \f0 buffer_touch_ad_y\f1  \b =\b0  \cf3 17\cf0\b ;\b0 \par
+\tab \tab \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >\b0  \cf3 67\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <\b0  \cf3 74\cf0\b ))\b0 \par
+\tab \tab \tab \tab \tab \f0 buffer_touch_ad_y\f1  \b =\b0  \cf3 67\cf0\b ;\b0 \tab \tab \tab \tab \par
+\tab \tab \tab \tab \f0 bar_2_height\f1  \b =\b0  \cf3 50\cf0\b -(\f0\b0 buffer_touch_ad_y\f1\b -\cf3\b0 17\cf0\b );\b0 \par
+\tab \tab \tab \tab \cf4\b for\cf0\b0  \b (\f0\b0 i\f1  \b =\b0  \cf3 17\cf0\b ;\b0  \f0 i\f1  \b <\b0  \f0 buffer_touch_ad_y\f1\b -\cf3\b0 1\cf0\b ;\b0  \f0 i\f1\b ++)\b0 \par
+\tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 57\cf0\b ,\b0  \f0 i\f1\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 58\cf0\b ,\b0  \f0 i\f1\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 59\cf0\b ,\b0  \f0 i\f1\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 60\cf0\b ,\b0  \f0 i\f1\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 61\cf0\b ,\b0  \f0 i\f1\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \tab \cf4\b for\cf0\b0  \b (\f0\b0 i\f1  \b =\b0  \cf3 57\cf0\b ;\b0  \f0 i\f1  \b <=\b0  \cf3 61\cf0\b ;\b0  \f0 i\f1\b ++)\b0 \par
+\tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \f0 g_draw_vertical_line\f1\b (\f0\b0 i\f1\b ,\b0  \f0 buffer_touch_ad_y\f1\b ,\b0  \f0 bar_2_height\f1\b );\b0 \par
+\tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \tab \f0 val_max\f1  \b =\b0  \f0 round\f1\b (((\cf4 long\cf0\b0  \cf4\b int\cf0 )\f0\b0 bar_2_height\f1  \b *\b0  \cf3 10000\cf0\b )/\cf3\b0 489\cf0\b );\b0 \par
+\tab \tab \tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 bar_2_height\f1  \b !=\b0  \cf3 0\cf0\b )\b0 \par
+\tab \tab \tab \tab \tab \f0 val_max_bar\f1  \b =\b0  \b (\f0\b0 bar_2_height\f1\b *\cf3\b0 2\cf0\b )\b0  \b -\b0  \cf3 1\cf0\b ;\b0 \par
+\tab \tab \tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \tab \tab \f0 val_max_bar\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \tab \tab \f0 val_max_bcd\f1\b [\cf3\b0 0\cf0\b ]\b0  \b =\b0  \b (\f0\b0 val_max_bar\f1\b /\cf3\b0 10\cf0\b )+\cf3\b0 48\cf0\b ;\b0 \par
+\tab \tab \tab \tab \f0 val_max_bar\f1  \b %=\b0  \cf3 10\cf0\b ;\b0 \par
+\tab \tab \tab \tab \f0 val_max_bcd\f1\b [\cf3\b0 1\cf0\b ]\b0  \b =\b0  \f0 val_max_bar\f1\b +\cf3\b0 48\cf0\b ;\b0 \par
+\tab \tab \tab \b \}\b0 \par
+\tab \tab \b \}\b0 \par
+\cf1 //============= \tab \tab Bar 3 \tab \tab \tab ================\par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 118\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 132\cf0\b ))\b0 \par
+\tab \tab \b \{\b0 \par
+\tab \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 17\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 67\cf0\b ))\b0 \par
+\tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b <\b0  \cf3 17\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b >\b0  \cf3 10\cf0\b ))\b0 \par
+\tab \tab \tab \tab \tab \f0 buffer_touch_ad_y\f1  \b =\b0  \cf3 17\cf0\b ;\b0 \par
+\tab \tab \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_y\f1  \b >\b0  \cf3 67\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <\b0  \cf3 74\cf0\b ))\b0 \par
+\tab \tab \tab \tab \tab \f0 buffer_touch_ad_y\f1  \b =\b0  \cf3 67\cf0\b ;\b0 \tab \tab \tab \tab \par
+\tab \tab \tab \tab \f0 bar_3_height\f1  \b =\b0  \cf3 50\cf0\b -(\f0\b0 buffer_touch_ad_y\f1\b -\cf3\b0 17\cf0\b );\b0 \par
+\tab \tab \tab \tab \cf4\b for\cf0\b0  \b (\f0\b0 i\f1  \b =\b0  \cf3 17\cf0\b ;\b0  \f0 i\f1  \b <\b0  \f0 buffer_touch_ad_y\f1\b -\cf3\b0 1\cf0\b ;\b0  \f0 i\f1\b ++)\b0 \par
+\tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 102\cf0\b ,\b0  \f0 i\f1\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 103\cf0\b ,\b0  \f0 i\f1\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 104\cf0\b ,\b0  \f0 i\f1\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 105\cf0\b ,\b0  \f0 i\f1\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 106\cf0\b ,\b0  \f0 i\f1\b ,\b0  \f0 PIXEL_OFF\f1\b );\b0 \par
+\tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \tab \cf4\b for\cf0\b0  \b (\f0\b0 i\f1  \b =\b0  \cf3 102\cf0\b ;\b0  \f0 i\f1  \b <=\b0  \cf3 106\cf0\b ;\b0  \f0 i\f1\b ++)\b0 \par
+\tab \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \tab \f0 g_draw_vertical_line\f1\b (\f0\b0 i\f1\b ,\b0  \f0 buffer_touch_ad_y\f1\b ,\b0  \f0 bar_3_height\f1\b );\b0 \par
+\tab \tab \tab \tab \b \}\b0 \par
+\tab \tab \tab \tab \f0 val_refr\f1  \b =\b0  \f0 bar_3_height\f1\b ;\b0 \par
+\tab \tab \tab \tab \f0 val_refr_bar\f1  \b =\b0  \f0 bar_3_height\f1\b ;\b0 \par
+\tab \tab \tab \tab \f0 val_refr_bcd\f1\b [\cf3\b0 2\cf0\b ]\b0  \b =\b0  \b (\f0\b0 val_refr_bar\f1\b /\cf3\b0 10\cf0\b )+\cf3\b0 48\cf0\b ;\b0 \par
+\tab \tab \tab \tab \f0 val_refr_bar\f1  \b %=\b0  \cf3 10\cf0\b ;\b0 \par
+\tab \tab \tab \tab \f0 val_refr_bcd\f1\b [\cf3\b0 3\cf0\b ]\b0  \b =\b0  \f0 val_refr_bar\f1\b +\cf3\b0 48\cf0\b ;\b0 \par
+\tab \tab \tab \b \}\b0 \par
+\tab \tab \b \}\b0 \par
+\cf1 //============= \tab \tab Button \tab \tab \tab ================\par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 buffer_touch_ad_x\f1  \b >=\b0  \cf3 152\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_x\f1  \b <=\b0  \cf3 160\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b >=\b0  \cf3 63\cf0\b )\b0  \b &&\b0  \b (\f0\b0 buffer_touch_ad_y\f1  \b <=\b0  \cf3 80\cf0\b ))\b0 \par
+\tab \tab \b \{\b0 \par
+\tab \tab \tab \f0 button_pressed\f1\b ++;\b0 \par
+\tab \tab \b \}\b0 \par
+\tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \b \{\b0 \par
+\tab \tab \tab \f0 button_pressed\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \b \}\b0 \par
+\tab \tab \cf4\b if\cf0\b0  \b ((\f0\b0 button_pressed\f1  \b ==\b0  \cf3 2\cf0\b )\b0  \b &&\b0  \b (\f0\b0 val_min\f1  \b >\b0  \f0 val_max\f1\b ))\b0 \tab \tab \cf1 //error check and display\par
+\cf0 \tab \tab \b \{\b0 \par
+\tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 112\cf0\b ,\b0  \cf3 20\cf0\b ,\b0  \cf5 "Error:   "\cf0\b );\b0 \par
+\tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 112\cf0\b ,\b0  \cf3 30\cf0\b ,\b0  \cf5 "Val_min  "\cf0\b );\b0 \par
+\tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 112\cf0\b ,\b0  \cf3 40\cf0\b ,\b0  \cf5 ">        "\cf0\b );\b0 \par
+\tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 112\cf0\b ,\b0  \cf3 50\cf0\b ,\b0  \cf5 "Val_max! "\cf0\b );\b0 \par
+\tab \tab \tab \f0 delay_ms\f1\b (\cf3\b0 2000\cf0\b );\b0 \par
+\tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 112\cf0\b ,\b0  \cf3 20\cf0\b ,\b0  \cf5 "         "\cf0\b );\b0 \par
+\tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 112\cf0\b ,\b0  \cf3 30\cf0\b ,\b0  \cf5 "         "\cf0\b );\b0 \par
+\tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 112\cf0\b ,\b0  \cf3 40\cf0\b ,\b0  \cf5 "         "\cf0\b );\b0 \par
+\tab \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 112\cf0\b ,\b0  \cf3 50\cf0\b ,\b0  \cf5 "         "\cf0\b );\b0 \par
+\tab \tab \tab \f0 button_pressed\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \tab \b \}\b0 \par
+\cf1 //============= \tab Display values\tab \tab ================\par
+\cf0 \tab \tab \f0 g_draw_string\f1\b (\cf3\b0 5\cf0\b ,\b0  \cf3 4\cf0\b ,\b0  \f0 val_min_bcd\f1\b );\b0 \par
+\tab \tab \f0 g_draw_string\f1\b (\cf3\b0 23\cf0\b ,\b0  \cf3 4\cf0\b ,\b0  \cf5 "C"\cf0\b );\b0 \par
+\tab \tab \f0 g_draw_string\f1\b (\cf3\b0 50\cf0\b ,\b0  \cf3 4\cf0\b ,\b0  \f0 val_max_bcd\f1\b );\b0 \par
+\tab \tab \f0 g_draw_string\f1\b (\cf3\b0 68\cf0\b ,\b0  \cf3 4\cf0\b ,\b0  \cf5 "C"\cf0\b );\b0 \par
+\tab \tab \f0 g_draw_string\f1\b (\cf3\b0 95\cf0\b ,\b0  \cf3 4\cf0\b ,\b0  \f0 val_refr_bcd\f1\b );\b0 \par
+\cf7 #ifdef GRAD_ON\par
+\cf0 \tab \tab \f0 draw_grad\f1\b (\cf3\b0 17\cf0\b ,\b0  \cf3 2\cf0\b );\b0 \par
+\tab \tab \f0 draw_grad\f1\b (\cf3\b0 62\cf0\b ,\b0  \cf3 2\cf0\b );\b0 \par
+\cf7 #endif\par
+\cf0 \tab \b \}\b0 \par
+\b \}\b0 \par
+\par
+\cf4\b void\cf0\b0  \f0 draw_layout\f1\b (\cf4 void\cf0 )\b0 \par
+\b \{\b0 \par
+\cf1 //============= \tab \tab Layout \tab \tab \tab ================\par
+\cf0 \tab \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 i\f1\b ;\b0 \par
+\par
+\tab \f0 lcd_graphics_clear\f1\b ();\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 0\cf0\b ,\b0  \cf3 0\cf0\b ,\b0  \cf3 160\cf0\b ,\b0  \cf3 80\cf0\b );\b0 \par
+\tab \f0 g_draw_rectangle\f1\b (\cf3\b0 0\cf0\b ,\b0  \cf3 0\cf0\b ,\b0  \cf3 60\cf0\b ,\b0  \cf3 80\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 5\cf0\b ,\b0  \cf3 5\cf0\b ,\b0  \cf5 "A/D:"\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 13\cf0\b ,\b0  \cf3 14\cf0\b ,\b0  \f0 val_ad_bcd\f1\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 31\cf0\b ,\b0  \cf3 14\cf0\b ,\b0  \cf5 "C"\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 5\cf0\b ,\b0  \cf3 23\cf0\b ,\b0  \cf5 "Min:"\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 13\cf0\b ,\b0  \cf3 32\cf0\b ,\b0  \f0 val_min_bcd\f1\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 31\cf0\b ,\b0  \cf3 32\cf0\b ,\b0  \cf5 "C"\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 5\cf0\b ,\b0  \cf3 41\cf0\b ,\b0  \cf5 "Max:"\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 13\cf0\b ,\b0  \cf3 50\cf0\b ,\b0  \f0 val_max_bcd\f1\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 31\cf0\b ,\b0  \cf3 50\cf0\b ,\b0  \cf5 "C"\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 5\cf0\b ,\b0  \cf3 59\cf0\b ,\b0  \cf5 "T_refr:"\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 13\cf0\b ,\b0  \cf3 68\cf0\b ,\b0  \f0 val_refr_bcd\f1\b );\b0 \par
+\tab \f0 g_draw_horizontal_line\f1\b (\cf3\b0 74\cf0\b ,\b0  \cf3 75\cf0\b ,\b0  \cf3 80\cf0\b );\b0 \par
+\tab \f0 g_draw_vertical_line\f1\b (\cf3\b0 74\cf0\b ,\b0  \cf3 5\cf0\b ,\b0  \cf3 70\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 151\cf0\b ,\b0  \cf3 65\cf0\b ,\b0  \cf5 "t"\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 67\cf0\b ,\b0  \cf3 2\cf0\b ,\b0  \cf5 "C"\cf0\b );\b0 \par
+\cf7 #ifdef GRAD_ON\par
+\cf0 \tab \f0 draw_grad\f1\b (\cf3\b0 61\cf0\b ,\b0  \cf3 0\cf0\b );\b0 \par
+\tab \f0 draw_grad\f1\b (\cf3\b0 25\cf0\b ,\b0  \cf3 12\cf0\b );\b0 \par
+\tab \f0 draw_grad\f1\b (\cf3\b0 25\cf0\b ,\b0  \cf3 30\cf0\b );\b0 \par
+\tab \f0 draw_grad\f1\b (\cf3\b0 25\cf0\b ,\b0  \cf3 48\cf0\b );\b0 \par
+\cf7 #endif\par
+#ifdef FLAME_AND_FLAKE_ON\par
+\cf0 \tab \f0 g_draw_rectangle\f1\b (\f0\b0 PIC_POS_FLAME_FLAKE_X\f1  \b -\b0  \cf3 1\cf0\b ,\b0  \f0 PIC_POS_FLAME_FLAKE_Y\f1  \b -\b0  \cf3 1\cf0\b ,\b0  \cf3 21\cf0\b ,\b0  \cf3 21\cf0\b );\b0 \par
+\cf7 #endif\par
+\cf1 //============= \tab \tab Arrow X\tab \tab \tab ================\par
+\cf0 \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 152\cf0\b ,\b0  \cf3 74\cf0\b ,\b0  \f0 PIXEL_ON\f1\b );\b0 \par
+\tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 152\cf0\b ,\b0  \cf3 76\cf0\b ,\b0  \f0 PIXEL_ON\f1\b );\b0 \par
+\cf1 //============= \tab \tab Arrow Y\tab \tab \tab ================\tab \par
+\cf0 \tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 73\cf0\b ,\b0  \cf3 7\cf0\b ,\b0  \f0 PIXEL_ON\f1\b );\b0 \par
+\tab \f0 lcd_graphics_plot_pixel\f1\b (\cf3\b0 75\cf0\b ,\b0  \cf3 7\cf0\b ,\b0  \f0 PIXEL_ON\f1\b );\b0 \par
+\cf1 //============= \tab \tab 99°C Level\tab \tab ================\tab \par
+\cf0 \tab \f0 g_draw_horizontal_line\f1\b (\cf3\b0 73\cf0\b ,\b0  \cf3 15\cf0\b ,\b0  \cf3 2\cf0\b );\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 61\cf0\b ,\b0  \cf3 12\cf0\b ,\b0  \cf5 "99"\cf0\b );\b0 \par
+\cf1 //============= \tab \tab Min/Max Level\tab ================\par
+\cf0 \tab \cf4\b for\cf0\b0  \b (\f0\b0 i\f1  \b =\b0  \cf3 73\cf0\b ;\b0  \f0 i\f1  \b <=\b0  \cf3 154\cf0\b ;\b0  \f0 i\f1\b ++)\b0 \par
+\tab \b \{\b0 \par
+\tab \tab \cf4\b if\cf0\b0  \b (!(\f0\b0 i\f1\b %\cf3\b0 3\cf0\b ))\b0 \par
+\tab \tab \b \{\b0 \par
+\tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\f0\b0 i\f1\b ,\b0  \cf3 14\cf0\b +\f0\b0 round\f1\b (\cf3\b0 60\cf0  \b -\b0  \f0 bar_2_height\f1  \b *\b0  \cf3 118\cf0  \b /\b0  \cf3 100\cf0\b ),\b0  \f0 PIXEL_ON\f1\b );\b0 \par
+\tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\f0\b0 i\f1\b ,\b0  \cf3 14\cf0\b +\f0\b0 round\f1\b (\cf3\b0 60\cf0  \b -\b0  \f0 bar_1_height\f1  \b *\b0  \cf3 118\cf0  \b /\b0  \cf3 100\cf0\b ),\b0  \f0 PIXEL_ON\f1\b );\b0 \par
+\tab \tab \b \}\b0 \par
+\tab \b \}\b0 \par
+\cf1 //============= \tab \tab /Layout\tab \tab \tab ================\par
+\cf0\b \}\b0 \par
+\par
+\cf4\b unsigned\cf0\b0  \cf4\b int\cf0\b0  \f0 get_touch_x\f1\b (\cf4 unsigned\cf0\b0  \cf4\b int\cf0\b0  \f0 y\f1\b )\b0 \par
+\b \{\b0 \par
+\tab \cf4\b unsigned\cf0\b0  \cf4\b int\cf0\b0  \f0 x\f1\b ;\b0 \par
+\tab \cf4\b unsigned\cf0\b0  \cf4\b int\cf0\b0  \f0 x_left\f1\b ;\b0 \par
+\tab \cf4\b unsigned\cf0\b0  \cf4\b int\cf0\b0  \f0 x_right\f1\b ;\b0 \par
+\cf1 //======= reconfig pins for x detection\tab ================\tab \par
+\cf0 \tab \f0 init_in_pin\f1\b (\f0\b0 TOUCH_ANA_PORT\f1\b ,\b0  \cf3 2\cf0\b );\b0 \tab \par
+\tab \f0 init_out_pin\f1\b (\f0\b0 TOUCH_ANA_PORT\f1\b ,\b0  \cf3 1\cf0\b );\b0 \par
+\tab \f0 set_pin\f1\b (\f0\b0 TOUCH_ANA_PORT\f1\b ,\b0  \cf3 1\cf0\b );\b0 \par
+\tab \f0 reset_pin\f1\b (\f0\b0 TOUCH_DIGIT_OUT_PORT\f1\b ,\b0  \f0 TOUCH_DIGIT_OUT_PIN\f1\b );\b0 \par
+\tab \f0 delay_ms\f1\b (\cf3\b0 10\cf0\b );\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //wait for energy to vanish\par
+\cf0 \par
+\tab \f0 ADMUX\f1  \b =\b0  \cf3 0x42\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //connect to AD_2\par
+\cf0 \tab \f0 ADCSRA\f1  \b =\b0  \cf3 0x97\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //enable ad converter\par
+\cf0 \tab \f0 ADCSRA\f1  \b |=\b0  \cf3 0x40\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //start converter\par
+\cf0 \tab \cf4\b while\cf0 ((\f0\b0 ADCSRA\f1\b &\cf3\b0 0x10\cf0\b )==\cf3\b0 0\cf0\b );\b0 \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //waiting for end of calculation\par
+\cf0 \tab \f0 ADCSRA\f1  \b |=\b0  \cf3 0x10\cf0\b ;\b0 \par
+\tab \f0 x\f1  \b =\b0  \f0 ADCL\f1\b |\f0\b0 ADCH\f1\b <<\cf3\b0 8\cf0\b ;\b0 \par
+\tab \cf4\b if\cf0\b0  \b (\f0\b0 x\f1  \b ==\b0  \cf3 0\cf0\b )\b0 \par
+\tab \tab \cf4\b return\cf0\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \f0 x_left\f1  \b =\b0  \f0 round\f1\b (\cf3\b0 427\cf0\b -((\f0\b0 y\f1\b *(\cf3\b0 427\cf0\b -\cf3\b0 186\cf0\b ))/\cf3\b0 80\cf0\b ));\b0 \tab \tab \tab \tab \cf1 //calculating x limits related to y_pos\par
+\cf0 \tab \f0 x_right\f1  \b =\b0  \f0 round\f1\b (\cf3\b0 300\cf0\b -((\f0\b0 y\f1\b *(\cf3\b0 300\cf0\b -\cf3\b0 110\cf0\b ))/\cf3\b0 80\cf0\b ));\b0 \tab \tab \tab \tab \cf1 //calculating x limits related to y_pos\par
+\cf0 \tab \par
+\tab \cf4\b return\cf0\b0  \f0 round\f1\b (\cf3\b0 160\cf0\b -((\f0\b0 x\f1\b -\f0\b0 x_right\f1\b )*\cf3\b0 160\cf0\b /(\f0\b0 x_left\f1\b -\f0\b0 x_right\f1\b )));\b0 \tab \cf1 //calculating x pos and return\par
+\cf0\b \}\b0 \par
+\par
+\cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 get_touch_y\f1\b (\cf4 void\cf0 )\b0 \par
+\b \{\b0 \par
+\cf1 //======= reconfig pins for y detection\tab ================\par
+\cf0 \tab \f0 init_in_pin\f1\b (\f0\b0 TOUCH_ANA_PORT\f1\b ,\b0  \cf3 1\cf0\b );\b0 \tab \par
+\tab \f0 init_out_pin\f1\b (\f0\b0 TOUCH_ANA_PORT\f1\b ,\b0  \cf3 2\cf0\b );\b0 \par
+\tab \f0 reset_pin\f1\b (\f0\b0 TOUCH_ANA_PORT\f1\b ,\b0  \cf3 2\cf0\b );\b0 \par
+\tab \f0 set_pin\f1\b (\f0\b0 TOUCH_DIGIT_OUT_PORT\f1\b ,\b0  \f0 TOUCH_DIGIT_OUT_PIN\f1\b );\b0 \par
+\tab \f0 delay_ms\f1\b (\cf3\b0 10\cf0\b );\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //wait for energy to vanish\par
+\cf0 \par
+\tab \f0 ADMUX\f1  \b =\b0  \cf3 0x41\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //connect to AD_1\par
+\cf0 \tab \f0 ADCSRA\f1  \b =\b0  \cf3 0x97\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //enable ad converter\par
+\cf0 \tab \f0 ADCSRA\f1  \b |=\b0  \cf3 0x40\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //start converter\par
+\cf0 \tab \cf4\b while\cf0 ((\f0\b0 ADCSRA\f1\b &\cf3\b0 0x10\cf0\b )==\cf3\b0 0\cf0\b );\b0 \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //waiting for end of calculation\par
+\cf0 \tab \f0 ADCSRA\f1  \b |=\b0  \cf3 0x10\cf0\b ;\b0 \par
+\par
+\tab \cf4\b return\cf0\b0  \f0 round\f1\b ((((\f0\b0 ADCL\f1\b |\f0\b0 ADCH\f1\b <<\cf3\b0 8\cf0\b )-\cf3\b0 262\cf0\b )*\cf3\b0 10\cf0\b )/\cf3\b0 65\cf0\b );\b0 \tab \tab \tab \cf1 //return y pos\par
+\cf0\b \}\b0 \par
+\par
+\cf4\b void\cf0\b0  \f0 clr_diagram\f1\b (\cf4 void\cf0 )\b0 \par
+\b \{\b0 \par
+\tab \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 x_buffer\f1  \b =\b0  \cf3 75\cf0\b ;\b0 \par
+\tab \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 y_buffer\f1  \b =\b0  \cf3 75\cf0\b ;\b0 \par
+\tab \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 x\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \par
+\tab \cf4\b for\cf0\b0  \b (\f0\b0 x\f1  \b =\b0  \cf3 0\cf0\b ;\b0  \f0 x\f1  \b <=\b0  \cf3 79\cf0\b ;\b0  \f0 x\f1\b ++)\b0 \tab \tab \cf1 //clear old graph on display\par
+\cf0 \tab \b \{\b0 \par
+\tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 diagram\f1\b [\f0\b0 x\f1\b ]\b0  \b !=\b0  \cf3 0\cf0\b )\b0 \par
+\tab \tab \b \{\b0 \par
+\tab \tab \tab \f0 draw_line\f1\b (\f0\b0 x_buffer\f1\b ,\b0  \f0 y_buffer\f1\b ,\b0  \f0 x\f1  \b +\b0  \cf3 75\cf0\b ,\b0  \b (-\cf3\b0 1\cf0\b *((\cf4 signed\cf0\b0  \cf4\b int\cf0 )\f0\b0 diagram\f1\b [\f0\b0 x\f1\b ]))+\cf3\b0 75\cf0\b ,\b0  \cf3 0\cf0\b );\b0 \par
+\tab \tab \tab \f0 draw_line\f1\b (\f0\b0 x_buffer\f1\b ,\b0  \f0 y_buffer\f1\b ,\b0  \f0 x\f1  \b +\b0  \cf3 75\cf0\b ,\b0  \b (-\cf3\b0 1\cf0\b *((\cf4 signed\cf0\b0  \cf4\b int\cf0 )\f0\b0 diagram\f1\b [\f0\b0 x\f1\b ]))+\cf3\b0 74\cf0\b ,\b0  \cf3 0\cf0\b );\b0 \par
+\tab \tab \tab \f0 draw_line\f1\b (\f0\b0 x_buffer\f1\b ,\b0  \f0 y_buffer\f1\b ,\b0  \f0 x\f1  \b +\b0  \cf3 75\cf0\b ,\b0  \b (-\cf3\b0 1\cf0\b *((\cf4 signed\cf0\b0  \cf4\b int\cf0 )\f0\b0 diagram\f1\b [\f0\b0 x\f1\b ]))+\cf3\b0 73\cf0\b ,\b0  \cf3 0\cf0\b );\b0 \par
+\tab \tab \tab \cf1 //lcd_graphics_plot_pixel((x*8)+75+bit, (-1*(y))+74, PIXEL_OFF);\par
+\cf0 \tab \tab \tab \f0 x_buffer\f1  \b =\b0  \f0 x\f1  \b +\b0  \cf3 75\cf0\b ;\b0 \par
+\tab \tab \tab \f0 y_buffer\f1  \b =\b0  \b (-\cf3\b0 1\cf0\b *((\cf4 signed\cf0\b0  \cf4\b int\cf0 )\f0\b0 diagram\f1\b [\f0\b0 x\f1\b ]))+\cf3\b0 74\cf0\b ;\b0 \par
+\tab \tab \b \}\b0 \par
+\tab \tab \f0 diagram\f1\b [\f0\b0 x\f1\b ]\b0  \b =\b0  \cf3 0\cf0\b ;\b0 \tab \tab \tab \tab \cf1 //clear data array\par
+\cf0 \tab \b \}\b0 \tab \par
+\b \}\b0 \par
+\par
+\cf4\b void\cf0\b0  \f0 draw_diagram\f1\b (\cf4 void\cf0 )\b0 \par
+\b \{\b0 \par
+\tab \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 x\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 x_buffer\f1  \b =\b0  \cf3 75\cf0\b ;\b0 \par
+\tab \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 y_buffer\f1  \b =\b0  \cf3 75\cf0\b ;\b0 \par
+\tab \par
+\tab \cf4\b for\cf0\b0  \b (\f0\b0 x\f1  \b =\b0  \cf3 0\cf0\b ;\b0  \f0 x\f1  \b <=\b0  \cf3 79\cf0\b ;\b0  \f0 x\f1\b ++)\b0 \tab \tab \cf1 //draw graph on display\par
+\cf0 \tab \b \{\b0 \par
+\tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 diagram\f1\b [\f0\b0 x\f1\b ]\b0  \b !=\b0  \cf3 0\cf0\b )\b0 \par
+\tab \tab \b \{\b0 \par
+\tab \tab \tab \f0 draw_line\f1\b (\f0\b0 x_buffer\f1\b ,\b0  \f0 y_buffer\f1\b ,\b0  \f0 x\f1  \b +\b0  \cf3 75\cf0\b ,\b0  \b (-\cf3\b0 1\cf0\b *((\cf4 signed\cf0\b0  \cf4\b int\cf0 )\f0\b0 diagram\f1\b [\f0\b0 x\f1\b ]))+\cf3\b0 74\cf0\b ,\b0  \cf3 1\cf0\b );\b0 \par
+\tab \tab \tab \f0 x_buffer\f1  \b =\b0  \f0 x\f1  \b +\b0  \cf3 75\cf0\b ;\b0 \par
+\tab \tab \tab \f0 y_buffer\f1  \b =\b0  \b (-\cf3\b0 1\cf0\b *((\cf4 signed\cf0\b0  \cf4\b int\cf0 )\f0\b0 diagram\f1\b [\f0\b0 x\f1\b ]))+\cf3\b0 74\cf0\b ;\b0 \par
+\tab \tab \b \}\b0 \par
+\tab \b \}\b0 \par
+\tab \f0 g_draw_string\f1\b (\cf3\b0 151\cf0\b ,\b0  \cf3 65\cf0\b ,\b0  \cf5 "t"\cf0\b );\b0 \tab \cf1 //redraw t for time axis\par
+\cf0\b \}\b0 \par
+\par
+\cf4\b void\cf0\b0  \f0 draw_line\f1\b (\cf4 unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 x_start\f1\b ,\b0  \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 y_start\f1\b ,\b0  \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 x_end\f1\b ,\b0  \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 y_end\f1\b ,\b0  \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 draw\f1\b )\b0 \par
+\b \{\b0 \par
+\tab \cf4\b signed\cf0\b0  \cf4\b char\cf0\b0  \f0 dx\f1\b ;\b0 \par
+\tab \cf4\b signed\cf0\b0  \cf4\b char\cf0\b0  \f0 dy\f1\b ;\b0 \par
+\tab \cf4\b float\cf0\b0  \f0 m\f1\b ,\b0  \f0 n\f1\b ;\b0 \par
+\tab \cf4\b unsigned\cf0\b0  \cf4\b char\cf0\b0  \f0 style\f1  \b =\b0  \cf3 0\cf0\b ;\b0 \par
+\tab \par
+\tab \cf4\b if\cf0\b0  \b (\f0\b0 draw\f1\b )\b0 \par
+\tab \tab \f0 style\f1  \b =\b0  \cf3 0xff\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //pixel on\par
+\cf0 \tab \cf4\b else\cf0\b0 \par
+\tab \tab \f0 style\f1  \b =\b0  \cf3 0x00\cf0\b ;\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //pixel off\par
+\cf0 \par
+\tab \f0 dx\f1  \b =\b0  \b (\cf4 signed\cf0 )(\f0\b0 x_end\f1  \b -\b0  \f0 x_start\f1\b );\b0 \tab \tab \tab \tab \tab \cf1 //calculating delta x\par
+\cf0 \tab \f0 dy\f1  \b =\b0  \b (\cf4 signed\cf0 )(\f0\b0 y_end\f1  \b -\b0  \f0 y_start\f1\b );\b0 \tab \tab \tab \tab \tab \cf1 //calculating delta y\par
+\cf0 \tab \par
+\tab \f0 lcd_graphics_plot_pixel\f1\b (\f0\b0 x_start\f1\b ,\b0  \f0 y_start\f1\b ,\b0  \f0 style\f1\b );\b0 \tab \cf1 //draw start pos\par
+\cf0 \par
+\tab \cf4\b if\cf0\b0  \b (\f0\b0 fabs\f1\b (\f0\b0 dx\f1\b )\b0  \b >\b0  \f0 fabs\f1\b (\f0\b0 dy\f1\b ))\b0  \tab \par
+\tab \b \{\b0 \par
+\tab \tab \f0 m\f1  \b =\b0  \b (\cf4 float\cf0 )\b0  \f0 dy\f1  \b /\b0  \b (\cf4 float\cf0 )\b0  \f0 dx\f1\b ;\b0 \tab \tab \tab \tab \tab \cf1 //calculating slope of graph\par
+\cf0 \tab \tab \f0 n\f1  \b =\b0  \f0 y_start\f1  \b -\b0  \b (\f0\b0 m\f1\b *\f0\b0 x_start\f1\b );\b0 \tab \tab \tab \tab \tab \tab \cf1 //calculating offset\par
+\cf0 \tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 dx\f1  \b <\b0  \cf3 0\cf0\b )\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //direction of graph\par
+\cf0 \tab \tab \tab \f0 dx\f1  \b =\b0  \b -\cf3\b0 1\cf0\b ;\b0 \par
+\tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \f0 dx\f1  \b =\b0  \cf3 1\cf0\b ;\b0 \par
+\tab \tab \cf4\b while\cf0\b0  \b (\f0\b0 x_start\f1  \b !=\b0  \f0 x_end\f1\b )\b0  \tab \tab \tab \tab \tab \tab \cf1 //draw graph on screen\par
+\cf0 \tab \tab \b \{\b0 \par
+\tab \tab \tab \f0 x_start\f1  \b +=\b0  \f0 dx\f1\b ;\b0 \par
+\tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b (\f0\b0 x_start\f1\b ,\b0  \b (\cf4 int\cf0 )(\f0\b0 m\f1\b *\f0\b0 x_start\f1  \b +\b0  \f0 n\f1\b ),\b0  \f0 style\f1\b );\b0 \par
+\tab \tab \b \}\b0 \par
+\tab \b \}\b0  \par
+\tab \cf4\b else\cf0\b0 \par
+\tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 dy\f1  \b !=\b0  \cf3 0\cf0\b )\b0  \par
+\tab \tab \b \{\b0 \par
+\tab \tab \tab \f0 m\f1  \b =\b0  \b (\cf4 float\cf0 )\b0  \f0 dx\f1  \b /\b0  \b (\cf4 float\cf0 )\b0  \f0 dy\f1\b ;\b0 \tab \tab \tab \tab \cf1 //calculating slope of graph\par
+\cf0 \tab \tab \tab \f0 n\f1  \b =\b0  \f0 x_start\f1  \b -\b0  \b (\f0\b0 m\f1\b *\f0\b0 y_start\f1\b );\b0 \tab \tab \tab \tab \tab \cf1 //calculating offset\par
+\cf0 \tab \tab \tab \cf4\b if\cf0\b0  \b (\f0\b0 dy\f1  \b <\b0  \cf3 0\cf0\b )\b0 \tab \tab \tab \tab \tab \tab \tab \tab \tab \cf1 //direction of graph\par
+\cf0 \tab \tab \tab \tab \f0 dy\f1  \b =\b0  \b -\cf3\b0 1\cf0\b ;\b0 \par
+\tab \tab \tab \cf4\b else\cf0\b0 \par
+\tab \tab \tab \tab \f0 dy\f1  \b =\b0  \cf3 1\cf0\b ;\b0 \par
+\tab \tab \tab \cf4\b while\cf0\b0  \b (\f0\b0 y_start\f1  \b !=\b0  \f0 y_end\f1\b )\b0  \tab \tab \tab \tab \tab \cf1 //draw graph on screen\par
+\cf0 \tab \tab \tab \b \{\b0 \par
+\tab \tab \tab \tab \f0 y_start\f1  \b +=\b0  \f0 dy\f1\b ;\b0 \par
+\tab \tab \tab \tab \f0 lcd_graphics_plot_pixel\f1\b ((\cf4 int\cf0 )(\f0\b0 m\f1\b *\f0\b0 y_start\f1  \b +\b0  \f0 n\f1\b ),\b0  \f0 y_start\f1\b ,\b0  \f0 style\f1\b );\b0 \par
+\tab \tab \tab \b \}\b0 \par
+\tab \tab \b \}\b0 \par
+\b \}\b0 \par
+\par
+}

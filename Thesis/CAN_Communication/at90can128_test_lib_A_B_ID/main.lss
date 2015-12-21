@@ -1,0 +1,3059 @@
+
+main.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000020  00800100  00001408  0000149c  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         00001408  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .bss          0000004b  00800120  00800120  000014bc  2**0
+                  ALLOC
+  3 .stab         00001488  00000000  00000000  000014bc  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  4 .stabstr      00000bf9  00000000  00000000  00002944  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+       0:	0c 94 4a 00 	jmp	0x94	; 0x94 <__ctors_end>
+       4:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+       8:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+       c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      10:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      14:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      18:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      1c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      20:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      24:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      28:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      2c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      30:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      34:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      38:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      3c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      40:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      44:	0c 94 83 08 	jmp	0x1106	; 0x1106 <__vector_17>
+      48:	0c 94 32 09 	jmp	0x1264	; 0x1264 <__vector_18>
+      4c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      50:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      54:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      58:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      5c:	0c 94 40 08 	jmp	0x1080	; 0x1080 <__vector_23>
+      60:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      64:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      68:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      6c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      70:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      74:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      78:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      7c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      80:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      84:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      88:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      8c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+      90:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+
+00000094 <__ctors_end>:
+      94:	11 24       	eor	r1, r1
+      96:	1f be       	out	0x3f, r1	; 63
+      98:	cf ef       	ldi	r28, 0xFF	; 255
+      9a:	d0 e1       	ldi	r29, 0x10	; 16
+      9c:	de bf       	out	0x3e, r29	; 62
+      9e:	cd bf       	out	0x3d, r28	; 61
+
+000000a0 <__do_copy_data>:
+      a0:	11 e0       	ldi	r17, 0x01	; 1
+      a2:	a0 e0       	ldi	r26, 0x00	; 0
+      a4:	b1 e0       	ldi	r27, 0x01	; 1
+      a6:	e8 e0       	ldi	r30, 0x08	; 8
+      a8:	f4 e1       	ldi	r31, 0x14	; 20
+      aa:	00 e0       	ldi	r16, 0x00	; 0
+      ac:	0b bf       	out	0x3b, r16	; 59
+      ae:	02 c0       	rjmp	.+4      	; 0xb4 <__do_copy_data+0x14>
+      b0:	07 90       	elpm	r0, Z+
+      b2:	0d 92       	st	X+, r0
+      b4:	a0 32       	cpi	r26, 0x20	; 32
+      b6:	b1 07       	cpc	r27, r17
+      b8:	d9 f7       	brne	.-10     	; 0xb0 <__do_copy_data+0x10>
+
+000000ba <__do_clear_bss>:
+      ba:	11 e0       	ldi	r17, 0x01	; 1
+      bc:	a0 e2       	ldi	r26, 0x20	; 32
+      be:	b1 e0       	ldi	r27, 0x01	; 1
+      c0:	01 c0       	rjmp	.+2      	; 0xc4 <.do_clear_bss_start>
+
+000000c2 <.do_clear_bss_loop>:
+      c2:	1d 92       	st	X+, r1
+
+000000c4 <.do_clear_bss_start>:
+      c4:	ab 36       	cpi	r26, 0x6B	; 107
+      c6:	b1 07       	cpc	r27, r17
+      c8:	e1 f7       	brne	.-8      	; 0xc2 <.do_clear_bss_loop>
+      ca:	0e 94 15 07 	call	0xe2a	; 0xe2a <main>
+      ce:	0c 94 02 0a 	jmp	0x1404	; 0x1404 <_exit>
+
+000000d2 <__bad_interrupt>:
+      d2:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+000000d6 <can_set_baudrate>:
+can_message can_get_mob_data(void);
+/* </Function declarations> */
+
+/* Set baudrate (1000, 500, 250, 200, 125, 100kbits/s) for cpu clock (16, 12, 8, 6, 4MHz) */
+void can_set_baudrate(uint16_t baud)
+{
+      d6:	df 93       	push	r29
+      d8:	cf 93       	push	r28
+      da:	00 d0       	rcall	.+0      	; 0xdc <can_set_baudrate+0x6>
+      dc:	00 d0       	rcall	.+0      	; 0xde <can_set_baudrate+0x8>
+      de:	cd b7       	in	r28, 0x3d	; 61
+      e0:	de b7       	in	r29, 0x3e	; 62
+      e2:	9a 83       	std	Y+2, r25	; 0x02
+      e4:	89 83       	std	Y+1, r24	; 0x01
+#if F_CPU	== 16000000
+	switch(baud)
+      e6:	89 81       	ldd	r24, Y+1	; 0x01
+      e8:	9a 81       	ldd	r25, Y+2	; 0x02
+      ea:	9c 83       	std	Y+4, r25	; 0x04
+      ec:	8b 83       	std	Y+3, r24	; 0x03
+      ee:	8b 81       	ldd	r24, Y+3	; 0x03
+      f0:	9c 81       	ldd	r25, Y+4	; 0x04
+      f2:	88 3c       	cpi	r24, 0xC8	; 200
+      f4:	91 05       	cpc	r25, r1
+      f6:	09 f4       	brne	.+2      	; 0xfa <can_set_baudrate+0x24>
+      f8:	4a c0       	rjmp	.+148    	; 0x18e <can_set_baudrate+0xb8>
+      fa:	8b 81       	ldd	r24, Y+3	; 0x03
+      fc:	9c 81       	ldd	r25, Y+4	; 0x04
+      fe:	89 3c       	cpi	r24, 0xC9	; 201
+     100:	91 05       	cpc	r25, r1
+     102:	68 f4       	brcc	.+26     	; 0x11e <can_set_baudrate+0x48>
+     104:	8b 81       	ldd	r24, Y+3	; 0x03
+     106:	9c 81       	ldd	r25, Y+4	; 0x04
+     108:	84 36       	cpi	r24, 0x64	; 100
+     10a:	91 05       	cpc	r25, r1
+     10c:	09 f4       	brne	.+2      	; 0x110 <can_set_baudrate+0x3a>
+     10e:	59 c0       	rjmp	.+178    	; 0x1c2 <can_set_baudrate+0xec>
+     110:	8b 81       	ldd	r24, Y+3	; 0x03
+     112:	9c 81       	ldd	r25, Y+4	; 0x04
+     114:	8d 37       	cpi	r24, 0x7D	; 125
+     116:	91 05       	cpc	r25, r1
+     118:	09 f4       	brne	.+2      	; 0x11c <can_set_baudrate+0x46>
+     11a:	46 c0       	rjmp	.+140    	; 0x1a8 <can_set_baudrate+0xd2>
+     11c:	5e c0       	rjmp	.+188    	; 0x1da <can_set_baudrate+0x104>
+     11e:	8b 81       	ldd	r24, Y+3	; 0x03
+     120:	9c 81       	ldd	r25, Y+4	; 0x04
+     122:	21 e0       	ldi	r18, 0x01	; 1
+     124:	84 3f       	cpi	r24, 0xF4	; 244
+     126:	92 07       	cpc	r25, r18
+     128:	c1 f0       	breq	.+48     	; 0x15a <can_set_baudrate+0x84>
+     12a:	8b 81       	ldd	r24, Y+3	; 0x03
+     12c:	9c 81       	ldd	r25, Y+4	; 0x04
+     12e:	23 e0       	ldi	r18, 0x03	; 3
+     130:	88 3e       	cpi	r24, 0xE8	; 232
+     132:	92 07       	cpc	r25, r18
+     134:	31 f0       	breq	.+12     	; 0x142 <can_set_baudrate+0x6c>
+     136:	8b 81       	ldd	r24, Y+3	; 0x03
+     138:	9c 81       	ldd	r25, Y+4	; 0x04
+     13a:	8a 3f       	cpi	r24, 0xFA	; 250
+     13c:	91 05       	cpc	r25, r1
+     13e:	d1 f0       	breq	.+52     	; 0x174 <can_set_baudrate+0x9e>
+     140:	4c c0       	rjmp	.+152    	; 0x1da <can_set_baudrate+0x104>
+	{
+		case 1000:
+			CANBT1		= 0x00;
+     142:	e2 ee       	ldi	r30, 0xE2	; 226
+     144:	f0 e0       	ldi	r31, 0x00	; 0
+     146:	10 82       	st	Z, r1
+			CANBT2		= 0x0c;
+     148:	e3 ee       	ldi	r30, 0xE3	; 227
+     14a:	f0 e0       	ldi	r31, 0x00	; 0
+     14c:	8c e0       	ldi	r24, 0x0C	; 12
+     14e:	80 83       	st	Z, r24
+			CANBT3		= 0x37;
+     150:	e4 ee       	ldi	r30, 0xE4	; 228
+     152:	f0 e0       	ldi	r31, 0x00	; 0
+     154:	87 e3       	ldi	r24, 0x37	; 55
+     156:	80 83       	st	Z, r24
+     158:	40 c0       	rjmp	.+128    	; 0x1da <can_set_baudrate+0x104>
+			break;
+		case 500:
+			CANBT1		= 0x02;
+     15a:	e2 ee       	ldi	r30, 0xE2	; 226
+     15c:	f0 e0       	ldi	r31, 0x00	; 0
+     15e:	82 e0       	ldi	r24, 0x02	; 2
+     160:	80 83       	st	Z, r24
+			CANBT2		= 0x0c;
+     162:	e3 ee       	ldi	r30, 0xE3	; 227
+     164:	f0 e0       	ldi	r31, 0x00	; 0
+     166:	8c e0       	ldi	r24, 0x0C	; 12
+     168:	80 83       	st	Z, r24
+			CANBT3		= 0x37;
+     16a:	e4 ee       	ldi	r30, 0xE4	; 228
+     16c:	f0 e0       	ldi	r31, 0x00	; 0
+     16e:	87 e3       	ldi	r24, 0x37	; 55
+     170:	80 83       	st	Z, r24
+     172:	33 c0       	rjmp	.+102    	; 0x1da <can_set_baudrate+0x104>
+			break;
+		case 250:
+			CANBT1		= 0x06;
+     174:	e2 ee       	ldi	r30, 0xE2	; 226
+     176:	f0 e0       	ldi	r31, 0x00	; 0
+     178:	86 e0       	ldi	r24, 0x06	; 6
+     17a:	80 83       	st	Z, r24
+			CANBT2		= 0x0c;
+     17c:	e3 ee       	ldi	r30, 0xE3	; 227
+     17e:	f0 e0       	ldi	r31, 0x00	; 0
+     180:	8c e0       	ldi	r24, 0x0C	; 12
+     182:	80 83       	st	Z, r24
+			CANBT3		= 0x37;
+     184:	e4 ee       	ldi	r30, 0xE4	; 228
+     186:	f0 e0       	ldi	r31, 0x00	; 0
+     188:	87 e3       	ldi	r24, 0x37	; 55
+     18a:	80 83       	st	Z, r24
+     18c:	26 c0       	rjmp	.+76     	; 0x1da <can_set_baudrate+0x104>
+			break;
+		case 200:
+			CANBT1		= 0x08;
+     18e:	e2 ee       	ldi	r30, 0xE2	; 226
+     190:	f0 e0       	ldi	r31, 0x00	; 0
+     192:	88 e0       	ldi	r24, 0x08	; 8
+     194:	80 83       	st	Z, r24
+			CANBT2		= 0x0c;
+     196:	e3 ee       	ldi	r30, 0xE3	; 227
+     198:	f0 e0       	ldi	r31, 0x00	; 0
+     19a:	8c e0       	ldi	r24, 0x0C	; 12
+     19c:	80 83       	st	Z, r24
+			CANBT3		= 0x37;
+     19e:	e4 ee       	ldi	r30, 0xE4	; 228
+     1a0:	f0 e0       	ldi	r31, 0x00	; 0
+     1a2:	87 e3       	ldi	r24, 0x37	; 55
+     1a4:	80 83       	st	Z, r24
+     1a6:	19 c0       	rjmp	.+50     	; 0x1da <can_set_baudrate+0x104>
+			break;
+		case 125:
+			CANBT1		= 0x0e;
+     1a8:	e2 ee       	ldi	r30, 0xE2	; 226
+     1aa:	f0 e0       	ldi	r31, 0x00	; 0
+     1ac:	8e e0       	ldi	r24, 0x0E	; 14
+     1ae:	80 83       	st	Z, r24
+			CANBT2		= 0x0c;
+     1b0:	e3 ee       	ldi	r30, 0xE3	; 227
+     1b2:	f0 e0       	ldi	r31, 0x00	; 0
+     1b4:	8c e0       	ldi	r24, 0x0C	; 12
+     1b6:	80 83       	st	Z, r24
+			CANBT3		= 0x37;
+     1b8:	e4 ee       	ldi	r30, 0xE4	; 228
+     1ba:	f0 e0       	ldi	r31, 0x00	; 0
+     1bc:	87 e3       	ldi	r24, 0x37	; 55
+     1be:	80 83       	st	Z, r24
+     1c0:	0c c0       	rjmp	.+24     	; 0x1da <can_set_baudrate+0x104>
+			break;
+		case 100:
+			CANBT1		= 0x12;
+     1c2:	e2 ee       	ldi	r30, 0xE2	; 226
+     1c4:	f0 e0       	ldi	r31, 0x00	; 0
+     1c6:	82 e1       	ldi	r24, 0x12	; 18
+     1c8:	80 83       	st	Z, r24
+			CANBT2		= 0x0c;
+     1ca:	e3 ee       	ldi	r30, 0xE3	; 227
+     1cc:	f0 e0       	ldi	r31, 0x00	; 0
+     1ce:	8c e0       	ldi	r24, 0x0C	; 12
+     1d0:	80 83       	st	Z, r24
+			CANBT3		= 0x37;
+     1d2:	e4 ee       	ldi	r30, 0xE4	; 228
+     1d4:	f0 e0       	ldi	r31, 0x00	; 0
+     1d6:	87 e3       	ldi	r24, 0x37	; 55
+     1d8:	80 83       	st	Z, r24
+			break;
+		default:
+			break;
+	}
+#endif
+}
+     1da:	0f 90       	pop	r0
+     1dc:	0f 90       	pop	r0
+     1de:	0f 90       	pop	r0
+     1e0:	0f 90       	pop	r0
+     1e2:	cf 91       	pop	r28
+     1e4:	df 91       	pop	r29
+     1e6:	08 95       	ret
+
+000001e8 <can_set_interrupt>:
+/* Set interrupt mode */
+void can_set_interrupt(uint8_t mode)
+{
+     1e8:	df 93       	push	r29
+     1ea:	cf 93       	push	r28
+     1ec:	00 d0       	rcall	.+0      	; 0x1ee <can_set_interrupt+0x6>
+     1ee:	0f 92       	push	r0
+     1f0:	cd b7       	in	r28, 0x3d	; 61
+     1f2:	de b7       	in	r29, 0x3e	; 62
+     1f4:	89 83       	std	Y+1, r24	; 0x01
+	switch(mode)
+     1f6:	89 81       	ldd	r24, Y+1	; 0x01
+     1f8:	28 2f       	mov	r18, r24
+     1fa:	30 e0       	ldi	r19, 0x00	; 0
+     1fc:	3b 83       	std	Y+3, r19	; 0x03
+     1fe:	2a 83       	std	Y+2, r18	; 0x02
+     200:	8a 81       	ldd	r24, Y+2	; 0x02
+     202:	9b 81       	ldd	r25, Y+3	; 0x03
+     204:	81 30       	cpi	r24, 0x01	; 1
+     206:	91 05       	cpc	r25, r1
+     208:	61 f1       	breq	.+88     	; 0x262 <can_set_interrupt+0x7a>
+     20a:	2a 81       	ldd	r18, Y+2	; 0x02
+     20c:	3b 81       	ldd	r19, Y+3	; 0x03
+     20e:	22 30       	cpi	r18, 0x02	; 2
+     210:	31 05       	cpc	r19, r1
+     212:	2c f4       	brge	.+10     	; 0x21e <can_set_interrupt+0x36>
+     214:	8a 81       	ldd	r24, Y+2	; 0x02
+     216:	9b 81       	ldd	r25, Y+3	; 0x03
+     218:	00 97       	sbiw	r24, 0x00	; 0
+     21a:	69 f0       	breq	.+26     	; 0x236 <can_set_interrupt+0x4e>
+     21c:	63 c0       	rjmp	.+198    	; 0x2e4 <can_set_interrupt+0xfc>
+     21e:	2a 81       	ldd	r18, Y+2	; 0x02
+     220:	3b 81       	ldd	r19, Y+3	; 0x03
+     222:	22 30       	cpi	r18, 0x02	; 2
+     224:	31 05       	cpc	r19, r1
+     226:	99 f1       	breq	.+102    	; 0x28e <can_set_interrupt+0xa6>
+     228:	8a 81       	ldd	r24, Y+2	; 0x02
+     22a:	9b 81       	ldd	r25, Y+3	; 0x03
+     22c:	83 30       	cpi	r24, 0x03	; 3
+     22e:	91 05       	cpc	r25, r1
+     230:	09 f4       	brne	.+2      	; 0x234 <can_set_interrupt+0x4c>
+     232:	43 c0       	rjmp	.+134    	; 0x2ba <can_set_interrupt+0xd2>
+     234:	57 c0       	rjmp	.+174    	; 0x2e4 <can_set_interrupt+0xfc>
+	{
+		case NONE:
+			clearbit(CANGIE, ENIT);
+     236:	ab ed       	ldi	r26, 0xDB	; 219
+     238:	b0 e0       	ldi	r27, 0x00	; 0
+     23a:	eb ed       	ldi	r30, 0xDB	; 219
+     23c:	f0 e0       	ldi	r31, 0x00	; 0
+     23e:	80 81       	ld	r24, Z
+     240:	8f 77       	andi	r24, 0x7F	; 127
+     242:	8c 93       	st	X, r24
+		  	clearbit(CANGIE, ENRX);
+     244:	ab ed       	ldi	r26, 0xDB	; 219
+     246:	b0 e0       	ldi	r27, 0x00	; 0
+     248:	eb ed       	ldi	r30, 0xDB	; 219
+     24a:	f0 e0       	ldi	r31, 0x00	; 0
+     24c:	80 81       	ld	r24, Z
+     24e:	8f 7d       	andi	r24, 0xDF	; 223
+     250:	8c 93       	st	X, r24
+			clearbit(CANGIE, ENTX);
+     252:	ab ed       	ldi	r26, 0xDB	; 219
+     254:	b0 e0       	ldi	r27, 0x00	; 0
+     256:	eb ed       	ldi	r30, 0xDB	; 219
+     258:	f0 e0       	ldi	r31, 0x00	; 0
+     25a:	80 81       	ld	r24, Z
+     25c:	8f 7e       	andi	r24, 0xEF	; 239
+     25e:	8c 93       	st	X, r24
+     260:	41 c0       	rjmp	.+130    	; 0x2e4 <can_set_interrupt+0xfc>
+			break;
+		case TX:
+			setbit(CANGIE, ENIT);
+     262:	ab ed       	ldi	r26, 0xDB	; 219
+     264:	b0 e0       	ldi	r27, 0x00	; 0
+     266:	eb ed       	ldi	r30, 0xDB	; 219
+     268:	f0 e0       	ldi	r31, 0x00	; 0
+     26a:	80 81       	ld	r24, Z
+     26c:	80 68       	ori	r24, 0x80	; 128
+     26e:	8c 93       	st	X, r24
+		  	clearbit(CANGIE, ENRX);
+     270:	ab ed       	ldi	r26, 0xDB	; 219
+     272:	b0 e0       	ldi	r27, 0x00	; 0
+     274:	eb ed       	ldi	r30, 0xDB	; 219
+     276:	f0 e0       	ldi	r31, 0x00	; 0
+     278:	80 81       	ld	r24, Z
+     27a:	8f 7d       	andi	r24, 0xDF	; 223
+     27c:	8c 93       	st	X, r24
+			setbit(CANGIE, ENTX);
+     27e:	ab ed       	ldi	r26, 0xDB	; 219
+     280:	b0 e0       	ldi	r27, 0x00	; 0
+     282:	eb ed       	ldi	r30, 0xDB	; 219
+     284:	f0 e0       	ldi	r31, 0x00	; 0
+     286:	80 81       	ld	r24, Z
+     288:	80 61       	ori	r24, 0x10	; 16
+     28a:	8c 93       	st	X, r24
+     28c:	2b c0       	rjmp	.+86     	; 0x2e4 <can_set_interrupt+0xfc>
+			break;
+		case RX:
+			setbit(CANGIE, ENIT);
+     28e:	ab ed       	ldi	r26, 0xDB	; 219
+     290:	b0 e0       	ldi	r27, 0x00	; 0
+     292:	eb ed       	ldi	r30, 0xDB	; 219
+     294:	f0 e0       	ldi	r31, 0x00	; 0
+     296:	80 81       	ld	r24, Z
+     298:	80 68       	ori	r24, 0x80	; 128
+     29a:	8c 93       	st	X, r24
+		  	setbit(CANGIE, ENRX);
+     29c:	ab ed       	ldi	r26, 0xDB	; 219
+     29e:	b0 e0       	ldi	r27, 0x00	; 0
+     2a0:	eb ed       	ldi	r30, 0xDB	; 219
+     2a2:	f0 e0       	ldi	r31, 0x00	; 0
+     2a4:	80 81       	ld	r24, Z
+     2a6:	80 62       	ori	r24, 0x20	; 32
+     2a8:	8c 93       	st	X, r24
+			clearbit(CANGIE, ENTX);
+     2aa:	ab ed       	ldi	r26, 0xDB	; 219
+     2ac:	b0 e0       	ldi	r27, 0x00	; 0
+     2ae:	eb ed       	ldi	r30, 0xDB	; 219
+     2b0:	f0 e0       	ldi	r31, 0x00	; 0
+     2b2:	80 81       	ld	r24, Z
+     2b4:	8f 7e       	andi	r24, 0xEF	; 239
+     2b6:	8c 93       	st	X, r24
+     2b8:	15 c0       	rjmp	.+42     	; 0x2e4 <can_set_interrupt+0xfc>
+			break;
+		case TXRX:
+			setbit(CANGIE, ENIT);
+     2ba:	ab ed       	ldi	r26, 0xDB	; 219
+     2bc:	b0 e0       	ldi	r27, 0x00	; 0
+     2be:	eb ed       	ldi	r30, 0xDB	; 219
+     2c0:	f0 e0       	ldi	r31, 0x00	; 0
+     2c2:	80 81       	ld	r24, Z
+     2c4:	80 68       	ori	r24, 0x80	; 128
+     2c6:	8c 93       	st	X, r24
+		  	setbit(CANGIE, ENRX);
+     2c8:	ab ed       	ldi	r26, 0xDB	; 219
+     2ca:	b0 e0       	ldi	r27, 0x00	; 0
+     2cc:	eb ed       	ldi	r30, 0xDB	; 219
+     2ce:	f0 e0       	ldi	r31, 0x00	; 0
+     2d0:	80 81       	ld	r24, Z
+     2d2:	80 62       	ori	r24, 0x20	; 32
+     2d4:	8c 93       	st	X, r24
+			setbit(CANGIE, ENTX);
+     2d6:	ab ed       	ldi	r26, 0xDB	; 219
+     2d8:	b0 e0       	ldi	r27, 0x00	; 0
+     2da:	eb ed       	ldi	r30, 0xDB	; 219
+     2dc:	f0 e0       	ldi	r31, 0x00	; 0
+     2de:	80 81       	ld	r24, Z
+     2e0:	80 61       	ori	r24, 0x10	; 16
+     2e2:	8c 93       	st	X, r24
+			break;
+		default:
+			break;
+	}
+}
+     2e4:	0f 90       	pop	r0
+     2e6:	0f 90       	pop	r0
+     2e8:	0f 90       	pop	r0
+     2ea:	cf 91       	pop	r28
+     2ec:	df 91       	pop	r29
+     2ee:	08 95       	ret
+
+000002f0 <can_select_mob>:
+/* Select MOB */
+void can_select_mob(uint8_t mob)
+{
+     2f0:	df 93       	push	r29
+     2f2:	cf 93       	push	r28
+     2f4:	0f 92       	push	r0
+     2f6:	cd b7       	in	r28, 0x3d	; 61
+     2f8:	de b7       	in	r29, 0x3e	; 62
+     2fa:	89 83       	std	Y+1, r24	; 0x01
+	CANPAGE	= (mob << 4);
+     2fc:	ed ee       	ldi	r30, 0xED	; 237
+     2fe:	f0 e0       	ldi	r31, 0x00	; 0
+     300:	89 81       	ldd	r24, Y+1	; 0x01
+     302:	82 95       	swap	r24
+     304:	80 7f       	andi	r24, 0xF0	; 240
+     306:	80 83       	st	Z, r24
+}
+     308:	0f 90       	pop	r0
+     30a:	cf 91       	pop	r28
+     30c:	df 91       	pop	r29
+     30e:	08 95       	ret
+
+00000310 <can_set_mob_id_mask>:
+/* Set ID mask for selected MOB */
+void can_set_mob_id_mask(uint32_t idm, uint8_t id_type)
+{
+     310:	df 93       	push	r29
+     312:	cf 93       	push	r28
+     314:	00 d0       	rcall	.+0      	; 0x316 <can_set_mob_id_mask+0x6>
+     316:	00 d0       	rcall	.+0      	; 0x318 <can_set_mob_id_mask+0x8>
+     318:	0f 92       	push	r0
+     31a:	cd b7       	in	r28, 0x3d	; 61
+     31c:	de b7       	in	r29, 0x3e	; 62
+     31e:	69 83       	std	Y+1, r22	; 0x01
+     320:	7a 83       	std	Y+2, r23	; 0x02
+     322:	8b 83       	std	Y+3, r24	; 0x03
+     324:	9c 83       	std	Y+4, r25	; 0x04
+     326:	4d 83       	std	Y+5, r20	; 0x05
+	if (id_type == 1)
+     328:	8d 81       	ldd	r24, Y+5	; 0x05
+     32a:	81 30       	cpi	r24, 0x01	; 1
+     32c:	09 f0       	breq	.+2      	; 0x330 <can_set_mob_id_mask+0x20>
+     32e:	3f c0       	rjmp	.+126    	; 0x3ae <can_set_mob_id_mask+0x9e>
+	{
+		idm	<<= 3;
+     330:	89 81       	ldd	r24, Y+1	; 0x01
+     332:	9a 81       	ldd	r25, Y+2	; 0x02
+     334:	ab 81       	ldd	r26, Y+3	; 0x03
+     336:	bc 81       	ldd	r27, Y+4	; 0x04
+     338:	88 0f       	add	r24, r24
+     33a:	99 1f       	adc	r25, r25
+     33c:	aa 1f       	adc	r26, r26
+     33e:	bb 1f       	adc	r27, r27
+     340:	88 0f       	add	r24, r24
+     342:	99 1f       	adc	r25, r25
+     344:	aa 1f       	adc	r26, r26
+     346:	bb 1f       	adc	r27, r27
+     348:	88 0f       	add	r24, r24
+     34a:	99 1f       	adc	r25, r25
+     34c:	aa 1f       	adc	r26, r26
+     34e:	bb 1f       	adc	r27, r27
+     350:	89 83       	std	Y+1, r24	; 0x01
+     352:	9a 83       	std	Y+2, r25	; 0x02
+     354:	ab 83       	std	Y+3, r26	; 0x03
+     356:	bc 83       	std	Y+4, r27	; 0x04
+		CANIDM4 = ((unsigned char) (idm));
+     358:	e4 ef       	ldi	r30, 0xF4	; 244
+     35a:	f0 e0       	ldi	r31, 0x00	; 0
+     35c:	89 81       	ldd	r24, Y+1	; 0x01
+     35e:	80 83       	st	Z, r24
+		CANIDM4 |= (0x01 << RTRMSK) | (0x01 << IDEMSK);
+     360:	a4 ef       	ldi	r26, 0xF4	; 244
+     362:	b0 e0       	ldi	r27, 0x00	; 0
+     364:	e4 ef       	ldi	r30, 0xF4	; 244
+     366:	f0 e0       	ldi	r31, 0x00	; 0
+     368:	80 81       	ld	r24, Z
+     36a:	85 60       	ori	r24, 0x05	; 5
+     36c:	8c 93       	st	X, r24
+		CANIDM3 = (unsigned char) (idm >> 8);
+     36e:	e5 ef       	ldi	r30, 0xF5	; 245
+     370:	f0 e0       	ldi	r31, 0x00	; 0
+     372:	89 81       	ldd	r24, Y+1	; 0x01
+     374:	9a 81       	ldd	r25, Y+2	; 0x02
+     376:	ab 81       	ldd	r26, Y+3	; 0x03
+     378:	bc 81       	ldd	r27, Y+4	; 0x04
+     37a:	89 2f       	mov	r24, r25
+     37c:	9a 2f       	mov	r25, r26
+     37e:	ab 2f       	mov	r26, r27
+     380:	bb 27       	eor	r27, r27
+     382:	80 83       	st	Z, r24
+		CANIDM2 = (unsigned char) (idm >> 16);
+     384:	e6 ef       	ldi	r30, 0xF6	; 246
+     386:	f0 e0       	ldi	r31, 0x00	; 0
+     388:	89 81       	ldd	r24, Y+1	; 0x01
+     38a:	9a 81       	ldd	r25, Y+2	; 0x02
+     38c:	ab 81       	ldd	r26, Y+3	; 0x03
+     38e:	bc 81       	ldd	r27, Y+4	; 0x04
+     390:	cd 01       	movw	r24, r26
+     392:	aa 27       	eor	r26, r26
+     394:	bb 27       	eor	r27, r27
+     396:	80 83       	st	Z, r24
+		CANIDM1 = (unsigned char) (idm >> 24);
+     398:	e7 ef       	ldi	r30, 0xF7	; 247
+     39a:	f0 e0       	ldi	r31, 0x00	; 0
+     39c:	89 81       	ldd	r24, Y+1	; 0x01
+     39e:	9a 81       	ldd	r25, Y+2	; 0x02
+     3a0:	ab 81       	ldd	r26, Y+3	; 0x03
+     3a2:	bc 81       	ldd	r27, Y+4	; 0x04
+     3a4:	8b 2f       	mov	r24, r27
+     3a6:	99 27       	eor	r25, r25
+     3a8:	aa 27       	eor	r26, r26
+     3aa:	bb 27       	eor	r27, r27
+     3ac:	80 83       	st	Z, r24
+	}
+	if (id_type == 0)
+     3ae:	8d 81       	ldd	r24, Y+5	; 0x05
+     3b0:	88 23       	and	r24, r24
+     3b2:	a9 f5       	brne	.+106    	; 0x41e <can_set_mob_id_mask+0x10e>
+	{
+		idm <<= 5;
+     3b4:	89 81       	ldd	r24, Y+1	; 0x01
+     3b6:	9a 81       	ldd	r25, Y+2	; 0x02
+     3b8:	ab 81       	ldd	r26, Y+3	; 0x03
+     3ba:	bc 81       	ldd	r27, Y+4	; 0x04
+     3bc:	88 0f       	add	r24, r24
+     3be:	99 1f       	adc	r25, r25
+     3c0:	aa 1f       	adc	r26, r26
+     3c2:	bb 1f       	adc	r27, r27
+     3c4:	88 0f       	add	r24, r24
+     3c6:	99 1f       	adc	r25, r25
+     3c8:	aa 1f       	adc	r26, r26
+     3ca:	bb 1f       	adc	r27, r27
+     3cc:	88 0f       	add	r24, r24
+     3ce:	99 1f       	adc	r25, r25
+     3d0:	aa 1f       	adc	r26, r26
+     3d2:	bb 1f       	adc	r27, r27
+     3d4:	88 0f       	add	r24, r24
+     3d6:	99 1f       	adc	r25, r25
+     3d8:	aa 1f       	adc	r26, r26
+     3da:	bb 1f       	adc	r27, r27
+     3dc:	88 0f       	add	r24, r24
+     3de:	99 1f       	adc	r25, r25
+     3e0:	aa 1f       	adc	r26, r26
+     3e2:	bb 1f       	adc	r27, r27
+     3e4:	89 83       	std	Y+1, r24	; 0x01
+     3e6:	9a 83       	std	Y+2, r25	; 0x02
+     3e8:	ab 83       	std	Y+3, r26	; 0x03
+     3ea:	bc 83       	std	Y+4, r27	; 0x04
+		CANIDM4 &= 0x05;	// Sustain bit 0, 2
+     3ec:	a4 ef       	ldi	r26, 0xF4	; 244
+     3ee:	b0 e0       	ldi	r27, 0x00	; 0
+     3f0:	e4 ef       	ldi	r30, 0xF4	; 244
+     3f2:	f0 e0       	ldi	r31, 0x00	; 0
+     3f4:	80 81       	ld	r24, Z
+     3f6:	85 70       	andi	r24, 0x05	; 5
+     3f8:	8c 93       	st	X, r24
+		CANIDM3 = 0x00;
+     3fa:	e5 ef       	ldi	r30, 0xF5	; 245
+     3fc:	f0 e0       	ldi	r31, 0x00	; 0
+     3fe:	10 82       	st	Z, r1
+		CANIDM2 = (unsigned char) (idm);
+     400:	e6 ef       	ldi	r30, 0xF6	; 246
+     402:	f0 e0       	ldi	r31, 0x00	; 0
+     404:	89 81       	ldd	r24, Y+1	; 0x01
+     406:	80 83       	st	Z, r24
+		CANIDM1 = (unsigned char) (idm >> 8);
+     408:	e7 ef       	ldi	r30, 0xF7	; 247
+     40a:	f0 e0       	ldi	r31, 0x00	; 0
+     40c:	89 81       	ldd	r24, Y+1	; 0x01
+     40e:	9a 81       	ldd	r25, Y+2	; 0x02
+     410:	ab 81       	ldd	r26, Y+3	; 0x03
+     412:	bc 81       	ldd	r27, Y+4	; 0x04
+     414:	89 2f       	mov	r24, r25
+     416:	9a 2f       	mov	r25, r26
+     418:	ab 2f       	mov	r26, r27
+     41a:	bb 27       	eor	r27, r27
+     41c:	80 83       	st	Z, r24
+	}
+}
+     41e:	0f 90       	pop	r0
+     420:	0f 90       	pop	r0
+     422:	0f 90       	pop	r0
+     424:	0f 90       	pop	r0
+     426:	0f 90       	pop	r0
+     428:	cf 91       	pop	r28
+     42a:	df 91       	pop	r29
+     42c:	08 95       	ret
+
+0000042e <can_set_mob_id>:
+/* Set ID for selected MOB */
+void can_set_mob_id(uint32_t id, uint8_t id_type)
+{
+     42e:	df 93       	push	r29
+     430:	cf 93       	push	r28
+     432:	00 d0       	rcall	.+0      	; 0x434 <can_set_mob_id+0x6>
+     434:	00 d0       	rcall	.+0      	; 0x436 <can_set_mob_id+0x8>
+     436:	0f 92       	push	r0
+     438:	cd b7       	in	r28, 0x3d	; 61
+     43a:	de b7       	in	r29, 0x3e	; 62
+     43c:	69 83       	std	Y+1, r22	; 0x01
+     43e:	7a 83       	std	Y+2, r23	; 0x02
+     440:	8b 83       	std	Y+3, r24	; 0x03
+     442:	9c 83       	std	Y+4, r25	; 0x04
+     444:	4d 83       	std	Y+5, r20	; 0x05
+	if (id_type == 1)
+     446:	8d 81       	ldd	r24, Y+5	; 0x05
+     448:	81 30       	cpi	r24, 0x01	; 1
+     44a:	09 f0       	breq	.+2      	; 0x44e <can_set_mob_id+0x20>
+     44c:	51 c0       	rjmp	.+162    	; 0x4f0 <can_set_mob_id+0xc2>
+	{
+		id <<= 3;
+     44e:	89 81       	ldd	r24, Y+1	; 0x01
+     450:	9a 81       	ldd	r25, Y+2	; 0x02
+     452:	ab 81       	ldd	r26, Y+3	; 0x03
+     454:	bc 81       	ldd	r27, Y+4	; 0x04
+     456:	88 0f       	add	r24, r24
+     458:	99 1f       	adc	r25, r25
+     45a:	aa 1f       	adc	r26, r26
+     45c:	bb 1f       	adc	r27, r27
+     45e:	88 0f       	add	r24, r24
+     460:	99 1f       	adc	r25, r25
+     462:	aa 1f       	adc	r26, r26
+     464:	bb 1f       	adc	r27, r27
+     466:	88 0f       	add	r24, r24
+     468:	99 1f       	adc	r25, r25
+     46a:	aa 1f       	adc	r26, r26
+     46c:	bb 1f       	adc	r27, r27
+     46e:	89 83       	std	Y+1, r24	; 0x01
+     470:	9a 83       	std	Y+2, r25	; 0x02
+     472:	ab 83       	std	Y+3, r26	; 0x03
+     474:	bc 83       	std	Y+4, r27	; 0x04
+		id |= (CANIDT4 & 0x07);
+     476:	e0 ef       	ldi	r30, 0xF0	; 240
+     478:	f0 e0       	ldi	r31, 0x00	; 0
+     47a:	80 81       	ld	r24, Z
+     47c:	88 2f       	mov	r24, r24
+     47e:	90 e0       	ldi	r25, 0x00	; 0
+     480:	a0 e0       	ldi	r26, 0x00	; 0
+     482:	b0 e0       	ldi	r27, 0x00	; 0
+     484:	9c 01       	movw	r18, r24
+     486:	ad 01       	movw	r20, r26
+     488:	27 70       	andi	r18, 0x07	; 7
+     48a:	30 70       	andi	r19, 0x00	; 0
+     48c:	40 70       	andi	r20, 0x00	; 0
+     48e:	50 70       	andi	r21, 0x00	; 0
+     490:	89 81       	ldd	r24, Y+1	; 0x01
+     492:	9a 81       	ldd	r25, Y+2	; 0x02
+     494:	ab 81       	ldd	r26, Y+3	; 0x03
+     496:	bc 81       	ldd	r27, Y+4	; 0x04
+     498:	82 2b       	or	r24, r18
+     49a:	93 2b       	or	r25, r19
+     49c:	a4 2b       	or	r26, r20
+     49e:	b5 2b       	or	r27, r21
+     4a0:	89 83       	std	Y+1, r24	; 0x01
+     4a2:	9a 83       	std	Y+2, r25	; 0x02
+     4a4:	ab 83       	std	Y+3, r26	; 0x03
+     4a6:	bc 83       	std	Y+4, r27	; 0x04
+
+		CANIDT4 = (unsigned char) (id);
+     4a8:	e0 ef       	ldi	r30, 0xF0	; 240
+     4aa:	f0 e0       	ldi	r31, 0x00	; 0
+     4ac:	89 81       	ldd	r24, Y+1	; 0x01
+     4ae:	80 83       	st	Z, r24
+		CANIDT3 = (unsigned char) (id >> 8);
+     4b0:	e1 ef       	ldi	r30, 0xF1	; 241
+     4b2:	f0 e0       	ldi	r31, 0x00	; 0
+     4b4:	89 81       	ldd	r24, Y+1	; 0x01
+     4b6:	9a 81       	ldd	r25, Y+2	; 0x02
+     4b8:	ab 81       	ldd	r26, Y+3	; 0x03
+     4ba:	bc 81       	ldd	r27, Y+4	; 0x04
+     4bc:	89 2f       	mov	r24, r25
+     4be:	9a 2f       	mov	r25, r26
+     4c0:	ab 2f       	mov	r26, r27
+     4c2:	bb 27       	eor	r27, r27
+     4c4:	80 83       	st	Z, r24
+		CANIDT2 = (unsigned char) (id >> 16);
+     4c6:	e2 ef       	ldi	r30, 0xF2	; 242
+     4c8:	f0 e0       	ldi	r31, 0x00	; 0
+     4ca:	89 81       	ldd	r24, Y+1	; 0x01
+     4cc:	9a 81       	ldd	r25, Y+2	; 0x02
+     4ce:	ab 81       	ldd	r26, Y+3	; 0x03
+     4d0:	bc 81       	ldd	r27, Y+4	; 0x04
+     4d2:	cd 01       	movw	r24, r26
+     4d4:	aa 27       	eor	r26, r26
+     4d6:	bb 27       	eor	r27, r27
+     4d8:	80 83       	st	Z, r24
+		CANIDT1 = (unsigned char) (id >> 24);
+     4da:	e3 ef       	ldi	r30, 0xF3	; 243
+     4dc:	f0 e0       	ldi	r31, 0x00	; 0
+     4de:	89 81       	ldd	r24, Y+1	; 0x01
+     4e0:	9a 81       	ldd	r25, Y+2	; 0x02
+     4e2:	ab 81       	ldd	r26, Y+3	; 0x03
+     4e4:	bc 81       	ldd	r27, Y+4	; 0x04
+     4e6:	8b 2f       	mov	r24, r27
+     4e8:	99 27       	eor	r25, r25
+     4ea:	aa 27       	eor	r26, r26
+     4ec:	bb 27       	eor	r27, r27
+     4ee:	80 83       	st	Z, r24
+	}
+	if (id_type == 0)
+     4f0:	8d 81       	ldd	r24, Y+5	; 0x05
+     4f2:	88 23       	and	r24, r24
+     4f4:	a9 f5       	brne	.+106    	; 0x560 <can_set_mob_id+0x132>
+	{
+		id <<= 5;
+     4f6:	89 81       	ldd	r24, Y+1	; 0x01
+     4f8:	9a 81       	ldd	r25, Y+2	; 0x02
+     4fa:	ab 81       	ldd	r26, Y+3	; 0x03
+     4fc:	bc 81       	ldd	r27, Y+4	; 0x04
+     4fe:	88 0f       	add	r24, r24
+     500:	99 1f       	adc	r25, r25
+     502:	aa 1f       	adc	r26, r26
+     504:	bb 1f       	adc	r27, r27
+     506:	88 0f       	add	r24, r24
+     508:	99 1f       	adc	r25, r25
+     50a:	aa 1f       	adc	r26, r26
+     50c:	bb 1f       	adc	r27, r27
+     50e:	88 0f       	add	r24, r24
+     510:	99 1f       	adc	r25, r25
+     512:	aa 1f       	adc	r26, r26
+     514:	bb 1f       	adc	r27, r27
+     516:	88 0f       	add	r24, r24
+     518:	99 1f       	adc	r25, r25
+     51a:	aa 1f       	adc	r26, r26
+     51c:	bb 1f       	adc	r27, r27
+     51e:	88 0f       	add	r24, r24
+     520:	99 1f       	adc	r25, r25
+     522:	aa 1f       	adc	r26, r26
+     524:	bb 1f       	adc	r27, r27
+     526:	89 83       	std	Y+1, r24	; 0x01
+     528:	9a 83       	std	Y+2, r25	; 0x02
+     52a:	ab 83       	std	Y+3, r26	; 0x03
+     52c:	bc 83       	std	Y+4, r27	; 0x04
+		CANIDT4 &= 0x05;	// Reset CANIDT4, sustain bit 0, 2
+     52e:	a0 ef       	ldi	r26, 0xF0	; 240
+     530:	b0 e0       	ldi	r27, 0x00	; 0
+     532:	e0 ef       	ldi	r30, 0xF0	; 240
+     534:	f0 e0       	ldi	r31, 0x00	; 0
+     536:	80 81       	ld	r24, Z
+     538:	85 70       	andi	r24, 0x05	; 5
+     53a:	8c 93       	st	X, r24
+		CANIDT3 = 0x00;
+     53c:	e1 ef       	ldi	r30, 0xF1	; 241
+     53e:	f0 e0       	ldi	r31, 0x00	; 0
+     540:	10 82       	st	Z, r1
+		CANIDT2 = (unsigned char) (id);
+     542:	e2 ef       	ldi	r30, 0xF2	; 242
+     544:	f0 e0       	ldi	r31, 0x00	; 0
+     546:	89 81       	ldd	r24, Y+1	; 0x01
+     548:	80 83       	st	Z, r24
+		CANIDT1 = (unsigned char) (id >> 8);
+     54a:	e3 ef       	ldi	r30, 0xF3	; 243
+     54c:	f0 e0       	ldi	r31, 0x00	; 0
+     54e:	89 81       	ldd	r24, Y+1	; 0x01
+     550:	9a 81       	ldd	r25, Y+2	; 0x02
+     552:	ab 81       	ldd	r26, Y+3	; 0x03
+     554:	bc 81       	ldd	r27, Y+4	; 0x04
+     556:	89 2f       	mov	r24, r25
+     558:	9a 2f       	mov	r25, r26
+     55a:	ab 2f       	mov	r26, r27
+     55c:	bb 27       	eor	r27, r27
+     55e:	80 83       	st	Z, r24
+	}
+}
+     560:	0f 90       	pop	r0
+     562:	0f 90       	pop	r0
+     564:	0f 90       	pop	r0
+     566:	0f 90       	pop	r0
+     568:	0f 90       	pop	r0
+     56a:	cf 91       	pop	r28
+     56c:	df 91       	pop	r29
+     56e:	08 95       	ret
+
+00000570 <can_get_mob_id>:
+/* Get ID mask for selected MOB */
+uint32_t can_get_mob_id(uint8_t id_type)
+{
+     570:	df 93       	push	r29
+     572:	cf 93       	push	r28
+     574:	cd b7       	in	r28, 0x3d	; 61
+     576:	de b7       	in	r29, 0x3e	; 62
+     578:	29 97       	sbiw	r28, 0x09	; 9
+     57a:	0f b6       	in	r0, 0x3f	; 63
+     57c:	f8 94       	cli
+     57e:	de bf       	out	0x3e, r29	; 62
+     580:	0f be       	out	0x3f, r0	; 63
+     582:	cd bf       	out	0x3d, r28	; 61
+     584:	8d 83       	std	Y+5, r24	; 0x05
+	uint32_t id = 0;
+     586:	19 82       	std	Y+1, r1	; 0x01
+     588:	1a 82       	std	Y+2, r1	; 0x02
+     58a:	1b 82       	std	Y+3, r1	; 0x03
+     58c:	1c 82       	std	Y+4, r1	; 0x04
+	if (id_type == 1)
+     58e:	8d 81       	ldd	r24, Y+5	; 0x05
+     590:	81 30       	cpi	r24, 0x01	; 1
+     592:	09 f0       	breq	.+2      	; 0x596 <can_get_mob_id+0x26>
+     594:	76 c0       	rjmp	.+236    	; 0x682 <can_get_mob_id+0x112>
+	{
+		id |= (uint32_t) ((uint32_t) CANIDT1) << 24;
+     596:	e3 ef       	ldi	r30, 0xF3	; 243
+     598:	f0 e0       	ldi	r31, 0x00	; 0
+     59a:	80 81       	ld	r24, Z
+     59c:	88 2f       	mov	r24, r24
+     59e:	90 e0       	ldi	r25, 0x00	; 0
+     5a0:	a0 e0       	ldi	r26, 0x00	; 0
+     5a2:	b0 e0       	ldi	r27, 0x00	; 0
+     5a4:	58 2f       	mov	r21, r24
+     5a6:	44 27       	eor	r20, r20
+     5a8:	33 27       	eor	r19, r19
+     5aa:	22 27       	eor	r18, r18
+     5ac:	89 81       	ldd	r24, Y+1	; 0x01
+     5ae:	9a 81       	ldd	r25, Y+2	; 0x02
+     5b0:	ab 81       	ldd	r26, Y+3	; 0x03
+     5b2:	bc 81       	ldd	r27, Y+4	; 0x04
+     5b4:	82 2b       	or	r24, r18
+     5b6:	93 2b       	or	r25, r19
+     5b8:	a4 2b       	or	r26, r20
+     5ba:	b5 2b       	or	r27, r21
+     5bc:	89 83       	std	Y+1, r24	; 0x01
+     5be:	9a 83       	std	Y+2, r25	; 0x02
+     5c0:	ab 83       	std	Y+3, r26	; 0x03
+     5c2:	bc 83       	std	Y+4, r27	; 0x04
+		id |= (uint32_t) ((uint32_t) CANIDT2) << 16;
+     5c4:	e2 ef       	ldi	r30, 0xF2	; 242
+     5c6:	f0 e0       	ldi	r31, 0x00	; 0
+     5c8:	80 81       	ld	r24, Z
+     5ca:	88 2f       	mov	r24, r24
+     5cc:	90 e0       	ldi	r25, 0x00	; 0
+     5ce:	a0 e0       	ldi	r26, 0x00	; 0
+     5d0:	b0 e0       	ldi	r27, 0x00	; 0
+     5d2:	ac 01       	movw	r20, r24
+     5d4:	33 27       	eor	r19, r19
+     5d6:	22 27       	eor	r18, r18
+     5d8:	89 81       	ldd	r24, Y+1	; 0x01
+     5da:	9a 81       	ldd	r25, Y+2	; 0x02
+     5dc:	ab 81       	ldd	r26, Y+3	; 0x03
+     5de:	bc 81       	ldd	r27, Y+4	; 0x04
+     5e0:	82 2b       	or	r24, r18
+     5e2:	93 2b       	or	r25, r19
+     5e4:	a4 2b       	or	r26, r20
+     5e6:	b5 2b       	or	r27, r21
+     5e8:	89 83       	std	Y+1, r24	; 0x01
+     5ea:	9a 83       	std	Y+2, r25	; 0x02
+     5ec:	ab 83       	std	Y+3, r26	; 0x03
+     5ee:	bc 83       	std	Y+4, r27	; 0x04
+		id |= (uint32_t) ((uint32_t) CANIDT3) << 8;
+     5f0:	e1 ef       	ldi	r30, 0xF1	; 241
+     5f2:	f0 e0       	ldi	r31, 0x00	; 0
+     5f4:	80 81       	ld	r24, Z
+     5f6:	88 2f       	mov	r24, r24
+     5f8:	90 e0       	ldi	r25, 0x00	; 0
+     5fa:	a0 e0       	ldi	r26, 0x00	; 0
+     5fc:	b0 e0       	ldi	r27, 0x00	; 0
+     5fe:	22 27       	eor	r18, r18
+     600:	38 2f       	mov	r19, r24
+     602:	49 2f       	mov	r20, r25
+     604:	5a 2f       	mov	r21, r26
+     606:	89 81       	ldd	r24, Y+1	; 0x01
+     608:	9a 81       	ldd	r25, Y+2	; 0x02
+     60a:	ab 81       	ldd	r26, Y+3	; 0x03
+     60c:	bc 81       	ldd	r27, Y+4	; 0x04
+     60e:	82 2b       	or	r24, r18
+     610:	93 2b       	or	r25, r19
+     612:	a4 2b       	or	r26, r20
+     614:	b5 2b       	or	r27, r21
+     616:	89 83       	std	Y+1, r24	; 0x01
+     618:	9a 83       	std	Y+2, r25	; 0x02
+     61a:	ab 83       	std	Y+3, r26	; 0x03
+     61c:	bc 83       	std	Y+4, r27	; 0x04
+		id |= (uint32_t) (CANIDT4 & 0xF8);	//last 3 bits are functional bits
+     61e:	e0 ef       	ldi	r30, 0xF0	; 240
+     620:	f0 e0       	ldi	r31, 0x00	; 0
+     622:	80 81       	ld	r24, Z
+     624:	88 2f       	mov	r24, r24
+     626:	90 e0       	ldi	r25, 0x00	; 0
+     628:	a0 e0       	ldi	r26, 0x00	; 0
+     62a:	b0 e0       	ldi	r27, 0x00	; 0
+     62c:	9c 01       	movw	r18, r24
+     62e:	ad 01       	movw	r20, r26
+     630:	28 7f       	andi	r18, 0xF8	; 248
+     632:	30 70       	andi	r19, 0x00	; 0
+     634:	40 70       	andi	r20, 0x00	; 0
+     636:	50 70       	andi	r21, 0x00	; 0
+     638:	89 81       	ldd	r24, Y+1	; 0x01
+     63a:	9a 81       	ldd	r25, Y+2	; 0x02
+     63c:	ab 81       	ldd	r26, Y+3	; 0x03
+     63e:	bc 81       	ldd	r27, Y+4	; 0x04
+     640:	82 2b       	or	r24, r18
+     642:	93 2b       	or	r25, r19
+     644:	a4 2b       	or	r26, r20
+     646:	b5 2b       	or	r27, r21
+     648:	89 83       	std	Y+1, r24	; 0x01
+     64a:	9a 83       	std	Y+2, r25	; 0x02
+     64c:	ab 83       	std	Y+3, r26	; 0x03
+     64e:	bc 83       	std	Y+4, r27	; 0x04
+		id >>= 3;
+     650:	89 81       	ldd	r24, Y+1	; 0x01
+     652:	9a 81       	ldd	r25, Y+2	; 0x02
+     654:	ab 81       	ldd	r26, Y+3	; 0x03
+     656:	bc 81       	ldd	r27, Y+4	; 0x04
+     658:	68 94       	set
+     65a:	12 f8       	bld	r1, 2
+     65c:	b6 95       	lsr	r27
+     65e:	a7 95       	ror	r26
+     660:	97 95       	ror	r25
+     662:	87 95       	ror	r24
+     664:	16 94       	lsr	r1
+     666:	d1 f7       	brne	.-12     	; 0x65c <can_get_mob_id+0xec>
+     668:	89 83       	std	Y+1, r24	; 0x01
+     66a:	9a 83       	std	Y+2, r25	; 0x02
+     66c:	ab 83       	std	Y+3, r26	; 0x03
+     66e:	bc 83       	std	Y+4, r27	; 0x04
+		
+		return id;
+     670:	89 81       	ldd	r24, Y+1	; 0x01
+     672:	9a 81       	ldd	r25, Y+2	; 0x02
+     674:	ab 81       	ldd	r26, Y+3	; 0x03
+     676:	bc 81       	ldd	r27, Y+4	; 0x04
+     678:	8e 83       	std	Y+6, r24	; 0x06
+     67a:	9f 83       	std	Y+7, r25	; 0x07
+     67c:	a8 87       	std	Y+8, r26	; 0x08
+     67e:	b9 87       	std	Y+9, r27	; 0x09
+     680:	4f c0       	rjmp	.+158    	; 0x720 <can_get_mob_id+0x1b0>
+	}
+	if (id_type == 0)
+     682:	8d 81       	ldd	r24, Y+5	; 0x05
+     684:	88 23       	and	r24, r24
+     686:	09 f0       	breq	.+2      	; 0x68a <can_get_mob_id+0x11a>
+     688:	43 c0       	rjmp	.+134    	; 0x710 <can_get_mob_id+0x1a0>
+	{
+		id |= (uint32_t) ((uint32_t) CANIDT1) << 8;
+     68a:	e3 ef       	ldi	r30, 0xF3	; 243
+     68c:	f0 e0       	ldi	r31, 0x00	; 0
+     68e:	80 81       	ld	r24, Z
+     690:	88 2f       	mov	r24, r24
+     692:	90 e0       	ldi	r25, 0x00	; 0
+     694:	a0 e0       	ldi	r26, 0x00	; 0
+     696:	b0 e0       	ldi	r27, 0x00	; 0
+     698:	22 27       	eor	r18, r18
+     69a:	38 2f       	mov	r19, r24
+     69c:	49 2f       	mov	r20, r25
+     69e:	5a 2f       	mov	r21, r26
+     6a0:	89 81       	ldd	r24, Y+1	; 0x01
+     6a2:	9a 81       	ldd	r25, Y+2	; 0x02
+     6a4:	ab 81       	ldd	r26, Y+3	; 0x03
+     6a6:	bc 81       	ldd	r27, Y+4	; 0x04
+     6a8:	82 2b       	or	r24, r18
+     6aa:	93 2b       	or	r25, r19
+     6ac:	a4 2b       	or	r26, r20
+     6ae:	b5 2b       	or	r27, r21
+     6b0:	89 83       	std	Y+1, r24	; 0x01
+     6b2:	9a 83       	std	Y+2, r25	; 0x02
+     6b4:	ab 83       	std	Y+3, r26	; 0x03
+     6b6:	bc 83       	std	Y+4, r27	; 0x04
+		id |= ((uint32_t) CANIDT2);
+     6b8:	e2 ef       	ldi	r30, 0xF2	; 242
+     6ba:	f0 e0       	ldi	r31, 0x00	; 0
+     6bc:	80 81       	ld	r24, Z
+     6be:	28 2f       	mov	r18, r24
+     6c0:	30 e0       	ldi	r19, 0x00	; 0
+     6c2:	40 e0       	ldi	r20, 0x00	; 0
+     6c4:	50 e0       	ldi	r21, 0x00	; 0
+     6c6:	89 81       	ldd	r24, Y+1	; 0x01
+     6c8:	9a 81       	ldd	r25, Y+2	; 0x02
+     6ca:	ab 81       	ldd	r26, Y+3	; 0x03
+     6cc:	bc 81       	ldd	r27, Y+4	; 0x04
+     6ce:	82 2b       	or	r24, r18
+     6d0:	93 2b       	or	r25, r19
+     6d2:	a4 2b       	or	r26, r20
+     6d4:	b5 2b       	or	r27, r21
+     6d6:	89 83       	std	Y+1, r24	; 0x01
+     6d8:	9a 83       	std	Y+2, r25	; 0x02
+     6da:	ab 83       	std	Y+3, r26	; 0x03
+     6dc:	bc 83       	std	Y+4, r27	; 0x04
+		id >>= 5;
+     6de:	89 81       	ldd	r24, Y+1	; 0x01
+     6e0:	9a 81       	ldd	r25, Y+2	; 0x02
+     6e2:	ab 81       	ldd	r26, Y+3	; 0x03
+     6e4:	bc 81       	ldd	r27, Y+4	; 0x04
+     6e6:	68 94       	set
+     6e8:	14 f8       	bld	r1, 4
+     6ea:	b6 95       	lsr	r27
+     6ec:	a7 95       	ror	r26
+     6ee:	97 95       	ror	r25
+     6f0:	87 95       	ror	r24
+     6f2:	16 94       	lsr	r1
+     6f4:	d1 f7       	brne	.-12     	; 0x6ea <can_get_mob_id+0x17a>
+     6f6:	89 83       	std	Y+1, r24	; 0x01
+     6f8:	9a 83       	std	Y+2, r25	; 0x02
+     6fa:	ab 83       	std	Y+3, r26	; 0x03
+     6fc:	bc 83       	std	Y+4, r27	; 0x04
+		
+		return id;
+     6fe:	89 81       	ldd	r24, Y+1	; 0x01
+     700:	9a 81       	ldd	r25, Y+2	; 0x02
+     702:	ab 81       	ldd	r26, Y+3	; 0x03
+     704:	bc 81       	ldd	r27, Y+4	; 0x04
+     706:	8e 83       	std	Y+6, r24	; 0x06
+     708:	9f 83       	std	Y+7, r25	; 0x07
+     70a:	a8 87       	std	Y+8, r26	; 0x08
+     70c:	b9 87       	std	Y+9, r27	; 0x09
+     70e:	08 c0       	rjmp	.+16     	; 0x720 <can_get_mob_id+0x1b0>
+	}
+	
+	return id;
+     710:	89 81       	ldd	r24, Y+1	; 0x01
+     712:	9a 81       	ldd	r25, Y+2	; 0x02
+     714:	ab 81       	ldd	r26, Y+3	; 0x03
+     716:	bc 81       	ldd	r27, Y+4	; 0x04
+     718:	8e 83       	std	Y+6, r24	; 0x06
+     71a:	9f 83       	std	Y+7, r25	; 0x07
+     71c:	a8 87       	std	Y+8, r26	; 0x08
+     71e:	b9 87       	std	Y+9, r27	; 0x09
+     720:	8e 81       	ldd	r24, Y+6	; 0x06
+     722:	9f 81       	ldd	r25, Y+7	; 0x07
+     724:	a8 85       	ldd	r26, Y+8	; 0x08
+     726:	b9 85       	ldd	r27, Y+9	; 0x09
+}
+     728:	bc 01       	movw	r22, r24
+     72a:	cd 01       	movw	r24, r26
+     72c:	29 96       	adiw	r28, 0x09	; 9
+     72e:	0f b6       	in	r0, 0x3f	; 63
+     730:	f8 94       	cli
+     732:	de bf       	out	0x3e, r29	; 62
+     734:	0f be       	out	0x3f, r0	; 63
+     736:	cd bf       	out	0x3d, r28	; 61
+     738:	cf 91       	pop	r28
+     73a:	df 91       	pop	r29
+     73c:	08 95       	ret
+
+0000073e <can_set_mob_mode>:
+/* Set mode for selected MOB */
+void can_set_mob_mode(uint8_t mode, uint8_t id_type)
+{
+     73e:	df 93       	push	r29
+     740:	cf 93       	push	r28
+     742:	00 d0       	rcall	.+0      	; 0x744 <can_set_mob_mode+0x6>
+     744:	00 d0       	rcall	.+0      	; 0x746 <can_set_mob_mode+0x8>
+     746:	cd b7       	in	r28, 0x3d	; 61
+     748:	de b7       	in	r29, 0x3e	; 62
+     74a:	89 83       	std	Y+1, r24	; 0x01
+     74c:	6a 83       	std	Y+2, r22	; 0x02
+	if (id_type == 1)
+     74e:	8a 81       	ldd	r24, Y+2	; 0x02
+     750:	81 30       	cpi	r24, 0x01	; 1
+     752:	41 f4       	brne	.+16     	; 0x764 <can_set_mob_mode+0x26>
+	{
+		setbit(CANCDMOB, IDE);
+     754:	af ee       	ldi	r26, 0xEF	; 239
+     756:	b0 e0       	ldi	r27, 0x00	; 0
+     758:	ef ee       	ldi	r30, 0xEF	; 239
+     75a:	f0 e0       	ldi	r31, 0x00	; 0
+     75c:	80 81       	ld	r24, Z
+     75e:	80 61       	ori	r24, 0x10	; 16
+     760:	8c 93       	st	X, r24
+     762:	07 c0       	rjmp	.+14     	; 0x772 <can_set_mob_mode+0x34>
+	}
+	else
+	{
+		clearbit(CANCDMOB, IDE);
+     764:	af ee       	ldi	r26, 0xEF	; 239
+     766:	b0 e0       	ldi	r27, 0x00	; 0
+     768:	ef ee       	ldi	r30, 0xEF	; 239
+     76a:	f0 e0       	ldi	r31, 0x00	; 0
+     76c:	80 81       	ld	r24, Z
+     76e:	8f 7e       	andi	r24, 0xEF	; 239
+     770:	8c 93       	st	X, r24
+	}
+
+	switch(mode)
+     772:	89 81       	ldd	r24, Y+1	; 0x01
+     774:	28 2f       	mov	r18, r24
+     776:	30 e0       	ldi	r19, 0x00	; 0
+     778:	3c 83       	std	Y+4, r19	; 0x04
+     77a:	2b 83       	std	Y+3, r18	; 0x03
+     77c:	8b 81       	ldd	r24, Y+3	; 0x03
+     77e:	9c 81       	ldd	r25, Y+4	; 0x04
+     780:	82 30       	cpi	r24, 0x02	; 2
+     782:	91 05       	cpc	r25, r1
+     784:	09 f4       	brne	.+2      	; 0x788 <can_set_mob_mode+0x4a>
+     786:	5d c0       	rjmp	.+186    	; 0x842 <can_set_mob_mode+0x104>
+     788:	2b 81       	ldd	r18, Y+3	; 0x03
+     78a:	3c 81       	ldd	r19, Y+4	; 0x04
+     78c:	23 30       	cpi	r18, 0x03	; 3
+     78e:	31 05       	cpc	r19, r1
+     790:	54 f4       	brge	.+20     	; 0x7a6 <can_set_mob_mode+0x68>
+     792:	8b 81       	ldd	r24, Y+3	; 0x03
+     794:	9c 81       	ldd	r25, Y+4	; 0x04
+     796:	00 97       	sbiw	r24, 0x00	; 0
+     798:	99 f0       	breq	.+38     	; 0x7c0 <can_set_mob_mode+0x82>
+     79a:	2b 81       	ldd	r18, Y+3	; 0x03
+     79c:	3c 81       	ldd	r19, Y+4	; 0x04
+     79e:	21 30       	cpi	r18, 0x01	; 1
+     7a0:	31 05       	cpc	r19, r1
+     7a2:	91 f1       	breq	.+100    	; 0x808 <can_set_mob_mode+0xca>
+     7a4:	a4 c0       	rjmp	.+328    	; 0x8ee <can_set_mob_mode+0x1b0>
+     7a6:	8b 81       	ldd	r24, Y+3	; 0x03
+     7a8:	9c 81       	ldd	r25, Y+4	; 0x04
+     7aa:	83 30       	cpi	r24, 0x03	; 3
+     7ac:	91 05       	cpc	r25, r1
+     7ae:	09 f4       	brne	.+2      	; 0x7b2 <can_set_mob_mode+0x74>
+     7b0:	65 c0       	rjmp	.+202    	; 0x87c <can_set_mob_mode+0x13e>
+     7b2:	2b 81       	ldd	r18, Y+3	; 0x03
+     7b4:	3c 81       	ldd	r19, Y+4	; 0x04
+     7b6:	24 30       	cpi	r18, 0x04	; 4
+     7b8:	31 05       	cpc	r19, r1
+     7ba:	09 f4       	brne	.+2      	; 0x7be <can_set_mob_mode+0x80>
+     7bc:	7c c0       	rjmp	.+248    	; 0x8b6 <can_set_mob_mode+0x178>
+     7be:	97 c0       	rjmp	.+302    	; 0x8ee <can_set_mob_mode+0x1b0>
+	{
+		case DISABLED:
+			clearbit(CANCDMOB, CONMOB0);
+     7c0:	af ee       	ldi	r26, 0xEF	; 239
+     7c2:	b0 e0       	ldi	r27, 0x00	; 0
+     7c4:	ef ee       	ldi	r30, 0xEF	; 239
+     7c6:	f0 e0       	ldi	r31, 0x00	; 0
+     7c8:	80 81       	ld	r24, Z
+     7ca:	8f 7b       	andi	r24, 0xBF	; 191
+     7cc:	8c 93       	st	X, r24
+			clearbit(CANCDMOB, CONMOB1);
+     7ce:	af ee       	ldi	r26, 0xEF	; 239
+     7d0:	b0 e0       	ldi	r27, 0x00	; 0
+     7d2:	ef ee       	ldi	r30, 0xEF	; 239
+     7d4:	f0 e0       	ldi	r31, 0x00	; 0
+     7d6:	80 81       	ld	r24, Z
+     7d8:	8f 77       	andi	r24, 0x7F	; 127
+     7da:	8c 93       	st	X, r24
+			clearbit(CANCDMOB,RPLV);
+     7dc:	af ee       	ldi	r26, 0xEF	; 239
+     7de:	b0 e0       	ldi	r27, 0x00	; 0
+     7e0:	ef ee       	ldi	r30, 0xEF	; 239
+     7e2:	f0 e0       	ldi	r31, 0x00	; 0
+     7e4:	80 81       	ld	r24, Z
+     7e6:	8f 7d       	andi	r24, 0xDF	; 223
+     7e8:	8c 93       	st	X, r24
+			clearbit(CANIDT4, RTRTAG);
+     7ea:	a0 ef       	ldi	r26, 0xF0	; 240
+     7ec:	b0 e0       	ldi	r27, 0x00	; 0
+     7ee:	e0 ef       	ldi	r30, 0xF0	; 240
+     7f0:	f0 e0       	ldi	r31, 0x00	; 0
+     7f2:	80 81       	ld	r24, Z
+     7f4:	8b 7f       	andi	r24, 0xFB	; 251
+     7f6:	8c 93       	st	X, r24
+			clearbit(CANIDM4, RTRMSK);
+     7f8:	a4 ef       	ldi	r26, 0xF4	; 244
+     7fa:	b0 e0       	ldi	r27, 0x00	; 0
+     7fc:	e4 ef       	ldi	r30, 0xF4	; 244
+     7fe:	f0 e0       	ldi	r31, 0x00	; 0
+     800:	80 81       	ld	r24, Z
+     802:	8b 7f       	andi	r24, 0xFB	; 251
+     804:	8c 93       	st	X, r24
+     806:	73 c0       	rjmp	.+230    	; 0x8ee <can_set_mob_mode+0x1b0>
+			break;
+		case TRANSMIT_DATA:
+			setbit(CANCDMOB, CONMOB0);
+     808:	af ee       	ldi	r26, 0xEF	; 239
+     80a:	b0 e0       	ldi	r27, 0x00	; 0
+     80c:	ef ee       	ldi	r30, 0xEF	; 239
+     80e:	f0 e0       	ldi	r31, 0x00	; 0
+     810:	80 81       	ld	r24, Z
+     812:	80 64       	ori	r24, 0x40	; 64
+     814:	8c 93       	st	X, r24
+			clearbit(CANCDMOB, CONMOB1);
+     816:	af ee       	ldi	r26, 0xEF	; 239
+     818:	b0 e0       	ldi	r27, 0x00	; 0
+     81a:	ef ee       	ldi	r30, 0xEF	; 239
+     81c:	f0 e0       	ldi	r31, 0x00	; 0
+     81e:	80 81       	ld	r24, Z
+     820:	8f 77       	andi	r24, 0x7F	; 127
+     822:	8c 93       	st	X, r24
+			clearbit(CANCDMOB,RPLV);
+     824:	af ee       	ldi	r26, 0xEF	; 239
+     826:	b0 e0       	ldi	r27, 0x00	; 0
+     828:	ef ee       	ldi	r30, 0xEF	; 239
+     82a:	f0 e0       	ldi	r31, 0x00	; 0
+     82c:	80 81       	ld	r24, Z
+     82e:	8f 7d       	andi	r24, 0xDF	; 223
+     830:	8c 93       	st	X, r24
+			clearbit(CANIDT4, RTRTAG);
+     832:	a0 ef       	ldi	r26, 0xF0	; 240
+     834:	b0 e0       	ldi	r27, 0x00	; 0
+     836:	e0 ef       	ldi	r30, 0xF0	; 240
+     838:	f0 e0       	ldi	r31, 0x00	; 0
+     83a:	80 81       	ld	r24, Z
+     83c:	8b 7f       	andi	r24, 0xFB	; 251
+     83e:	8c 93       	st	X, r24
+     840:	56 c0       	rjmp	.+172    	; 0x8ee <can_set_mob_mode+0x1b0>
+			break;
+		case TRANSMIT_REMOTE:
+			clearbit(CANCDMOB, CONMOB1);
+     842:	af ee       	ldi	r26, 0xEF	; 239
+     844:	b0 e0       	ldi	r27, 0x00	; 0
+     846:	ef ee       	ldi	r30, 0xEF	; 239
+     848:	f0 e0       	ldi	r31, 0x00	; 0
+     84a:	80 81       	ld	r24, Z
+     84c:	8f 77       	andi	r24, 0x7F	; 127
+     84e:	8c 93       	st	X, r24
+			setbit(CANCDMOB, CONMOB0);
+     850:	af ee       	ldi	r26, 0xEF	; 239
+     852:	b0 e0       	ldi	r27, 0x00	; 0
+     854:	ef ee       	ldi	r30, 0xEF	; 239
+     856:	f0 e0       	ldi	r31, 0x00	; 0
+     858:	80 81       	ld	r24, Z
+     85a:	80 64       	ori	r24, 0x40	; 64
+     85c:	8c 93       	st	X, r24
+			clearbit(CANCDMOB,RPLV);
+     85e:	af ee       	ldi	r26, 0xEF	; 239
+     860:	b0 e0       	ldi	r27, 0x00	; 0
+     862:	ef ee       	ldi	r30, 0xEF	; 239
+     864:	f0 e0       	ldi	r31, 0x00	; 0
+     866:	80 81       	ld	r24, Z
+     868:	8f 7d       	andi	r24, 0xDF	; 223
+     86a:	8c 93       	st	X, r24
+			setbit(CANIDT4, RTRTAG);
+     86c:	a0 ef       	ldi	r26, 0xF0	; 240
+     86e:	b0 e0       	ldi	r27, 0x00	; 0
+     870:	e0 ef       	ldi	r30, 0xF0	; 240
+     872:	f0 e0       	ldi	r31, 0x00	; 0
+     874:	80 81       	ld	r24, Z
+     876:	84 60       	ori	r24, 0x04	; 4
+     878:	8c 93       	st	X, r24
+     87a:	39 c0       	rjmp	.+114    	; 0x8ee <can_set_mob_mode+0x1b0>
+			break;
+		case RECEIVE_DATA:
+			clearbit(CANCDMOB, CONMOB0);
+     87c:	af ee       	ldi	r26, 0xEF	; 239
+     87e:	b0 e0       	ldi	r27, 0x00	; 0
+     880:	ef ee       	ldi	r30, 0xEF	; 239
+     882:	f0 e0       	ldi	r31, 0x00	; 0
+     884:	80 81       	ld	r24, Z
+     886:	8f 7b       	andi	r24, 0xBF	; 191
+     888:	8c 93       	st	X, r24
+			setbit(CANCDMOB, CONMOB1);
+     88a:	af ee       	ldi	r26, 0xEF	; 239
+     88c:	b0 e0       	ldi	r27, 0x00	; 0
+     88e:	ef ee       	ldi	r30, 0xEF	; 239
+     890:	f0 e0       	ldi	r31, 0x00	; 0
+     892:	80 81       	ld	r24, Z
+     894:	80 68       	ori	r24, 0x80	; 128
+     896:	8c 93       	st	X, r24
+			clearbit(CANCDMOB,RPLV);
+     898:	af ee       	ldi	r26, 0xEF	; 239
+     89a:	b0 e0       	ldi	r27, 0x00	; 0
+     89c:	ef ee       	ldi	r30, 0xEF	; 239
+     89e:	f0 e0       	ldi	r31, 0x00	; 0
+     8a0:	80 81       	ld	r24, Z
+     8a2:	8f 7d       	andi	r24, 0xDF	; 223
+     8a4:	8c 93       	st	X, r24
+			clearbit(CANIDT4, RTRTAG);
+     8a6:	a0 ef       	ldi	r26, 0xF0	; 240
+     8a8:	b0 e0       	ldi	r27, 0x00	; 0
+     8aa:	e0 ef       	ldi	r30, 0xF0	; 240
+     8ac:	f0 e0       	ldi	r31, 0x00	; 0
+     8ae:	80 81       	ld	r24, Z
+     8b0:	8b 7f       	andi	r24, 0xFB	; 251
+     8b2:	8c 93       	st	X, r24
+     8b4:	1c c0       	rjmp	.+56     	; 0x8ee <can_set_mob_mode+0x1b0>
+			break;
+		case AUTO_REPLY:
+			clearbit(CANCDMOB, CONMOB0);
+     8b6:	af ee       	ldi	r26, 0xEF	; 239
+     8b8:	b0 e0       	ldi	r27, 0x00	; 0
+     8ba:	ef ee       	ldi	r30, 0xEF	; 239
+     8bc:	f0 e0       	ldi	r31, 0x00	; 0
+     8be:	80 81       	ld	r24, Z
+     8c0:	8f 7b       	andi	r24, 0xBF	; 191
+     8c2:	8c 93       	st	X, r24
+			setbit(CANCDMOB, CONMOB1);
+     8c4:	af ee       	ldi	r26, 0xEF	; 239
+     8c6:	b0 e0       	ldi	r27, 0x00	; 0
+     8c8:	ef ee       	ldi	r30, 0xEF	; 239
+     8ca:	f0 e0       	ldi	r31, 0x00	; 0
+     8cc:	80 81       	ld	r24, Z
+     8ce:	80 68       	ori	r24, 0x80	; 128
+     8d0:	8c 93       	st	X, r24
+			setbit(CANCDMOB,RPLV);
+     8d2:	af ee       	ldi	r26, 0xEF	; 239
+     8d4:	b0 e0       	ldi	r27, 0x00	; 0
+     8d6:	ef ee       	ldi	r30, 0xEF	; 239
+     8d8:	f0 e0       	ldi	r31, 0x00	; 0
+     8da:	80 81       	ld	r24, Z
+     8dc:	80 62       	ori	r24, 0x20	; 32
+     8de:	8c 93       	st	X, r24
+			setbit(CANIDT4, RTRTAG);
+     8e0:	a0 ef       	ldi	r26, 0xF0	; 240
+     8e2:	b0 e0       	ldi	r27, 0x00	; 0
+     8e4:	e0 ef       	ldi	r30, 0xF0	; 240
+     8e6:	f0 e0       	ldi	r31, 0x00	; 0
+     8e8:	80 81       	ld	r24, Z
+     8ea:	84 60       	ori	r24, 0x04	; 4
+     8ec:	8c 93       	st	X, r24
+			break;
+		default:
+			break;
+	}
+}
+     8ee:	0f 90       	pop	r0
+     8f0:	0f 90       	pop	r0
+     8f2:	0f 90       	pop	r0
+     8f4:	0f 90       	pop	r0
+     8f6:	cf 91       	pop	r28
+     8f8:	df 91       	pop	r29
+     8fa:	08 95       	ret
+
+000008fc <can_get_mob_mode>:
+/* Get mode for selected MOB */
+uint8_t can_get_mob_mode(void)
+{
+     8fc:	df 93       	push	r29
+     8fe:	cf 93       	push	r28
+     900:	0f 92       	push	r0
+     902:	cd b7       	in	r28, 0x3d	; 61
+     904:	de b7       	in	r29, 0x3e	; 62
+	uint8_t	mode;
+	mode = 0;
+     906:	19 82       	std	Y+1, r1	; 0x01
+
+	if (!getbit(CANCDMOB, CONMOB1) && !getbit(CANCDMOB, CONMOB0))
+     908:	ef ee       	ldi	r30, 0xEF	; 239
+     90a:	f0 e0       	ldi	r31, 0x00	; 0
+     90c:	80 81       	ld	r24, Z
+     90e:	88 23       	and	r24, r24
+     910:	5c f0       	brlt	.+22     	; 0x928 <can_get_mob_mode+0x2c>
+     912:	ef ee       	ldi	r30, 0xEF	; 239
+     914:	f0 e0       	ldi	r31, 0x00	; 0
+     916:	80 81       	ld	r24, Z
+     918:	88 2f       	mov	r24, r24
+     91a:	90 e0       	ldi	r25, 0x00	; 0
+     91c:	80 74       	andi	r24, 0x40	; 64
+     91e:	90 70       	andi	r25, 0x00	; 0
+     920:	00 97       	sbiw	r24, 0x00	; 0
+     922:	11 f4       	brne	.+4      	; 0x928 <can_get_mob_mode+0x2c>
+	{
+		mode = DISABLED;
+     924:	19 82       	std	Y+1, r1	; 0x01
+     926:	70 c0       	rjmp	.+224    	; 0xa08 <can_get_mob_mode+0x10c>
+	}
+	else if (!getbit(CANCDMOB, CONMOB1) && getbit(CANCDMOB, CONMOB0) && !getbit(CANIDT4, RTRTAG))
+     928:	ef ee       	ldi	r30, 0xEF	; 239
+     92a:	f0 e0       	ldi	r31, 0x00	; 0
+     92c:	80 81       	ld	r24, Z
+     92e:	88 23       	and	r24, r24
+     930:	ac f0       	brlt	.+42     	; 0x95c <can_get_mob_mode+0x60>
+     932:	ef ee       	ldi	r30, 0xEF	; 239
+     934:	f0 e0       	ldi	r31, 0x00	; 0
+     936:	80 81       	ld	r24, Z
+     938:	88 2f       	mov	r24, r24
+     93a:	90 e0       	ldi	r25, 0x00	; 0
+     93c:	80 74       	andi	r24, 0x40	; 64
+     93e:	90 70       	andi	r25, 0x00	; 0
+     940:	00 97       	sbiw	r24, 0x00	; 0
+     942:	61 f0       	breq	.+24     	; 0x95c <can_get_mob_mode+0x60>
+     944:	e0 ef       	ldi	r30, 0xF0	; 240
+     946:	f0 e0       	ldi	r31, 0x00	; 0
+     948:	80 81       	ld	r24, Z
+     94a:	88 2f       	mov	r24, r24
+     94c:	90 e0       	ldi	r25, 0x00	; 0
+     94e:	84 70       	andi	r24, 0x04	; 4
+     950:	90 70       	andi	r25, 0x00	; 0
+     952:	00 97       	sbiw	r24, 0x00	; 0
+     954:	19 f4       	brne	.+6      	; 0x95c <can_get_mob_mode+0x60>
+	{
+		mode = TRANSMIT_DATA;
+     956:	81 e0       	ldi	r24, 0x01	; 1
+     958:	89 83       	std	Y+1, r24	; 0x01
+     95a:	56 c0       	rjmp	.+172    	; 0xa08 <can_get_mob_mode+0x10c>
+	}
+	else if (!getbit(CANCDMOB, CONMOB1) && getbit(CANCDMOB, CONMOB0) && getbit(CANIDT4, RTRTAG))
+     95c:	ef ee       	ldi	r30, 0xEF	; 239
+     95e:	f0 e0       	ldi	r31, 0x00	; 0
+     960:	80 81       	ld	r24, Z
+     962:	88 23       	and	r24, r24
+     964:	ac f0       	brlt	.+42     	; 0x990 <can_get_mob_mode+0x94>
+     966:	ef ee       	ldi	r30, 0xEF	; 239
+     968:	f0 e0       	ldi	r31, 0x00	; 0
+     96a:	80 81       	ld	r24, Z
+     96c:	88 2f       	mov	r24, r24
+     96e:	90 e0       	ldi	r25, 0x00	; 0
+     970:	80 74       	andi	r24, 0x40	; 64
+     972:	90 70       	andi	r25, 0x00	; 0
+     974:	00 97       	sbiw	r24, 0x00	; 0
+     976:	61 f0       	breq	.+24     	; 0x990 <can_get_mob_mode+0x94>
+     978:	e0 ef       	ldi	r30, 0xF0	; 240
+     97a:	f0 e0       	ldi	r31, 0x00	; 0
+     97c:	80 81       	ld	r24, Z
+     97e:	88 2f       	mov	r24, r24
+     980:	90 e0       	ldi	r25, 0x00	; 0
+     982:	84 70       	andi	r24, 0x04	; 4
+     984:	90 70       	andi	r25, 0x00	; 0
+     986:	00 97       	sbiw	r24, 0x00	; 0
+     988:	19 f0       	breq	.+6      	; 0x990 <can_get_mob_mode+0x94>
+	{
+		mode = TRANSMIT_REMOTE;
+     98a:	82 e0       	ldi	r24, 0x02	; 2
+     98c:	89 83       	std	Y+1, r24	; 0x01
+     98e:	3c c0       	rjmp	.+120    	; 0xa08 <can_get_mob_mode+0x10c>
+	}
+	else if (getbit(CANCDMOB, CONMOB1) && !getbit(CANCDMOB, CONMOB0) && !getbit(CANIDT4, RTRTAG))
+     990:	ef ee       	ldi	r30, 0xEF	; 239
+     992:	f0 e0       	ldi	r31, 0x00	; 0
+     994:	80 81       	ld	r24, Z
+     996:	88 23       	and	r24, r24
+     998:	ac f4       	brge	.+42     	; 0x9c4 <can_get_mob_mode+0xc8>
+     99a:	ef ee       	ldi	r30, 0xEF	; 239
+     99c:	f0 e0       	ldi	r31, 0x00	; 0
+     99e:	80 81       	ld	r24, Z
+     9a0:	88 2f       	mov	r24, r24
+     9a2:	90 e0       	ldi	r25, 0x00	; 0
+     9a4:	80 74       	andi	r24, 0x40	; 64
+     9a6:	90 70       	andi	r25, 0x00	; 0
+     9a8:	00 97       	sbiw	r24, 0x00	; 0
+     9aa:	61 f4       	brne	.+24     	; 0x9c4 <can_get_mob_mode+0xc8>
+     9ac:	e0 ef       	ldi	r30, 0xF0	; 240
+     9ae:	f0 e0       	ldi	r31, 0x00	; 0
+     9b0:	80 81       	ld	r24, Z
+     9b2:	88 2f       	mov	r24, r24
+     9b4:	90 e0       	ldi	r25, 0x00	; 0
+     9b6:	84 70       	andi	r24, 0x04	; 4
+     9b8:	90 70       	andi	r25, 0x00	; 0
+     9ba:	00 97       	sbiw	r24, 0x00	; 0
+     9bc:	19 f4       	brne	.+6      	; 0x9c4 <can_get_mob_mode+0xc8>
+	{
+		mode = RECEIVE_DATA;
+     9be:	83 e0       	ldi	r24, 0x03	; 3
+     9c0:	89 83       	std	Y+1, r24	; 0x01
+     9c2:	22 c0       	rjmp	.+68     	; 0xa08 <can_get_mob_mode+0x10c>
+	}else if (getbit(CANCDMOB, CONMOB1) && !getbit(CANCDMOB, CONMOB0) && getbit(CANCDMOB,RPLV) && getbit(CANIDT4, RTRTAG))
+     9c4:	ef ee       	ldi	r30, 0xEF	; 239
+     9c6:	f0 e0       	ldi	r31, 0x00	; 0
+     9c8:	80 81       	ld	r24, Z
+     9ca:	88 23       	and	r24, r24
+     9cc:	ec f4       	brge	.+58     	; 0xa08 <can_get_mob_mode+0x10c>
+     9ce:	ef ee       	ldi	r30, 0xEF	; 239
+     9d0:	f0 e0       	ldi	r31, 0x00	; 0
+     9d2:	80 81       	ld	r24, Z
+     9d4:	88 2f       	mov	r24, r24
+     9d6:	90 e0       	ldi	r25, 0x00	; 0
+     9d8:	80 74       	andi	r24, 0x40	; 64
+     9da:	90 70       	andi	r25, 0x00	; 0
+     9dc:	00 97       	sbiw	r24, 0x00	; 0
+     9de:	a1 f4       	brne	.+40     	; 0xa08 <can_get_mob_mode+0x10c>
+     9e0:	ef ee       	ldi	r30, 0xEF	; 239
+     9e2:	f0 e0       	ldi	r31, 0x00	; 0
+     9e4:	80 81       	ld	r24, Z
+     9e6:	88 2f       	mov	r24, r24
+     9e8:	90 e0       	ldi	r25, 0x00	; 0
+     9ea:	80 72       	andi	r24, 0x20	; 32
+     9ec:	90 70       	andi	r25, 0x00	; 0
+     9ee:	00 97       	sbiw	r24, 0x00	; 0
+     9f0:	59 f0       	breq	.+22     	; 0xa08 <can_get_mob_mode+0x10c>
+     9f2:	e0 ef       	ldi	r30, 0xF0	; 240
+     9f4:	f0 e0       	ldi	r31, 0x00	; 0
+     9f6:	80 81       	ld	r24, Z
+     9f8:	88 2f       	mov	r24, r24
+     9fa:	90 e0       	ldi	r25, 0x00	; 0
+     9fc:	84 70       	andi	r24, 0x04	; 4
+     9fe:	90 70       	andi	r25, 0x00	; 0
+     a00:	00 97       	sbiw	r24, 0x00	; 0
+     a02:	11 f0       	breq	.+4      	; 0xa08 <can_get_mob_mode+0x10c>
+	{
+		mode = AUTO_REPLY;
+     a04:	84 e0       	ldi	r24, 0x04	; 4
+     a06:	89 83       	std	Y+1, r24	; 0x01
+	}
+
+	return mode;
+     a08:	89 81       	ldd	r24, Y+1	; 0x01
+}
+     a0a:	0f 90       	pop	r0
+     a0c:	cf 91       	pop	r28
+     a0e:	df 91       	pop	r29
+     a10:	08 95       	ret
+
+00000a12 <can_set_mob_data>:
+/* Set data length for selected MOB */
+void can_set_mob_data(uint8_t *data, uint8_t length)
+{
+     a12:	df 93       	push	r29
+     a14:	cf 93       	push	r28
+     a16:	00 d0       	rcall	.+0      	; 0xa18 <can_set_mob_data+0x6>
+     a18:	00 d0       	rcall	.+0      	; 0xa1a <can_set_mob_data+0x8>
+     a1a:	cd b7       	in	r28, 0x3d	; 61
+     a1c:	de b7       	in	r29, 0x3e	; 62
+     a1e:	9b 83       	std	Y+3, r25	; 0x03
+     a20:	8a 83       	std	Y+2, r24	; 0x02
+     a22:	6c 83       	std	Y+4, r22	; 0x04
+	uint8_t	i;
+	
+    CANCDMOB = (CANCDMOB & 0xf0) | length;
+     a24:	af ee       	ldi	r26, 0xEF	; 239
+     a26:	b0 e0       	ldi	r27, 0x00	; 0
+     a28:	ef ee       	ldi	r30, 0xEF	; 239
+     a2a:	f0 e0       	ldi	r31, 0x00	; 0
+     a2c:	80 81       	ld	r24, Z
+     a2e:	98 2f       	mov	r25, r24
+     a30:	90 7f       	andi	r25, 0xF0	; 240
+     a32:	8c 81       	ldd	r24, Y+4	; 0x04
+     a34:	89 2b       	or	r24, r25
+     a36:	8c 93       	st	X, r24
+
+	for(i = 0; i < length; i++){
+     a38:	19 82       	std	Y+1, r1	; 0x01
+     a3a:	0f c0       	rjmp	.+30     	; 0xa5a <can_set_mob_data+0x48>
+		CANMSG	= data[i];
+     a3c:	aa ef       	ldi	r26, 0xFA	; 250
+     a3e:	b0 e0       	ldi	r27, 0x00	; 0
+     a40:	89 81       	ldd	r24, Y+1	; 0x01
+     a42:	28 2f       	mov	r18, r24
+     a44:	30 e0       	ldi	r19, 0x00	; 0
+     a46:	8a 81       	ldd	r24, Y+2	; 0x02
+     a48:	9b 81       	ldd	r25, Y+3	; 0x03
+     a4a:	fc 01       	movw	r30, r24
+     a4c:	e2 0f       	add	r30, r18
+     a4e:	f3 1f       	adc	r31, r19
+     a50:	80 81       	ld	r24, Z
+     a52:	8c 93       	st	X, r24
+{
+	uint8_t	i;
+	
+    CANCDMOB = (CANCDMOB & 0xf0) | length;
+
+	for(i = 0; i < length; i++){
+     a54:	89 81       	ldd	r24, Y+1	; 0x01
+     a56:	8f 5f       	subi	r24, 0xFF	; 255
+     a58:	89 83       	std	Y+1, r24	; 0x01
+     a5a:	99 81       	ldd	r25, Y+1	; 0x01
+     a5c:	8c 81       	ldd	r24, Y+4	; 0x04
+     a5e:	98 17       	cp	r25, r24
+     a60:	68 f3       	brcs	.-38     	; 0xa3c <can_set_mob_data+0x2a>
+		CANMSG	= data[i];
+	}
+}
+     a62:	0f 90       	pop	r0
+     a64:	0f 90       	pop	r0
+     a66:	0f 90       	pop	r0
+     a68:	0f 90       	pop	r0
+     a6a:	cf 91       	pop	r28
+     a6c:	df 91       	pop	r29
+     a6e:	08 95       	ret
+
+00000a70 <can_get_mob_data>:
+/* Get data for selected MOB */
+can_message can_get_mob_data(void)
+{
+     a70:	df 93       	push	r29
+     a72:	cf 93       	push	r28
+     a74:	cd b7       	in	r28, 0x3d	; 61
+     a76:	de b7       	in	r29, 0x3e	; 62
+     a78:	6a 97       	sbiw	r28, 0x1a	; 26
+     a7a:	0f b6       	in	r0, 0x3f	; 63
+     a7c:	f8 94       	cli
+     a7e:	de bf       	out	0x3e, r29	; 62
+     a80:	0f be       	out	0x3f, r0	; 63
+     a82:	cd bf       	out	0x3d, r28	; 61
+     a84:	9d 8b       	std	Y+21, r25	; 0x15
+     a86:	8c 8b       	std	Y+20, r24	; 0x14
+	uint8_t	i;
+	can_message	msg;
+
+	for (i = 0; i < 8; i++)
+     a88:	19 82       	std	Y+1, r1	; 0x01
+     a8a:	0f c0       	rjmp	.+30     	; 0xaaa <can_get_mob_data+0x3a>
+	{
+		msg.data[i]	= CANMSG;
+     a8c:	89 81       	ldd	r24, Y+1	; 0x01
+     a8e:	28 2f       	mov	r18, r24
+     a90:	30 e0       	ldi	r19, 0x00	; 0
+     a92:	ea ef       	ldi	r30, 0xFA	; 250
+     a94:	f0 e0       	ldi	r31, 0x00	; 0
+     a96:	40 81       	ld	r20, Z
+     a98:	ce 01       	movw	r24, r28
+     a9a:	0c 96       	adiw	r24, 0x0c	; 12
+     a9c:	fc 01       	movw	r30, r24
+     a9e:	e2 0f       	add	r30, r18
+     aa0:	f3 1f       	adc	r31, r19
+     aa2:	40 83       	st	Z, r20
+can_message can_get_mob_data(void)
+{
+	uint8_t	i;
+	can_message	msg;
+
+	for (i = 0; i < 8; i++)
+     aa4:	89 81       	ldd	r24, Y+1	; 0x01
+     aa6:	8f 5f       	subi	r24, 0xFF	; 255
+     aa8:	89 83       	std	Y+1, r24	; 0x01
+     aaa:	89 81       	ldd	r24, Y+1	; 0x01
+     aac:	88 30       	cpi	r24, 0x08	; 8
+     aae:	70 f3       	brcs	.-36     	; 0xa8c <can_get_mob_data+0x1c>
+	{
+		msg.data[i]	= CANMSG;
+	}
+
+	return msg;
+     ab0:	8c 89       	ldd	r24, Y+20	; 0x14
+     ab2:	9d 89       	ldd	r25, Y+21	; 0x15
+     ab4:	9f 8b       	std	Y+23, r25	; 0x17
+     ab6:	8e 8b       	std	Y+22, r24	; 0x16
+     ab8:	fe 01       	movw	r30, r28
+     aba:	32 96       	adiw	r30, 0x02	; 2
+     abc:	f9 8f       	std	Y+25, r31	; 0x19
+     abe:	e8 8f       	std	Y+24, r30	; 0x18
+     ac0:	f2 e1       	ldi	r31, 0x12	; 18
+     ac2:	fa 8f       	std	Y+26, r31	; 0x1a
+     ac4:	e8 8d       	ldd	r30, Y+24	; 0x18
+     ac6:	f9 8d       	ldd	r31, Y+25	; 0x19
+     ac8:	00 80       	ld	r0, Z
+     aca:	88 8d       	ldd	r24, Y+24	; 0x18
+     acc:	99 8d       	ldd	r25, Y+25	; 0x19
+     ace:	01 96       	adiw	r24, 0x01	; 1
+     ad0:	99 8f       	std	Y+25, r25	; 0x19
+     ad2:	88 8f       	std	Y+24, r24	; 0x18
+     ad4:	ee 89       	ldd	r30, Y+22	; 0x16
+     ad6:	ff 89       	ldd	r31, Y+23	; 0x17
+     ad8:	00 82       	st	Z, r0
+     ada:	8e 89       	ldd	r24, Y+22	; 0x16
+     adc:	9f 89       	ldd	r25, Y+23	; 0x17
+     ade:	01 96       	adiw	r24, 0x01	; 1
+     ae0:	9f 8b       	std	Y+23, r25	; 0x17
+     ae2:	8e 8b       	std	Y+22, r24	; 0x16
+     ae4:	9a 8d       	ldd	r25, Y+26	; 0x1a
+     ae6:	91 50       	subi	r25, 0x01	; 1
+     ae8:	9a 8f       	std	Y+26, r25	; 0x1a
+     aea:	ea 8d       	ldd	r30, Y+26	; 0x1a
+     aec:	ee 23       	and	r30, r30
+     aee:	51 f7       	brne	.-44     	; 0xac4 <can_get_mob_data+0x54>
+}
+     af0:	8c 89       	ldd	r24, Y+20	; 0x14
+     af2:	9d 89       	ldd	r25, Y+21	; 0x15
+     af4:	6a 96       	adiw	r28, 0x1a	; 26
+     af6:	0f b6       	in	r0, 0x3f	; 63
+     af8:	f8 94       	cli
+     afa:	de bf       	out	0x3e, r29	; 62
+     afc:	0f be       	out	0x3f, r0	; 63
+     afe:	cd bf       	out	0x3d, r28	; 61
+     b00:	cf 91       	pop	r28
+     b02:	df 91       	pop	r29
+     b04:	08 95       	ret
+
+00000b06 <can_set_mob_interrupt>:
+/* Set interrupt for given MOB */
+void can_set_mob_interrupt(uint8_t object)
+{
+     b06:	df 93       	push	r29
+     b08:	cf 93       	push	r28
+     b0a:	0f 92       	push	r0
+     b0c:	cd b7       	in	r28, 0x3d	; 61
+     b0e:	de b7       	in	r29, 0x3e	; 62
+     b10:	89 83       	std	Y+1, r24	; 0x01
+	if ((object >= 0) && (object <= 7))
+     b12:	89 81       	ldd	r24, Y+1	; 0x01
+     b14:	88 30       	cpi	r24, 0x08	; 8
+     b16:	a0 f4       	brcc	.+40     	; 0xb40 <can_set_mob_interrupt+0x3a>
+	{
+		CANIE2 |= (0x01 << object);
+     b18:	ae ed       	ldi	r26, 0xDE	; 222
+     b1a:	b0 e0       	ldi	r27, 0x00	; 0
+     b1c:	ee ed       	ldi	r30, 0xDE	; 222
+     b1e:	f0 e0       	ldi	r31, 0x00	; 0
+     b20:	80 81       	ld	r24, Z
+     b22:	48 2f       	mov	r20, r24
+     b24:	89 81       	ldd	r24, Y+1	; 0x01
+     b26:	28 2f       	mov	r18, r24
+     b28:	30 e0       	ldi	r19, 0x00	; 0
+     b2a:	81 e0       	ldi	r24, 0x01	; 1
+     b2c:	90 e0       	ldi	r25, 0x00	; 0
+     b2e:	02 2e       	mov	r0, r18
+     b30:	02 c0       	rjmp	.+4      	; 0xb36 <can_set_mob_interrupt+0x30>
+     b32:	88 0f       	add	r24, r24
+     b34:	99 1f       	adc	r25, r25
+     b36:	0a 94       	dec	r0
+     b38:	e2 f7       	brpl	.-8      	; 0xb32 <can_set_mob_interrupt+0x2c>
+     b3a:	84 2b       	or	r24, r20
+     b3c:	8c 93       	st	X, r24
+     b3e:	1c c0       	rjmp	.+56     	; 0xb78 <can_set_mob_interrupt+0x72>
+	}
+	else if ((object >= 8) && (object <= 14))
+     b40:	89 81       	ldd	r24, Y+1	; 0x01
+     b42:	88 30       	cpi	r24, 0x08	; 8
+     b44:	c8 f0       	brcs	.+50     	; 0xb78 <can_set_mob_interrupt+0x72>
+     b46:	89 81       	ldd	r24, Y+1	; 0x01
+     b48:	8f 30       	cpi	r24, 0x0F	; 15
+     b4a:	b0 f4       	brcc	.+44     	; 0xb78 <can_set_mob_interrupt+0x72>
+	{
+		CANIE1 |= (0x01 << (object - 8));
+     b4c:	af ed       	ldi	r26, 0xDF	; 223
+     b4e:	b0 e0       	ldi	r27, 0x00	; 0
+     b50:	ef ed       	ldi	r30, 0xDF	; 223
+     b52:	f0 e0       	ldi	r31, 0x00	; 0
+     b54:	80 81       	ld	r24, Z
+     b56:	48 2f       	mov	r20, r24
+     b58:	89 81       	ldd	r24, Y+1	; 0x01
+     b5a:	88 2f       	mov	r24, r24
+     b5c:	90 e0       	ldi	r25, 0x00	; 0
+     b5e:	9c 01       	movw	r18, r24
+     b60:	28 50       	subi	r18, 0x08	; 8
+     b62:	30 40       	sbci	r19, 0x00	; 0
+     b64:	81 e0       	ldi	r24, 0x01	; 1
+     b66:	90 e0       	ldi	r25, 0x00	; 0
+     b68:	02 2e       	mov	r0, r18
+     b6a:	02 c0       	rjmp	.+4      	; 0xb70 <can_set_mob_interrupt+0x6a>
+     b6c:	88 0f       	add	r24, r24
+     b6e:	99 1f       	adc	r25, r25
+     b70:	0a 94       	dec	r0
+     b72:	e2 f7       	brpl	.-8      	; 0xb6c <can_set_mob_interrupt+0x66>
+     b74:	84 2b       	or	r24, r20
+     b76:	8c 93       	st	X, r24
+	}
+}
+     b78:	0f 90       	pop	r0
+     b7a:	cf 91       	pop	r28
+     b7c:	df 91       	pop	r29
+     b7e:	08 95       	ret
+
+00000b80 <can_get_mob_interrupt>:
+/* Get MOB which has forced an interrupt */
+uint8_t can_get_mob_interrupt(void)
+{
+     b80:	df 93       	push	r29
+     b82:	cf 93       	push	r28
+     b84:	00 d0       	rcall	.+0      	; 0xb86 <can_get_mob_interrupt+0x6>
+     b86:	00 d0       	rcall	.+0      	; 0xb88 <can_get_mob_interrupt+0x8>
+     b88:	cd b7       	in	r28, 0x3d	; 61
+     b8a:	de b7       	in	r29, 0x3e	; 62
+	uint8_t mob;
+	uint16_t maske;
+	
+	maske = CANSIT2 | (CANSIT1 << 8);
+     b8c:	e0 ee       	ldi	r30, 0xE0	; 224
+     b8e:	f0 e0       	ldi	r31, 0x00	; 0
+     b90:	80 81       	ld	r24, Z
+     b92:	28 2f       	mov	r18, r24
+     b94:	30 e0       	ldi	r19, 0x00	; 0
+     b96:	e1 ee       	ldi	r30, 0xE1	; 225
+     b98:	f0 e0       	ldi	r31, 0x00	; 0
+     b9a:	80 81       	ld	r24, Z
+     b9c:	88 2f       	mov	r24, r24
+     b9e:	90 e0       	ldi	r25, 0x00	; 0
+     ba0:	98 2f       	mov	r25, r24
+     ba2:	88 27       	eor	r24, r24
+     ba4:	82 2b       	or	r24, r18
+     ba6:	93 2b       	or	r25, r19
+     ba8:	9a 83       	std	Y+2, r25	; 0x02
+     baa:	89 83       	std	Y+1, r24	; 0x01
+	// Error if mask equals zero
+	if (maske == 0)
+     bac:	89 81       	ldd	r24, Y+1	; 0x01
+     bae:	9a 81       	ldd	r25, Y+2	; 0x02
+     bb0:	00 97       	sbiw	r24, 0x00	; 0
+     bb2:	19 f4       	brne	.+6      	; 0xbba <can_get_mob_interrupt+0x3a>
+	{
+		return NOMOB;
+     bb4:	8f ef       	ldi	r24, 0xFF	; 255
+     bb6:	8c 83       	std	Y+4, r24	; 0x04
+     bb8:	19 c0       	rjmp	.+50     	; 0xbec <can_get_mob_interrupt+0x6c>
+	}
+	// Right shifting mask, number of shifts equals MOB number
+	for (mob = 0; (maske & 0x01) == 0; mob++)
+     bba:	1b 82       	std	Y+3, r1	; 0x03
+     bbc:	09 c0       	rjmp	.+18     	; 0xbd0 <can_get_mob_interrupt+0x50>
+	{
+		maske >>= 1;
+     bbe:	89 81       	ldd	r24, Y+1	; 0x01
+     bc0:	9a 81       	ldd	r25, Y+2	; 0x02
+     bc2:	96 95       	lsr	r25
+     bc4:	87 95       	ror	r24
+     bc6:	9a 83       	std	Y+2, r25	; 0x02
+     bc8:	89 83       	std	Y+1, r24	; 0x01
+	if (maske == 0)
+	{
+		return NOMOB;
+	}
+	// Right shifting mask, number of shifts equals MOB number
+	for (mob = 0; (maske & 0x01) == 0; mob++)
+     bca:	8b 81       	ldd	r24, Y+3	; 0x03
+     bcc:	8f 5f       	subi	r24, 0xFF	; 255
+     bce:	8b 83       	std	Y+3, r24	; 0x03
+     bd0:	89 81       	ldd	r24, Y+1	; 0x01
+     bd2:	9a 81       	ldd	r25, Y+2	; 0x02
+     bd4:	81 70       	andi	r24, 0x01	; 1
+     bd6:	90 70       	andi	r25, 0x00	; 0
+     bd8:	00 97       	sbiw	r24, 0x00	; 0
+     bda:	89 f3       	breq	.-30     	; 0xbbe <can_get_mob_interrupt+0x3e>
+	{
+		maske >>= 1;
+	}
+	//  Error if MOB number not in range
+	if (mob > (MOBS_NUM - 1))
+     bdc:	8b 81       	ldd	r24, Y+3	; 0x03
+     bde:	8f 30       	cpi	r24, 0x0F	; 15
+     be0:	18 f0       	brcs	.+6      	; 0xbe8 <can_get_mob_interrupt+0x68>
+	{
+		return NOMOB;
+     be2:	8f ef       	ldi	r24, 0xFF	; 255
+     be4:	8c 83       	std	Y+4, r24	; 0x04
+     be6:	02 c0       	rjmp	.+4      	; 0xbec <can_get_mob_interrupt+0x6c>
+	}
+	else
+	{
+		return mob;
+     be8:	8b 81       	ldd	r24, Y+3	; 0x03
+     bea:	8c 83       	std	Y+4, r24	; 0x04
+     bec:	8c 81       	ldd	r24, Y+4	; 0x04
+	}
+}
+     bee:	0f 90       	pop	r0
+     bf0:	0f 90       	pop	r0
+     bf2:	0f 90       	pop	r0
+     bf4:	0f 90       	pop	r0
+     bf6:	cf 91       	pop	r28
+     bf8:	df 91       	pop	r29
+     bfa:	08 95       	ret
+
+00000bfc <can_clear_mob_interrupt>:
+/* Clear interrupt for given MOB */
+void can_clear_mob_interrupt(uint8_t object)
+{
+     bfc:	df 93       	push	r29
+     bfe:	cf 93       	push	r28
+     c00:	0f 92       	push	r0
+     c02:	cd b7       	in	r28, 0x3d	; 61
+     c04:	de b7       	in	r29, 0x3e	; 62
+     c06:	89 83       	std	Y+1, r24	; 0x01
+	if ((object >= 0) && (object <= 7))
+     c08:	89 81       	ldd	r24, Y+1	; 0x01
+     c0a:	88 30       	cpi	r24, 0x08	; 8
+     c0c:	a8 f4       	brcc	.+42     	; 0xc38 <can_clear_mob_interrupt+0x3c>
+	{
+		CANIE2 &= ~(0x01 << object);
+     c0e:	ae ed       	ldi	r26, 0xDE	; 222
+     c10:	b0 e0       	ldi	r27, 0x00	; 0
+     c12:	ee ed       	ldi	r30, 0xDE	; 222
+     c14:	f0 e0       	ldi	r31, 0x00	; 0
+     c16:	80 81       	ld	r24, Z
+     c18:	48 2f       	mov	r20, r24
+     c1a:	89 81       	ldd	r24, Y+1	; 0x01
+     c1c:	28 2f       	mov	r18, r24
+     c1e:	30 e0       	ldi	r19, 0x00	; 0
+     c20:	81 e0       	ldi	r24, 0x01	; 1
+     c22:	90 e0       	ldi	r25, 0x00	; 0
+     c24:	02 2e       	mov	r0, r18
+     c26:	02 c0       	rjmp	.+4      	; 0xc2c <can_clear_mob_interrupt+0x30>
+     c28:	88 0f       	add	r24, r24
+     c2a:	99 1f       	adc	r25, r25
+     c2c:	0a 94       	dec	r0
+     c2e:	e2 f7       	brpl	.-8      	; 0xc28 <can_clear_mob_interrupt+0x2c>
+     c30:	80 95       	com	r24
+     c32:	84 23       	and	r24, r20
+     c34:	8c 93       	st	X, r24
+     c36:	1d c0       	rjmp	.+58     	; 0xc72 <can_clear_mob_interrupt+0x76>
+	}
+	else if ((object >= 8) && (object <= 14))
+     c38:	89 81       	ldd	r24, Y+1	; 0x01
+     c3a:	88 30       	cpi	r24, 0x08	; 8
+     c3c:	d0 f0       	brcs	.+52     	; 0xc72 <can_clear_mob_interrupt+0x76>
+     c3e:	89 81       	ldd	r24, Y+1	; 0x01
+     c40:	8f 30       	cpi	r24, 0x0F	; 15
+     c42:	b8 f4       	brcc	.+46     	; 0xc72 <can_clear_mob_interrupt+0x76>
+	{
+		CANIE1 &= ~(0x01 << (object - 8));
+     c44:	af ed       	ldi	r26, 0xDF	; 223
+     c46:	b0 e0       	ldi	r27, 0x00	; 0
+     c48:	ef ed       	ldi	r30, 0xDF	; 223
+     c4a:	f0 e0       	ldi	r31, 0x00	; 0
+     c4c:	80 81       	ld	r24, Z
+     c4e:	48 2f       	mov	r20, r24
+     c50:	89 81       	ldd	r24, Y+1	; 0x01
+     c52:	88 2f       	mov	r24, r24
+     c54:	90 e0       	ldi	r25, 0x00	; 0
+     c56:	9c 01       	movw	r18, r24
+     c58:	28 50       	subi	r18, 0x08	; 8
+     c5a:	30 40       	sbci	r19, 0x00	; 0
+     c5c:	81 e0       	ldi	r24, 0x01	; 1
+     c5e:	90 e0       	ldi	r25, 0x00	; 0
+     c60:	02 2e       	mov	r0, r18
+     c62:	02 c0       	rjmp	.+4      	; 0xc68 <can_clear_mob_interrupt+0x6c>
+     c64:	88 0f       	add	r24, r24
+     c66:	99 1f       	adc	r25, r25
+     c68:	0a 94       	dec	r0
+     c6a:	e2 f7       	brpl	.-8      	; 0xc64 <can_clear_mob_interrupt+0x68>
+     c6c:	80 95       	com	r24
+     c6e:	84 23       	and	r24, r20
+     c70:	8c 93       	st	X, r24
+	}
+}
+     c72:	0f 90       	pop	r0
+     c74:	cf 91       	pop	r28
+     c76:	df 91       	pop	r29
+     c78:	08 95       	ret
+
+00000c7a <can_init>:
+/* Init CAN controller */
+void can_init(uint16_t baud, uint8_t intmode)
+{
+     c7a:	df 93       	push	r29
+     c7c:	cf 93       	push	r28
+     c7e:	00 d0       	rcall	.+0      	; 0xc80 <can_init+0x6>
+     c80:	00 d0       	rcall	.+0      	; 0xc82 <can_init+0x8>
+     c82:	cd b7       	in	r28, 0x3d	; 61
+     c84:	de b7       	in	r29, 0x3e	; 62
+     c86:	9b 83       	std	Y+3, r25	; 0x03
+     c88:	8a 83       	std	Y+2, r24	; 0x02
+     c8a:	6c 83       	std	Y+4, r22	; 0x04
+	unsigned char timeout = 1;
+     c8c:	81 e0       	ldi	r24, 0x01	; 1
+     c8e:	89 83       	std	Y+1, r24	; 0x01
+	
+	CANGCON |= (1 << SWRES);			// Force software reset
+     c90:	a8 ed       	ldi	r26, 0xD8	; 216
+     c92:	b0 e0       	ldi	r27, 0x00	; 0
+     c94:	e8 ed       	ldi	r30, 0xD8	; 216
+     c96:	f0 e0       	ldi	r31, 0x00	; 0
+     c98:	80 81       	ld	r24, Z
+     c9a:	81 60       	ori	r24, 0x01	; 1
+     c9c:	8c 93       	st	X, r24
+	//clear_all_mobs();
+	can_set_baudrate(125);				// Set baudrate
+     c9e:	8d e7       	ldi	r24, 0x7D	; 125
+     ca0:	90 e0       	ldi	r25, 0x00	; 0
+     ca2:	0e 94 6b 00 	call	0xd6	; 0xd6 <can_set_baudrate>
+	can_set_interrupt(intmode);			// Set interrupt mode
+     ca6:	8c 81       	ldd	r24, Y+4	; 0x04
+     ca8:	0e 94 f4 00 	call	0x1e8	; 0x1e8 <can_set_interrupt>
+	setbit(CANGCON, ENASTB);			// Enable CAN controller
+     cac:	a8 ed       	ldi	r26, 0xD8	; 216
+     cae:	b0 e0       	ldi	r27, 0x00	; 0
+     cb0:	e8 ed       	ldi	r30, 0xD8	; 216
+     cb2:	f0 e0       	ldi	r31, 0x00	; 0
+     cb4:	80 81       	ld	r24, Z
+     cb6:	82 60       	ori	r24, 0x02	; 2
+     cb8:	8c 93       	st	X, r24
+     cba:	03 c0       	rjmp	.+6      	; 0xcc2 <can_init+0x48>
+	while ((!getbit(CANGSTA, ENFG))  && (timeout != 0))	// Wait for transmission complete flag or timeout
+	{
+		timeout++;
+     cbc:	89 81       	ldd	r24, Y+1	; 0x01
+     cbe:	8f 5f       	subi	r24, 0xFF	; 255
+     cc0:	89 83       	std	Y+1, r24	; 0x01
+	CANGCON |= (1 << SWRES);			// Force software reset
+	//clear_all_mobs();
+	can_set_baudrate(125);				// Set baudrate
+	can_set_interrupt(intmode);			// Set interrupt mode
+	setbit(CANGCON, ENASTB);			// Enable CAN controller
+	while ((!getbit(CANGSTA, ENFG))  && (timeout != 0))	// Wait for transmission complete flag or timeout
+     cc2:	e9 ed       	ldi	r30, 0xD9	; 217
+     cc4:	f0 e0       	ldi	r31, 0x00	; 0
+     cc6:	80 81       	ld	r24, Z
+     cc8:	88 2f       	mov	r24, r24
+     cca:	90 e0       	ldi	r25, 0x00	; 0
+     ccc:	84 70       	andi	r24, 0x04	; 4
+     cce:	90 70       	andi	r25, 0x00	; 0
+     cd0:	00 97       	sbiw	r24, 0x00	; 0
+     cd2:	19 f4       	brne	.+6      	; 0xcda <can_init+0x60>
+     cd4:	89 81       	ldd	r24, Y+1	; 0x01
+     cd6:	88 23       	and	r24, r24
+     cd8:	89 f7       	brne	.-30     	; 0xcbc <can_init+0x42>
+	{
+		timeout++;
+	}
+}
+     cda:	0f 90       	pop	r0
+     cdc:	0f 90       	pop	r0
+     cde:	0f 90       	pop	r0
+     ce0:	0f 90       	pop	r0
+     ce2:	cf 91       	pop	r28
+     ce4:	df 91       	pop	r29
+     ce6:	08 95       	ret
+
+00000ce8 <can_enable_mob>:
+/* Enable the given MOB */
+void can_enable_mob(uint8_t object, uint8_t mode, can_message msg)
+{
+     ce8:	df 93       	push	r29
+     cea:	cf 93       	push	r28
+     cec:	00 d0       	rcall	.+0      	; 0xcee <can_enable_mob+0x6>
+     cee:	cd b7       	in	r28, 0x3d	; 61
+     cf0:	de b7       	in	r29, 0x3e	; 62
+     cf2:	89 83       	std	Y+1, r24	; 0x01
+     cf4:	6a 83       	std	Y+2, r22	; 0x02
+	can_select_mob(object);				// Select MOB
+     cf6:	89 81       	ldd	r24, Y+1	; 0x01
+     cf8:	0e 94 78 01 	call	0x2f0	; 0x2f0 <can_select_mob>
+	can_set_mob_interrupt(object);		// Set interrupt
+     cfc:	89 81       	ldd	r24, Y+1	; 0x01
+     cfe:	0e 94 83 05 	call	0xb06	; 0xb06 <can_set_mob_interrupt>
+	can_set_mob_id_mask(msg.idm, msg.id_type);			// Set ID mask
+     d02:	8c 85       	ldd	r24, Y+12	; 0x0c
+     d04:	9d 85       	ldd	r25, Y+13	; 0x0d
+     d06:	ae 85       	ldd	r26, Y+14	; 0x0e
+     d08:	bf 85       	ldd	r27, Y+15	; 0x0f
+     d0a:	2f 81       	ldd	r18, Y+7	; 0x07
+     d0c:	bc 01       	movw	r22, r24
+     d0e:	cd 01       	movw	r24, r26
+     d10:	42 2f       	mov	r20, r18
+     d12:	0e 94 88 01 	call	0x310	; 0x310 <can_set_mob_id_mask>
+	can_set_mob_id(msg.id, msg.id_type);					// Set ID
+     d16:	88 85       	ldd	r24, Y+8	; 0x08
+     d18:	99 85       	ldd	r25, Y+9	; 0x09
+     d1a:	aa 85       	ldd	r26, Y+10	; 0x0a
+     d1c:	bb 85       	ldd	r27, Y+11	; 0x0b
+     d1e:	2f 81       	ldd	r18, Y+7	; 0x07
+     d20:	bc 01       	movw	r22, r24
+     d22:	cd 01       	movw	r24, r26
+     d24:	42 2f       	mov	r20, r18
+     d26:	0e 94 17 02 	call	0x42e	; 0x42e <can_set_mob_id>
+	switch(mode)
+     d2a:	8a 81       	ldd	r24, Y+2	; 0x02
+     d2c:	88 2f       	mov	r24, r24
+     d2e:	90 e0       	ldi	r25, 0x00	; 0
+     d30:	84 30       	cpi	r24, 0x04	; 4
+     d32:	91 05       	cpc	r25, r1
+     d34:	31 f4       	brne	.+12     	; 0xd42 <can_enable_mob+0x5a>
+	{
+		case AUTO_REPLY:
+			can_set_mob_data(msg.data, msg.length);
+     d36:	28 89       	ldd	r18, Y+16	; 0x10
+     d38:	ce 01       	movw	r24, r28
+     d3a:	41 96       	adiw	r24, 0x11	; 17
+     d3c:	62 2f       	mov	r22, r18
+     d3e:	0e 94 09 05 	call	0xa12	; 0xa12 <can_set_mob_data>
+			break;
+		default:
+			break;
+	}
+	can_set_mob_mode(mode, msg.id_type);				// Set mode
+     d42:	9f 81       	ldd	r25, Y+7	; 0x07
+     d44:	8a 81       	ldd	r24, Y+2	; 0x02
+     d46:	69 2f       	mov	r22, r25
+     d48:	0e 94 9f 03 	call	0x73e	; 0x73e <can_set_mob_mode>
+}
+     d4c:	0f 90       	pop	r0
+     d4e:	0f 90       	pop	r0
+     d50:	cf 91       	pop	r28
+     d52:	df 91       	pop	r29
+     d54:	08 95       	ret
+
+00000d56 <can_get_mob_id_type>:
+/* Get ID Type of selected MOB */
+uint8_t can_get_mob_id_type(void)
+{
+     d56:	df 93       	push	r29
+     d58:	cf 93       	push	r28
+     d5a:	0f 92       	push	r0
+     d5c:	cd b7       	in	r28, 0x3d	; 61
+     d5e:	de b7       	in	r29, 0x3e	; 62
+	if (getbit(CANCDMOB, IDE) == 0)
+     d60:	ef ee       	ldi	r30, 0xEF	; 239
+     d62:	f0 e0       	ldi	r31, 0x00	; 0
+     d64:	80 81       	ld	r24, Z
+     d66:	88 2f       	mov	r24, r24
+     d68:	90 e0       	ldi	r25, 0x00	; 0
+     d6a:	80 71       	andi	r24, 0x10	; 16
+     d6c:	90 70       	andi	r25, 0x00	; 0
+     d6e:	00 97       	sbiw	r24, 0x00	; 0
+     d70:	11 f4       	brne	.+4      	; 0xd76 <can_get_mob_id_type+0x20>
+	{
+		return 0;
+     d72:	19 82       	std	Y+1, r1	; 0x01
+     d74:	02 c0       	rjmp	.+4      	; 0xd7a <can_get_mob_id_type+0x24>
+	}
+	else
+	{
+		return 1;
+     d76:	81 e0       	ldi	r24, 0x01	; 1
+     d78:	89 83       	std	Y+1, r24	; 0x01
+     d7a:	89 81       	ldd	r24, Y+1	; 0x01
+	}
+}
+     d7c:	0f 90       	pop	r0
+     d7e:	cf 91       	pop	r28
+     d80:	df 91       	pop	r29
+     d82:	08 95       	ret
+
+00000d84 <can_disable_mob>:
+/* Disable the given MOB */
+void can_disable_mob(uint8_t object)
+{
+     d84:	df 93       	push	r29
+     d86:	cf 93       	push	r28
+     d88:	0f 92       	push	r0
+     d8a:	cd b7       	in	r28, 0x3d	; 61
+     d8c:	de b7       	in	r29, 0x3e	; 62
+     d8e:	89 83       	std	Y+1, r24	; 0x01
+	can_select_mob(object);				// Select MOB
+     d90:	89 81       	ldd	r24, Y+1	; 0x01
+     d92:	0e 94 78 01 	call	0x2f0	; 0x2f0 <can_select_mob>
+	can_clear_mob_interrupt(object);	// Clear interrupt
+     d96:	89 81       	ldd	r24, Y+1	; 0x01
+     d98:	0e 94 fe 05 	call	0xbfc	; 0xbfc <can_clear_mob_interrupt>
+	can_set_mob_mode(DISABLED, 0);			// Set mode
+     d9c:	80 e0       	ldi	r24, 0x00	; 0
+     d9e:	60 e0       	ldi	r22, 0x00	; 0
+     da0:	0e 94 9f 03 	call	0x73e	; 0x73e <can_set_mob_mode>
+}
+     da4:	0f 90       	pop	r0
+     da6:	cf 91       	pop	r28
+     da8:	df 91       	pop	r29
+     daa:	08 95       	ret
+
+00000dac <can_send_data>:
+/* Send data */
+void can_send_data(uint8_t mob, can_message msg)
+{
+     dac:	df 93       	push	r29
+     dae:	cf 93       	push	r28
+     db0:	00 d0       	rcall	.+0      	; 0xdb2 <can_send_data+0x6>
+     db2:	00 d0       	rcall	.+0      	; 0xdb4 <can_send_data+0x8>
+     db4:	cd b7       	in	r28, 0x3d	; 61
+     db6:	de b7       	in	r29, 0x3e	; 62
+     db8:	8c 83       	std	Y+4, r24	; 0x04
+	uint8_t	mode_buffer;
+	uint8_t	id_type_buffer;
+	uint8_t timeout = 1;
+     dba:	81 e0       	ldi	r24, 0x01	; 1
+     dbc:	89 83       	std	Y+1, r24	; 0x01
+	
+	can_select_mob(mob);				// Select MOB
+     dbe:	8c 81       	ldd	r24, Y+4	; 0x04
+     dc0:	0e 94 78 01 	call	0x2f0	; 0x2f0 <can_select_mob>
+	mode_buffer = can_get_mob_mode();	// Save mode
+     dc4:	0e 94 7e 04 	call	0x8fc	; 0x8fc <can_get_mob_mode>
+     dc8:	8b 83       	std	Y+3, r24	; 0x03
+	id_type_buffer = can_get_mob_id_type();		// Save ID type
+     dca:	0e 94 ab 06 	call	0xd56	; 0xd56 <can_get_mob_id_type>
+     dce:	8a 83       	std	Y+2, r24	; 0x02
+	can_set_mob_data(msg.data, msg.length);		// Set data and length
+     dd0:	2a 89       	ldd	r18, Y+18	; 0x12
+     dd2:	ce 01       	movw	r24, r28
+     dd4:	43 96       	adiw	r24, 0x13	; 19
+     dd6:	62 2f       	mov	r22, r18
+     dd8:	0e 94 09 05 	call	0xa12	; 0xa12 <can_set_mob_data>
+	can_set_mob_mode(TRANSMIT_DATA, msg.id_type);	// Set transmiter mode
+     ddc:	99 85       	ldd	r25, Y+9	; 0x09
+     dde:	81 e0       	ldi	r24, 0x01	; 1
+     de0:	69 2f       	mov	r22, r25
+     de2:	0e 94 9f 03 	call	0x73e	; 0x73e <can_set_mob_mode>
+     de6:	03 c0       	rjmp	.+6      	; 0xdee <can_send_data+0x42>
+
+	while ((!getbit(CANSTMOB, TXOK))  && (timeout != 0))	// Wait for transmission complete flag or timeout
+	{
+		timeout++;
+     de8:	89 81       	ldd	r24, Y+1	; 0x01
+     dea:	8f 5f       	subi	r24, 0xFF	; 255
+     dec:	89 83       	std	Y+1, r24	; 0x01
+	mode_buffer = can_get_mob_mode();	// Save mode
+	id_type_buffer = can_get_mob_id_type();		// Save ID type
+	can_set_mob_data(msg.data, msg.length);		// Set data and length
+	can_set_mob_mode(TRANSMIT_DATA, msg.id_type);	// Set transmiter mode
+
+	while ((!getbit(CANSTMOB, TXOK))  && (timeout != 0))	// Wait for transmission complete flag or timeout
+     dee:	ee ee       	ldi	r30, 0xEE	; 238
+     df0:	f0 e0       	ldi	r31, 0x00	; 0
+     df2:	80 81       	ld	r24, Z
+     df4:	88 2f       	mov	r24, r24
+     df6:	90 e0       	ldi	r25, 0x00	; 0
+     df8:	80 74       	andi	r24, 0x40	; 64
+     dfa:	90 70       	andi	r25, 0x00	; 0
+     dfc:	00 97       	sbiw	r24, 0x00	; 0
+     dfe:	19 f4       	brne	.+6      	; 0xe06 <can_send_data+0x5a>
+     e00:	89 81       	ldd	r24, Y+1	; 0x01
+     e02:	88 23       	and	r24, r24
+     e04:	89 f7       	brne	.-30     	; 0xde8 <can_send_data+0x3c>
+	{
+		timeout++;
+	}			
+	clearbit(CANSTMOB, TXOK);			// Reset transmission complete flag
+     e06:	ae ee       	ldi	r26, 0xEE	; 238
+     e08:	b0 e0       	ldi	r27, 0x00	; 0
+     e0a:	ee ee       	ldi	r30, 0xEE	; 238
+     e0c:	f0 e0       	ldi	r31, 0x00	; 0
+     e0e:	80 81       	ld	r24, Z
+     e10:	8f 7b       	andi	r24, 0xBF	; 191
+     e12:	8c 93       	st	X, r24
+	can_set_mob_mode(mode_buffer, id_type_buffer);		// Recover MOB mode
+     e14:	8b 81       	ldd	r24, Y+3	; 0x03
+     e16:	6a 81       	ldd	r22, Y+2	; 0x02
+     e18:	0e 94 9f 03 	call	0x73e	; 0x73e <can_set_mob_mode>
+}
+     e1c:	0f 90       	pop	r0
+     e1e:	0f 90       	pop	r0
+     e20:	0f 90       	pop	r0
+     e22:	0f 90       	pop	r0
+     e24:	cf 91       	pop	r28
+     e26:	df 91       	pop	r29
+     e28:	08 95       	ret
+
+00000e2a <main>:
+#include "main.h"
+
+int main(void)
+{
+     e2a:	df 93       	push	r29
+     e2c:	cf 93       	push	r28
+     e2e:	cd b7       	in	r28, 0x3d	; 61
+     e30:	de b7       	in	r29, 0x3e	; 62
+     e32:	2f 97       	sbiw	r28, 0x0f	; 15
+     e34:	0f b6       	in	r0, 0x3f	; 63
+     e36:	f8 94       	cli
+     e38:	de bf       	out	0x3e, r29	; 62
+     e3a:	0f be       	out	0x3f, r0	; 63
+     e3c:	cd bf       	out	0x3d, r28	; 61
+	DDRB |= (0x01 << PB0);
+     e3e:	a4 e2       	ldi	r26, 0x24	; 36
+     e40:	b0 e0       	ldi	r27, 0x00	; 0
+     e42:	e4 e2       	ldi	r30, 0x24	; 36
+     e44:	f0 e0       	ldi	r31, 0x00	; 0
+     e46:	80 81       	ld	r24, Z
+     e48:	81 60       	ori	r24, 0x01	; 1
+     e4a:	8c 93       	st	X, r24
+	can_init(125, RX);
+     e4c:	8d e7       	ldi	r24, 0x7D	; 125
+     e4e:	90 e0       	ldi	r25, 0x00	; 0
+     e50:	62 e0       	ldi	r22, 0x02	; 2
+     e52:	0e 94 3d 06 	call	0xc7a	; 0xc7a <can_init>
+	
+	msg_test.id_type = 1;	//type A, 11bit ID
+     e56:	81 e0       	ldi	r24, 0x01	; 1
+     e58:	80 93 59 01 	sts	0x0159, r24
+	msg_test.id = 0x111;
+     e5c:	81 e1       	ldi	r24, 0x11	; 17
+     e5e:	91 e0       	ldi	r25, 0x01	; 1
+     e60:	a0 e0       	ldi	r26, 0x00	; 0
+     e62:	b0 e0       	ldi	r27, 0x00	; 0
+     e64:	80 93 5a 01 	sts	0x015A, r24
+     e68:	90 93 5b 01 	sts	0x015B, r25
+     e6c:	a0 93 5c 01 	sts	0x015C, r26
+     e70:	b0 93 5d 01 	sts	0x015D, r27
+	msg_test.idm = 0x7ff;
+     e74:	8f ef       	ldi	r24, 0xFF	; 255
+     e76:	97 e0       	ldi	r25, 0x07	; 7
+     e78:	a0 e0       	ldi	r26, 0x00	; 0
+     e7a:	b0 e0       	ldi	r27, 0x00	; 0
+     e7c:	80 93 5e 01 	sts	0x015E, r24
+     e80:	90 93 5f 01 	sts	0x015F, r25
+     e84:	a0 93 60 01 	sts	0x0160, r26
+     e88:	b0 93 61 01 	sts	0x0161, r27
+	msg_test.length = 7;
+     e8c:	87 e0       	ldi	r24, 0x07	; 7
+     e8e:	80 93 62 01 	sts	0x0162, r24
+	msg_test.data[0] = 'T';
+     e92:	84 e5       	ldi	r24, 0x54	; 84
+     e94:	80 93 63 01 	sts	0x0163, r24
+	msg_test.data[1] = 'e';
+     e98:	85 e6       	ldi	r24, 0x65	; 101
+     e9a:	80 93 64 01 	sts	0x0164, r24
+	msg_test.data[2] = 's';
+     e9e:	83 e7       	ldi	r24, 0x73	; 115
+     ea0:	80 93 65 01 	sts	0x0165, r24
+	msg_test.data[3] = 't';
+     ea4:	84 e7       	ldi	r24, 0x74	; 116
+     ea6:	80 93 66 01 	sts	0x0166, r24
+	msg_test.data[4] = '1';
+     eaa:	81 e3       	ldi	r24, 0x31	; 49
+     eac:	80 93 67 01 	sts	0x0167, r24
+	msg_test.data[5] = '2';
+     eb0:	82 e3       	ldi	r24, 0x32	; 50
+     eb2:	80 93 68 01 	sts	0x0168, r24
+	msg_test.data[6] = '3';
+     eb6:	83 e3       	ldi	r24, 0x33	; 51
+     eb8:	80 93 69 01 	sts	0x0169, r24
+	msg_test.data[7] = '4';
+     ebc:	84 e3       	ldi	r24, 0x34	; 52
+     ebe:	80 93 6a 01 	sts	0x016A, r24
+
+	msg_bat_1.id_type = 0;
+     ec2:	10 92 47 01 	sts	0x0147, r1
+	msg_bat_1.id = 0x030;
+     ec6:	80 e3       	ldi	r24, 0x30	; 48
+     ec8:	90 e0       	ldi	r25, 0x00	; 0
+     eca:	a0 e0       	ldi	r26, 0x00	; 0
+     ecc:	b0 e0       	ldi	r27, 0x00	; 0
+     ece:	80 93 48 01 	sts	0x0148, r24
+     ed2:	90 93 49 01 	sts	0x0149, r25
+     ed6:	a0 93 4a 01 	sts	0x014A, r26
+     eda:	b0 93 4b 01 	sts	0x014B, r27
+	msg_bat_1.idm = 0x7ff;	
+     ede:	8f ef       	ldi	r24, 0xFF	; 255
+     ee0:	97 e0       	ldi	r25, 0x07	; 7
+     ee2:	a0 e0       	ldi	r26, 0x00	; 0
+     ee4:	b0 e0       	ldi	r27, 0x00	; 0
+     ee6:	80 93 4c 01 	sts	0x014C, r24
+     eea:	90 93 4d 01 	sts	0x014D, r25
+     eee:	a0 93 4e 01 	sts	0x014E, r26
+     ef2:	b0 93 4f 01 	sts	0x014F, r27
+	msg_bat_1.length = 8;
+     ef6:	88 e0       	ldi	r24, 0x08	; 8
+     ef8:	80 93 50 01 	sts	0x0150, r24
+	
+	msg_bat_2.id_type = 0;
+     efc:	10 92 35 01 	sts	0x0135, r1
+	msg_bat_2.id = 0x031;
+     f00:	81 e3       	ldi	r24, 0x31	; 49
+     f02:	90 e0       	ldi	r25, 0x00	; 0
+     f04:	a0 e0       	ldi	r26, 0x00	; 0
+     f06:	b0 e0       	ldi	r27, 0x00	; 0
+     f08:	80 93 36 01 	sts	0x0136, r24
+     f0c:	90 93 37 01 	sts	0x0137, r25
+     f10:	a0 93 38 01 	sts	0x0138, r26
+     f14:	b0 93 39 01 	sts	0x0139, r27
+	msg_bat_2.idm = 0x7ff;	
+     f18:	8f ef       	ldi	r24, 0xFF	; 255
+     f1a:	97 e0       	ldi	r25, 0x07	; 7
+     f1c:	a0 e0       	ldi	r26, 0x00	; 0
+     f1e:	b0 e0       	ldi	r27, 0x00	; 0
+     f20:	80 93 3a 01 	sts	0x013A, r24
+     f24:	90 93 3b 01 	sts	0x013B, r25
+     f28:	a0 93 3c 01 	sts	0x013C, r26
+     f2c:	b0 93 3d 01 	sts	0x013D, r27
+	msg_bat_2.length = 8;
+     f30:	88 e0       	ldi	r24, 0x08	; 8
+     f32:	80 93 3e 01 	sts	0x013E, r24
+
+	can_enable_mob (10, TRANSMIT_DATA, msg_test);
+     f36:	8d b7       	in	r24, 0x3d	; 61
+     f38:	9e b7       	in	r25, 0x3e	; 62
+     f3a:	42 97       	sbiw	r24, 0x12	; 18
+     f3c:	0f b6       	in	r0, 0x3f	; 63
+     f3e:	f8 94       	cli
+     f40:	9e bf       	out	0x3e, r25	; 62
+     f42:	0f be       	out	0x3f, r0	; 63
+     f44:	8d bf       	out	0x3d, r24	; 61
+     f46:	8d b7       	in	r24, 0x3d	; 61
+     f48:	9e b7       	in	r25, 0x3e	; 62
+     f4a:	01 96       	adiw	r24, 0x01	; 1
+     f4c:	9a 83       	std	Y+2, r25	; 0x02
+     f4e:	89 83       	std	Y+1, r24	; 0x01
+     f50:	e9 e5       	ldi	r30, 0x59	; 89
+     f52:	f1 e0       	ldi	r31, 0x01	; 1
+     f54:	fc 83       	std	Y+4, r31	; 0x04
+     f56:	eb 83       	std	Y+3, r30	; 0x03
+     f58:	f2 e1       	ldi	r31, 0x12	; 18
+     f5a:	fd 83       	std	Y+5, r31	; 0x05
+     f5c:	eb 81       	ldd	r30, Y+3	; 0x03
+     f5e:	fc 81       	ldd	r31, Y+4	; 0x04
+     f60:	00 80       	ld	r0, Z
+     f62:	8b 81       	ldd	r24, Y+3	; 0x03
+     f64:	9c 81       	ldd	r25, Y+4	; 0x04
+     f66:	01 96       	adiw	r24, 0x01	; 1
+     f68:	9c 83       	std	Y+4, r25	; 0x04
+     f6a:	8b 83       	std	Y+3, r24	; 0x03
+     f6c:	e9 81       	ldd	r30, Y+1	; 0x01
+     f6e:	fa 81       	ldd	r31, Y+2	; 0x02
+     f70:	00 82       	st	Z, r0
+     f72:	89 81       	ldd	r24, Y+1	; 0x01
+     f74:	9a 81       	ldd	r25, Y+2	; 0x02
+     f76:	01 96       	adiw	r24, 0x01	; 1
+     f78:	9a 83       	std	Y+2, r25	; 0x02
+     f7a:	89 83       	std	Y+1, r24	; 0x01
+     f7c:	9d 81       	ldd	r25, Y+5	; 0x05
+     f7e:	91 50       	subi	r25, 0x01	; 1
+     f80:	9d 83       	std	Y+5, r25	; 0x05
+     f82:	ed 81       	ldd	r30, Y+5	; 0x05
+     f84:	ee 23       	and	r30, r30
+     f86:	51 f7       	brne	.-44     	; 0xf5c <main+0x132>
+     f88:	8a e0       	ldi	r24, 0x0A	; 10
+     f8a:	61 e0       	ldi	r22, 0x01	; 1
+     f8c:	0e 94 74 06 	call	0xce8	; 0xce8 <can_enable_mob>
+     f90:	8d b7       	in	r24, 0x3d	; 61
+     f92:	9e b7       	in	r25, 0x3e	; 62
+     f94:	42 96       	adiw	r24, 0x12	; 18
+     f96:	0f b6       	in	r0, 0x3f	; 63
+     f98:	f8 94       	cli
+     f9a:	9e bf       	out	0x3e, r25	; 62
+     f9c:	0f be       	out	0x3f, r0	; 63
+     f9e:	8d bf       	out	0x3d, r24	; 61
+	can_enable_mob (0, RECEIVE_DATA, msg_bat_1);
+     fa0:	ed b7       	in	r30, 0x3d	; 61
+     fa2:	fe b7       	in	r31, 0x3e	; 62
+     fa4:	72 97       	sbiw	r30, 0x12	; 18
+     fa6:	0f b6       	in	r0, 0x3f	; 63
+     fa8:	f8 94       	cli
+     faa:	fe bf       	out	0x3e, r31	; 62
+     fac:	0f be       	out	0x3f, r0	; 63
+     fae:	ed bf       	out	0x3d, r30	; 61
+     fb0:	8d b7       	in	r24, 0x3d	; 61
+     fb2:	9e b7       	in	r25, 0x3e	; 62
+     fb4:	01 96       	adiw	r24, 0x01	; 1
+     fb6:	9f 83       	std	Y+7, r25	; 0x07
+     fb8:	8e 83       	std	Y+6, r24	; 0x06
+     fba:	87 e4       	ldi	r24, 0x47	; 71
+     fbc:	91 e0       	ldi	r25, 0x01	; 1
+     fbe:	99 87       	std	Y+9, r25	; 0x09
+     fc0:	88 87       	std	Y+8, r24	; 0x08
+     fc2:	92 e1       	ldi	r25, 0x12	; 18
+     fc4:	9a 87       	std	Y+10, r25	; 0x0a
+     fc6:	e8 85       	ldd	r30, Y+8	; 0x08
+     fc8:	f9 85       	ldd	r31, Y+9	; 0x09
+     fca:	00 80       	ld	r0, Z
+     fcc:	88 85       	ldd	r24, Y+8	; 0x08
+     fce:	99 85       	ldd	r25, Y+9	; 0x09
+     fd0:	01 96       	adiw	r24, 0x01	; 1
+     fd2:	99 87       	std	Y+9, r25	; 0x09
+     fd4:	88 87       	std	Y+8, r24	; 0x08
+     fd6:	ee 81       	ldd	r30, Y+6	; 0x06
+     fd8:	ff 81       	ldd	r31, Y+7	; 0x07
+     fda:	00 82       	st	Z, r0
+     fdc:	8e 81       	ldd	r24, Y+6	; 0x06
+     fde:	9f 81       	ldd	r25, Y+7	; 0x07
+     fe0:	01 96       	adiw	r24, 0x01	; 1
+     fe2:	9f 83       	std	Y+7, r25	; 0x07
+     fe4:	8e 83       	std	Y+6, r24	; 0x06
+     fe6:	9a 85       	ldd	r25, Y+10	; 0x0a
+     fe8:	91 50       	subi	r25, 0x01	; 1
+     fea:	9a 87       	std	Y+10, r25	; 0x0a
+     fec:	ea 85       	ldd	r30, Y+10	; 0x0a
+     fee:	ee 23       	and	r30, r30
+     ff0:	51 f7       	brne	.-44     	; 0xfc6 <main+0x19c>
+     ff2:	80 e0       	ldi	r24, 0x00	; 0
+     ff4:	63 e0       	ldi	r22, 0x03	; 3
+     ff6:	0e 94 74 06 	call	0xce8	; 0xce8 <can_enable_mob>
+     ffa:	8d b7       	in	r24, 0x3d	; 61
+     ffc:	9e b7       	in	r25, 0x3e	; 62
+     ffe:	42 96       	adiw	r24, 0x12	; 18
+    1000:	0f b6       	in	r0, 0x3f	; 63
+    1002:	f8 94       	cli
+    1004:	9e bf       	out	0x3e, r25	; 62
+    1006:	0f be       	out	0x3f, r0	; 63
+    1008:	8d bf       	out	0x3d, r24	; 61
+	can_enable_mob (1, RECEIVE_DATA, msg_bat_2);
+    100a:	ed b7       	in	r30, 0x3d	; 61
+    100c:	fe b7       	in	r31, 0x3e	; 62
+    100e:	72 97       	sbiw	r30, 0x12	; 18
+    1010:	0f b6       	in	r0, 0x3f	; 63
+    1012:	f8 94       	cli
+    1014:	fe bf       	out	0x3e, r31	; 62
+    1016:	0f be       	out	0x3f, r0	; 63
+    1018:	ed bf       	out	0x3d, r30	; 61
+    101a:	8d b7       	in	r24, 0x3d	; 61
+    101c:	9e b7       	in	r25, 0x3e	; 62
+    101e:	01 96       	adiw	r24, 0x01	; 1
+    1020:	9c 87       	std	Y+12, r25	; 0x0c
+    1022:	8b 87       	std	Y+11, r24	; 0x0b
+    1024:	85 e3       	ldi	r24, 0x35	; 53
+    1026:	91 e0       	ldi	r25, 0x01	; 1
+    1028:	9e 87       	std	Y+14, r25	; 0x0e
+    102a:	8d 87       	std	Y+13, r24	; 0x0d
+    102c:	92 e1       	ldi	r25, 0x12	; 18
+    102e:	9f 87       	std	Y+15, r25	; 0x0f
+    1030:	ed 85       	ldd	r30, Y+13	; 0x0d
+    1032:	fe 85       	ldd	r31, Y+14	; 0x0e
+    1034:	00 80       	ld	r0, Z
+    1036:	8d 85       	ldd	r24, Y+13	; 0x0d
+    1038:	9e 85       	ldd	r25, Y+14	; 0x0e
+    103a:	01 96       	adiw	r24, 0x01	; 1
+    103c:	9e 87       	std	Y+14, r25	; 0x0e
+    103e:	8d 87       	std	Y+13, r24	; 0x0d
+    1040:	eb 85       	ldd	r30, Y+11	; 0x0b
+    1042:	fc 85       	ldd	r31, Y+12	; 0x0c
+    1044:	00 82       	st	Z, r0
+    1046:	8b 85       	ldd	r24, Y+11	; 0x0b
+    1048:	9c 85       	ldd	r25, Y+12	; 0x0c
+    104a:	01 96       	adiw	r24, 0x01	; 1
+    104c:	9c 87       	std	Y+12, r25	; 0x0c
+    104e:	8b 87       	std	Y+11, r24	; 0x0b
+    1050:	9f 85       	ldd	r25, Y+15	; 0x0f
+    1052:	91 50       	subi	r25, 0x01	; 1
+    1054:	9f 87       	std	Y+15, r25	; 0x0f
+    1056:	ef 85       	ldd	r30, Y+15	; 0x0f
+    1058:	ee 23       	and	r30, r30
+    105a:	51 f7       	brne	.-44     	; 0x1030 <main+0x206>
+    105c:	81 e0       	ldi	r24, 0x01	; 1
+    105e:	63 e0       	ldi	r22, 0x03	; 3
+    1060:	0e 94 74 06 	call	0xce8	; 0xce8 <can_enable_mob>
+    1064:	8d b7       	in	r24, 0x3d	; 61
+    1066:	9e b7       	in	r25, 0x3e	; 62
+    1068:	42 96       	adiw	r24, 0x12	; 18
+    106a:	0f b6       	in	r0, 0x3f	; 63
+    106c:	f8 94       	cli
+    106e:	9e bf       	out	0x3e, r25	; 62
+    1070:	0f be       	out	0x3f, r0	; 63
+    1072:	8d bf       	out	0x3d, r24	; 61
+	
+	sei();
+    1074:	78 94       	sei
+	TIMER0_ini();
+    1076:	0e 94 06 09 	call	0x120c	; 0x120c <TIMER0_ini>
+	USART0_ini();
+    107a:	0e 94 19 09 	call	0x1232	; 0x1232 <USART0_ini>
+    107e:	ff cf       	rjmp	.-2      	; 0x107e <main+0x254>
+
+00001080 <__vector_23>:
+	{
+	}
+}
+
+SIGNAL (SIG_UART0_TRANS)								//a/d converter in interrupt mode
+{
+    1080:	1f 92       	push	r1
+    1082:	0f 92       	push	r0
+    1084:	0f b6       	in	r0, 0x3f	; 63
+    1086:	0f 92       	push	r0
+    1088:	00 90 5b 00 	lds	r0, 0x005B
+    108c:	0f 92       	push	r0
+    108e:	11 24       	eor	r1, r1
+    1090:	8f 93       	push	r24
+    1092:	9f 93       	push	r25
+    1094:	af 93       	push	r26
+    1096:	bf 93       	push	r27
+    1098:	ef 93       	push	r30
+    109a:	ff 93       	push	r31
+    109c:	df 93       	push	r29
+    109e:	cf 93       	push	r28
+    10a0:	cd b7       	in	r28, 0x3d	; 61
+    10a2:	de b7       	in	r29, 0x3e	; 62
+	if (send_data == 1)
+    10a4:	80 91 20 01 	lds	r24, 0x0120
+    10a8:	81 30       	cpi	r24, 0x01	; 1
+    10aa:	e9 f4       	brne	.+58     	; 0x10e6 <__vector_23+0x66>
+	{
+		if (send_data_position < 31)
+    10ac:	80 91 21 01 	lds	r24, 0x0121
+    10b0:	8f 31       	cpi	r24, 0x1F	; 31
+    10b2:	88 f4       	brcc	.+34     	; 0x10d6 <__vector_23+0x56>
+		{
+			//UDR0 = msg_bcd[send_data_position];
+			UDR0 = msg_uart30[send_data_position];
+    10b4:	a6 ec       	ldi	r26, 0xC6	; 198
+    10b6:	b0 e0       	ldi	r27, 0x00	; 0
+    10b8:	80 91 21 01 	lds	r24, 0x0121
+    10bc:	88 2f       	mov	r24, r24
+    10be:	90 e0       	ldi	r25, 0x00	; 0
+    10c0:	fc 01       	movw	r30, r24
+    10c2:	e0 50       	subi	r30, 0x00	; 0
+    10c4:	ff 4f       	sbci	r31, 0xFF	; 255
+    10c6:	80 81       	ld	r24, Z
+    10c8:	8c 93       	st	X, r24
+			send_data_position++;
+    10ca:	80 91 21 01 	lds	r24, 0x0121
+    10ce:	8f 5f       	subi	r24, 0xFF	; 255
+    10d0:	80 93 21 01 	sts	0x0121, r24
+    10d4:	08 c0       	rjmp	.+16     	; 0x10e6 <__vector_23+0x66>
+		}
+		else
+		{
+			UDR0 = 0x0d;
+    10d6:	e6 ec       	ldi	r30, 0xC6	; 198
+    10d8:	f0 e0       	ldi	r31, 0x00	; 0
+    10da:	8d e0       	ldi	r24, 0x0D	; 13
+    10dc:	80 83       	st	Z, r24
+			send_data_position = 0;
+    10de:	10 92 21 01 	sts	0x0121, r1
+			send_data = 0;
+    10e2:	10 92 20 01 	sts	0x0120, r1
+		}
+	}
+}
+    10e6:	cf 91       	pop	r28
+    10e8:	df 91       	pop	r29
+    10ea:	ff 91       	pop	r31
+    10ec:	ef 91       	pop	r30
+    10ee:	bf 91       	pop	r27
+    10f0:	af 91       	pop	r26
+    10f2:	9f 91       	pop	r25
+    10f4:	8f 91       	pop	r24
+    10f6:	0f 90       	pop	r0
+    10f8:	00 92 5b 00 	sts	0x005B, r0
+    10fc:	0f 90       	pop	r0
+    10fe:	0f be       	out	0x3f, r0	; 63
+    1100:	0f 90       	pop	r0
+    1102:	1f 90       	pop	r1
+    1104:	18 95       	reti
+
+00001106 <__vector_17>:
+
+SIGNAL (SIG_OVERFLOW0)								//a/d converter in interrupt mode
+{
+    1106:	1f 92       	push	r1
+    1108:	0f 92       	push	r0
+    110a:	0f b6       	in	r0, 0x3f	; 63
+    110c:	0f 92       	push	r0
+    110e:	00 90 5b 00 	lds	r0, 0x005B
+    1112:	0f 92       	push	r0
+    1114:	11 24       	eor	r1, r1
+    1116:	2f 93       	push	r18
+    1118:	3f 93       	push	r19
+    111a:	4f 93       	push	r20
+    111c:	5f 93       	push	r21
+    111e:	6f 93       	push	r22
+    1120:	7f 93       	push	r23
+    1122:	8f 93       	push	r24
+    1124:	9f 93       	push	r25
+    1126:	af 93       	push	r26
+    1128:	bf 93       	push	r27
+    112a:	ef 93       	push	r30
+    112c:	ff 93       	push	r31
+    112e:	df 93       	push	r29
+    1130:	cf 93       	push	r28
+    1132:	00 d0       	rcall	.+0      	; 0x1134 <__vector_17+0x2e>
+    1134:	00 d0       	rcall	.+0      	; 0x1136 <__vector_17+0x30>
+    1136:	0f 92       	push	r0
+    1138:	cd b7       	in	r28, 0x3d	; 61
+    113a:	de b7       	in	r29, 0x3e	; 62
+	TCNT0 = 0x06;
+    113c:	e6 e4       	ldi	r30, 0x46	; 70
+    113e:	f0 e0       	ldi	r31, 0x00	; 0
+    1140:	86 e0       	ldi	r24, 0x06	; 6
+    1142:	80 83       	st	Z, r24
+	timer0_cnt++;
+    1144:	80 91 22 01 	lds	r24, 0x0122
+    1148:	8f 5f       	subi	r24, 0xFF	; 255
+    114a:	80 93 22 01 	sts	0x0122, r24
+	
+	if (timer0_cnt == 250) //100ms
+    114e:	80 91 22 01 	lds	r24, 0x0122
+    1152:	8a 3f       	cpi	r24, 0xFA	; 250
+    1154:	09 f0       	breq	.+2      	; 0x1158 <__vector_17+0x52>
+    1156:	3f c0       	rjmp	.+126    	; 0x11d6 <__vector_17+0xd0>
+	{
+		send_data = 1;
+    1158:	81 e0       	ldi	r24, 0x01	; 1
+    115a:	80 93 20 01 	sts	0x0120, r24
+		send_data_position = 0;
+    115e:	10 92 21 01 	sts	0x0121, r1
+		UDR0 = START_OF_MESSAGE;
+    1162:	e6 ec       	ldi	r30, 0xC6	; 198
+    1164:	f0 e0       	ldi	r31, 0x00	; 0
+    1166:	85 e5       	ldi	r24, 0x55	; 85
+    1168:	80 83       	st	Z, r24
+			
+		can_send_data (10, msg_test);
+    116a:	8d b7       	in	r24, 0x3d	; 61
+    116c:	9e b7       	in	r25, 0x3e	; 62
+    116e:	42 97       	sbiw	r24, 0x12	; 18
+    1170:	0f b6       	in	r0, 0x3f	; 63
+    1172:	f8 94       	cli
+    1174:	9e bf       	out	0x3e, r25	; 62
+    1176:	0f be       	out	0x3f, r0	; 63
+    1178:	8d bf       	out	0x3d, r24	; 61
+    117a:	8d b7       	in	r24, 0x3d	; 61
+    117c:	9e b7       	in	r25, 0x3e	; 62
+    117e:	01 96       	adiw	r24, 0x01	; 1
+    1180:	9a 83       	std	Y+2, r25	; 0x02
+    1182:	89 83       	std	Y+1, r24	; 0x01
+    1184:	e9 e5       	ldi	r30, 0x59	; 89
+    1186:	f1 e0       	ldi	r31, 0x01	; 1
+    1188:	fc 83       	std	Y+4, r31	; 0x04
+    118a:	eb 83       	std	Y+3, r30	; 0x03
+    118c:	f2 e1       	ldi	r31, 0x12	; 18
+    118e:	fd 83       	std	Y+5, r31	; 0x05
+    1190:	eb 81       	ldd	r30, Y+3	; 0x03
+    1192:	fc 81       	ldd	r31, Y+4	; 0x04
+    1194:	00 80       	ld	r0, Z
+    1196:	8b 81       	ldd	r24, Y+3	; 0x03
+    1198:	9c 81       	ldd	r25, Y+4	; 0x04
+    119a:	01 96       	adiw	r24, 0x01	; 1
+    119c:	9c 83       	std	Y+4, r25	; 0x04
+    119e:	8b 83       	std	Y+3, r24	; 0x03
+    11a0:	e9 81       	ldd	r30, Y+1	; 0x01
+    11a2:	fa 81       	ldd	r31, Y+2	; 0x02
+    11a4:	00 82       	st	Z, r0
+    11a6:	89 81       	ldd	r24, Y+1	; 0x01
+    11a8:	9a 81       	ldd	r25, Y+2	; 0x02
+    11aa:	01 96       	adiw	r24, 0x01	; 1
+    11ac:	9a 83       	std	Y+2, r25	; 0x02
+    11ae:	89 83       	std	Y+1, r24	; 0x01
+    11b0:	9d 81       	ldd	r25, Y+5	; 0x05
+    11b2:	91 50       	subi	r25, 0x01	; 1
+    11b4:	9d 83       	std	Y+5, r25	; 0x05
+    11b6:	ed 81       	ldd	r30, Y+5	; 0x05
+    11b8:	ee 23       	and	r30, r30
+    11ba:	51 f7       	brne	.-44     	; 0x1190 <__vector_17+0x8a>
+    11bc:	8a e0       	ldi	r24, 0x0A	; 10
+    11be:	0e 94 d6 06 	call	0xdac	; 0xdac <can_send_data>
+    11c2:	8d b7       	in	r24, 0x3d	; 61
+    11c4:	9e b7       	in	r25, 0x3e	; 62
+    11c6:	42 96       	adiw	r24, 0x12	; 18
+    11c8:	0f b6       	in	r0, 0x3f	; 63
+    11ca:	f8 94       	cli
+    11cc:	9e bf       	out	0x3e, r25	; 62
+    11ce:	0f be       	out	0x3f, r0	; 63
+    11d0:	8d bf       	out	0x3d, r24	; 61
+		timer0_cnt = 0;
+    11d2:	10 92 22 01 	sts	0x0122, r1
+		//can_rec_data (1, msg_bat);
+	}
+}
+    11d6:	0f 90       	pop	r0
+    11d8:	0f 90       	pop	r0
+    11da:	0f 90       	pop	r0
+    11dc:	0f 90       	pop	r0
+    11de:	0f 90       	pop	r0
+    11e0:	cf 91       	pop	r28
+    11e2:	df 91       	pop	r29
+    11e4:	ff 91       	pop	r31
+    11e6:	ef 91       	pop	r30
+    11e8:	bf 91       	pop	r27
+    11ea:	af 91       	pop	r26
+    11ec:	9f 91       	pop	r25
+    11ee:	8f 91       	pop	r24
+    11f0:	7f 91       	pop	r23
+    11f2:	6f 91       	pop	r22
+    11f4:	5f 91       	pop	r21
+    11f6:	4f 91       	pop	r20
+    11f8:	3f 91       	pop	r19
+    11fa:	2f 91       	pop	r18
+    11fc:	0f 90       	pop	r0
+    11fe:	00 92 5b 00 	sts	0x005B, r0
+    1202:	0f 90       	pop	r0
+    1204:	0f be       	out	0x3f, r0	; 63
+    1206:	0f 90       	pop	r0
+    1208:	1f 90       	pop	r1
+    120a:	18 95       	reti
+
+0000120c <TIMER0_ini>:
+
+void TIMER0_ini (void)
+{
+    120c:	df 93       	push	r29
+    120e:	cf 93       	push	r28
+    1210:	cd b7       	in	r28, 0x3d	; 61
+    1212:	de b7       	in	r29, 0x3e	; 62
+	TCCR0A = (1 << CS02) | (0 << CS01) | (0 << CS00);	//Prescaler 256
+    1214:	e4 e4       	ldi	r30, 0x44	; 68
+    1216:	f0 e0       	ldi	r31, 0x00	; 0
+    1218:	84 e0       	ldi	r24, 0x04	; 4
+    121a:	80 83       	st	Z, r24
+	//TCNT0 = 0x00;
+	TIMSK0 = (0 << OCIE0A) | (1 << TOIE0);
+    121c:	ee e6       	ldi	r30, 0x6E	; 110
+    121e:	f0 e0       	ldi	r31, 0x00	; 0
+    1220:	81 e0       	ldi	r24, 0x01	; 1
+    1222:	80 83       	st	Z, r24
+	TCNT0 = 0x06;
+    1224:	e6 e4       	ldi	r30, 0x46	; 70
+    1226:	f0 e0       	ldi	r31, 0x00	; 0
+    1228:	86 e0       	ldi	r24, 0x06	; 6
+    122a:	80 83       	st	Z, r24
+}
+    122c:	cf 91       	pop	r28
+    122e:	df 91       	pop	r29
+    1230:	08 95       	ret
+
+00001232 <USART0_ini>:
+
+void USART0_ini (void)
+{
+    1232:	df 93       	push	r29
+    1234:	cf 93       	push	r28
+    1236:	cd b7       	in	r28, 0x3d	; 61
+    1238:	de b7       	in	r29, 0x3e	; 62
+	/* Set baud rate */
+	UBRR0H = (unsigned char) (BAUD>>8);
+    123a:	e5 ec       	ldi	r30, 0xC5	; 197
+    123c:	f0 e0       	ldi	r31, 0x00	; 0
+    123e:	10 82       	st	Z, r1
+	UBRR0L = (unsigned char) BAUD;
+    1240:	e4 ec       	ldi	r30, 0xC4	; 196
+    1242:	f0 e0       	ldi	r31, 0x00	; 0
+    1244:	87 e6       	ldi	r24, 0x67	; 103
+    1246:	80 83       	st	Z, r24
+	UCSR0C = (0 << UMSEL0) | //asynchronous
+    1248:	e2 ec       	ldi	r30, 0xC2	; 194
+    124a:	f0 e0       	ldi	r31, 0x00	; 0
+    124c:	86 e0       	ldi	r24, 0x06	; 6
+    124e:	80 83       	st	Z, r24
+			(0 << UPM00) | (0<<UPM01) |	//Mode 00: no parity
+			(0 << USBS0) | 	//1 stop bit
+			(1 << UCSZ01) | (1 << UCSZ00);	//Mode 011: 8 bit data
+	/* Enable transmitter, disable receiver */
+	UCSR0B = (0 << RXCIE0) | (1 << TXCIE0) | (0 << RXEN0) | (1 << TXEN0) | (0 << UCSZ02);
+    1250:	e1 ec       	ldi	r30, 0xC1	; 193
+    1252:	f0 e0       	ldi	r31, 0x00	; 0
+    1254:	88 e4       	ldi	r24, 0x48	; 72
+    1256:	80 83       	st	Z, r24
+	UCSR0A = (0 << U2X0);
+    1258:	e0 ec       	ldi	r30, 0xC0	; 192
+    125a:	f0 e0       	ldi	r31, 0x00	; 0
+    125c:	10 82       	st	Z, r1
+}
+    125e:	cf 91       	pop	r28
+    1260:	df 91       	pop	r29
+    1262:	08 95       	ret
+
+00001264 <__vector_18>:
+
+SIGNAL (SIG_CAN_INTERRUPT1)
+{
+    1264:	1f 92       	push	r1
+    1266:	0f 92       	push	r0
+    1268:	0f b6       	in	r0, 0x3f	; 63
+    126a:	0f 92       	push	r0
+    126c:	00 90 5b 00 	lds	r0, 0x005B
+    1270:	0f 92       	push	r0
+    1272:	11 24       	eor	r1, r1
+    1274:	2f 93       	push	r18
+    1276:	3f 93       	push	r19
+    1278:	4f 93       	push	r20
+    127a:	5f 93       	push	r21
+    127c:	6f 93       	push	r22
+    127e:	7f 93       	push	r23
+    1280:	8f 93       	push	r24
+    1282:	9f 93       	push	r25
+    1284:	af 93       	push	r26
+    1286:	bf 93       	push	r27
+    1288:	ef 93       	push	r30
+    128a:	ff 93       	push	r31
+    128c:	df 93       	push	r29
+    128e:	cf 93       	push	r28
+    1290:	cd b7       	in	r28, 0x3d	; 61
+    1292:	de b7       	in	r29, 0x3e	; 62
+    1294:	69 97       	sbiw	r28, 0x19	; 25
+    1296:	de bf       	out	0x3e, r29	; 62
+    1298:	cd bf       	out	0x3d, r28	; 61
+	//PORTE &= ~(0x01 << 6);
+	uint8_t		save_canpage;
+ 	static		can_message message;
+
+	// Aktuelle CANPAGE sichern
+ 	save_canpage	= CANPAGE;
+    129a:	ed ee       	ldi	r30, 0xED	; 237
+    129c:	f0 e0       	ldi	r31, 0x00	; 0
+    129e:	80 81       	ld	r24, Z
+    12a0:	8a 83       	std	Y+2, r24	; 0x02
+
+    // Index des MOB ermitteln, der den Interrupt ausgelöst hat
+	uint8_t mob 	= can_get_mob_interrupt();
+    12a2:	0e 94 c0 05 	call	0xb80	; 0xb80 <can_get_mob_interrupt>
+    12a6:	89 83       	std	Y+1, r24	; 0x01
+    
+	// Falls es kein gültiges MOB war abbrechen
+	if(mob == NOMOB)
+    12a8:	89 81       	ldd	r24, Y+1	; 0x01
+    12aa:	8f 3f       	cpi	r24, 0xFF	; 255
+    12ac:	09 f4       	brne	.+2      	; 0x12b0 <__vector_18+0x4c>
+    12ae:	91 c0       	rjmp	.+290    	; 0x13d2 <__vector_18+0x16e>
+	{
+		return;
+	}
+
+	// Objekt das den Interrupt ausgelöst hat holen
+	can_select_mob(mob);
+    12b0:	89 81       	ldd	r24, Y+1	; 0x01
+    12b2:	0e 94 78 01 	call	0x2f0	; 0x2f0 <can_select_mob>
+    
+	// Daten des MOBs aus CANMSG auslesen
+	message			= can_get_mob_data();
+    12b6:	ce 01       	movw	r24, r28
+    12b8:	03 96       	adiw	r24, 0x03	; 3
+    12ba:	0e 94 38 05 	call	0xa70	; 0xa70 <can_get_mob_data>
+    12be:	83 e2       	ldi	r24, 0x23	; 35
+    12c0:	91 e0       	ldi	r25, 0x01	; 1
+    12c2:	9e 8b       	std	Y+22, r25	; 0x16
+    12c4:	8d 8b       	std	Y+21, r24	; 0x15
+    12c6:	fe 01       	movw	r30, r28
+    12c8:	33 96       	adiw	r30, 0x03	; 3
+    12ca:	f8 8f       	std	Y+24, r31	; 0x18
+    12cc:	ef 8b       	std	Y+23, r30	; 0x17
+    12ce:	f2 e1       	ldi	r31, 0x12	; 18
+    12d0:	f9 8f       	std	Y+25, r31	; 0x19
+    12d2:	ef 89       	ldd	r30, Y+23	; 0x17
+    12d4:	f8 8d       	ldd	r31, Y+24	; 0x18
+    12d6:	00 80       	ld	r0, Z
+    12d8:	8f 89       	ldd	r24, Y+23	; 0x17
+    12da:	98 8d       	ldd	r25, Y+24	; 0x18
+    12dc:	01 96       	adiw	r24, 0x01	; 1
+    12de:	98 8f       	std	Y+24, r25	; 0x18
+    12e0:	8f 8b       	std	Y+23, r24	; 0x17
+    12e2:	ed 89       	ldd	r30, Y+21	; 0x15
+    12e4:	fe 89       	ldd	r31, Y+22	; 0x16
+    12e6:	00 82       	st	Z, r0
+    12e8:	8d 89       	ldd	r24, Y+21	; 0x15
+    12ea:	9e 89       	ldd	r25, Y+22	; 0x16
+    12ec:	01 96       	adiw	r24, 0x01	; 1
+    12ee:	9e 8b       	std	Y+22, r25	; 0x16
+    12f0:	8d 8b       	std	Y+21, r24	; 0x15
+    12f2:	99 8d       	ldd	r25, Y+25	; 0x19
+    12f4:	91 50       	subi	r25, 0x01	; 1
+    12f6:	99 8f       	std	Y+25, r25	; 0x19
+    12f8:	e9 8d       	ldd	r30, Y+25	; 0x19
+    12fa:	ee 23       	and	r30, r30
+    12fc:	51 f7       	brne	.-44     	; 0x12d2 <__vector_18+0x6e>
+	
+	// Id der Nachricht holen
+	message.id		= can_get_mob_id(can_get_mob_id_type());
+    12fe:	0e 94 ab 06 	call	0xd56	; 0xd56 <can_get_mob_id_type>
+    1302:	0e 94 b8 02 	call	0x570	; 0x570 <can_get_mob_id>
+    1306:	dc 01       	movw	r26, r24
+    1308:	cb 01       	movw	r24, r22
+    130a:	80 93 24 01 	sts	0x0124, r24
+    130e:	90 93 25 01 	sts	0x0125, r25
+    1312:	a0 93 26 01 	sts	0x0126, r26
+    1316:	b0 93 27 01 	sts	0x0127, r27
+
+	PORTB ^= (0x01 << PB0);
+    131a:	a5 e2       	ldi	r26, 0x25	; 37
+    131c:	b0 e0       	ldi	r27, 0x00	; 0
+    131e:	e5 e2       	ldi	r30, 0x25	; 37
+    1320:	f0 e0       	ldi	r31, 0x00	; 0
+    1322:	90 81       	ld	r25, Z
+    1324:	81 e0       	ldi	r24, 0x01	; 1
+    1326:	89 27       	eor	r24, r25
+    1328:	8c 93       	st	X, r24
+//	//////////////////////////////////
+//	// Daten verarbeiten / ausgeben //
+//	//////////////////////////////////
+//
+	if (message.id == 0x030)
+    132a:	80 91 24 01 	lds	r24, 0x0124
+    132e:	90 91 25 01 	lds	r25, 0x0125
+    1332:	a0 91 26 01 	lds	r26, 0x0126
+    1336:	b0 91 27 01 	lds	r27, 0x0127
+    133a:	80 33       	cpi	r24, 0x30	; 48
+    133c:	91 05       	cpc	r25, r1
+    133e:	a1 05       	cpc	r26, r1
+    1340:	b1 05       	cpc	r27, r1
+    1342:	01 f5       	brne	.+64     	; 0x1384 <__vector_18+0x120>
+	{
+		// Cell 1
+		msg_uart30[1] = message.data[1];	// H Byte
+    1344:	80 91 2e 01 	lds	r24, 0x012E
+    1348:	80 93 01 01 	sts	0x0101, r24
+		msg_uart30[2] = message.data[0];	// L Byte
+    134c:	80 91 2d 01 	lds	r24, 0x012D
+    1350:	80 93 02 01 	sts	0x0102, r24
+		// Cell 2
+		msg_uart30[3] = message.data[3];	// H Byte
+    1354:	80 91 30 01 	lds	r24, 0x0130
+    1358:	80 93 03 01 	sts	0x0103, r24
+		msg_uart30[4] = message.data[2];	// L Byte
+    135c:	80 91 2f 01 	lds	r24, 0x012F
+    1360:	80 93 04 01 	sts	0x0104, r24
+		// Cell 3
+		msg_uart30[5] = message.data[5];	// H Byte
+    1364:	80 91 32 01 	lds	r24, 0x0132
+    1368:	80 93 05 01 	sts	0x0105, r24
+		msg_uart30[6] = message.data[4];	// L Byte
+    136c:	80 91 31 01 	lds	r24, 0x0131
+    1370:	80 93 06 01 	sts	0x0106, r24
+		// Cell 4
+		msg_uart30[7] = message.data[7];	// H Byte
+    1374:	80 91 34 01 	lds	r24, 0x0134
+    1378:	80 93 07 01 	sts	0x0107, r24
+		msg_uart30[8] = message.data[6];	// L Byte
+    137c:	80 91 33 01 	lds	r24, 0x0133
+    1380:	80 93 08 01 	sts	0x0108, r24
+	}
+	if (message.id == 0x031)
+    1384:	80 91 24 01 	lds	r24, 0x0124
+    1388:	90 91 25 01 	lds	r25, 0x0125
+    138c:	a0 91 26 01 	lds	r26, 0x0126
+    1390:	b0 91 27 01 	lds	r27, 0x0127
+    1394:	81 33       	cpi	r24, 0x31	; 49
+    1396:	91 05       	cpc	r25, r1
+    1398:	a1 05       	cpc	r26, r1
+    139a:	b1 05       	cpc	r27, r1
+    139c:	41 f4       	brne	.+16     	; 0x13ae <__vector_18+0x14a>
+	{
+		// Cell 5
+		msg_uart30[9] = message.data[1];	// H Byte
+    139e:	80 91 2e 01 	lds	r24, 0x012E
+    13a2:	80 93 09 01 	sts	0x0109, r24
+		msg_uart30[10] = message.data[0];	// L Byte
+    13a6:	80 91 2d 01 	lds	r24, 0x012D
+    13aa:	80 93 0a 01 	sts	0x010A, r24
+//	//////////////////////////////////
+//	// Daten verarbeiten / ausgeben //
+//	//////////////////////////////////
+
+	// RXOK-Flag löschen
+	clearbit(CANSTMOB, RXOK);
+    13ae:	ae ee       	ldi	r26, 0xEE	; 238
+    13b0:	b0 e0       	ldi	r27, 0x00	; 0
+    13b2:	ee ee       	ldi	r30, 0xEE	; 238
+    13b4:	f0 e0       	ldi	r31, 0x00	; 0
+    13b6:	80 81       	ld	r24, Z
+    13b8:	8f 7d       	andi	r24, 0xDF	; 223
+    13ba:	8c 93       	st	X, r24
+    
+	// MOB auf Empfang und CAN 2.0B Standard setzen
+	can_set_mob_mode(RECEIVE_DATA, can_get_mob_id_type());
+    13bc:	0e 94 ab 06 	call	0xd56	; 0xd56 <can_get_mob_id_type>
+    13c0:	98 2f       	mov	r25, r24
+    13c2:	83 e0       	ldi	r24, 0x03	; 3
+    13c4:	69 2f       	mov	r22, r25
+    13c6:	0e 94 9f 03 	call	0x73e	; 0x73e <can_set_mob_mode>
+    
+	//CANPAGE wiederherstellen
+	CANPAGE		= save_canpage;
+    13ca:	ed ee       	ldi	r30, 0xED	; 237
+    13cc:	f0 e0       	ldi	r31, 0x00	; 0
+    13ce:	8a 81       	ldd	r24, Y+2	; 0x02
+    13d0:	80 83       	st	Z, r24
+}
+    13d2:	69 96       	adiw	r28, 0x19	; 25
+    13d4:	de bf       	out	0x3e, r29	; 62
+    13d6:	cd bf       	out	0x3d, r28	; 61
+    13d8:	cf 91       	pop	r28
+    13da:	df 91       	pop	r29
+    13dc:	ff 91       	pop	r31
+    13de:	ef 91       	pop	r30
+    13e0:	bf 91       	pop	r27
+    13e2:	af 91       	pop	r26
+    13e4:	9f 91       	pop	r25
+    13e6:	8f 91       	pop	r24
+    13e8:	7f 91       	pop	r23
+    13ea:	6f 91       	pop	r22
+    13ec:	5f 91       	pop	r21
+    13ee:	4f 91       	pop	r20
+    13f0:	3f 91       	pop	r19
+    13f2:	2f 91       	pop	r18
+    13f4:	0f 90       	pop	r0
+    13f6:	00 92 5b 00 	sts	0x005B, r0
+    13fa:	0f 90       	pop	r0
+    13fc:	0f be       	out	0x3f, r0	; 63
+    13fe:	0f 90       	pop	r0
+    1400:	1f 90       	pop	r1
+    1402:	18 95       	reti
+
+00001404 <_exit>:
+    1404:	f8 94       	cli
+
+00001406 <__stop_program>:
+    1406:	ff cf       	rjmp	.-2      	; 0x1406 <__stop_program>

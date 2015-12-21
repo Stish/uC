@@ -1,0 +1,310 @@
+
+main.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000001f6  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .bss          00000001  00800100  00800100  0000026a  2**0
+                  ALLOC
+  2 .stab         000004bc  00000000  00000000  0000026c  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  3 .stabstr      00000751  00000000  00000000  00000728  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 4a 00 	jmp	0x94	; 0x94 <__ctors_end>
+   4:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+   8:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+   c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  10:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  14:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  18:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  1c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  20:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  24:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  28:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  2c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  30:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  34:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  38:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  3c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  40:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  44:	0c 94 85 00 	jmp	0x10a	; 0x10a <__vector_17>
+  48:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  4c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  50:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  54:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  58:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  5c:	0c 94 75 00 	jmp	0xea	; 0xea <__vector_23>
+  60:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  64:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  68:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  6c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  70:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  74:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  78:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  7c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  80:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  84:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  88:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  8c:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+  90:	0c 94 69 00 	jmp	0xd2	; 0xd2 <__bad_interrupt>
+
+00000094 <__ctors_end>:
+  94:	11 24       	eor	r1, r1
+  96:	1f be       	out	0x3f, r1	; 63
+  98:	cf ef       	ldi	r28, 0xFF	; 255
+  9a:	d0 e1       	ldi	r29, 0x10	; 16
+  9c:	de bf       	out	0x3e, r29	; 62
+  9e:	cd bf       	out	0x3d, r28	; 61
+
+000000a0 <__do_copy_data>:
+  a0:	11 e0       	ldi	r17, 0x01	; 1
+  a2:	a0 e0       	ldi	r26, 0x00	; 0
+  a4:	b1 e0       	ldi	r27, 0x01	; 1
+  a6:	e6 ef       	ldi	r30, 0xF6	; 246
+  a8:	f1 e0       	ldi	r31, 0x01	; 1
+  aa:	00 e0       	ldi	r16, 0x00	; 0
+  ac:	0b bf       	out	0x3b, r16	; 59
+  ae:	02 c0       	rjmp	.+4      	; 0xb4 <__do_copy_data+0x14>
+  b0:	07 90       	elpm	r0, Z+
+  b2:	0d 92       	st	X+, r0
+  b4:	a0 30       	cpi	r26, 0x00	; 0
+  b6:	b1 07       	cpc	r27, r17
+  b8:	d9 f7       	brne	.-10     	; 0xb0 <__do_copy_data+0x10>
+
+000000ba <__do_clear_bss>:
+  ba:	11 e0       	ldi	r17, 0x01	; 1
+  bc:	a0 e0       	ldi	r26, 0x00	; 0
+  be:	b1 e0       	ldi	r27, 0x01	; 1
+  c0:	01 c0       	rjmp	.+2      	; 0xc4 <.do_clear_bss_start>
+
+000000c2 <.do_clear_bss_loop>:
+  c2:	1d 92       	st	X+, r1
+
+000000c4 <.do_clear_bss_start>:
+  c4:	a1 30       	cpi	r26, 0x01	; 1
+  c6:	b1 07       	cpc	r27, r17
+  c8:	e1 f7       	brne	.-8      	; 0xc2 <.do_clear_bss_loop>
+  ca:	0e 94 6b 00 	call	0xd6	; 0xd6 <main>
+  ce:	0c 94 f9 00 	jmp	0x1f2	; 0x1f2 <_exit>
+
+000000d2 <__bad_interrupt>:
+  d2:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+000000d6 <main>:
+#include "main.h"
+
+int main(void)
+{
+  d6:	df 93       	push	r29
+  d8:	cf 93       	push	r28
+  da:	cd b7       	in	r28, 0x3d	; 61
+  dc:	de b7       	in	r29, 0x3e	; 62
+	sei();
+  de:	78 94       	sei
+	TIMER0_ini();
+  e0:	0e 94 b4 00 	call	0x168	; 0x168 <TIMER0_ini>
+	USART1_ini();
+  e4:	0e 94 c7 00 	call	0x18e	; 0x18e <USART1_ini>
+  e8:	ff cf       	rjmp	.-2      	; 0xe8 <main+0x12>
+
+000000ea <__vector_23>:
+	{
+	}
+}
+
+SIGNAL (SIG_UART0_TRANS)								//a/d converter in interrupt mode
+{
+  ea:	1f 92       	push	r1
+  ec:	0f 92       	push	r0
+  ee:	0f b6       	in	r0, 0x3f	; 63
+  f0:	0f 92       	push	r0
+  f2:	11 24       	eor	r1, r1
+  f4:	df 93       	push	r29
+  f6:	cf 93       	push	r28
+  f8:	cd b7       	in	r28, 0x3d	; 61
+  fa:	de b7       	in	r29, 0x3e	; 62
+}
+  fc:	cf 91       	pop	r28
+  fe:	df 91       	pop	r29
+ 100:	0f 90       	pop	r0
+ 102:	0f be       	out	0x3f, r0	; 63
+ 104:	0f 90       	pop	r0
+ 106:	1f 90       	pop	r1
+ 108:	18 95       	reti
+
+0000010a <__vector_17>:
+
+SIGNAL (SIG_OVERFLOW0)								//a/d converter in interrupt mode
+{
+ 10a:	1f 92       	push	r1
+ 10c:	0f 92       	push	r0
+ 10e:	0f b6       	in	r0, 0x3f	; 63
+ 110:	0f 92       	push	r0
+ 112:	00 90 5b 00 	lds	r0, 0x005B
+ 116:	0f 92       	push	r0
+ 118:	11 24       	eor	r1, r1
+ 11a:	8f 93       	push	r24
+ 11c:	ef 93       	push	r30
+ 11e:	ff 93       	push	r31
+ 120:	df 93       	push	r29
+ 122:	cf 93       	push	r28
+ 124:	cd b7       	in	r28, 0x3d	; 61
+ 126:	de b7       	in	r29, 0x3e	; 62
+	TCNT0 = 0x06;
+ 128:	e6 e4       	ldi	r30, 0x46	; 70
+ 12a:	f0 e0       	ldi	r31, 0x00	; 0
+ 12c:	86 e0       	ldi	r24, 0x06	; 6
+ 12e:	80 83       	st	Z, r24
+	timer0_cnt++;
+ 130:	80 91 00 01 	lds	r24, 0x0100
+ 134:	8f 5f       	subi	r24, 0xFF	; 255
+ 136:	80 93 00 01 	sts	0x0100, r24
+	
+	if (timer0_cnt == 250) //100ms
+ 13a:	80 91 00 01 	lds	r24, 0x0100
+ 13e:	8a 3f       	cpi	r24, 0xFA	; 250
+ 140:	31 f4       	brne	.+12     	; 0x14e <__vector_17+0x44>
+	{
+		timer0_cnt = 0;
+ 142:	10 92 00 01 	sts	0x0100, r1
+		UDR1 = 'A';
+ 146:	ee ec       	ldi	r30, 0xCE	; 206
+ 148:	f0 e0       	ldi	r31, 0x00	; 0
+ 14a:	81 e4       	ldi	r24, 0x41	; 65
+ 14c:	80 83       	st	Z, r24
+	}
+}
+ 14e:	cf 91       	pop	r28
+ 150:	df 91       	pop	r29
+ 152:	ff 91       	pop	r31
+ 154:	ef 91       	pop	r30
+ 156:	8f 91       	pop	r24
+ 158:	0f 90       	pop	r0
+ 15a:	00 92 5b 00 	sts	0x005B, r0
+ 15e:	0f 90       	pop	r0
+ 160:	0f be       	out	0x3f, r0	; 63
+ 162:	0f 90       	pop	r0
+ 164:	1f 90       	pop	r1
+ 166:	18 95       	reti
+
+00000168 <TIMER0_ini>:
+
+void TIMER0_ini (void)
+{
+ 168:	df 93       	push	r29
+ 16a:	cf 93       	push	r28
+ 16c:	cd b7       	in	r28, 0x3d	; 61
+ 16e:	de b7       	in	r29, 0x3e	; 62
+	TCCR0A = (1 << CS02) | (0 << CS01) | (0 << CS00);	//Prescaler 256
+ 170:	e4 e4       	ldi	r30, 0x44	; 68
+ 172:	f0 e0       	ldi	r31, 0x00	; 0
+ 174:	84 e0       	ldi	r24, 0x04	; 4
+ 176:	80 83       	st	Z, r24
+	//TCNT0 = 0x00;
+	TIMSK0 = (0 << OCIE0A) | (1 << TOIE0);
+ 178:	ee e6       	ldi	r30, 0x6E	; 110
+ 17a:	f0 e0       	ldi	r31, 0x00	; 0
+ 17c:	81 e0       	ldi	r24, 0x01	; 1
+ 17e:	80 83       	st	Z, r24
+	TCNT0 = 0x06;
+ 180:	e6 e4       	ldi	r30, 0x46	; 70
+ 182:	f0 e0       	ldi	r31, 0x00	; 0
+ 184:	86 e0       	ldi	r24, 0x06	; 6
+ 186:	80 83       	st	Z, r24
+}
+ 188:	cf 91       	pop	r28
+ 18a:	df 91       	pop	r29
+ 18c:	08 95       	ret
+
+0000018e <USART1_ini>:
+
+void USART1_ini (void)
+{
+ 18e:	df 93       	push	r29
+ 190:	cf 93       	push	r28
+ 192:	cd b7       	in	r28, 0x3d	; 61
+ 194:	de b7       	in	r29, 0x3e	; 62
+	/* Set baud rate */
+	UBRR1H = (unsigned char) (BAUD>>8);
+ 196:	ed ec       	ldi	r30, 0xCD	; 205
+ 198:	f0 e0       	ldi	r31, 0x00	; 0
+ 19a:	10 82       	st	Z, r1
+	UBRR1L = (unsigned char) BAUD;
+ 19c:	ec ec       	ldi	r30, 0xCC	; 204
+ 19e:	f0 e0       	ldi	r31, 0x00	; 0
+ 1a0:	88 e0       	ldi	r24, 0x08	; 8
+ 1a2:	80 83       	st	Z, r24
+	UCSR1C = (0 << UMSEL1) | //asynchronous
+ 1a4:	ea ec       	ldi	r30, 0xCA	; 202
+ 1a6:	f0 e0       	ldi	r31, 0x00	; 0
+ 1a8:	86 e0       	ldi	r24, 0x06	; 6
+ 1aa:	80 83       	st	Z, r24
+			(0 << UPM10) | (0<<UPM11) |	//Mode 00: no parity
+			(0 << USBS1) | 	//1 stop bit
+			(1 << UCSZ11) | (1 << UCSZ10);	//Mode 011: 8 bit data
+	/* Enable transmitter, disable receiver */
+	UCSR1B = (0 << RXCIE1) | (0 << TXCIE1) | (0 << RXEN1) | (1 << TXEN1) | (0 << UCSZ12);
+ 1ac:	e9 ec       	ldi	r30, 0xC9	; 201
+ 1ae:	f0 e0       	ldi	r31, 0x00	; 0
+ 1b0:	88 e0       	ldi	r24, 0x08	; 8
+ 1b2:	80 83       	st	Z, r24
+	UCSR1A = (0 << U2X1);
+ 1b4:	e8 ec       	ldi	r30, 0xC8	; 200
+ 1b6:	f0 e0       	ldi	r31, 0x00	; 0
+ 1b8:	10 82       	st	Z, r1
+}
+ 1ba:	cf 91       	pop	r28
+ 1bc:	df 91       	pop	r29
+ 1be:	08 95       	ret
+
+000001c0 <USART0_ini>:
+
+void USART0_ini (void)
+{
+ 1c0:	df 93       	push	r29
+ 1c2:	cf 93       	push	r28
+ 1c4:	cd b7       	in	r28, 0x3d	; 61
+ 1c6:	de b7       	in	r29, 0x3e	; 62
+	/* Set baud rate */
+	UBRR0H = (unsigned char) (BAUD>>8);
+ 1c8:	e5 ec       	ldi	r30, 0xC5	; 197
+ 1ca:	f0 e0       	ldi	r31, 0x00	; 0
+ 1cc:	10 82       	st	Z, r1
+	UBRR0L = (unsigned char) BAUD;
+ 1ce:	e4 ec       	ldi	r30, 0xC4	; 196
+ 1d0:	f0 e0       	ldi	r31, 0x00	; 0
+ 1d2:	88 e0       	ldi	r24, 0x08	; 8
+ 1d4:	80 83       	st	Z, r24
+	UCSR0C = (0 << UMSEL0) | //asynchronous
+ 1d6:	e2 ec       	ldi	r30, 0xC2	; 194
+ 1d8:	f0 e0       	ldi	r31, 0x00	; 0
+ 1da:	86 e0       	ldi	r24, 0x06	; 6
+ 1dc:	80 83       	st	Z, r24
+			(0 << UPM00) | (0<<UPM01) |	//Mode 00: no parity
+			(0 << USBS0) | 	//1 stop bit
+			(1 << UCSZ01) | (1 << UCSZ00);	//Mode 011: 8 bit data
+	/* Enable transmitter, disable receiver */
+	UCSR0B = (0 << RXCIE0) | (0 << TXCIE0) | (0 << RXEN0) | (1 << TXEN0) | (0 << UCSZ02);
+ 1de:	e1 ec       	ldi	r30, 0xC1	; 193
+ 1e0:	f0 e0       	ldi	r31, 0x00	; 0
+ 1e2:	88 e0       	ldi	r24, 0x08	; 8
+ 1e4:	80 83       	st	Z, r24
+	UCSR0A = (0 << U2X0);
+ 1e6:	e0 ec       	ldi	r30, 0xC0	; 192
+ 1e8:	f0 e0       	ldi	r31, 0x00	; 0
+ 1ea:	10 82       	st	Z, r1
+}
+ 1ec:	cf 91       	pop	r28
+ 1ee:	df 91       	pop	r29
+ 1f0:	08 95       	ret
+
+000001f2 <_exit>:
+ 1f2:	f8 94       	cli
+
+000001f4 <__stop_program>:
+ 1f4:	ff cf       	rjmp	.-2      	; 0x1f4 <__stop_program>

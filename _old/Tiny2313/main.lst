@@ -1,0 +1,72 @@
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+  69               	.global	main
+  71               	main:
+   1:main.c        **** //LED Blinking
+   2:main.c        **** #include <avr/io.h>
+   3:main.c        **** 
+   4:main.c        **** int main(void)
+   5:main.c        **** {
+  72               	main
+  74               	main:
+  76               	.LM0:
+   6:main.c        **** 	unsigned char i, j;
+   7:main.c        **** 	
+   8:main.c        **** 	DDRB |= (0x01 << 0);	//PB.0 output
+  78               	.LM0:
+  79 0000 B89A      	.LFBB1:
+   9:main.c        **** 	DDRB &= ~(0x01 << 1);	//PB.1 input
+  80               	,0,5,.LM0-.LFBB1
+  81               	.LM0:
+  82 0002 B998      	.LFBB1:
+  10:main.c        **** 	
+  11:main.c        **** 	while(PINB & (0x01 << 1))
+  12:main.c        **** 	{
+  13:main.c        **** 		PORTB ^= (0x01 << 0);
+  83               	,0,5,.LM0-.LFBB1
+  84               	.LM0:
+  85 0004 91E0      	.LFBB1:
+  86 0006 00C0      	/* prologue: function */
+  87               	/* frame size = 0 */
+  89 000a 8927      	.LM1:
+  90 000c 88BB      		sbi 55-32,0
+  92               	.LM2:
+  93               		cbi 55-32,1
+  95 0010 00C0      	.LM3:
+  14:main.c        **** 		
+  15:main.c        **** 		/*for(i = 0; i <= 255; i++)
+  16:main.c        **** 		{
+  17:main.c        **** 			for(j = 0; j <= 255; j++)
+  18:main.c        **** 			{ 
+  19:main.c        **** 			}
+  20:main.c        **** 		}*/
+  21:main.c        **** 	}
+  22:main.c        **** 	
+  23:main.c        **** }...
+  96               	13,.LM3-.LFBB1
+  97               	.LM3:
+  98 0012 80E0      		ldi r25,lo8(1)
+  99 0014 90E0      		rjmp .L2
+ 100               	.L3:
+ 101 0016 0895      		in r24,56-32
+ 102               		eor r24,r25
+ 103               		out 56-32,r24
+ 104               	.L2:
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\DOKUME~1\-\LOKALE~1\Temp/ccCH4U2Q.s:2      *ABS*:0000003f __SREG__
+C:\DOKUME~1\-\LOKALE~1\Temp/ccCH4U2Q.s:3      *ABS*:0000003e __SP_H__
+C:\DOKUME~1\-\LOKALE~1\Temp/ccCH4U2Q.s:4      *ABS*:0000003d __SP_L__
+C:\DOKUME~1\-\LOKALE~1\Temp/ccCH4U2Q.s:5      *ABS*:00000034 __CCP__
+C:\DOKUME~1\-\LOKALE~1\Temp/ccCH4U2Q.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOKUME~1\-\LOKALE~1\Temp/ccCH4U2Q.s:7      *ABS*:00000001 __zero_reg__
+C:\DOKUME~1\-\LOKALE~1\Temp/ccCH4U2Q.s:71     .text:00000000 main
+
+NO UNDEFINED SYMBOLS

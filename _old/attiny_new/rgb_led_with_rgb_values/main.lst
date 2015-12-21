@@ -1,0 +1,532 @@
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+  81               	.global	ovrflw_cnt
+  82               		.data
+  85               	ovrflw_cnt:
+  86 0000 0100      		.word	1
+  87               	.global	rgb
+  90               	rgb:
+  91 0002 FF        		.byte	-1
+  92 0003 FF        		.byte	-1
+  93 0004 FF        		.byte	-1
+  94               	.global	rgb_fade
+  97               	rgb_fade:
+  98 0005 FF        		.byte	-1
+  99 0006 FF        		.byte	-1
+ 100 0007 FF        		.byte	-1
+ 101               		.text
+ 103               	.global	__vector_6
+ 105               	__vector_6:
+   1:main.c        **** /*
+   2:main.c        ****                          _____   _____
+   3:main.c        ****              _____      |     \_/     |
+   4:main.c        ****              Reset O--1-|PA2      VCC |-20-O
+   5:main.c        ****                         |             |
+   6:main.c        ****                RXD O--2-|PD0       PB7|-19-O UCSK/SCL/PCINT7
+   7:main.c        ****                         |             |
+   8:main.c        ****                TXD O--3-|PD1       PB6|-18-O MISO/DO/PCINT6
+   9:main.c        ****                         |             |
+  10:main.c        ****              XTAL2 O--4-|PA1       PB5|-17-O MOSI/DI/PCINT5
+  11:main.c        ****                         |             |
+  12:main.c        ****              XTAL1 O--5-|PA0       PB4|-16-O OC1B/PCINT4
+  13:main.c        ****                         |             |
+  14:main.c        ****     CKOUT/XCK/INT0 O--6-|PD2       PB3|-15-O OC1A/PCINT3
+  15:main.c        ****                         |             |
+  16:main.c        ****               INT1 O--7-|PD3       PB2|-14-O OC0A/PCINT2
+  17:main.c        ****                         |             |
+  18:main.c        ****                 T0 O--8-|PD4       PB1|-13-O AIN1/PCINT1
+  19:main.c        ****                         |             |
+  20:main.c        ****            OC0B/T1 O--9-|PD5       PB0|-12-O AIN0/PCINT0
+  21:main.c        ****                         |             |
+  22:main.c        ****                GND O-10-|GND       PD6|-11-O ICP
+  23:main.c        ****                         |_____________|
+  24:main.c        ****                           ATTiny 2313
+  25:main.c        **** 						  
+  26:main.c        **** */
+  27:main.c        **** #define R_START	255	//pin b.0
+  28:main.c        **** #define G_START	255	//pin b.1
+  29:main.c        **** #define B_START	255	//pin b.2
+  30:main.c        **** #define FADE_ON
+  31:main.c        **** 
+  32:main.c        **** #include <avr/signal.h>
+  33:main.c        **** #include <avr/interrupt.h>
+  34:main.c        **** #include <avr/io.h>
+  35:main.c        **** #ifdef FADE_ON
+  36:main.c        **** 	#include <stdlib.h>
+  37:main.c        **** #endif
+  38:main.c        **** 
+  39:main.c        **** unsigned int ovrflw_cnt = 1;
+  40:main.c        **** unsigned char rgb[3] = {R_START, G_START, B_START};
+  41:main.c        **** #ifdef FADE_ON
+  42:main.c        **** 	unsigned char rgb_fade[3] = {R_START, G_START, B_START};
+  43:main.c        **** #endif
+  44:main.c        **** 
+  45:main.c        **** SIGNAL (SIG_TIMER0_OVF)
+  46:main.c        **** {
+ 106               		68,0,46,.LM0-.LFBB1
+ 107               	.LM0:
+ 108               	.LFBB1:
+ 109 0000 1F92      		push __zero_reg__
+ 110 0002 0F92      		push r0
+ 111 0004 0FB6      		in r0,__SREG__
+ 112 0006 0F92      		push r0
+ 113 0008 1124      		clr __zero_reg__
+ 114 000a 2F93      		push r18
+ 115 000c 3F93      		push r19
+ 116 000e 8F93      		push r24
+ 117 0010 9F93      		push r25
+ 118 0012 AF93      		push r26
+ 119 0014 BF93      		push r27
+ 120 0016 EF93      		push r30
+ 121 0018 FF93      		push r31
+ 122 001a DF93      		push r29
+ 123 001c CF93      		push r28
+ 124 001e CDB7      		in r28,__SP_L__
+ 125 0020 DEB7      		in r29,__SP_H__
+ 126               	/* prologue: Signal */
+ 127               	/* frame size = 0 */
+  47:main.c        **** 	if (ovrflw_cnt == 256)
+ 128               	LFBB1
+ 129               	.LM1:
+ 130 0022 8091 0000 		lds r24,ovrflw_cnt
+ 131 0026 9091 0000 		lds r25,(ovrflw_cnt)+1
+ 132 002a 21E0      		ldi r18,hi8(256)
+ 133 002c 8030      		cpi r24,lo8(256)
+ 134 002e 9207      		cpc r25,r18
+ 135 0030 01F4      		brne .L2
+  48:main.c        **** 		ovrflw_cnt = 0;
+ 136               	68,0,48,.LM2-.LFBB1
+ 137               	.LM2:
+ 138 0032 1092 0000 		sts (ovrflw_cnt)+1,__zero_reg__
+ 139 0036 1092 0000 		sts ovrflw_cnt,__zero_reg__
+ 140               	.L2:
+  49:main.c        **** 	
+  50:main.c        **** //=== Red LED ===
+  51:main.c        **** 	if ((ovrflw_cnt >= 0) && (ovrflw_cnt <= rgb[0]))
+ 141               	bn	68,0,51,.LM3-.LFBB1
+ 142               	.LM3:
+ 143 003a 8091 0000 		lds r24,rgb
+ 144 003e 282F      		mov r18,r24
+ 145 0040 30E0      		ldi r19,lo8(0)
+ 146 0042 8091 0000 		lds r24,ovrflw_cnt
+ 147 0046 9091 0000 		lds r25,(ovrflw_cnt)+1
+ 148 004a 2817      		cp r18,r24
+ 149 004c 3907      		cpc r19,r25
+ 150 004e 00F0      		brlo .L3
+  52:main.c        **** 	{
+  53:main.c        **** 		PORTB |= (1 << 0);
+ 151               	,0,53,.LM4-.LFBB1
+ 152               	.LM4:
+ 153 0050 A8E3      		ldi r26,lo8(56)
+ 154 0052 B0E0      		ldi r27,hi8(56)
+ 155 0054 E8E3      		ldi r30,lo8(56)
+ 156 0056 F0E0      		ldi r31,hi8(56)
+ 157 0058 8081      		ld r24,Z
+ 158 005a 8160      		ori r24,lo8(1)
+ 159 005c 8C93      		st X,r24
+ 160 005e 00C0      		rjmp .L4
+ 161               	.L3:
+  54:main.c        **** 		//PORTB &= ~(1 << 1) & ~(1 << 2);
+  55:main.c        **** 	}
+  56:main.c        **** 	else
+  57:main.c        **** 	{
+  58:main.c        **** 		PORTB &= ~(1 << 0);
+ 162               	0,58,.LM5-.LFBB1
+ 163               	.LM5:
+ 164 0060 A8E3      		ldi r26,lo8(56)
+ 165 0062 B0E0      		ldi r27,hi8(56)
+ 166 0064 E8E3      		ldi r30,lo8(56)
+ 167 0066 F0E0      		ldi r31,hi8(56)
+ 168 0068 8081      		ld r24,Z
+ 169 006a 8E7F      		andi r24,lo8(-2)
+ 170 006c 8C93      		st X,r24
+ 171               	.L4:
+  59:main.c        **** 	}
+  60:main.c        **** //=== Green LED ===
+  61:main.c        **** 	if ((ovrflw_cnt >= 0) && (ovrflw_cnt <= rgb[1]))
+ 172               	,0,61,.LM6-.LFBB1
+ 173               	.LM6:
+ 174 006e 8091 0000 		lds r24,rgb+1
+ 175 0072 282F      		mov r18,r24
+ 176 0074 30E0      		ldi r19,lo8(0)
+ 177 0076 8091 0000 		lds r24,ovrflw_cnt
+ 178 007a 9091 0000 		lds r25,(ovrflw_cnt)+1
+ 179 007e 2817      		cp r18,r24
+ 180 0080 3907      		cpc r19,r25
+ 181 0082 00F0      		brlo .L5
+  62:main.c        **** 	{
+  63:main.c        **** 		PORTB |= (1 << 1);
+ 182               	,0,63,.LM7-.LFBB1
+ 183               	.LM7:
+ 184 0084 A8E3      		ldi r26,lo8(56)
+ 185 0086 B0E0      		ldi r27,hi8(56)
+ 186 0088 E8E3      		ldi r30,lo8(56)
+ 187 008a F0E0      		ldi r31,hi8(56)
+ 188 008c 8081      		ld r24,Z
+ 189 008e 8260      		ori r24,lo8(2)
+ 190 0090 8C93      		st X,r24
+ 191 0092 00C0      		rjmp .L6
+ 192               	.L5:
+  64:main.c        **** 		//PORTB &= ~(1 << 0) & ~(1 << 2);
+  65:main.c        **** 	}
+  66:main.c        **** 	else
+  67:main.c        **** 	{
+  68:main.c        **** 		PORTB &= ~(1 << 1);
+ 193               	0,68,.LM8-.LFBB1
+ 194               	.LM8:
+ 195 0094 A8E3      		ldi r26,lo8(56)
+ 196 0096 B0E0      		ldi r27,hi8(56)
+ 197 0098 E8E3      		ldi r30,lo8(56)
+ 198 009a F0E0      		ldi r31,hi8(56)
+ 199 009c 8081      		ld r24,Z
+ 200 009e 8D7F      		andi r24,lo8(-3)
+ 201 00a0 8C93      		st X,r24
+ 202               	.L6:
+  69:main.c        **** 	}
+  70:main.c        **** //=== Blue LED ===
+  71:main.c        **** 	if ((ovrflw_cnt >= 0) && (ovrflw_cnt <= rgb[2]))
+ 203               	,0,71,.LM9-.LFBB1
+ 204               	.LM9:
+ 205 00a2 8091 0000 		lds r24,rgb+2
+ 206 00a6 282F      		mov r18,r24
+ 207 00a8 30E0      		ldi r19,lo8(0)
+ 208 00aa 8091 0000 		lds r24,ovrflw_cnt
+ 209 00ae 9091 0000 		lds r25,(ovrflw_cnt)+1
+ 210 00b2 2817      		cp r18,r24
+ 211 00b4 3907      		cpc r19,r25
+ 212 00b6 00F0      		brlo .L7
+  72:main.c        **** 	{
+  73:main.c        **** 		PORTB |= (1 << 2);
+ 213               	,0,73,.LM10-.LFBB1
+ 214               	.LM10:
+ 215 00b8 A8E3      		ldi r26,lo8(56)
+ 216 00ba B0E0      		ldi r27,hi8(56)
+ 217 00bc E8E3      		ldi r30,lo8(56)
+ 218 00be F0E0      		ldi r31,hi8(56)
+ 219 00c0 8081      		ld r24,Z
+ 220 00c2 8460      		ori r24,lo8(4)
+ 221 00c4 8C93      		st X,r24
+ 222 00c6 00C0      		rjmp .L8
+ 223               	.L7:
+  74:main.c        **** 		//PORTB &= ~(1 << 0) & ~(1 << 1);
+  75:main.c        **** 	}
+  76:main.c        **** 	else
+  77:main.c        **** 	{
+  78:main.c        **** 		PORTB &= ~(1 << 2);
+ 224               	0,78,.LM11-.LFBB1
+ 225               	.LM11:
+ 226 00c8 A8E3      		ldi r26,lo8(56)
+ 227 00ca B0E0      		ldi r27,hi8(56)
+ 228 00cc E8E3      		ldi r30,lo8(56)
+ 229 00ce F0E0      		ldi r31,hi8(56)
+ 230 00d0 8081      		ld r24,Z
+ 231 00d2 8B7F      		andi r24,lo8(-5)
+ 232 00d4 8C93      		st X,r24
+ 233               	.L8:
+  79:main.c        **** 	}
+  80:main.c        **** 	ovrflw_cnt++;
+ 234               	,0,80,.LM12-.LFBB1
+ 235               	.LM12:
+ 236 00d6 8091 0000 		lds r24,ovrflw_cnt
+ 237 00da 9091 0000 		lds r25,(ovrflw_cnt)+1
+ 238 00de 0196      		adiw r24,1
+ 239 00e0 9093 0000 		sts (ovrflw_cnt)+1,r25
+ 240 00e4 8093 0000 		sts ovrflw_cnt,r24
+ 241               	/* epilogue start */
+  81:main.c        **** }
+ 242               	68,0,81,.LM13-.LFBB1
+ 243               	.LM13:
+ 244 00e8 CF91      		pop r28
+ 245 00ea DF91      		pop r29
+ 246 00ec FF91      		pop r31
+ 247 00ee EF91      		pop r30
+ 248 00f0 BF91      		pop r27
+ 249 00f2 AF91      		pop r26
+ 250 00f4 9F91      		pop r25
+ 251 00f6 8F91      		pop r24
+ 252 00f8 3F91      		pop r19
+ 253 00fa 2F91      		pop r18
+ 254 00fc 0F90      		pop r0
+ 255 00fe 0FBE      		out __SREG__,r0
+ 256 0100 0F90      		pop r0
+ 257 0102 1F90      		pop __zero_reg__
+ 258 0104 1895      		reti
+ 260               	.Lscope1:
+ 262               	.global	main
+ 264               	main:
+  82:main.c        **** 
+  83:main.c        **** int main(void)
+  84:main.c        **** {
+ 265               	LFBB2
+ 266               	.LM14:
+ 267               	.LFBB2:
+ 268 0106 DF93      		push r29
+ 269 0108 CF93      		push r28
+ 270 010a 00D0      		rcall .
+ 271 010c 00D0      		rcall .
+ 272 010e CDB7      		in r28,__SP_L__
+ 273 0110 DEB7      		in r29,__SP_H__
+ 274               	/* prologue: function */
+ 275               	/* frame size = 4 */
+  85:main.c        **** #ifdef FADE_ON
+  86:main.c        **** 	unsigned long int i = 0;
+ 276               	:
+ 278 0112 1982      	.global	main
+ 280 0116 1B82      	main:
+  87:main.c        **** #endif
+  88:main.c        **** 	
+  89:main.c        **** 	DDRB |= (1 << 0) | (1 << 1) | (1 << 2);
+ 282               	
+ 283               	.LFBB2:
+ 284 011a A7E3      		push r29
+ 285 011c B0E0      		push r28
+ 286 011e E7E3      		rcall .
+ 287 0120 F0E0      		rcall .
+ 288 0122 8081      		in r28,__SP_L__
+ 289 0124 8760      		in r29,__SP_H__
+ 290 0126 8C93      	/* prologue: function */
+  90:main.c        **** 	PORTB &= ~(1 << 0) & ~(1 << 1) & ~(1 << 2);
+ 291               	 .-__vector_6
+ 292               	.Lscope1:
+ 294 012a B0E0      	.global	main
+ 296 012e F0E0      	main:
+ 298 0132 887F      	.LM14:
+ 299 0134 8C93      	.LFBB2:
+  91:main.c        **** 	
+  92:main.c        **** 	TCNT0 = 0x00;
+ 300               	
+ 301               		push r28
+ 302 0136 E2E5      		rcall .
+ 303 0138 F0E0      		rcall .
+ 304 013a 1082      		in r28,__SP_L__
+  93:main.c        **** 	TCCR0B = 0x01;
+ 305               	0
+ 306               		pop __zero_reg__
+ 307 013c E3E5      		reti
+ 309 0140 81E0      	.Lscope1:
+  94:main.c        **** 	TIMSK  |= (1 << TOIE0);
+ 311               	l	main
+ 313 0144 A9E5      	main:
+ 315 0148 E9E5      	.LM14:
+ 316 014a F0E0      	.LFBB2:
+ 317 014c 8081      		push r29
+ 318 014e 8260      		push r28
+ 319 0150 8C93      		rcall .
+  95:main.c        **** 	sei();
+ 320               		in r28,__SP_L__
+ 321               		in r29,__SP_H__
+ 322               	/* prologue: function */
+ 323               	/* frame size = 4 */
+ 325               	.LM15:
+ 326               		std Y+1,__zero_reg__
+ 327               		std Y+2,__zero_reg__
+  96:main.c        **** 
+  97:main.c        **** 	while(1)
+  98:main.c        **** 	{
+  99:main.c        **** 	#ifdef FADE_ON
+ 100:main.c        **** 		if ((rgb[0] == rgb_fade[0]) && (rgb[1] == rgb_fade[1]) && (rgb[2] == rgb_fade[2]))
+ 328               	n	68,0,84,.LM14-.LFBB2
+ 329               	.LM14:
+ 330 0154 9091 0000 	.LFBB2:
+ 331 0158 8091 0000 		push r29
+ 332 015c 9817      		push r28
+ 333 015e 01F4      		rcall .
+ 334 0160 9091 0000 		rcall .
+ 335 0164 8091 0000 		in r28,__SP_L__
+ 336 0168 9817      		in r29,__SP_H__
+ 337 016a 01F4      	/* prologue: function */
+ 338 016c 9091 0000 	/* frame size = 4 */
+ 340 0174 9817      	.LM15:
+ 341 0176 01F4      		std Y+1,__zero_reg__
+ 101:main.c        **** 		{
+ 102:main.c        **** 			rgb_fade[0] = (rand()%255);
+ 342               	 @function
+ 343               	main:
+ 345 017a 2FEF      	.LM14:
+ 346 017c 30E0      	.LFBB2:
+ 347 017e B901      		push r29
+ 348 0180 00D0      		push r28
+ 349 0182 8093 0000 		rcall .
+ 103:main.c        **** 			rgb_fade[1] = (rand()%255);
+ 350               	p r0
+ 351               		out __SREG__,r0
+ 352 0186 00D0      		pop r0
+ 353 0188 2FEF      		pop __zero_reg__
+ 354 018a 30E0      		reti
+ 356 018e 00D0      	.Lscope1:
+ 104:main.c        **** 			rgb_fade[2] = (rand()%255);
+ 358               	main
+ 360 0194 00D0      	main:
+ 362 0198 30E0      	.LM14:
+ 363 019a B901      	.LFBB2:
+ 364 019c 00D0      		push r29
+ 365 019e 8093 0000 		push r28
+ 366 01a2 00C0      		rcall .
+ 367               		rcall .
+ 105:main.c        **** 		}
+ 106:main.c        **** 		else
+ 107:main.c        **** 		{
+ 108:main.c        **** 			for (i = 0; i <= 2; i++)
+ 368               	SP_L__
+ 369               		in r29,__SP_H__
+ 370 01a4 1982      	/* prologue: function */
+ 371 01a6 1A82      	/* frame size = 4 */
+ 373 01aa 1C82      	.LM15:
+ 374 01ac 00C0      		std Y+1,__zero_reg__
+ 375               		std Y+2,__zero_reg__
+ 109:main.c        **** 			{
+ 110:main.c        **** 				if (rgb_fade[i] > rgb[i])
+ 376               	n	68,0,84,.LM14-.LFBB2
+ 377               	.LM14:
+ 378 01ae 8981      	.LFBB2:
+ 379 01b0 9A81      		push r29
+ 380 01b2 AB81      		push r28
+ 381 01b4 BC81      		rcall .
+ 382 01b6 FC01      		rcall .
+ 383 01b8 E050      		in r28,__SP_L__
+ 384 01ba F040      		in r29,__SP_H__
+ 385 01bc 2081      	/* prologue: function */
+ 386 01be 8981      	/* frame size = 4 */
+ 388 01c2 AB81      	.LM15:
+ 389 01c4 BC81      		std Y+1,__zero_reg__
+ 390 01c6 FC01      		std Y+2,__zero_reg__
+ 391 01c8 E050      		std Y+3,__zero_reg__
+ 392 01ca F040      		std Y+4,__zero_reg__
+ 394 01ce 8217      	.LM16:
+ 395 01d0 00F4      		ldi r26,lo8(55)
+ 111:main.c        **** 					rgb[i]++;
+ 396               	_SP_H__
+ 397               	/* prologue: function */
+ 398 01d2 8981      	/* frame size = 4 */
+ 400 01d6 AB81      	.LM15:
+ 401 01d8 BC81      		std Y+1,__zero_reg__
+ 402 01da FC01      		std Y+2,__zero_reg__
+ 403 01dc E050      		std Y+3,__zero_reg__
+ 404 01de F040      		std Y+4,__zero_reg__
+ 406 01e2 2F5F      	.LM16:
+ 407 01e4 FC01      		ldi r26,lo8(55)
+ 408 01e6 E050      		ldi r27,hi8(55)
+ 409 01e8 F040      		ldi r30,lo8(55)
+ 410 01ea 2083      		ldi r31,hi8(55)
+ 411               		ld r24,Z
+ 112:main.c        **** 				if (rgb_fade[i] < rgb[i])
+ 412               	0,86,.LM15-.LFBB2
+ 413               	.LM15:
+ 414 01ec 8981      		std Y+1,__zero_reg__
+ 415 01ee 9A81      		std Y+2,__zero_reg__
+ 416 01f0 AB81      		std Y+3,__zero_reg__
+ 417 01f2 BC81      		std Y+4,__zero_reg__
+ 419 01f6 E050      	.LM16:
+ 420 01f8 F040      		ldi r26,lo8(55)
+ 421 01fa 2081      		ldi r27,hi8(55)
+ 422 01fc 8981      		ldi r30,lo8(55)
+ 423 01fe 9A81      		ldi r31,hi8(55)
+ 424 0200 AB81      		ld r24,Z
+ 425 0202 BC81      		ori r24,lo8(7)
+ 426 0204 FC01      		st X,r24
+ 428 0208 F040      	.LM17:
+ 429 020a 8081      		ldi r26,lo8(56)
+ 430 020c 2817      		ldi r27,hi8(56)
+ 431 020e 00F4      		ldi r30,lo8(56)
+ 113:main.c        **** 					rgb[i]--;
+ 432               		68,0,89,.LM16-.LFBB2
+ 433               	.LM16:
+ 434 0210 8981      		ldi r26,lo8(55)
+ 435 0212 9A81      		ldi r27,hi8(55)
+ 436 0214 AB81      		ldi r30,lo8(55)
+ 437 0216 BC81      		ldi r31,hi8(55)
+ 438 0218 FC01      		ld r24,Z
+ 439 021a E050      		ori r24,lo8(7)
+ 440 021c F040      		st X,r24
+ 442 0220 2150      	.LM17:
+ 443 0222 FC01      		ldi r26,lo8(56)
+ 444 0224 E050      		ldi r27,hi8(56)
+ 445 0226 F040      		ldi r30,lo8(56)
+ 446 0228 2083      		ldi r31,hi8(56)
+ 447               		ld r24,Z
+ 448               		andi r24,lo8(-8)
+ 449               		st X,r24
+ 451 022c 9A81      	.LM18:
+ 452 022e AB81      		ldi r30,lo8(82)
+ 453 0230 BC81      		ldi r31,hi8(82)
+ 454 0232 0196      		st Z,__zero_reg__
+ 456 0236 B11D      	.LM19:
+ 457 0238 8983      		ldi r30,lo8(83)
+ 458 023a 9A83      		ldi r31,hi8(83)
+ 459 023c AB83      		ldi r24,lo8(1)
+ 460 023e BC83      		st Z,r24
+ 462 0240 8981      	.LM20:
+ 463 0242 9A81      		ldi r26,lo8(89)
+ 464 0244 AB81      		ldi r27,hi8(89)
+ 465 0246 BC81      		ldi r30,lo8(89)
+ 466 0248 8330      		ldi r31,hi8(89)
+ 467 024a 9105      		ld r24,Z
+ 468 024c A105      		ori r24,lo8(2)
+ 469 024e B105      		st X,r24
+ 471 0252 00C0      	.LM21:
+ 114:main.c        **** 			}
+ 115:main.c        **** 			for (i = 0; i <= 2000; i++);
+ 472               	,lo8(1)
+ 473               		st Z,r24
+ 475 0256 1A82      	.LM20:
+ 476 0258 1B82      		ldi r26,lo8(89)
+ 477 025a 1C82      		ldi r27,hi8(89)
+ 478 025c 00C0      		ldi r30,lo8(89)
+ 479               		ldi r31,hi8(89)
+ 480 025e 8981      		ld r24,Z
+ 481 0260 9A81      		ori r24,lo8(2)
+ 482 0262 AB81      		st X,r24
+ 484 0266 0196      	.LM21:
+ 485 0268 A11D      	/* #APP */
+ 486 026a B11D      	 ;  95 "main.c" 1
+ 487 026c 8983      		sei
+ 488 026e 9A83      	 ;  0 "" 2
+ 489 0270 AB83      	/* #NOAPP */
+ 490 0272 BC83      	.L19:
+ 492 0274 8981      	.LM22:
+ 493 0276 9A81      		lds r25,rgb
+ 494 0278 AB81      		lds r24,rgb_fade
+ 495 027a BC81      		cp r25,r24
+ 496 027c 813D      		brne .L11
+ 497 027e 27E0      		lds r25,rgb+1
+ 498 0280 9207      		lds r24,rgb_fade+1
+ 499 0282 20E0      		cp r25,r24
+ 500 0284 A207      		brne .L11
+ 501 0286 20E0      		lds r25,rgb+2
+ 502 0288 B207      		lds r24,rgb_fade+2
+ 503 028a 00F0      		cp r25,r24
+ 504 028c 00C0      		brne .L11
+ 506               	.LM23:
+ 507               		rcall rand
+ 508               		ldi r18,lo8(255)
+ 509               		ldi r19,hi8(255)
+ 510               		movw r22,r18
+ 511               		rcall __divmodhi4
+ 512               		sts rgb_fade,r24
+ 514               	.LM24:
+ 515               		rcall rand
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\Users\alex\AppData\Local\Temp/ccxajXsd.s:2      *ABS*:0000003f __SREG__
+C:\Users\alex\AppData\Local\Temp/ccxajXsd.s:3      *ABS*:0000003e __SP_H__
+C:\Users\alex\AppData\Local\Temp/ccxajXsd.s:4      *ABS*:0000003d __SP_L__
+C:\Users\alex\AppData\Local\Temp/ccxajXsd.s:5      *ABS*:00000034 __CCP__
+C:\Users\alex\AppData\Local\Temp/ccxajXsd.s:6      *ABS*:00000000 __tmp_reg__
+C:\Users\alex\AppData\Local\Temp/ccxajXsd.s:7      *ABS*:00000001 __zero_reg__
+C:\Users\alex\AppData\Local\Temp/ccxajXsd.s:85     .data:00000000 ovrflw_cnt
+C:\Users\alex\AppData\Local\Temp/ccxajXsd.s:90     .data:00000002 rgb
+C:\Users\alex\AppData\Local\Temp/ccxajXsd.s:97     .data:00000005 rgb_fade
+C:\Users\alex\AppData\Local\Temp/ccxajXsd.s:105    .text:00000000 __vector_6
+C:\Users\alex\AppData\Local\Temp/ccxajXsd.s:264    .text:00000106 main
+
+UNDEFINED SYMBOLS
+rand
+__divmodhi4
+__do_copy_data

@@ -1,0 +1,958 @@
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+  68               		.data
+  71               	C.8.1246:
+  72 0000 3E        		.byte	62
+  73 0001 41        		.byte	65
+  74 0002 41        		.byte	65
+  75 0003 41        		.byte	65
+  76 0004 3E        		.byte	62
+  79               	C.7.1245:
+  80 0005 7F        		.byte	127
+  81 0006 01        		.byte	1
+  82 0007 01        		.byte	1
+  83 0008 01        		.byte	1
+  84 0009 01        		.byte	1
+  87               	C.6.1244:
+  88 000a 7F        		.byte	127
+  89 000b 08        		.byte	8
+  90 000c 08        		.byte	8
+  91 000d 08        		.byte	8
+  92 000e 7F        		.byte	127
+  95               	C.5.1243:
+  96 000f 7F        		.byte	127
+  97 0010 48        		.byte	72
+  98 0011 48        		.byte	72
+  99 0012 48        		.byte	72
+ 100 0013 40        		.byte	64
+ 103               	C.4.1242:
+ 104 0014 7F        		.byte	127
+ 105 0015 49        		.byte	73
+ 106 0016 49        		.byte	73
+ 107 0017 49        		.byte	73
+ 108 0018 41        		.byte	65
+ 111               	C.3.1241:
+ 112 0019 7F        		.byte	127
+ 113 001a 41        		.byte	65
+ 114 001b 41        		.byte	65
+ 115 001c 41        		.byte	65
+ 116 001d 3E        		.byte	62
+ 119               	C.2.1240:
+ 120 001e 3E        		.byte	62
+ 121 001f 41        		.byte	65
+ 122 0020 41        		.byte	65
+ 123 0021 41        		.byte	65
+ 124 0022 22        		.byte	34
+ 127               	C.1.1239:
+ 128 0023 7F        		.byte	127
+ 129 0024 49        		.byte	73
+ 130 0025 49        		.byte	73
+ 131 0026 49        		.byte	73
+ 132 0027 36        		.byte	54
+ 135               	C.0.1238:
+ 136 0028 3F        		.byte	63
+ 137 0029 48        		.byte	72
+ 138 002a 48        		.byte	72
+ 139 002b 48        		.byte	72
+ 140 002c 3F        		.byte	63
+ 141               		.text
+ 143               	.global	main
+ 145               	main:
+   1:main.c        **** #include <avr/io.h>
+   2:main.c        **** 
+   3:main.c        **** void disp_char(unsigned char colums[5]);
+   4:main.c        **** 
+   5:main.c        **** int main(void)
+   6:main.c        **** {
+ 146               	tmp_reg__,__SREG__
+ 147               		cli
+ 148               		out __SP_H__,r29
+ 149 0000 DF93      		out __SREG__,__tmp_reg__
+ 150 0002 CF93      		out __SP_L__,r28
+ 151 0004 CDB7      	/* prologue: function */
+ 152 0006 DEB7      	/* frame size = 92 */
+ 154 000a D040      	.LM1:
+ 155 000c 0FB6      		movw r24,r28
+ 156 000e F894      		adiw r24,3
+ 157 0010 DEBF      		std Y+49,r25
+ 158 0012 0FBE      		std Y+48,r24
+ 159 0014 CDBF      		ldi r30,lo8(C.0.1238)
+ 160               		ldi r31,hi8(C.0.1238)
+ 161               		std Y+51,r31
+   7:main.c        **** 	unsigned char colums_a[5] = {0x3f, 0x48, 0x48, 0x48, 0x3f};
+ 162               	di r31,lo8(5)
+ 163               		std Y+52,r31
+ 164 0016 CE01      	.L2:
+ 165 0018 0396      		ldd r30,Y+50
+ 166 001a 99AB      		ldd r31,Y+51
+ 167 001c 88AB      		ld r0,Z
+ 168 001e E0E0      		ldd r24,Y+50
+ 169 0020 F0E0      		ldd r25,Y+51
+ 170 0022 FBAB      		adiw r24,1
+ 171 0024 EAAB      		std Y+51,r25
+ 172 0026 F5E0      		std Y+50,r24
+ 173 0028 FCAB      		ldd r30,Y+48
+ 174               		ldd r31,Y+49
+ 175 002a EAA9      		st Z,r0
+ 176 002c FBA9      		ldd r24,Y+48
+ 177 002e 0080      		ldd r25,Y+49
+ 178 0030 8AA9      		adiw r24,1
+ 179 0032 9BA9      		std Y+49,r25
+ 180 0034 0196      		std Y+48,r24
+ 181 0036 9BAB      		ldd r25,Y+52
+ 182 0038 8AAB      		subi r25,lo8(-(-1))
+ 183 003a E8A9      		std Y+52,r25
+ 184 003c F9A9      		ldd r30,Y+52
+ 185 003e 0082      		tst r30
+ 186 0040 88A9      		brne .L2
+ 188 0044 0196      	.LM2:
+ 189 0046 99AB      		movw r24,r28
+ 190 0048 88AB      		adiw r24,8
+ 191 004a 9CA9      		std Y+54,r25
+ 192 004c 9150      		std Y+53,r24
+ 193 004e 9CAB      		ldi r30,lo8(C.1.1239)
+ 194 0050 ECA9      		ldi r31,hi8(C.1.1239)
+ 195 0052 EE23      		std Y+56,r31
+ 196 0054 01F4      		std Y+55,r30
+   8:main.c        **** 	unsigned char colums_b[5] = {0x7f, 0x49, 0x49, 0x49, 0x36};
+ 197               		ldd r30,Y+55
+ 198               		ldd r31,Y+56
+ 199 0056 CE01      		ld r0,Z
+ 200 0058 0896      		ldd r24,Y+55
+ 201 005a 9EAB      		ldd r25,Y+56
+ 202 005c 8DAB      		adiw r24,1
+ 203 005e E0E0      		std Y+56,r25
+ 204 0060 F0E0      		std Y+55,r24
+ 205 0062 F8AF      		ldd r30,Y+53
+ 206 0064 EFAB      		ldd r31,Y+54
+ 207 0066 F5E0      		st Z,r0
+ 208 0068 F9AF      		ldd r24,Y+53
+ 209               		ldd r25,Y+54
+ 210 006a EFA9      		adiw r24,1
+ 211 006c F8AD      		std Y+54,r25
+ 212 006e 0080      		std Y+53,r24
+ 213 0070 8FA9      		ldd r25,Y+57
+ 214 0072 98AD      		subi r25,lo8(-(-1))
+ 215 0074 0196      		std Y+57,r25
+ 216 0076 98AF      		ldd r30,Y+57
+ 217 0078 8FAB      		tst r30
+ 218 007a EDA9      		brne .L3
+ 220 007e 0082      	.LM3:
+ 221 0080 8DA9      		movw r24,r28
+ 222 0082 9EA9      		adiw r24,13
+ 223 0084 0196      		std Y+59,r25
+ 224 0086 9EAB      		std Y+58,r24
+ 225 0088 8DAB      		ldi r30,lo8(C.2.1240)
+ 226 008a 99AD      		ldi r31,hi8(C.2.1240)
+ 227 008c 9150      		std Y+61,r31
+ 228 008e 99AF      		std Y+60,r30
+ 229 0090 E9AD      		ldi r31,lo8(5)
+ 230 0092 EE23      		std Y+62,r31
+ 231 0094 01F4      	.L4:
+   9:main.c        **** 	unsigned char colums_c[5] = {0x3e, 0x41, 0x41, 0x41, 0x22};
+ 232               	Z
+ 233               		ldd r24,Y+60
+ 234 0096 CE01      		ldd r25,Y+61
+ 235 0098 0D96      		adiw r24,1
+ 236 009a 9BAF      		std Y+61,r25
+ 237 009c 8AAF      		std Y+60,r24
+ 238 009e E0E0      		ldd r30,Y+58
+ 239 00a0 F0E0      		ldd r31,Y+59
+ 240 00a2 FDAF      		st Z,r0
+ 241 00a4 ECAF      		ldd r24,Y+58
+ 242 00a6 F5E0      		ldd r25,Y+59
+ 243 00a8 FEAF      		adiw r24,1
+ 244               		std Y+59,r25
+ 245 00aa ECAD      		std Y+58,r24
+ 246 00ac FDAD      		ldd r25,Y+62
+ 247 00ae 0080      		subi r25,lo8(-(-1))
+ 248 00b0 8CAD      		std Y+62,r25
+ 249 00b2 9DAD      		ldd r30,Y+62
+ 250 00b4 0196      		tst r30
+ 251 00b6 9DAF      		brne .L4
+ 253 00ba EAAD      	.LM4:
+ 254 00bc FBAD      		movw r24,r28
+ 255 00be 0082      		adiw r24,18
+ 256 00c0 8AAD      		adiw r28,63-62
+ 257 00c2 9BAD      		std Y+63,r25
+ 258 00c4 0196      		std Y+62,r24
+ 259 00c6 9BAF      		sbiw r28,63-62
+ 260 00c8 8AAF      		ldi r30,lo8(C.3.1241)
+ 261 00ca 9EAD      		ldi r31,hi8(C.3.1241)
+ 262 00cc 9150      		adiw r28,65-62
+ 263 00ce 9EAF      		std Y+63,r31
+ 264 00d0 EEAD      		std Y+62,r30
+ 265 00d2 EE23      		sbiw r28,65-62
+ 266 00d4 01F4      		ldi r31,lo8(5)
+  10:main.c        **** 	unsigned char colums_d[5] = {0x7f, 0x41, 0x41, 0x41, 0x3e};
+ 267               	 r28,67-63
+ 268               	.L5:
+ 269 00d6 CE01      		adiw r28,65-62
+ 270 00d8 4296      		ldd r30,Y+62
+ 271 00da 2196      		ldd r31,Y+63
+ 272 00dc 9FAF      		sbiw r28,65-62
+ 273 00de 8EAF      		ld r0,Z
+ 274 00e0 2197      		adiw r28,65-62
+ 275 00e2 E0E0      		ldd r24,Y+62
+ 276 00e4 F0E0      		ldd r25,Y+63
+ 277 00e6 2396      		sbiw r28,65-62
+ 278 00e8 FFAF      		adiw r24,1
+ 279 00ea EEAF      		adiw r28,65-62
+ 280 00ec 2397      		std Y+63,r25
+ 281 00ee F5E0      		std Y+62,r24
+ 282 00f0 2496      		sbiw r28,65-62
+ 283 00f2 FFAF      		adiw r28,63-62
+ 284 00f4 2497      		ldd r30,Y+62
+ 285               		ldd r31,Y+63
+ 286 00f6 2396      		sbiw r28,63-62
+ 287 00f8 EEAD      		st Z,r0
+ 288 00fa FFAD      		adiw r28,63-62
+ 289 00fc 2397      		ldd r24,Y+62
+ 290 00fe 0080      		ldd r25,Y+63
+ 291 0100 2396      		sbiw r28,63-62
+ 292 0102 8EAD      		adiw r24,1
+ 293 0104 9FAD      		adiw r28,63-62
+ 294 0106 2397      		std Y+63,r25
+ 295 0108 0196      		std Y+62,r24
+ 296 010a 2396      		sbiw r28,63-62
+ 297 010c 9FAF      		adiw r28,67-63
+ 298 010e 8EAF      		ldd r25,Y+63
+ 299 0110 2397      		sbiw r28,67-63
+ 300 0112 2196      		subi r25,lo8(-(-1))
+ 301 0114 EEAD      		adiw r28,67-63
+ 302 0116 FFAD      		std Y+63,r25
+ 303 0118 2197      		sbiw r28,67-63
+ 304 011a 0082      		adiw r28,67-63
+ 305 011c 2196      		ldd r30,Y+63
+ 306 011e 8EAD      		sbiw r28,67-63
+ 307 0120 9FAD      		tst r30
+ 308 0122 2197      		brne .L5
+ 310 0126 2196      	.LM5:
+ 311 0128 9FAF      		movw r24,r28
+ 312 012a 8EAF      		adiw r24,23
+ 313 012c 2197      		adiw r28,68-62
+ 314 012e 2496      		std Y+63,r25
+ 315 0130 9FAD      		std Y+62,r24
+ 316 0132 2497      		sbiw r28,68-62
+ 317 0134 9150      		ldi r30,lo8(C.4.1242)
+ 318 0136 2496      		ldi r31,hi8(C.4.1242)
+ 319 0138 9FAF      		adiw r28,70-62
+ 320 013a 2497      		std Y+63,r31
+ 321 013c 2496      		std Y+62,r30
+ 322 013e EFAD      		sbiw r28,70-62
+ 323 0140 2497      		ldi r31,lo8(5)
+ 324 0142 EE23      		adiw r28,72-63
+ 325 0144 01F4      		std Y+63,r31
+  11:main.c        **** 	unsigned char colums_e[5] = {0x7f, 0x49, 0x49, 0x49, 0x41};
+ 326               	,Y+63
+ 327               		sbiw r28,70-62
+ 328 0146 CE01      		ld r0,Z
+ 329 0148 4796      		adiw r28,70-62
+ 330 014a 2696      		ldd r24,Y+62
+ 331 014c 9FAF      		ldd r25,Y+63
+ 332 014e 8EAF      		sbiw r28,70-62
+ 333 0150 2697      		adiw r24,1
+ 334 0152 E0E0      		adiw r28,70-62
+ 335 0154 F0E0      		std Y+63,r25
+ 336 0156 2896      		std Y+62,r24
+ 337 0158 FFAF      		sbiw r28,70-62
+ 338 015a EEAF      		adiw r28,68-62
+ 339 015c 2897      		ldd r30,Y+62
+ 340 015e F5E0      		ldd r31,Y+63
+ 341 0160 2996      		sbiw r28,68-62
+ 342 0162 FFAF      		st Z,r0
+ 343 0164 2997      		adiw r28,68-62
+ 344               		ldd r24,Y+62
+ 345 0166 2896      		ldd r25,Y+63
+ 346 0168 EEAD      		sbiw r28,68-62
+ 347 016a FFAD      		adiw r24,1
+ 348 016c 2897      		adiw r28,68-62
+ 349 016e 0080      		std Y+63,r25
+ 350 0170 2896      		std Y+62,r24
+ 351 0172 8EAD      		sbiw r28,68-62
+ 352 0174 9FAD      		adiw r28,72-63
+ 353 0176 2897      		ldd r25,Y+63
+ 354 0178 0196      		sbiw r28,72-63
+ 355 017a 2896      		subi r25,lo8(-(-1))
+ 356 017c 9FAF      		adiw r28,72-63
+ 357 017e 8EAF      		std Y+63,r25
+ 358 0180 2897      		sbiw r28,72-63
+ 359 0182 2696      		adiw r28,72-63
+ 360 0184 EEAD      		ldd r30,Y+63
+ 361 0186 FFAD      		sbiw r28,72-63
+ 362 0188 2697      		tst r30
+ 363 018a 0082      		brne .L6
+ 365 018e 8EAD      	.LM6:
+ 366 0190 9FAD      		movw r24,r28
+ 367 0192 2697      		adiw r24,28
+ 368 0194 0196      		adiw r28,73-62
+ 369 0196 2696      		std Y+63,r25
+ 370 0198 9FAF      		std Y+62,r24
+ 371 019a 8EAF      		sbiw r28,73-62
+ 372 019c 2697      		ldi r30,lo8(C.5.1243)
+ 373 019e 2996      		ldi r31,hi8(C.5.1243)
+ 374 01a0 9FAD      		adiw r28,75-62
+ 375 01a2 2997      		std Y+63,r31
+ 376 01a4 9150      		std Y+62,r30
+ 377 01a6 2996      		sbiw r28,75-62
+ 378 01a8 9FAF      		ldi r31,lo8(5)
+ 379 01aa 2997      		adiw r28,77-63
+ 380 01ac 2996      		std Y+63,r31
+ 381 01ae EFAD      		sbiw r28,77-63
+ 382 01b0 2997      	.L7:
+ 383 01b2 EE23      		adiw r28,75-62
+ 384 01b4 01F4      		ldd r30,Y+62
+  12:main.c        **** 	unsigned char colums_f[5] = {0x7f, 0x48, 0x48, 0x48, 0x40};
+ 385               	 r24,Y+62
+ 386               		ldd r25,Y+63
+ 387 01b6 CE01      		sbiw r28,75-62
+ 388 01b8 4C96      		adiw r24,1
+ 389 01ba 2B96      		adiw r28,75-62
+ 390 01bc 9FAF      		std Y+63,r25
+ 391 01be 8EAF      		std Y+62,r24
+ 392 01c0 2B97      		sbiw r28,75-62
+ 393 01c2 E0E0      		adiw r28,73-62
+ 394 01c4 F0E0      		ldd r30,Y+62
+ 395 01c6 2D96      		ldd r31,Y+63
+ 396 01c8 FFAF      		sbiw r28,73-62
+ 397 01ca EEAF      		st Z,r0
+ 398 01cc 2D97      		adiw r28,73-62
+ 399 01ce F5E0      		ldd r24,Y+62
+ 400 01d0 2E96      		ldd r25,Y+63
+ 401 01d2 FFAF      		sbiw r28,73-62
+ 402 01d4 2E97      		adiw r24,1
+ 403               		adiw r28,73-62
+ 404 01d6 2D96      		std Y+63,r25
+ 405 01d8 EEAD      		std Y+62,r24
+ 406 01da FFAD      		sbiw r28,73-62
+ 407 01dc 2D97      		adiw r28,77-63
+ 408 01de 0080      		ldd r25,Y+63
+ 409 01e0 2D96      		sbiw r28,77-63
+ 410 01e2 8EAD      		subi r25,lo8(-(-1))
+ 411 01e4 9FAD      		adiw r28,77-63
+ 412 01e6 2D97      		std Y+63,r25
+ 413 01e8 0196      		sbiw r28,77-63
+ 414 01ea 2D96      		adiw r28,77-63
+ 415 01ec 9FAF      		ldd r30,Y+63
+ 416 01ee 8EAF      		sbiw r28,77-63
+ 417 01f0 2D97      		tst r30
+ 418 01f2 2B96      		brne .L7
+ 420 01f6 FFAD      	.LM7:
+ 421 01f8 2B97      		movw r24,r28
+ 422 01fa 0082      		adiw r24,33
+ 423 01fc 2B96      		adiw r28,78-62
+ 424 01fe 8EAD      		std Y+63,r25
+ 425 0200 9FAD      		std Y+62,r24
+ 426 0202 2B97      		sbiw r28,78-62
+ 427 0204 0196      		ldi r30,lo8(C.6.1244)
+ 428 0206 2B96      		ldi r31,hi8(C.6.1244)
+ 429 0208 9FAF      		adiw r28,80-62
+ 430 020a 8EAF      		std Y+63,r31
+ 431 020c 2B97      		std Y+62,r30
+ 432 020e 2E96      		sbiw r28,80-62
+ 433 0210 9FAD      		ldi r31,lo8(5)
+ 434 0212 2E97      		adiw r28,82-63
+ 435 0214 9150      		std Y+63,r31
+ 436 0216 2E96      		sbiw r28,82-63
+ 437 0218 9FAF      	.L8:
+ 438 021a 2E97      		adiw r28,80-62
+ 439 021c 2E96      		ldd r30,Y+62
+ 440 021e EFAD      		ldd r31,Y+63
+ 441 0220 2E97      		sbiw r28,80-62
+ 442 0222 EE23      		ld r0,Z
+ 443 0224 01F4      		adiw r28,80-62
+  13:main.c        **** 	unsigned char colums_h[5] = {0x7f, 0x08, 0x08, 0x08, 0x7f};
+ 444               	iw r28,80-62
+ 445               		std Y+63,r25
+ 446 0226 CE01      		std Y+62,r24
+ 447 0228 8196      		sbiw r28,80-62
+ 448 022a 6096      		adiw r28,78-62
+ 449 022c 9FAF      		ldd r30,Y+62
+ 450 022e 8EAF      		ldd r31,Y+63
+ 451 0230 6097      		sbiw r28,78-62
+ 452 0232 E0E0      		st Z,r0
+ 453 0234 F0E0      		adiw r28,78-62
+ 454 0236 6296      		ldd r24,Y+62
+ 455 0238 FFAF      		ldd r25,Y+63
+ 456 023a EEAF      		sbiw r28,78-62
+ 457 023c 6297      		adiw r24,1
+ 458 023e F5E0      		adiw r28,78-62
+ 459 0240 6396      		std Y+63,r25
+ 460 0242 FFAF      		std Y+62,r24
+ 461 0244 6397      		sbiw r28,78-62
+ 462               		adiw r28,82-63
+ 463 0246 6296      		ldd r25,Y+63
+ 464 0248 EEAD      		sbiw r28,82-63
+ 465 024a FFAD      		subi r25,lo8(-(-1))
+ 466 024c 6297      		adiw r28,82-63
+ 467 024e 0080      		std Y+63,r25
+ 468 0250 6296      		sbiw r28,82-63
+ 469 0252 8EAD      		adiw r28,82-63
+ 470 0254 9FAD      		ldd r30,Y+63
+ 471 0256 6297      		sbiw r28,82-63
+ 472 0258 0196      		tst r30
+ 473 025a 6296      		brne .L8
+ 475 025e 8EAF      	.LM8:
+ 476 0260 6297      		movw r24,r28
+ 477 0262 6096      		adiw r24,38
+ 478 0264 EEAD      		adiw r28,83-62
+ 479 0266 FFAD      		std Y+63,r25
+ 480 0268 6097      		std Y+62,r24
+ 481 026a 0082      		sbiw r28,83-62
+ 482 026c 6096      		ldi r30,lo8(C.7.1245)
+ 483 026e 8EAD      		ldi r31,hi8(C.7.1245)
+ 484 0270 9FAD      		adiw r28,85-62
+ 485 0272 6097      		std Y+63,r31
+ 486 0274 0196      		std Y+62,r30
+ 487 0276 6096      		sbiw r28,85-62
+ 488 0278 9FAF      		ldi r31,lo8(5)
+ 489 027a 8EAF      		adiw r28,87-63
+ 490 027c 6097      		std Y+63,r31
+ 491 027e 6396      		sbiw r28,87-63
+ 492 0280 9FAD      	.L9:
+ 493 0282 6397      		adiw r28,85-62
+ 494 0284 9150      		ldd r30,Y+62
+ 495 0286 6396      		ldd r31,Y+63
+ 496 0288 9FAF      		sbiw r28,85-62
+ 497 028a 6397      		ld r0,Z
+ 498 028c 6396      		adiw r28,85-62
+ 499 028e EFAD      		ldd r24,Y+62
+ 500 0290 6397      		ldd r25,Y+63
+ 501 0292 EE23      		sbiw r28,85-62
+ 502 0294 01F4      		adiw r24,1
+  14:main.c        **** 	unsigned char colums_l[5] = {0x7f, 0x01, 0x01, 0x01, 0x01};
+ 503               	
+ 504               		adiw r28,83-62
+ 505 0296 CE01      		ldd r30,Y+62
+ 506 0298 8696      		ldd r31,Y+63
+ 507 029a 6596      		sbiw r28,83-62
+ 508 029c 9FAF      		st Z,r0
+ 509 029e 8EAF      		adiw r28,83-62
+ 510 02a0 6597      		ldd r24,Y+62
+ 511 02a2 E0E0      		ldd r25,Y+63
+ 512 02a4 F0E0      		sbiw r28,83-62
+ 513 02a6 6796      		adiw r24,1
+ 514 02a8 FFAF      		adiw r28,83-62
+ 515 02aa EEAF      		std Y+63,r25
+ 516 02ac 6797      		std Y+62,r24
+ 517 02ae F5E0      		sbiw r28,83-62
+ 518 02b0 6896      		adiw r28,87-63
+ 519 02b2 FFAF      		ldd r25,Y+63
+ 520 02b4 6897      		sbiw r28,87-63
+ 521               		subi r25,lo8(-(-1))
+ 522 02b6 6796      		adiw r28,87-63
+ 523 02b8 EEAD      		std Y+63,r25
+ 524 02ba FFAD      		sbiw r28,87-63
+ 525 02bc 6797      		adiw r28,87-63
+ 526 02be 0080      		ldd r30,Y+63
+ 527 02c0 6796      		sbiw r28,87-63
+ 528 02c2 8EAD      		tst r30
+ 529 02c4 9FAD      		brne .L9
+ 531 02c8 0196      	.LM9:
+ 532 02ca 6796      		movw r24,r28
+ 533 02cc 9FAF      		adiw r24,43
+ 534 02ce 8EAF      		adiw r28,88-62
+ 535 02d0 6797      		std Y+63,r25
+ 536 02d2 6596      		std Y+62,r24
+ 537 02d4 EEAD      		sbiw r28,88-62
+ 538 02d6 FFAD      		ldi r30,lo8(C.8.1246)
+ 539 02d8 6597      		ldi r31,hi8(C.8.1246)
+ 540 02da 0082      		adiw r28,90-62
+ 541 02dc 6596      		std Y+63,r31
+ 542 02de 8EAD      		std Y+62,r30
+ 543 02e0 9FAD      		sbiw r28,90-62
+ 544 02e2 6597      		ldi r31,lo8(5)
+ 545 02e4 0196      		adiw r28,92-63
+ 546 02e6 6596      		std Y+63,r31
+ 547 02e8 9FAF      		sbiw r28,92-63
+ 548 02ea 8EAF      	.L10:
+ 549 02ec 6597      		adiw r28,90-62
+ 550 02ee 6896      		ldd r30,Y+62
+ 551 02f0 9FAD      		ldd r31,Y+63
+ 552 02f2 6897      		sbiw r28,90-62
+ 553 02f4 9150      		ld r0,Z
+ 554 02f6 6896      		adiw r28,90-62
+ 555 02f8 9FAF      		ldd r24,Y+62
+ 556 02fa 6897      		ldd r25,Y+63
+ 557 02fc 6896      		sbiw r28,90-62
+ 558 02fe EFAD      		adiw r24,1
+ 559 0300 6897      		adiw r28,90-62
+ 560 0302 EE23      		std Y+63,r25
+ 561 0304 01F4      		std Y+62,r24
+  15:main.c        **** 	unsigned char colums_o[5] = {0x3e, 0x41, 0x41, 0x41, 0x3e};
+ 562               	3
+ 563               		sbiw r28,88-62
+ 564 0306 CE01      		st Z,r0
+ 565 0308 8B96      		adiw r28,88-62
+ 566 030a 6A96      		ldd r24,Y+62
+ 567 030c 9FAF      		ldd r25,Y+63
+ 568 030e 8EAF      		sbiw r28,88-62
+ 569 0310 6A97      		adiw r24,1
+ 570 0312 E0E0      		adiw r28,88-62
+ 571 0314 F0E0      		std Y+63,r25
+ 572 0316 6C96      		std Y+62,r24
+ 573 0318 FFAF      		sbiw r28,88-62
+ 574 031a EEAF      		adiw r28,92-63
+ 575 031c 6C97      		ldd r25,Y+63
+ 576 031e F5E0      		sbiw r28,92-63
+ 577 0320 6D96      		subi r25,lo8(-(-1))
+ 578 0322 FFAF      		adiw r28,92-63
+ 579 0324 6D97      		std Y+63,r25
+ 580               		sbiw r28,92-63
+ 581 0326 6C96      		adiw r28,92-63
+ 582 0328 EEAD      		ldd r30,Y+63
+ 583 032a FFAD      		sbiw r28,92-63
+ 584 032c 6C97      		tst r30
+ 585 032e 0080      		brne .L10
+ 587 0332 8EAD      	.LM10:
+ 588 0334 9FAD      		ldi r26,lo8(55)
+ 589 0336 6C97      		ldi r27,hi8(55)
+ 590 0338 0196      		ldi r30,lo8(55)
+ 591 033a 6C96      		ldi r31,hi8(55)
+ 592 033c 9FAF      		ld r24,Z
+ 593 033e 8EAF      		ori r24,lo8(31)
+ 594 0340 6C97      		st X,r24
+ 596 0344 EEAD      	.LM11:
+ 597 0346 FFAD      		ldi r26,lo8(49)
+ 598 0348 6A97      		ldi r27,hi8(49)
+ 599 034a 0082      		ldi r30,lo8(49)
+ 600 034c 6A96      		ldi r31,hi8(49)
+ 601 034e 8EAD      		ld r24,Z
+ 602 0350 9FAD      		ori r24,lo8(124)
+ 603 0352 6A97      		st X,r24
+ 605 0356 6A96      	.LM12:
+ 606 0358 9FAF      		ldi r26,lo8(58)
+ 607 035a 8EAF      		ldi r27,hi8(58)
+ 608 035c 6A97      		ldi r30,lo8(58)
+ 609 035e 6D96      		ldi r31,hi8(58)
+ 610 0360 9FAD      		ld r24,Z
+ 611 0362 6D97      		ori r24,lo8(3)
+ 612 0364 9150      		st X,r24
+ 614 0368 9FAF      	.LM13:
+ 615 036a 6D97      		ldi r26,lo8(56)
+ 616 036c 6D96      		ldi r27,hi8(56)
+ 617 036e EFAD      		ldi r30,lo8(56)
+ 618 0370 6D97      		ldi r31,hi8(56)
+ 619 0372 EE23      		ld r24,Z
+ 620 0374 01F4      		andi r24,lo8(-32)
+  16:main.c        **** 	unsigned int i;
+  17:main.c        **** 	
+  18:main.c        **** 	DDRB |= 0x1f;
+ 621               	2,__zero_reg__
+ 622               		std Y+1,__zero_reg__
+ 623 0376 A7E3      		rjmp .L11
+ 624 0378 B0E0      	.L12:
+ 626 037c F0E0      	.LM15:
+ 627 037e 8081      		movw r24,r28
+ 628 0380 8F61      		adiw r24,33
+ 629 0382 8C93      		rcall disp_char
+  19:main.c        **** 	DDRD |= 0x7c;
+ 630               	8,0,26,.LM16-.LFBB1
+ 631               	.LM16:
+ 632 0384 A1E3      		ldd r24,Y+1
+ 633 0386 B0E0      		ldd r25,Y+2
+ 634 0388 E1E3      		adiw r24,1
+ 635 038a F0E0      		std Y+2,r25
+ 636 038c 8081      		std Y+1,r24
+ 637 038e 8C67      	.L11:
+ 638 0390 8C93      		ldd r24,Y+1
+  20:main.c        **** 	DDRA |= 0x03;
+ 639               	Y+2
+ 640               		ldi r31,hi8(1001)
+ 641 0392 AAE3      		cpi r24,lo8(1001)
+ 642 0394 B0E0      		cpc r25,r31
+ 643 0396 EAE3      		brlo .L12
+ 645 039a 8081      	.LM17:
+ 646 039c 8360      		std Y+2,__zero_reg__
+ 647 039e 8C93      		std Y+1,__zero_reg__
+  21:main.c        **** 	
+  22:main.c        **** 	PORTB &= ~0x1f;
+ 648               	3
+ 649               	.L14:
+ 651 03a2 B0E0      	.LM18:
+ 652 03a4 E8E3      		movw r24,r28
+ 653 03a6 F0E0      		adiw r24,23
+ 654 03a8 8081      		rcall disp_char
+ 656 03ac 8C93      	.LM19:
+ 657               		ldd r24,Y+1
+  23:main.c        **** 	
+  24:main.c        **** 	while(1)
+  25:main.c        **** 	{
+  26:main.c        **** 		for (i = 0; i <= 1000; i++)
+ 658               	+2
+ 659               		adiw r24,1
+ 660 03ae 1A82      		std Y+2,r25
+ 661 03b0 1982      		std Y+1,r24
+ 662 03b2 00C0      	.L13:
+ 663               		ldd r24,Y+1
+  27:main.c        **** 			disp_char(colums_h);
+ 664               	25,Y+2
+ 665               		ldi r18,hi8(1001)
+ 666 03b4 CE01      		cpi r24,lo8(1001)
+ 667 03b6 8196      		cpc r25,r18
+ 668 03b8 00D0      		brlo .L14
+ 670               	.LM20:
+ 671 03ba 8981      		std Y+2,__zero_reg__
+ 672 03bc 9A81      		std Y+1,__zero_reg__
+ 673 03be 0196      		rjmp .L15
+ 674 03c0 9A83      	.L16:
+ 676               	.LM21:
+ 677 03c4 8981      		movw r24,r28
+ 678 03c6 9A81      		adiw r24,38
+ 679 03c8 F3E0      		rcall disp_char
+ 681 03cc 9F07      	.LM22:
+ 682 03ce 00F0      		ldd r24,Y+1
+  28:main.c        **** 		for (i = 0; i <= 1000; i++)
+ 683               	r24,1
+ 684               		std Y+2,r25
+ 685 03d0 1A82      		std Y+1,r24
+ 686 03d2 1982      	.L15:
+ 687 03d4 00C0      		ldd r24,Y+1
+ 688               		ldd r25,Y+2
+  29:main.c        **** 			disp_char(colums_e);
+ 689               	30,hi8(2001)
+ 690               		cpi r24,lo8(2001)
+ 691 03d6 CE01      		cpc r25,r30
+ 692 03d8 4796      		brlo .L16
+ 694               	.LM23:
+ 695               		std Y+2,__zero_reg__
+ 696 03dc 8981      		std Y+1,__zero_reg__
+ 697 03de 9A81      		rjmp .L17
+ 698 03e0 0196      	.L18:
+ 700 03e4 8983      	.LM24:
+ 701               		movw r24,r28
+ 702 03e6 8981      		adiw r24,43
+ 703 03e8 9A81      		rcall disp_char
+ 705 03ec 893E      	.LM25:
+ 706 03ee 9207      		ldd r24,Y+1
+ 707 03f0 00F0      		ldd r25,Y+2
+  30:main.c        **** 		for (i = 0; i <= 2000; i++)
+ 708               	2,r25
+ 709               		std Y+1,r24
+ 710 03f2 1A82      	.L17:
+ 711 03f4 1982      		ldd r24,Y+1
+ 712 03f6 00C0      		ldd r25,Y+2
+ 713               		ldi r31,hi8(1001)
+  31:main.c        **** 			disp_char(colums_l);
+ 714               	24,lo8(1001)
+ 715               		cpc r25,r31
+ 716 03f8 CE01      		brlo .L18
+ 717 03fa 8696      		rjmp .L19
+ 731 0410 9E07      	.Lscope1:
+  32:main.c        **** 		for (i = 0; i <= 1000; i++)
+ 733               	,18)=*(0,11)",160,0,0,3
+ 734               	.global	disp_char
+ 736 0416 1982      	disp_char:
+ 738               	.LM26:
+  33:main.c        **** 			disp_char(colums_o);			
+ 739               	",128,0,0,1
+ 742 041c 8B96      	.Lscope1:
+ 745               	.global	disp_char
+ 747 0422 9A81      	disp_char:
+ 749 0426 9A83      	.LM26:
+ 750 0428 8983      	.LFBB2:
+ 751               		push r29
+ 752 042a 8981      		push r28
+ 753 042c 9A81      		rcall .
+ 754 042e F3E0      		rcall .
+ 755 0430 893E      		in r28,__SP_L__
+ 756 0432 9F07      		in r29,__SP_H__
+ 757 0434 00F0      	/* prologue: function */
+ 758 0436 00C0      	/* frame size = 4 */
+ 759               		std Y+4,r25
+ 760               		std Y+3,r24
+ 762               	.LM27:
+ 763               		std Y+1,__zero_reg__
+ 764               		rjmp .L22
+ 765               	.L33:
+ 767               	.LM28:
+ 768               		ldd r24,Y+1
+ 769               		mov r18,r24
+ 770               		ldi r19,lo8(0)
+ 771               		ldd r24,Y+3
+ 772               		ldd r25,Y+4
+ 773               		movw r30,r24
+ 774               		add r30,r18
+ 775               		adc r31,r19
+ 776               		ld r24,Z
+ 777               		mov r24,r24
+  34:main.c        **** 	}
+  35:main.c        **** }
+  36:main.c        **** 
+  37:main.c        **** void disp_char(unsigned char *colums)
+  38:main.c        **** {
+ 778               	bn	68,0,41,.LM27-.LFBB2
+ 779               	.LM27:
+ 780               		std Y+1,__zero_reg__
+ 781 0438 DF93      		rjmp .L22
+ 782 043a CF93      	.L33:
+ 784 043e 00D0      	.LM28:
+ 785 0440 CDB7      		ldd r24,Y+1
+ 786 0442 DEB7      		mov r18,r24
+ 787               		ldi r19,lo8(0)
+ 788               		ldd r24,Y+3
+ 789 0444 9C83      		ldd r25,Y+4
+ 790 0446 8B83      		movw r30,r24
+  39:main.c        **** 	unsigned char i, j;
+  40:main.c        **** 	
+  41:main.c        **** 	for (j = 0; j <= 4; j++)
+ 791               	
+ 792               	/* frame size = 4 */
+ 793 0448 1982      		std Y+4,r25
+ 794 044a 00C0      		std Y+3,r24
+  42:main.c        **** 	{
+  43:main.c        **** 		if (colums[j] & (0x01 << 0))
+ 796               	ype	disp_char, @function
+ 797               	disp_char:
+ 799 044e 282F      	.LM26:
+ 800 0450 30E0      	.LFBB2:
+ 801 0452 8B81      		push r29
+ 802 0454 9C81      		push r28
+ 803 0456 FC01      		rcall .
+ 804 0458 E20F      		rcall .
+ 805 045a F31F      		in r28,__SP_L__
+ 806 045c 8081      		in r29,__SP_H__
+ 807 045e 882F      	/* prologue: function */
+ 808 0460 90E0      	/* frame size = 4 */
+ 809 0462 8170      		std Y+4,r25
+ 810 0464 9070      		std Y+3,r24
+ 812 0468 01F0      	.LM27:
+  44:main.c        **** 			PORTA &= ~(0x01 << 0);
+ 813               	_char, @function
+ 814               	disp_char:
+ 816 046c B0E0      	.LM26:
+ 817 046e EBE3      	.LFBB2:
+ 818 0470 F0E0      		push r29
+ 819 0472 8081      		push r28
+ 820 0474 8E7F      		rcall .
+ 821 0476 8C93      		rcall .
+ 822 0478 00C0      		in r28,__SP_L__
+ 823               		in r29,__SP_H__
+  45:main.c        **** 		else
+  46:main.c        **** 			PORTA |= (0x01 << 0);
+ 824               	tabs	"disp_char:F(0,15)",36,0,0,disp_char
+ 826 047a ABE3      	.global	disp_char
+ 828 047e EBE3      	disp_char:
+ 830 0482 8081      	.LM26:
+ 831 0484 8160      	.LFBB2:
+ 832 0486 8C93      		push r29
+ 833               		push r28
+  47:main.c        **** 		if (colums[j] & (0x01 << 1))
+ 834               	BB1-.LFBB1
+ 836 0488 8981      	.Lscope1:
+ 839 048e 8B81      	.global	disp_char
+ 841 0492 FC01      	disp_char:
+ 843 0496 F31F      	.LM26:
+ 844 0498 8081      	.LFBB2:
+ 845 049a 882F      		push r29
+ 846 049c 90E0      		push r28
+ 847 049e 8270      		rcall .
+ 848 04a0 9070      		rcall .
+ 849 04a2 0097      		in r28,__SP_L__
+ 850 04a4 01F0      		in r29,__SP_H__
+  48:main.c        **** 			PORTA &= ~(0x01 << 1);
+ 851               	tabs	"disp_char:F(0,15)",36,0,0,disp_char
+ 853 04a6 ABE3      	.global	disp_char
+ 855 04aa EBE3      	disp_char:
+ 857 04ae 8081      	.LM26:
+ 858 04b0 8D7F      	.LFBB2:
+ 859 04b2 8C93      		push r29
+ 860 04b4 00C0      		push r28
+ 861               		rcall .
+  49:main.c        **** 		else
+  50:main.c        **** 			PORTA |= (0x01 << 1);
+ 862               	
+ 864 04b6 ABE3      	.Lscope1:
+ 867 04bc F0E0      	.global	disp_char
+ 869 04c0 8260      	disp_char:
+ 871               	.LM26:
+  51:main.c        **** 		for (i = 2; i <= 6; i++)
+ 872               	",128,0,0,1
+ 875 04c6 8A83      	.Lscope1:
+  52:main.c        **** 		{
+  53:main.c        **** 			if (colums[j] & (0x01 << i))
+ 878               	,0,0,33
+ 884 04d2 9C81      	.Lscope1:
+ 887 04d8 F31F      	.global	disp_char
+ 889 04dc 282F      	disp_char:
+ 891 04e0 8A81      	.LM26:
+ 892 04e2 882F      	.LFBB2:
+ 893 04e4 90E0      		push r29
+ 894 04e6 A901      		push r28
+ 895 04e8 00C0      		rcall .
+ 896 04ea 5595      		rcall .
+ 897 04ec 4795      		in r28,__SP_L__
+ 898 04ee 8A95      		in r29,__SP_H__
+ 899 04f0 02F4      	/* prologue: function */
+ 900 04f2 CA01      	/* frame size = 4 */
+ 901 04f4 8170      		std Y+4,r25
+ 902 04f6 9070      		std Y+3,r24
+ 904 04fa 01F0      	.LM27:
+  54:main.c        **** 				PORTD &= ~(0x01 << i);
+ 905               	 .L22
+ 906               	.L33:
+ 908 04fe B0E0      	.LM28:
+ 909 0500 E2E3      		ldd r24,Y+1
+ 910 0502 F0E0      		mov r18,r24
+ 911 0504 8081      		ldi r19,lo8(0)
+ 912 0506 482F      		ldd r24,Y+3
+ 913 0508 8A81      		ldd r25,Y+4
+ 914 050a 282F      		movw r30,r24
+ 915 050c 30E0      		add r30,r18
+ 916 050e 81E0      		adc r31,r19
+ 917 0510 90E0      		ld r24,Z
+ 918 0512 022E      		mov r24,r24
+ 919 0514 00C0      		ldi r25,lo8(0)
+ 920 0516 880F      		andi r24,lo8(1)
+ 921 0518 991F      		andi r25,hi8(1)
+ 922 051a 0A94      		tst r24
+ 923 051c 02F4      		breq .L23
+ 925 0520 8423      	.LM29:
+ 926 0522 8C93      		ldi r26,lo8(59)
+ 927 0524 00C0      		ldi r27,hi8(59)
+ 928               		ldi r30,lo8(59)
+  55:main.c        **** 			else
+  56:main.c        **** 				PORTD |= (0x01 << i);
+ 929               	25,Y+4
+ 930               		movw r30,r24
+ 931 0526 A2E3      		add r30,r18
+ 932 0528 B0E0      		adc r31,r19
+ 933 052a E2E3      		ld r24,Z
+ 934 052c F0E0      		mov r24,r24
+ 935 052e 8081      		ldi r25,lo8(0)
+ 936 0530 482F      		andi r24,lo8(1)
+ 937 0532 8A81      		andi r25,hi8(1)
+ 938 0534 282F      		tst r24
+ 939 0536 30E0      		breq .L23
+ 941 053a 90E0      	.LM29:
+ 942 053c 022E      		ldi r26,lo8(59)
+ 943 053e 00C0      		ldi r27,hi8(59)
+ 944 0540 880F      		ldi r30,lo8(59)
+ 945 0542 991F      		ldi r31,hi8(59)
+ 946 0544 0A94      		ld r24,Z
+ 947 0546 02F4      		andi r24,lo8(-2)
+ 948 0548 842B      		st X,r24
+ 949 054a 8C93      		rjmp .L24
+ 950               	.L23:
+ 952               	.LM30:
+ 953 054c 8A81      		ldi r26,lo8(59)
+ 954 054e 8F5F      		ldi r27,hi8(59)
+ 955 0550 8A83      		ldi r30,lo8(59)
+ 956               		ldi r31,hi8(59)
+ 957 0552 8A81      		ld r24,Z
+ 958 0554 8730      		ori r24,lo8(1)
+ 959 0556 00F4      		st X,r24
+ 960 0558 00C0      	.L24:
+  57:main.c        **** 		}
+  58:main.c        **** 		PORTB |= (0x01 << j);
+ 961               	1,hi8(59)
+ 962               		ld r24,Z
+ 963 055a A8E3      		andi r24,lo8(-2)
+ 964 055c B0E0      		st X,r24
+ 965 055e E8E3      		rjmp .L24
+ 966 0560 F0E0      	.L23:
+ 968 0564 482F      	.LM30:
+ 969 0566 8981      		ldi r26,lo8(59)
+ 970 0568 282F      		ldi r27,hi8(59)
+ 971 056a 30E0      		ldi r30,lo8(59)
+ 972 056c 81E0      		ldi r31,hi8(59)
+ 973 056e 90E0      		ld r24,Z
+ 974 0570 022E      		ori r24,lo8(1)
+ 975 0572 00C0      		st X,r24
+ 976 0574 880F      	.L24:
+ 978 0578 0A94      	.LM31:
+ 979 057a 02F4      		ldd r24,Y+1
+ 980 057c 842B      		mov r18,r24
+ 981 057e 8C93      		ldi r19,lo8(0)
+  59:main.c        **** 		for (i = 0; i <= 100; i++);
+ 982               	M30-.LFBB2
+ 983               	.LM30:
+ 984 0580 1A82      		ldi r26,lo8(59)
+ 985 0582 00C0      		ldi r27,hi8(59)
+ 986               		ldi r30,lo8(59)
+ 987 0584 8A81      		ldi r31,hi8(59)
+ 988 0586 8F5F      		ld r24,Z
+ 989 0588 8A83      		ori r24,lo8(1)
+ 990               		st X,r24
+ 991 058a 8A81      	.L24:
+ 993 058e 00F0      	.LM31:
+  60:main.c        **** 			//for (k = 0; k <= 100; k++);
+  61:main.c        **** 		PORTB &= ~(0x01 << j);
+ 994               		st X,r24
+ 995               		rjmp .L24
+ 996 0590 A8E3      	.L23:
+ 998 0594 E8E3      	.LM30:
+ 999 0596 F0E0      		ldi r26,lo8(59)
+ 1000 0598 8081      		ldi r27,hi8(59)
+ 1001 059a 482F      		ldi r30,lo8(59)
+ 1002 059c 8981      		ldi r31,hi8(59)
+ 1003 059e 282F      		ld r24,Z
+ 1004 05a0 30E0      		ori r24,lo8(1)
+ 1005 05a2 81E0      		st X,r24
+ 1006 05a4 90E0      	.L24:
+ 1008 05a8 00C0      	.LM31:
+ 1009 05aa 880F      		ldd r24,Y+1
+ 1010 05ac 991F      		mov r18,r24
+ 1011 05ae 0A94      		ldi r19,lo8(0)
+ 1012 05b0 02F4      		ldd r24,Y+3
+ 1013 05b2 8095      		ldd r25,Y+4
+ 1014 05b4 8423      		movw r30,r24
+ 1015 05b6 8C93      		add r30,r18
+ 1016               		adc r31,r19
+ 1017               		ld r24,Z
+ 1018 05b8 8981      		mov r24,r24
+ 1019 05ba 8F5F      		ldi r25,lo8(0)
+ 1020 05bc 8983      		andi r24,lo8(2)
+ 1021               		andi r25,hi8(2)
+ 1022 05be 8981      		sbiw r24,0
+ 1023 05c0 8530      		breq .L25
+ 1025 05c4 00C0      	.LM32:
+ 1026               		ldi r26,lo8(59)
+  62:main.c        **** 	}
+  63:main.c        **** }...
+ 1027               	4
+ 1028               		movw r30,r24
+ 1029 05c6 0F90      		add r30,r18
+ 1030 05c8 0F90      		adc r31,r19
+ 1031 05ca 0F90      		ld r24,Z
+ 1032 05cc 0F90      		mov r24,r24
+ 1033 05ce CF91      		ldi r25,lo8(0)
+ 1034 05d0 DF91      		andi r24,lo8(2)
+ 1035 05d2 0895      		andi r25,hi8(2)
+ 1036               		sbiw r24,0
+ 1037               		breq .L25
+ 1039               	.LM32:
+ 1040               		ldi r26,lo8(59)
+ 1041               		ldi r27,hi8(59)
+ 1042               		ldi r30,lo8(59)
+ 1043               		ldi r31,hi8(59)
+ 1044               		ld r24,Z
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:2      *ABS*:0000003f __SREG__
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:3      *ABS*:0000003e __SP_H__
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:4      *ABS*:0000003d __SP_L__
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:5      *ABS*:00000034 __CCP__
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:7      *ABS*:00000001 __zero_reg__
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:71     .data:00000000 C.8.1246
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:79     .data:00000005 C.7.1245
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:87     .data:0000000a C.6.1244
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:95     .data:0000000f C.5.1243
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:103    .data:00000014 C.4.1242
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:111    .data:00000019 C.3.1241
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:119    .data:0000001e C.2.1240
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:127    .data:00000023 C.1.1239
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:135    .data:00000028 C.0.1238
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:145    .text:00000000 main
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/cciFabQh.s:777    .text:00000438 disp_char
+
+UNDEFINED SYMBOLS
+__do_copy_data

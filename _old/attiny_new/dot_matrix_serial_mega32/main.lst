@@ -1,0 +1,1106 @@
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+  77               		.data
+  80               	C.0.1358:
+  81 0000 7F        		.byte	127
+  82 0001 7F        		.byte	127
+  83 0002 7F        		.byte	127
+  84 0003 7F        		.byte	127
+  85 0004 7F        		.byte	127
+  86               		.text
+  88               	.global	main
+  90               	main:
+   1:main.c        **** #define BAUD 12
+   2:main.c        **** 
+   3:main.c        **** #include <avr/io.h>
+   4:main.c        **** #include <avr/signal.h>
+   5:main.c        **** #include <avr/interrupt.h>
+   6:main.c        **** #include <stdlib.h>
+   7:main.c        **** 
+   8:main.c        **** void write_data(unsigned char device, unsigned char colums[5]);
+   9:main.c        **** 
+  10:main.c        **** /*ISR (USART_TXC_vect)
+  11:main.c        **** {
+  12:main.c        **** 	UDR = 0x81;
+  13:main.c        **** }*/
+  14:main.c        **** 
+  15:main.c        **** int main(void)
+  16:main.c        **** {
+  91               	P_H__
+  92               		sbiw r28,29
+  93               		in __tmp_reg__,__SREG__
+  94 0000 DF93      		cli
+  95 0002 CF93      		out __SP_H__,r29
+  96 0004 CDB7      		out __SREG__,__tmp_reg__
+  97 0006 DEB7      		out __SP_L__,r28
+  98 0008 6D97      	/* prologue: function */
+  99 000a 0FB6      	/* frame size = 29 */
+ 101 000e DEBF      	.LM1:
+ 102 0010 0FBE      		ldi r24,lo8(5)
+ 103 0012 CDBF      		movw r30,r28
+ 104               		adiw r30,10
+ 105               		movw r26,r30
+  17:main.c        **** 	unsigned long int i;
+  18:main.c        **** 	//unsigned char cursor = 0;
+  19:main.c        **** 	//unsigned char colums_a[5] = {0x3f, 0x48, 0x48, 0x48, 0x3f};
+  20:main.c        **** 	//unsigned char rec_char = 0;
+  21:main.c        **** 	//unsigned char colums_b[5] = {0x7f, 0x49, 0x49, 0x49, 0x36};
+  22:main.c        **** 	//unsigned char colums_c[5] = {0x3e, 0x41, 0x41, 0x41, 0x22};
+  23:main.c        **** 	//unsigned char colums_d[5] = {0x7f, 0x41, 0x41, 0x41, 0x3e};
+  24:main.c        **** 	//unsigned char colums_e[5] = {0x7f, 0x49, 0x49, 0x49, 0x41};
+  25:main.c        **** 	//unsigned char colums_f[5] = {0x7f, 0x48, 0x48, 0x48, 0x40};
+  26:main.c        **** 	/*unsigned char colums_h[5] = {0x7f, 0x08, 0x08, 0x08, 0x7f};
+  27:main.c        **** 	unsigned char colums_l[5] = {0x7f, 0x01, 0x01, 0x01, 0x01};
+  28:main.c        **** 	unsigned char colums_o[5] = {0x3e, 0x41, 0x41, 0x41, 0x3e};
+  29:main.c        **** 	unsigned char colums_empty[5] = {0x00, 0x00, 0x00, 0x00, 0x00};
+  30:main.c        **** 	unsigned char colums_exp_mark[5] = {0x00, 0x00, 0x7d, 0x00, 0x00};
+  31:main.c        **** 	unsigned char colums_80[5] = {0x00, 0x00, 0x00, 0x00, 0x00};
+  32:main.c        **** 	unsigned char colums_81[5] = {0x00, 0x00, 0x00, 0x00, 0x00};*/
+  33:main.c        **** 	unsigned char mtrx[5] = {0x00, 0x00, 0x00, 0x00, 0x00};
+ 106               	t X+,__zero_reg__
+ 107               	        dec r18
+ 108 0014 85E0      		brne .-6
+ 110 0018 3A96      	.LM2:
+ 111 001a DF01      		movw r20,r28
+ 112 001c 282F      		subi r20,lo8(-(15))
+ 113 001e 1D92      		sbci r21,hi8(-(15))
+ 114 0020 2A95      		std Y+26,r21
+ 115 0022 01F4      		std Y+25,r20
+  34:main.c        **** 	unsigned char mtrx_on[5] = {0x7f, 0x7f, 0x7f, 0x7f, 0x7f};
+ 116               	o8(C.0.1358)
+ 117               		ldi r25,hi8(C.0.1358)
+ 118 0024 AE01      		std Y+28,r25
+ 119 0026 415F      		std Y+27,r24
+ 120 0028 5F4F      		ldi r25,lo8(5)
+ 121 002a 5A8F      		std Y+29,r25
+ 122 002c 498F      	.L2:
+ 123 002e 80E0      		ldd r26,Y+27
+ 124 0030 90E0      		ldd r27,Y+28
+ 125 0032 9C8F      		ld r0,X
+ 126 0034 8B8F      		ldd r30,Y+27
+ 127 0036 95E0      		ldd r31,Y+28
+ 128 0038 9D8F      		adiw r30,1
+ 129               		std Y+28,r31
+ 130 003a AB8D      		std Y+27,r30
+ 131 003c BC8D      		ldd r26,Y+25
+ 132 003e 0C90      		ldd r27,Y+26
+ 133 0040 EB8D      		st X,r0
+ 134 0042 FC8D      		ldd r30,Y+25
+ 135 0044 3196      		ldd r31,Y+26
+ 136 0046 FC8F      		adiw r30,1
+ 137 0048 EB8F      		std Y+26,r31
+ 138 004a A98D      		std Y+25,r30
+ 139 004c BA8D      		ldd r31,Y+29
+ 140 004e 0C92      		subi r31,lo8(-(-1))
+ 141 0050 E98D      		std Y+29,r31
+ 142 0052 FA8D      		ldd r18,Y+29
+ 143 0054 3196      		tst r18
+ 144 0056 FA8F      		brne .L2
+ 146 005a FD8D      	.LM3:
+ 147 005c F150      		ldi r24,lo8(5)
+ 148 005e FD8F      		movw r30,r28
+ 149 0060 2D8D      		adiw r30,20
+ 150 0062 2223      		movw r26,r30
+ 151 0064 01F4      		mov r18,r24
+  35:main.c        **** 	unsigned char mtrx_off[5] = {0x00, 0x00, 0x00, 0x00, 0x00};
+ 152               		brne .-6
+ 154 0066 85E0      	.LM4:
+ 155 0068 FE01      		std Y+5,__zero_reg__
+ 157 006c DF01      	.LM5:
+ 158 006e 282F      		ldi r24,lo8(1)
+ 159 0070 1D92      		std Y+4,r24
+ 161 0074 01F4      	.LM6:
+  36:main.c        **** 	unsigned char mtrx_itm_cnt = 0;
+ 162               	_zero_reg__
+ 164 0076 1D82      	.LM7:
+  37:main.c        **** 	unsigned char mtrx_itm_type = 1;
+ 165               	d Y+2,__zero_reg__
+ 167 0078 81E0      	.LM8:
+ 168 007a 8C83      		ldi r24,lo8(1)
+  38:main.c        **** 	unsigned char mtrx_itm_x = 0;
+ 169               	 Y+1,r24
+ 171 007c 1B82      	.LM9:
+  39:main.c        **** 	unsigned char mtrx_itm_y = 0;
+ 172               	i r30,lo8(64)
+ 173               		ldi r31,hi8(64)
+ 174 007e 1A82      		st Z,__zero_reg__
+  40:main.c        **** 	unsigned char mtrx_new_itm = 1;
+ 175               	tabn	68,0,48,.LM10-.LFBB1
+ 176               	.LM10:
+ 177 0080 81E0      		ldi r30,lo8(41)
+ 178 0082 8983      		ldi r31,hi8(41)
+  41:main.c        **** 	//unsigned int i;
+  42:main.c        **** 	
+  43:main.c        **** 	//DDRB |= 0x1f;
+  44:main.c        **** 	//DDRD |= 0x7c;
+  45:main.c        **** 	//DDRA |= 0x03;
+  46:main.c        **** 
+  47:main.c        **** 	UBRRH = 0;		//UBRR to 15 for 115200bps with 14.7456Mhz
+ 179               	 r24,lo8(25)
+ 180               		st Z,r24
+ 182 0086 F0E0      	.LM11:
+ 183 0088 1082      		ldi r30,lo8(43)
+  48:main.c        **** 	UBRRL = 25;
+ 184               	r31,hi8(43)
+ 185               		ldi r24,lo8(98)
+ 186 008a E9E2      		st Z,r24
+ 188 008e 89E1      	.LM12:
+ 189 0090 8083      		ldi r30,lo8(42)
+  49:main.c        **** 	
+  50:main.c        **** 	UCSRA = 0x62;	// 
+ 190               	31,hi8(42)
+ 191               		ldi r24,lo8(24)
+ 192 0092 EBE2      		st Z,r24
+ 194 0096 82E6      	.LM13:
+ 195 0098 8083      		ldi r30,lo8(64)
+  51:main.c        **** 	UCSRB = 0x18;	// interrupts disabled, transmitter and reciever enabled, 8bit, no 9th bit
+ 196               	31,hi8(64)
+ 197               		ldi r24,lo8(-122)
+ 198 009a EAE2      		st Z,r24
+ 200 009e 88E1      	.LM14:
+ 201 00a0 8083      		ldi r30,lo8(44)
+  52:main.c        **** 	UCSRC = 0x86; 	// no parity, asynchronous, 1 stopbit, 8bit number
+ 202               	31,hi8(44)
+ 203               		ldi r24,lo8(1)
+ 204 00a2 E0E4      		st Z,r24
+ 205 00a4 F0E0      	.L26:
+ 207 00a8 8083      	.LM15:
+  53:main.c        **** 	//UCSRB |= (1 << RXCIE);
+  54:main.c        **** 	//sei();
+  55:main.c        **** 	
+  56:main.c        **** 	//PORTB &= ~0x1f;
+  57:main.c        **** 	UDR = 0x01;
+ 208               	24,Y+1
+ 209               		tst r24
+ 210 00aa ECE2      		brne .+2
+ 211 00ac F0E0      		rjmp .L3
+ 213 00b0 8083      	.LM16:
+ 214               		ldd r24,Y+4
+  58:main.c        **** 	
+  59:main.c        **** 	while(1)
+  60:main.c        **** 	{
+  61:main.c        **** 		if (mtrx_new_itm)
+ 215               	4
+ 216               		breq .L4
+ 217 00b2 8981      	.L5:
+ 219 00b6 01F4      	.LM17:
+ 220 00b8 00C0      		call rand
+  62:main.c        **** 		{
+  63:main.c        **** 			if (mtrx_itm_type)
+ 221               	18,lo8(5)
+ 222               		ldi r19,hi8(5)
+ 223 00ba 8C81      		movw r22,r18
+ 224 00bc 8823      		call __divmodhi4
+ 225 00be 01F0      		std Y+3,r24
+  64:main.c        **** 			{
+  65:main.c        **** 				do
+  66:main.c        **** 				{
+  67:main.c        **** 					mtrx_itm_x = (rand()%5);
+ 227               	
+ 228               		ldd r24,Y+3
+ 229 00c0 0E94 0000 		mov r18,r24
+ 230 00c4 25E0      		ldi r19,lo8(0)
+ 231 00c6 30E0      		movw r24,r28
+ 232 00c8 B901      		adiw r24,10
+ 233 00ca 0E94 0000 		movw r30,r24
+ 234 00ce 8B83      		add r30,r18
+  68:main.c        **** 				}
+  69:main.c        **** 				while (mtrx[mtrx_itm_x] & (1 << 6));
+ 235               	1,r19
+ 236               		ld r24,Z
+ 237 00d0 8B81      		mov r24,r24
+ 238 00d2 282F      		ldi r25,lo8(0)
+ 239 00d4 30E0      		andi r24,lo8(64)
+ 240 00d6 CE01      		andi r25,hi8(64)
+ 241 00d8 0A96      		sbiw r24,0
+ 242 00da FC01      		brne .L5
+ 244 00de F31F      	.LM19:
+ 245 00e0 8081      		ldd r24,Y+3
+ 246 00e2 882F      		mov r20,r24
+ 247 00e4 90E0      		ldi r21,lo8(0)
+ 248 00e6 8074      		ldd r24,Y+3
+ 249 00e8 9070      		mov r18,r24
+ 250 00ea 0097      		ldi r19,lo8(0)
+ 251 00ec 01F4      		movw r24,r28
+  70:main.c        **** 				mtrx[mtrx_itm_x] |= (1 << 6);
+ 252               	w r30,r24
+ 253               		add r30,r18
+ 254 00ee 8B81      		adc r31,r19
+ 255 00f0 482F      		ld r24,Z
+ 256 00f2 50E0      		mov r18,r24
+ 257 00f4 8B81      		ori r18,lo8(64)
+ 258 00f6 282F      		movw r24,r28
+ 259 00f8 30E0      		adiw r24,10
+ 260 00fa CE01      		movw r30,r24
+ 261 00fc 0A96      		add r30,r20
+ 262 00fe FC01      		adc r31,r21
+ 263 0100 E20F      		st Z,r18
+ 265 0104 8081      	.LM20:
+ 266 0106 282F      		std Y+1,__zero_reg__
+ 268 010a CE01      	.LM21:
+ 269 010c 0A96      		ldi r24,lo8(6)
+ 270 010e FC01      		std Y+2,r24
+ 272 0112 F51F      	.LM22:
+ 273 0114 2083      		ldd r24,Y+5
+  71:main.c        **** 				mtrx_new_itm = 0;
+ 274               	td Y+5,r24
+ 275               		rjmp .L7
+ 276 0116 1982      	.L4:
+  72:main.c        **** 				mtrx_itm_y = 6;
+ 277               	tabn	68,0,79,.LM23-.LFBB1
+ 278               	.LM23:
+ 279 0118 86E0      		call rand
+ 280 011a 8A83      		ldi r18,lo8(5)
+  73:main.c        **** 				mtrx_itm_cnt++;
+ 281               	 r19,hi8(5)
+ 282               		movw r22,r18
+ 283 011c 8D81      		call __divmodhi4
+ 284 011e 8F5F      		std Y+3,r24
+ 286 0122 00C0      	.LM24:
+ 287               		ldd r24,Y+3
+  74:main.c        **** 			}
+  75:main.c        **** 			else
+  76:main.c        **** 			{
+  77:main.c        **** 				do
+  78:main.c        **** 				{
+  79:main.c        **** 					mtrx_itm_x = (rand()%5);
+ 288               	8,r24
+ 289               		ldi r19,lo8(0)
+ 290 0124 0E94 0000 		movw r24,r28
+ 291 0128 25E0      		adiw r24,10
+ 292 012a 30E0      		movw r30,r24
+ 293 012c B901      		add r30,r18
+ 294 012e 0E94 0000 		adc r31,r19
+ 295 0132 8B83      		ld r24,Z
+  80:main.c        **** 				}
+  81:main.c        **** 				while (!(mtrx[mtrx_itm_x] & (1 << 6)));
+ 296               	,r24
+ 297               		ldi r25,lo8(0)
+ 298 0134 8B81      		andi r24,lo8(64)
+ 299 0136 282F      		andi r25,hi8(64)
+ 300 0138 30E0      		sbiw r24,0
+ 301 013a CE01      		breq .L4
+ 303 013e FC01      	.LM25:
+ 304 0140 E20F      		ldd r24,Y+3
+ 305 0142 F31F      		mov r20,r24
+ 306 0144 8081      		ldi r21,lo8(0)
+ 307 0146 882F      		ldd r24,Y+3
+ 308 0148 90E0      		mov r18,r24
+ 309 014a 8074      		ldi r19,lo8(0)
+ 310 014c 9070      		movw r24,r28
+ 311 014e 0097      		adiw r24,10
+ 312 0150 01F0      		movw r30,r24
+  82:main.c        **** 				mtrx[mtrx_itm_x] &= ~(1 << 6);
+ 313               	 r31,r19
+ 314               		ld r24,Z
+ 315 0152 8B81      		mov r18,r24
+ 316 0154 482F      		andi r18,lo8(-65)
+ 317 0156 50E0      		movw r24,r28
+ 318 0158 8B81      		adiw r24,10
+ 319 015a 282F      		movw r30,r24
+ 320 015c 30E0      		add r30,r20
+ 321 015e CE01      		adc r31,r21
+ 322 0160 0A96      		st Z,r18
+ 324 0164 E20F      	.LM26:
+ 325 0166 F31F      		std Y+1,__zero_reg__
+ 327 016a 282F      	.LM27:
+ 328 016c 2F7B      		ldi r24,lo8(6)
+ 329 016e CE01      		std Y+2,r24
+ 331 0172 FC01      	.LM28:
+ 332 0174 E40F      		ldd r24,Y+5
+ 333 0176 F51F      		subi r24,lo8(-(-1))
+ 334 0178 2083      		std Y+5,r24
+  83:main.c        **** 				mtrx_new_itm = 0;
+ 335               		68,0,90,.LM29-.LFBB1
+ 336               	.LM29:
+ 337 017a 1982      		ldd r24,Y+4
+  84:main.c        **** 				mtrx_itm_y = 6;
+ 338               	t r24
+ 339               		brne .+2
+ 340 017c 86E0      		rjmp .L8
+  85:main.c        **** 				mtrx_itm_cnt--;
+ 342               	0:
+ 343               		ldd r24,Y+3
+ 344 0180 8D81      		mov r18,r24
+ 345 0182 8150      		ldi r19,lo8(0)
+ 346 0184 8D83      		movw r24,r28
+ 347 0186 00C0      		adiw r24,10
+ 348               		movw r30,r24
+  86:main.c        **** 			}
+  87:main.c        **** 		}
+  88:main.c        **** 		else
+  89:main.c        **** 		{
+  90:main.c        **** 			if (mtrx_itm_type)
+ 349               	0,r18
+ 350               		adc r31,r19
+ 351 0188 8C81      		ld r24,Z
+ 352 018a 8823      		mov r18,r24
+ 353 018c 01F4      		ldi r19,lo8(0)
+ 354 018e 00C0      		ldd r24,Y+2
+  91:main.c        **** 			{
+  92:main.c        **** 				if ((!(mtrx[mtrx_itm_x] & (1 << (mtrx_itm_y - 1)))) && (mtrx_itm_y > 0))
+ 355               	24,r24
+ 356               		ldi r25,lo8(0)
+ 357 0190 8B81      		sbiw r24,1
+ 358 0192 282F      		movw r20,r18
+ 359 0194 30E0      		rjmp 2f
+ 360 0196 CE01      	1:	asr r21
+ 361 0198 0A96      		ror r20
+ 362 019a FC01      	2:	dec r24
+ 363 019c E20F      		brpl 1b
+ 364 019e F31F      		movw r24,r20
+ 365 01a0 8081      		andi r24,lo8(1)
+ 366 01a2 282F      		andi r25,hi8(1)
+ 367 01a4 30E0      		sbiw r24,0
+ 368 01a6 8A81      		breq .+2
+ 369 01a8 882F      		rjmp .L9
+ 370 01aa 90E0      		ldd r24,Y+2
+ 371 01ac 0197      		tst r24
+ 372 01ae A901      		brne .+2
+ 373 01b0 00C0      		rjmp .L9
+ 375 01b4 4795      	.LM31:
+ 376 01b6 8A95      		ldd r24,Y+3
+ 377 01b8 02F4      		mov r20,r24
+ 378 01ba CA01      		ldi r21,lo8(0)
+ 379 01bc 8170      		ldd r24,Y+3
+ 380 01be 9070      		mov r18,r24
+ 381 01c0 0097      		ldi r19,lo8(0)
+ 382 01c2 01F0      		movw r24,r28
+ 383 01c4 00C0      		adiw r24,10
+ 384 01c6 8A81      		movw r30,r24
+ 385 01c8 8823      		add r30,r18
+ 386 01ca 01F4      		adc r31,r19
+ 387 01cc 00C0      		ld r24,Z
+  93:main.c        **** 				{
+  94:main.c        **** 					mtrx[mtrx_itm_x] &= ~(1 << mtrx_itm_y);
+ 388               	8,r24
+ 389               		ldi r19,lo8(0)
+ 390 01ce 8B81      		ldi r24,lo8(1)
+ 391 01d0 482F      		ldi r25,hi8(1)
+ 392 01d2 50E0      		rjmp 2f
+ 393 01d4 8B81      	1:	lsl r24
+ 394 01d6 282F      		rol r25
+ 395 01d8 30E0      	2:	dec r18
+ 396 01da CE01      		brpl 1b
+ 397 01dc 0A96      		com r24
+ 398 01de FC01      		and r24,r22
+ 399 01e0 E20F      		mov r18,r24
+ 400 01e2 F31F      		movw r24,r28
+ 401 01e4 8081      		adiw r24,10
+ 402 01e6 682F      		movw r30,r24
+ 403 01e8 8A81      		add r30,r20
+ 404 01ea 282F      		adc r31,r21
+ 405 01ec 30E0      		st Z,r18
+ 407 01f0 90E0      	.LM32:
+ 408 01f2 00C0      		ldd r24,Y+3
+ 409 01f4 880F      		mov r20,r24
+ 410 01f6 991F      		ldi r21,lo8(0)
+ 411 01f8 2A95      		ldd r24,Y+3
+ 412 01fa 02F4      		mov r18,r24
+ 413 01fc 8095      		ldi r19,lo8(0)
+ 414 01fe 8623      		movw r24,r28
+ 415 0200 282F      		adiw r24,10
+ 416 0202 CE01      		movw r30,r24
+ 417 0204 0A96      		add r30,r18
+ 418 0206 FC01      		adc r31,r19
+ 419 0208 E40F      		ld r24,Z
+ 420 020a F51F      		mov r22,r24
+ 421 020c 2083      		ldd r24,Y+2
+  95:main.c        **** 					mtrx[mtrx_itm_x] |= (1 << mtrx_itm_y - 1);
+ 422               	 r18,r24
+ 423               		subi r18,lo8(-(-1))
+ 424 020e 8B81      		sbci r19,hi8(-(-1))
+ 425 0210 482F      		ldi r24,lo8(1)
+ 426 0212 50E0      		ldi r25,hi8(1)
+ 427 0214 8B81      		rjmp 2f
+ 428 0216 282F      	1:	lsl r24
+ 429 0218 30E0      		rol r25
+ 430 021a CE01      	2:	dec r18
+ 431 021c 0A96      		brpl 1b
+ 432 021e FC01      		or r24,r22
+ 433 0220 E20F      		mov r18,r24
+ 434 0222 F31F      		movw r24,r28
+ 435 0224 8081      		adiw r24,10
+ 436 0226 682F      		movw r30,r24
+ 437 0228 8A81      		add r30,r20
+ 438 022a 882F      		adc r31,r21
+ 439 022c 90E0      		st Z,r18
+ 441 0230 2150      	.LM33:
+ 442 0232 3040      		ldd r24,Y+2
+ 443 0234 81E0      		subi r24,lo8(-(-1))
+ 444 0236 90E0      		std Y+2,r24
+ 445 0238 00C0      		rjmp .L7
+ 446 023a 880F      	.L9:
+ 448 023e 2A95      	.LM34:
+ 449 0240 02F4      		ldi r24,lo8(1)
+ 450 0242 862B      		std Y+1,r24
+ 451 0244 282F      		rjmp .L7
+ 452 0246 CE01      	.L8:
+ 454 024a FC01      	.LM35:
+ 455 024c E40F      		ldd r24,Y+3
+ 456 024e F51F      		mov r18,r24
+ 457 0250 2083      		ldi r19,lo8(0)
+  96:main.c        **** 					mtrx_itm_y--;
+ 458               	,r24
+ 459               		add r30,r18
+ 460 0252 8A81      		adc r31,r19
+ 461 0254 8150      		ld r24,Z
+ 462 0256 8A83      		mov r18,r24
+ 463 0258 00C0      		ldi r19,lo8(0)
+ 464               		ldd r24,Y+2
+  97:main.c        **** 				}
+  98:main.c        **** 				else
+  99:main.c        **** 					mtrx_new_itm = 1;
+ 465               	4,r24
+ 466               		ldi r25,lo8(0)
+ 467 025a 81E0      		sbiw r24,1
+ 468 025c 8983      		movw r26,r18
+ 469 025e 00C0      		rjmp 2f
+ 470               	1:	asr r27
+ 100:main.c        **** 			}
+ 101:main.c        **** 			else
+ 102:main.c        **** 			{
+ 103:main.c        **** 				if (((mtrx[mtrx_itm_x] & (1 << (mtrx_itm_y - 1)))) && (mtrx_itm_y > 0))
+ 471               	26
+ 472               	2:	dec r24
+ 473 0260 8B81      		brpl 1b
+ 474 0262 282F      		movw r24,r26
+ 475 0264 30E0      		andi r24,lo8(1)
+ 476 0266 CE01      		andi r25,hi8(1)
+ 477 0268 0A96      		mov r25,r24
+ 478 026a FC01      		ldi r24,lo8(1)
+ 479 026c E20F      		eor r24,r25
+ 480 026e F31F      		tst r24
+ 481 0270 8081      		breq .+2
+ 482 0272 282F      		rjmp .L11
+ 483 0274 30E0      		ldd r24,Y+2
+ 484 0276 8A81      		tst r24
+ 485 0278 882F      		brne .+2
+ 486 027a 90E0      		rjmp .L11
+ 488 027e D901      	.LM36:
+ 489 0280 00C0      		ldd r24,Y+3
+ 490 0282 B595      		mov r20,r24
+ 491 0284 A795      		ldi r21,lo8(0)
+ 492 0286 8A95      		ldd r24,Y+3
+ 493 0288 02F4      		mov r18,r24
+ 494 028a CD01      		ldi r19,lo8(0)
+ 495 028c 8170      		movw r24,r28
+ 496 028e 9070      		adiw r24,10
+ 497 0290 982F      		movw r30,r24
+ 498 0292 81E0      		add r30,r18
+ 499 0294 8927      		adc r31,r19
+ 500 0296 8823      		ld r24,Z
+ 501 0298 01F0      		mov r22,r24
+ 502 029a 00C0      		ldd r24,Y+2
+ 503 029c 8A81      		mov r18,r24
+ 504 029e 8823      		ldi r19,lo8(0)
+ 505 02a0 01F4      		ldi r24,lo8(1)
+ 506 02a2 00C0      		ldi r25,hi8(1)
+ 104:main.c        **** 				{
+ 105:main.c        **** 					mtrx[mtrx_itm_x] |= (1 << mtrx_itm_y);
+ 507               	r18
+ 508               		brpl 1b
+ 509 02a4 8B81      		or r24,r22
+ 510 02a6 482F      		mov r18,r24
+ 511 02a8 50E0      		movw r24,r28
+ 512 02aa 8B81      		adiw r24,10
+ 513 02ac 282F      		movw r30,r24
+ 514 02ae 30E0      		add r30,r20
+ 515 02b0 CE01      		adc r31,r21
+ 516 02b2 0A96      		st Z,r18
+ 518 02b6 E20F      	.LM37:
+ 519 02b8 F31F      		ldd r24,Y+3
+ 520 02ba 8081      		mov r20,r24
+ 521 02bc 682F      		ldi r21,lo8(0)
+ 522 02be 8A81      		ldd r24,Y+3
+ 523 02c0 282F      		mov r18,r24
+ 524 02c2 30E0      		ldi r19,lo8(0)
+ 525 02c4 81E0      		movw r24,r28
+ 526 02c6 90E0      		adiw r24,10
+ 527 02c8 00C0      		movw r30,r24
+ 528 02ca 880F      		add r30,r18
+ 529 02cc 991F      		adc r31,r19
+ 530 02ce 2A95      		ld r24,Z
+ 531 02d0 02F4      		mov r22,r24
+ 532 02d2 862B      		ldd r24,Y+2
+ 533 02d4 282F      		mov r24,r24
+ 534 02d6 CE01      		ldi r25,lo8(0)
+ 535 02d8 0A96      		movw r18,r24
+ 536 02da FC01      		subi r18,lo8(-(-1))
+ 537 02dc E40F      		sbci r19,hi8(-(-1))
+ 538 02de F51F      		ldi r24,lo8(1)
+ 539 02e0 2083      		ldi r25,hi8(1)
+ 106:main.c        **** 					mtrx[mtrx_itm_x] &= ~(1 << mtrx_itm_y - 1);
+ 540               	ec r18
+ 541               		brpl 1b
+ 542 02e2 8B81      		com r24
+ 543 02e4 482F      		and r24,r22
+ 544 02e6 50E0      		mov r18,r24
+ 545 02e8 8B81      		movw r24,r28
+ 546 02ea 282F      		adiw r24,10
+ 547 02ec 30E0      		movw r30,r24
+ 548 02ee CE01      		add r30,r20
+ 549 02f0 0A96      		adc r31,r21
+ 550 02f2 FC01      		st Z,r18
+ 552 02f6 F31F      	.LM38:
+ 553 02f8 8081      		ldd r24,Y+2
+ 554 02fa 682F      		subi r24,lo8(-(-1))
+ 555 02fc 8A81      		std Y+2,r24
+ 556 02fe 882F      		rjmp .L7
+ 557 0300 90E0      	.L11:
+ 559 0304 2150      	.LM39:
+ 560 0306 3040      		ldi r24,lo8(1)
+ 561 0308 81E0      		std Y+1,r24
+ 562 030a 90E0      	.L7:
+ 564 030e 880F      	.LM40:
+ 565 0310 991F      		std Y+6,__zero_reg__
+ 566 0312 2A95      		std Y+7,__zero_reg__
+ 567 0314 02F4      		std Y+8,__zero_reg__
+ 568 0316 8095      		std Y+9,__zero_reg__
+ 569 0318 8623      		rjmp .L12
+ 570 031a 282F      	.L13:
+ 571 031c CE01      		ldd r24,Y+6
+ 572 031e 0A96      		ldd r25,Y+7
+ 573 0320 FC01      		ldd r26,Y+8
+ 574 0322 E40F      		ldd r27,Y+9
+ 575 0324 F51F      		adiw r24,1
+ 576 0326 2083      		adc r26,__zero_reg__
+ 107:main.c        **** 					mtrx_itm_y--;
+ 577               	td Y+7,r25
+ 578               		std Y+8,r26
+ 579 0328 8A81      		std Y+9,r27
+ 580 032a 8150      	.L12:
+ 581 032c 8A83      		ldd r24,Y+6
+ 582 032e 00C0      		ldd r25,Y+7
+ 583               		ldd r26,Y+8
+ 108:main.c        **** 				}
+ 109:main.c        **** 				else
+ 110:main.c        **** 					mtrx_new_itm = 1;
+ 584               	7,Y+9
+ 585               		cpi r24,lo8(10001)
+ 586 0330 81E0      		ldi r30,hi8(10001)
+ 587 0332 8983      		cpc r25,r30
+ 588               		ldi r30,hlo8(10001)
+ 111:main.c        **** 			}
+ 112:main.c        **** 		}
+ 113:main.c        **** 		for (i = 0; i <= 10000; i++);
+ 589               	r26,r30
+ 590               		ldi r30,hhi8(10001)
+ 591 0334 1E82      		cpc r27,r30
+ 592 0336 1F82      		brlo .L13
+ 594 033a 1986      	.LM41:
+ 595 033c 00C0      		movw r18,r28
+ 596               		subi r18,lo8(-(10))
+ 597 033e 8E81      		sbci r19,hi8(-(10))
+ 598 0340 9F81      		ldi r24,lo8(-127)
+ 599 0342 A885      		movw r22,r18
+ 600 0344 B985      		call write_data
+ 602 0348 A11D      	.LM42:
+ 603 034a B11D      		movw r18,r28
+ 604 034c 8E83      		subi r18,lo8(-(10))
+ 605 034e 9F83      		sbci r19,hi8(-(10))
+ 606 0350 A887      		ldi r24,lo8(-126)
+ 607 0352 B987      		movw r22,r18
+ 608               		call write_data
+ 610 0356 9F81      	.LM43:
+ 611 0358 A885      		ldd r24,Y+5
+ 612 035a B985      		tst r24
+ 613 035c 8131      		breq .L14
+ 614 035e E7E2      		ldd r24,Y+5
+ 615 0360 9E07      		cpi r24,lo8(35)
+ 616 0362 E0E0      		breq .+2
+ 617 0364 AE07      		rjmp .L26
+ 618 0366 E0E0      	.L14:
+ 620 036a 00F0      	.LM44:
+ 114:main.c        **** 		write_data(0x81, mtrx);
+ 621               	tabn	68,0,119,.LM45-.LFBB1
+ 622               	.LM45:
+ 623 036c 9E01      		ldd r25,Y+4
+ 624 036e 265F      		ldi r24,lo8(1)
+ 625 0370 3F4F      		eor r24,r25
+ 626 0372 81E8      		std Y+4,r24
+ 628 0376 0E94 0000 	.LM46:
+ 115:main.c        **** 		write_data(0x82, mtrx);
+ 629               	,__zero_reg__
+ 630               		std Y+7,__zero_reg__
+ 631 037a 9E01      		std Y+8,__zero_reg__
+ 632 037c 265F      		std Y+9,__zero_reg__
+ 633 037e 3F4F      		rjmp .L16
+ 634 0380 82E8      	.L17:
+ 635 0382 B901      		ldd r24,Y+6
+ 636 0384 0E94 0000 		ldd r25,Y+7
+ 116:main.c        **** 		if ((mtrx_itm_cnt == 0) || (mtrx_itm_cnt == 35))
+ 637               	,Y+8
+ 638               		ldd r27,Y+9
+ 639 0388 8D81      		adiw r24,1
+ 640 038a 8823      		adc r26,__zero_reg__
+ 641 038c 01F0      		adc r27,__zero_reg__
+ 642 038e 8D81      		std Y+6,r24
+ 643 0390 8332      		std Y+7,r25
+ 644 0392 01F0      		std Y+8,r26
+ 645 0394 00C0      		std Y+9,r27
+ 646               	.L16:
+ 117:main.c        **** 		{
+ 118:main.c        **** 			mtrx_new_itm = 1;
+ 647               	+6
+ 648               		ldd r25,Y+7
+ 649 0396 81E0      		ldd r26,Y+8
+ 650 0398 8983      		ldd r27,Y+9
+ 119:main.c        **** 			mtrx_itm_type ^= 0x01;
+ 651               	 r24,lo8(50001)
+ 652               		ldi r31,hi8(50001)
+ 653 039a 9C81      		cpc r25,r31
+ 654 039c 81E0      		ldi r31,hlo8(50001)
+ 655 039e 8927      		cpc r26,r31
+ 656 03a0 8C83      		ldi r31,hhi8(50001)
+ 120:main.c        **** 			//for (i = 0; i <= 100000; i++);
+ 121:main.c        **** 			for (i = 0; i <= 50000; i++);
+ 657               	27,r31
+ 658               		brlo .L17
+ 660 03a4 1F82      	.LM47:
+ 661 03a6 1886      		movw r18,r28
+ 662 03a8 1986      		subi r18,lo8(-(20))
+ 663 03aa 00C0      		sbci r19,hi8(-(20))
+ 664               		ldi r24,lo8(-127)
+ 665 03ac 8E81      		movw r22,r18
+ 666 03ae 9F81      		call write_data
+ 668 03b2 B985      	.LM48:
+ 669 03b4 0196      		movw r18,r28
+ 670 03b6 A11D      		subi r18,lo8(-(20))
+ 671 03b8 B11D      		sbci r19,hi8(-(20))
+ 672 03ba 8E83      		ldi r24,lo8(-126)
+ 673 03bc 9F83      		movw r22,r18
+ 674 03be A887      		call write_data
+ 676               	.LM49:
+ 677 03c2 8E81      		std Y+6,__zero_reg__
+ 678 03c4 9F81      		std Y+7,__zero_reg__
+ 679 03c6 A885      		std Y+8,__zero_reg__
+ 680 03c8 B985      		std Y+9,__zero_reg__
+ 681 03ca 8135      		rjmp .L18
+ 682 03cc F3EC      	.L19:
+ 683 03ce 9F07      		ldd r24,Y+6
+ 684 03d0 F0E0      		ldd r25,Y+7
+ 685 03d2 AF07      		ldd r26,Y+8
+ 686 03d4 F0E0      		ldd r27,Y+9
+ 687 03d6 BF07      		adiw r24,1
+ 688 03d8 00F0      		adc r26,__zero_reg__
+ 122:main.c        **** 			write_data(0x81, mtrx_off);
+ 689               	24
+ 690               		std Y+7,r25
+ 691 03da 9E01      		std Y+8,r26
+ 692 03dc 2C5E      		std Y+9,r27
+ 693 03de 3F4F      	.L18:
+ 694 03e0 81E8      		ldd r24,Y+6
+ 695 03e2 B901      		ldd r25,Y+7
+ 696 03e4 0E94 0000 		ldd r26,Y+8
+ 123:main.c        **** 			write_data(0x82, mtrx_off);
+ 697               	,Y+9
+ 698               		cpi r24,lo8(50001)
+ 699 03e8 9E01      		ldi r18,hi8(50001)
+ 700 03ea 2C5E      		cpc r25,r18
+ 701 03ec 3F4F      		ldi r18,hlo8(50001)
+ 702 03ee 82E8      		cpc r26,r18
+ 703 03f0 B901      		ldi r18,hhi8(50001)
+ 704 03f2 0E94 0000 		cpc r27,r18
+ 124:main.c        **** 			for (i = 0; i <= 50000; i++);
+ 705               	19
+ 707 03f6 1E82      	.LM50:
+ 708 03f8 1F82      		movw r18,r28
+ 709 03fa 1886      		subi r18,lo8(-(15))
+ 710 03fc 1986      		sbci r19,hi8(-(15))
+ 711 03fe 00C0      		ldi r24,lo8(-127)
+ 712               		movw r22,r18
+ 713 0400 8E81      		call write_data
+ 715 0404 A885      	.LM51:
+ 716 0406 B985      		movw r18,r28
+ 717 0408 0196      		subi r18,lo8(-(15))
+ 718 040a A11D      		sbci r19,hi8(-(15))
+ 719 040c B11D      		ldi r24,lo8(-126)
+ 720 040e 8E83      		movw r22,r18
+ 721 0410 9F83      		call write_data
+ 723 0414 B987      	.LM52:
+ 724               		std Y+6,__zero_reg__
+ 725 0416 8E81      		std Y+7,__zero_reg__
+ 726 0418 9F81      		std Y+8,__zero_reg__
+ 727 041a A885      		std Y+9,__zero_reg__
+ 728 041c B985      		rjmp .L20
+ 729 041e 8135      	.L21:
+ 730 0420 23EC      		ldd r24,Y+6
+ 731 0422 9207      		ldd r25,Y+7
+ 732 0424 20E0      		ldd r26,Y+8
+ 733 0426 A207      		ldd r27,Y+9
+ 734 0428 20E0      		adiw r24,1
+ 735 042a B207      		adc r26,__zero_reg__
+ 736 042c 00F0      		adc r27,__zero_reg__
+ 125:main.c        **** 			write_data(0x81, mtrx_on);
+ 737               	+8,r26
+ 738               		std Y+9,r27
+ 739 042e 9E01      	.L20:
+ 740 0430 215F      		ldd r24,Y+6
+ 741 0432 3F4F      		ldd r25,Y+7
+ 742 0434 81E8      		ldd r26,Y+8
+ 743 0436 B901      		ldd r27,Y+9
+ 744 0438 0E94 0000 		cpi r24,lo8(50001)
+ 126:main.c        **** 			write_data(0x82, mtrx_on);
+ 745               	5,Y+7
+ 746               		ldd r26,Y+8
+ 747 043c 9E01      		ldd r27,Y+9
+ 748 043e 215F      		adiw r24,1
+ 749 0440 3F4F      		adc r26,__zero_reg__
+ 750 0442 82E8      		adc r27,__zero_reg__
+ 751 0444 B901      		std Y+6,r24
+ 752 0446 0E94 0000 		std Y+7,r25
+ 127:main.c        **** 			for (i = 0; i <= 50000; i++);
+ 753               	ro_reg__
+ 754               		std Y+7,__zero_reg__
+ 755 044a 1E82      		std Y+8,__zero_reg__
+ 756 044c 1F82      		std Y+9,__zero_reg__
+ 757 044e 1886      		rjmp .L20
+ 758 0450 1986      	.L21:
+ 759 0452 00C0      		ldd r24,Y+6
+ 760               		ldd r25,Y+7
+ 761 0454 8E81      		ldd r26,Y+8
+ 762 0456 9F81      		ldd r27,Y+9
+ 763 0458 A885      		adiw r24,1
+ 764 045a B985      		adc r26,__zero_reg__
+ 765 045c 0196      		adc r27,__zero_reg__
+ 766 045e A11D      		std Y+6,r24
+ 767 0460 B11D      		std Y+7,r25
+ 768 0462 8E83      		std Y+8,r26
+ 769 0464 9F83      		std Y+9,r27
+ 770 0466 A887      	.L20:
+ 771 0468 B987      		ldd r24,Y+6
+ 772               		ldd r25,Y+7
+ 773 046a 8E81      		ldd r26,Y+8
+ 774 046c 9F81      		ldd r27,Y+9
+ 775 046e A885      		cpi r24,lo8(50001)
+ 776 0470 B985      		ldi r20,hi8(50001)
+ 777 0472 8135      		cpc r25,r20
+ 778 0474 43EC      		ldi r20,hlo8(50001)
+ 779 0476 9407      		cpc r26,r20
+ 780 0478 40E0      		ldi r20,hhi8(50001)
+ 781 047a A407      		cpc r27,r20
+ 782 047c 40E0      		brlo .L21
+ 784 0480 00F0      	.LM53:
+ 128:main.c        **** 			write_data(0x81, mtrx_off);
+ 785               	))
+ 786               		sbci r19,hi8(-(20))
+ 787 0482 9E01      		ldi r24,lo8(-127)
+ 788 0484 2C5E      		movw r22,r18
+ 789 0486 3F4F      		call write_data
+ 791 048a B901      	.LM54:
+ 792 048c 0E94 0000 		movw r18,r28
+ 129:main.c        **** 			write_data(0x82, mtrx_off);
+ 793               	 .L21
+ 795 0490 9E01      	.LM53:
+ 796 0492 2C5E      		movw r18,r28
+ 797 0494 3F4F      		subi r18,lo8(-(20))
+ 798 0496 82E8      		sbci r19,hi8(-(20))
+ 799 0498 B901      		ldi r24,lo8(-127)
+ 800 049a 0E94 0000 		movw r22,r18
+ 130:main.c        **** 			for (i = 0; i <= 50000; i++);
+ 801               	ldi r20,hlo8(50001)
+ 802               		cpc r26,r20
+ 803 049e 1E82      		ldi r20,hhi8(50001)
+ 804 04a0 1F82      		cpc r27,r20
+ 805 04a2 1886      		brlo .L21
+ 807 04a6 00C0      	.LM53:
+ 808               		movw r18,r28
+ 809 04a8 8E81      		subi r18,lo8(-(20))
+ 810 04aa 9F81      		sbci r19,hi8(-(20))
+ 811 04ac A885      		ldi r24,lo8(-127)
+ 812 04ae B985      		movw r22,r18
+ 813 04b0 0196      		call write_data
+ 815 04b4 B11D      	.LM54:
+ 816 04b6 8E83      		movw r18,r28
+ 817 04b8 9F83      		subi r18,lo8(-(20))
+ 818 04ba A887      		sbci r19,hi8(-(20))
+ 819 04bc B987      		ldi r24,lo8(-126)
+ 820               		movw r22,r18
+ 821 04be 8E81      		call write_data
+ 823 04c2 A885      	.LM55:
+ 824 04c4 B985      		std Y+6,__zero_reg__
+ 825 04c6 8135      		std Y+7,__zero_reg__
+ 826 04c8 53EC      		std Y+8,__zero_reg__
+ 827 04ca 9507      		std Y+9,__zero_reg__
+ 828 04cc 50E0      		rjmp .L22
+ 829 04ce A507      	.L23:
+ 830 04d0 50E0      		ldd r24,Y+6
+ 831 04d2 B507      		ldd r25,Y+7
+ 832 04d4 00F0      		ldd r26,Y+8
+ 131:main.c        **** 			write_data(0x81, mtrx_on);
+ 833               	ta
+ 835 04d6 9E01      	.LM55:
+ 836 04d8 215F      		std Y+6,__zero_reg__
+ 837 04da 3F4F      		std Y+7,__zero_reg__
+ 838 04dc 81E8      		std Y+8,__zero_reg__
+ 839 04de B901      		std Y+9,__zero_reg__
+ 840 04e0 0E94 0000 		rjmp .L22
+ 132:main.c        **** 			write_data(0x82, mtrx_on);
+ 841               	)
+ 842               		ldi r24,lo8(-126)
+ 843 04e4 9E01      		movw r22,r18
+ 844 04e6 215F      		call write_data
+ 846 04ea 82E8      	.LM55:
+ 847 04ec B901      		std Y+6,__zero_reg__
+ 848 04ee 0E94 0000 		std Y+7,__zero_reg__
+ 133:main.c        **** 			for (i = 0; i <= 50000; i++);
+ 849               	54:
+ 850               		movw r18,r28
+ 851 04f2 1E82      		subi r18,lo8(-(20))
+ 852 04f4 1F82      		sbci r19,hi8(-(20))
+ 853 04f6 1886      		ldi r24,lo8(-126)
+ 854 04f8 1986      		movw r22,r18
+ 855 04fa 00C0      		call write_data
+ 857 04fc 8E81      	.LM55:
+ 858 04fe 9F81      		std Y+6,__zero_reg__
+ 859 0500 A885      		std Y+7,__zero_reg__
+ 860 0502 B985      		std Y+8,__zero_reg__
+ 861 0504 0196      		std Y+9,__zero_reg__
+ 862 0506 A11D      		rjmp .L22
+ 863 0508 B11D      	.L23:
+ 864 050a 8E83      		ldd r24,Y+6
+ 865 050c 9F83      		ldd r25,Y+7
+ 866 050e A887      		ldd r26,Y+8
+ 867 0510 B987      		ldd r27,Y+9
+ 868               		adiw r24,1
+ 869 0512 8E81      		adc r26,__zero_reg__
+ 870 0514 9F81      		adc r27,__zero_reg__
+ 871 0516 A885      		std Y+6,r24
+ 872 0518 B985      		std Y+7,r25
+ 873 051a 8135      		std Y+8,r26
+ 874 051c E3EC      		std Y+9,r27
+ 875 051e 9E07      	.L22:
+ 876 0520 E0E0      		ldd r24,Y+6
+ 877 0522 AE07      		ldd r25,Y+7
+ 878 0524 E0E0      		ldd r26,Y+8
+ 879 0526 BE07      		ldd r27,Y+9
+ 880 0528 00F0      		cpi r24,lo8(50001)
+ 881 052a 00C0      		ldi r21,hi8(50001)
+ 882               		cpc r25,r21
+ 883               		ldi r21,hlo8(50001)
+ 884               		cpc r26,r21
+ 885               		ldi r21,hhi8(50001)
+ 886               		cpc r27,r21
+ 887               		brlo .L23
+ 889               	.LM56:
+ 890               		movw r18,r28
+ 891               		subi r18,lo8(-(15))
+ 892               		sbci r19,hi8(-(15))
+ 893               		ldi r24,lo8(-127)
+ 894               		movw r22,r18
+ 895               		call write_data
+ 897               	.LM57:
+ 898               		movw r18,r28
+ 899               		subi r18,lo8(-(15))
+ 900               		sbci r19,hi8(-(15))
+ 134:main.c        **** 		}
+ 135:main.c        **** 		/*if (mtrx_itm_cnt == 35) || 
+ 136:main.c        **** 		{
+ 137:main.c        **** 			mtrx_itm_type = 0;
+ 138:main.c        **** 			//mtrx_itm_cnt--;
+ 139:main.c        **** 			for (i = 0; i <= 100000; i++);
+ 140:main.c        **** 		}
+ 141:main.c        **** 		/*mtrx_itm_x = (rand()%5);
+ 142:main.c        **** 		mtrx_itm_y = (rand()%7);
+ 143:main.c        **** 		if ((!(mtrx[mtrx_itm_x] & (1 << mtrx_itm_y))) && (mtrx_itm_type))
+ 144:main.c        **** 		{
+ 145:main.c        **** 			mtrx[mtrx_itm_x] |= (1 << mtrx_itm_y);
+ 146:main.c        **** 			for (i = 0; i <= 50000; i++);
+ 147:main.c        **** 			mtrx_itm_cnt++;
+ 148:main.c        **** 		}
+ 149:main.c        **** 		if (((mtrx[mtrx_itm_x] & (1 << mtrx_itm_y))) && (!(mtrx_itm_type)))
+ 150:main.c        **** 		{
+ 151:main.c        **** 			mtrx[mtrx_itm_x] &= ~(1 << mtrx_itm_y);
+ 152:main.c        **** 			for (i = 0; i <= 50000; i++);
+ 153:main.c        **** 			mtrx_itm_cnt--;
+ 154:main.c        **** 		}
+ 155:main.c        **** 		if (mtrx_itm_cnt == 0)
+ 156:main.c        **** 			mtrx_itm_type = 1;
+ 157:main.c        **** 		if (mtrx_itm_cnt == 35)
+ 158:main.c        **** 			mtrx_itm_type = 0;
+ 159:main.c        **** 		write_data(0x81, mtrx);*/
+ 160:main.c        **** 		
+ 161:main.c        **** 		/*if (mtrx_itm_cnt == 35)
+ 162:main.c        **** 		{
+ 163:main.c        **** 			write_data(0x81, mtrx_off);
+ 164:main.c        **** 			for (i = 0; i <= 50000; i++);
+ 165:main.c        **** 			write_data(0x81, mtrx_on);
+ 166:main.c        **** 			for (i = 0; i <= 50000; i++);
+ 167:main.c        **** 			write_data(0x81, mtrx_off);
+ 168:main.c        **** 			for (i = 0; i <= 50000; i++);
+ 169:main.c        **** 			write_data(0x81, mtrx_on);
+ 170:main.c        **** 			for (i = 0; i <= 50000; i++);
+ 171:main.c        **** 			write_data(0x81, mtrx_off);
+ 172:main.c        **** 			for (i = 0; i <= 50000; i++);
+ 173:main.c        **** 			write_data(0x81, mtrx_on);
+ 174:main.c        **** 			for (i = 0; i <= 50000; i++);
+ 175:main.c        **** 			write_data(0x81, mtrx_off);
+ 176:main.c        **** 			for (i = 0; i <= 50000; i++);
+ 177:main.c        **** 			mtrx[0] = 0x00;
+ 178:main.c        **** 			mtrx[1] = 0x00;
+ 179:main.c        **** 			mtrx[2] = 0x00;
+ 180:main.c        **** 			mtrx[3] = 0x00;
+ 181:main.c        **** 			mtrx[4] = 0x00;
+ 182:main.c        **** 			mtrx_itm_cnt = 0;
+ 183:main.c        **** 		}
+ 184:main.c        **** 		/*write_data(0x80, colums_empty);
+ 185:main.c        **** 		write_data(0x81, colums_h);
+ 186:main.c        **** 		/*for (i = 0; i <= 100000; i++);
+ 187:main.c        **** 		write_data(0x80, colums_h);
+ 188:main.c        **** 		write_data(0x81, colums_e);
+ 189:main.c        **** 		for (i = 0; i <= 100000; i++);
+ 190:main.c        **** 		write_data(0x80, colums_e);
+ 191:main.c        **** 		write_data(0x81, colums_l);
+ 192:main.c        **** 		for (i = 0; i <= 100000; i++);
+ 193:main.c        **** 		write_data(0x80, colums_l);
+ 194:main.c        **** 		write_data(0x81, colums_l);
+ 195:main.c        **** 		for (i = 0; i <= 100000; i++);
+ 196:main.c        **** 		write_data(0x80, colums_l);
+ 197:main.c        **** 		write_data(0x81, colums_o);
+ 198:main.c        **** 		for (i = 0; i <= 100000; i++);
+ 199:main.c        **** 		write_data(0x80, colums_o);
+ 200:main.c        **** 		write_data(0x81, colums_exp_mark);
+ 201:main.c        **** 		for (i = 0; i <= 100000; i++);
+ 202:main.c        **** 		write_data(0x80, colums_exp_mark);
+ 203:main.c        **** 		write_data(0x81, colums_empty);
+ 204:main.c        **** 		for (i = 0; i <= 100000; i++);
+ 205:main.c        **** 		//while (!( UCSRA & (1<<UDRE)));
+ 206:main.c        **** 		//UDR = 0x81;
+ 207:main.c        **** 		//for (i = 0; i <= 1000; i++);*/
+ 208:main.c        **** 		/*write_data(0x80, colums_80);
+ 209:main.c        **** 		write_data(0x81, colums_81);
+ 210:main.c        **** 		for (i = 0; i <= 100000; i++);*/
+ 211:main.c        **** 		/*for (cursor = 0; cursor <= 29; cursor++)
+ 212:main.c        **** 		{
+ 213:main.c        **** 			
+ 214:main.c        **** 			write_data(0x80, colums_80);
+ 215:main.c        **** 			write_data(0x81, colums_81);
+ 216:main.c        **** 			for (i = 0; i <= 100000; i++);
+ 217:main.c        **** 		}*/
+ 218:main.c        **** 	}
+ 219:main.c        **** }
+ 220:main.c        **** 
+ 221:main.c        **** void write_data(unsigned char device, unsigned char colums[5])
+ 222:main.c        **** {
+ 901               	-(15))
+ 902               		ldi r24,lo8(-127)
+ 903               		movw r22,r18
+ 904 052c DF93      		call write_data
+ 906 0530 00D0      	.LM57:
+ 907 0532 00D0      		movw r18,r28
+ 908 0534 0F92      		subi r18,lo8(-(15))
+ 909 0536 CDB7      		sbci r19,hi8(-(15))
+ 910 0538 DEB7      		ldi r24,lo8(-126)
+ 911               		movw r22,r18
+ 912               		call write_data
+ 914 053c 7D83      	.LM58:
+ 915 053e 6C83      		std Y+6,__zero_reg__
+ 916               		std Y+7,__zero_reg__
+ 223:main.c        **** 	unsigned int i;
+ 224:main.c        **** 	
+ 225:main.c        **** 	while (!( UCSRA & (1<<UDRE)));
+ 917               	,hi8(-(15))
+ 918               		ldi r24,lo8(-126)
+ 919 0540 EBE2      		movw r22,r18
+ 920 0542 F0E0      		call write_data
+ 922 0546 882F      	.LM58:
+ 923 0548 90E0      		std Y+6,__zero_reg__
+ 924 054a 8072      		std Y+7,__zero_reg__
+ 925 054c 9070      		std Y+8,__zero_reg__
+ 926 054e 0097      		std Y+9,__zero_reg__
+ 927 0550 01F0      		rjmp .L24
+ 226:main.c        **** 	UDR = device;
+ 928               	ata
+ 930 0552 ECE2      	.LM58:
+ 931 0554 F0E0      		std Y+6,__zero_reg__
+ 932 0556 8B81      		std Y+7,__zero_reg__
+ 933 0558 8083      		std Y+8,__zero_reg__
+ 227:main.c        **** 	//for (j = 0; j <= 10; j++);
+ 228:main.c        **** 	for (i = 0; i <= 4; i++)
+ 934               	8(-126)
+ 935               		movw r22,r18
+ 936 055a 1A82      		call write_data
+ 938 055e 00C0      	.LM58:
+ 939               		std Y+6,__zero_reg__
+ 229:main.c        **** 	{
+ 230:main.c        **** 		while (!( UCSRA & (1<<UDRE)));
+ 940               	18,lo8(-(15))
+ 941               		sbci r19,hi8(-(15))
+ 942 0560 EBE2      		ldi r24,lo8(-126)
+ 943 0562 F0E0      		movw r22,r18
+ 944 0564 8081      		call write_data
+ 946 0568 90E0      	.LM58:
+ 947 056a 8072      		std Y+6,__zero_reg__
+ 948 056c 9070      		std Y+7,__zero_reg__
+ 949 056e 0097      		std Y+8,__zero_reg__
+ 950 0570 01F0      		std Y+9,__zero_reg__
+ 231:main.c        **** 		UDR = colums[i];	
+ 951               	call write_data
+ 953 0572 ACE2      	.LM58:
+ 954 0574 B0E0      		std Y+6,__zero_reg__
+ 955 0576 2C81      		std Y+7,__zero_reg__
+ 956 0578 3D81      		std Y+8,__zero_reg__
+ 957 057a 8981      		std Y+9,__zero_reg__
+ 958 057c 9A81      		rjmp .L24
+ 959 057e F901      	.L25:
+ 960 0580 E80F      		ldd r24,Y+6
+ 961 0582 F91F      		ldd r25,Y+7
+ 962 0584 8081      		ldd r26,Y+8
+ 963 0586 8C93      		ldd r27,Y+9
+ 964               		adiw r24,1
+ 965               		adc r26,__zero_reg__
+ 966 0588 8981      		adc r27,__zero_reg__
+ 967 058a 9A81      		std Y+6,r24
+ 968 058c 0196      		std Y+7,r25
+ 969 058e 9A83      		std Y+8,r26
+ 970 0590 8983      		std Y+9,r27
+ 971               	.L24:
+ 972 0592 8981      		ldd r24,Y+6
+ 973 0594 9A81      		ldd r25,Y+7
+ 974 0596 8530      		ldd r26,Y+8
+ 975 0598 9105      		ldd r27,Y+9
+ 976 059a 00F0      		cpi r24,lo8(50001)
+ 977               		ldi r30,hi8(50001)
+ 232:main.c        **** 		//for (j = 0; j <= 10; j++);	
+ 233:main.c        **** 	}
+ 234:main.c        **** }
+ 978               	d Y+8,r26
+ 979               		std Y+9,r27
+ 980 059c 0F90      	.L24:
+ 981 059e 0F90      		ldd r24,Y+6
+ 982 05a0 0F90      		ldd r25,Y+7
+ 983 05a2 0F90      		ldd r26,Y+8
+ 984 05a4 0F90      		ldd r27,Y+9
+ 985 05a6 CF91      		cpi r24,lo8(50001)
+ 986 05a8 DF91      		ldi r30,hi8(50001)
+ 987 05aa 0895      		cpc r25,r30
+ 988               		ldi r30,hlo8(50001)
+ 989               		cpc r26,r30
+ 990               		ldi r30,hhi8(50001)
+ 991               		cpc r27,r30
+ 992               		brlo .L25
+ 993               		rjmp .L26
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\Users\Alex\AppData\Local\Temp/cclJAUoh.s:2      *ABS*:0000003f __SREG__
+C:\Users\Alex\AppData\Local\Temp/cclJAUoh.s:3      *ABS*:0000003e __SP_H__
+C:\Users\Alex\AppData\Local\Temp/cclJAUoh.s:4      *ABS*:0000003d __SP_L__
+C:\Users\Alex\AppData\Local\Temp/cclJAUoh.s:5      *ABS*:00000034 __CCP__
+C:\Users\Alex\AppData\Local\Temp/cclJAUoh.s:6      *ABS*:00000000 __tmp_reg__
+C:\Users\Alex\AppData\Local\Temp/cclJAUoh.s:7      *ABS*:00000001 __zero_reg__
+C:\Users\Alex\AppData\Local\Temp/cclJAUoh.s:80     .data:00000000 C.0.1358
+C:\Users\Alex\AppData\Local\Temp/cclJAUoh.s:90     .text:00000000 main
+C:\Users\Alex\AppData\Local\Temp/cclJAUoh.s:900    .text:0000052c write_data
+
+UNDEFINED SYMBOLS
+rand
+__divmodhi4
+__do_copy_data

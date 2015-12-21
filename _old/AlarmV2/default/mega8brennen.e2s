@@ -1,0 +1,20 @@
+#------ START --------
+#Programming sequence
+SELECTDEVICE ATMEGA8
+CLEARBUFFER
+LOAD-PROG .\Alarm.hex
+LOAD-DATA .\Alarm.eep
+ERASE-ALL
+WRITE&VERIFY-ALL
+#Pay attention to NOT disable RSTDISBL
+#FusesH:
+# DWEN,  EESAVE, SPIEN, WDTON, BODLEV2, BODLEV1, BODLEV0, RSTDISBL}
+#   1       1       0      1       1        1       1         1
+#FusesL:
+# CKDIV, CKOUT,  SUT1,  SUT0,  CKSEL3,  CKSEL2,  CKSEL1,  CKSEL0}
+#   1      1       1     1        1        1       1        0
+#WRITE-FUSE 0x2600
+#Lock: {X,X,X,X,X,X,Lock2,Lock1}
+#        0 0 0 0 0 0      1     1
+#WRITE-LOCK 0x03
+#------- END ---------

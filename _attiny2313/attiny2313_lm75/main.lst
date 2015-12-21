@@ -1,0 +1,980 @@
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+  69               	.global	__vector_9
+  71               	__vector_9:
+   1:main.c        **** #define F_CPU 8000000UL
+   2:main.c        **** 
+   3:main.c        **** #include <avr/io.h>			
+   4:main.c        **** #include <avr/interrupt.h>	
+   5:main.c        **** #include <util/delay.h>
+   6:main.c        **** 
+   7:main.c        **** #define SDA PB0
+   8:main.c        **** #define SCL PB1
+   9:main.c        **** 
+  10:main.c        **** #define DDR_SDA DDRB
+  11:main.c        **** #define DDR_SCL DDRB
+  12:main.c        **** 
+  13:main.c        **** #define PORT_SDA PORTB
+  14:main.c        **** #define PORT_SCL PORTB
+  15:main.c        **** 
+  16:main.c        **** #define PIN_SDA PINB
+  17:main.c        **** 
+  18:main.c        **** /* Macros */
+  19:main.c        **** #define SCL_HIGH; 	PORT_SCL|=(0x01<<SCL);
+  20:main.c        **** #define SCL_LOW; 	PORT_SCL&=~(0x01<<SCL);
+  21:main.c        **** 
+  22:main.c        **** #define SDA_HIGH; 	PORT_SDA|=(0x01<<SDA);
+  23:main.c        **** #define SDA_LOW;	PORT_SDA&=~(0x01<<SDA);
+  24:main.c        **** 
+  25:main.c        **** unsigned int timer0_cnt = 0;
+  26:main.c        **** 
+  27:main.c        **** unsigned char send_data = 0;
+  28:main.c        **** unsigned char tx_frame_index = 0;
+  29:main.c        **** unsigned char temp_h = 0x00;
+  30:main.c        **** unsigned char temp_l = 0x00;
+  31:main.c        **** unsigned char tx_frame[3] = {0x12, 0x34, 0x0d};
+  32:main.c        **** 
+  33:main.c        **** void vTIMER0_ini (void);
+  34:main.c        **** void lm75_read_temp(void);
+  35:main.c        **** void scl_clk(void);
+  36:main.c        **** unsigned char get_data(void);
+  37:main.c        **** 
+  38:main.c        **** ISR (USART_TX_vect)
+  39:main.c        **** {
+  72               	in r0,__SREG__
+  73               		push r0
+  74               		clr __zero_reg__
+  75 0000 1F92      		push r18
+  76 0002 0F92      		push r24
+  77 0004 0FB6      		push r25
+  78 0006 0F92      		push r30
+  79 0008 1124      		push r31
+  80 000a 2F93      	/* prologue: Signal */
+  81 000c 8F93      	/* frame size = 0 */
+  83 0010 EF93      	.LM1:
+  84 0012 FF93      		lds r18,send_data
+  85               		cpi r18,lo8(1)
+  86               		brne .L3
+  40:main.c        **** 	if (send_data == 1)
+  87               	,.LM2-.LFBB1
+  88               	.LM2:
+  89 0014 2091 0000 		lds r24,tx_frame_index
+  90 0018 2130      		mov r30,r24
+  91 001a 01F4      		ldi r31,lo8(0)
+  41:main.c        **** 	{
+  42:main.c        **** 		UDR = tx_frame[tx_frame_index];
+  92               	 r30,lo8(-(tx_frame))
+  93               		sbci r31,hi8(-(tx_frame))
+  94 001c 8091 0000 		ld r25,Z
+  95 0020 E82F      		out 44-32,r25
+  97 0024 E050      	.LM3:
+  98 0026 F040      		subi r24,lo8(-(1))
+  99 0028 9081      		sts tx_frame_index,r24
+  43:main.c        **** 		tx_frame_index++;
+ 101               	i r24,lo8(3)
+ 102               		brne .L3
+ 104 002e 8093 0000 	.LM5:
+  44:main.c        **** 		if (tx_frame_index == 3)
+ 105               	 tx_frame_index,r18
+ 107 0032 8330      	.LM6:
+ 108 0034 01F4      		sts send_data,__zero_reg__
+  45:main.c        **** 		{
+  46:main.c        **** 			tx_frame_index = 1;
+ 109               	
+ 110               	/* epilogue start */
+  47:main.c        **** 			send_data = 0;
+ 112               	M7:
+ 113               		pop r31
+ 114 003a 1092 0000 		pop r30
+ 115               		pop r25
+ 116               		pop r24
+  48:main.c        **** 		}
+  49:main.c        **** 	}
+  50:main.c        **** } 
+ 117               	r18
+ 118               		pop r0
+ 119 003e FF91      		out __SREG__,r0
+ 120 0040 EF91      		pop r0
+ 121 0042 9F91      		pop __zero_reg__
+ 122 0044 8F91      		reti
+ 124 0048 0F90      	.Lscope1:
+ 126 004c 0F90      	.global	__vector_6
+ 128 0050 1895      	__vector_6:
+ 130               	.LM8:
+ 131               	.LFBB2:
+ 132               		push __zero_reg__
+ 133               		push r0
+ 134               		in r0,__SREG__
+  51:main.c        **** 
+  52:main.c        **** SIGNAL (SIG_TIMER0_OVF)								//a/d converter in interrupt mode
+  53:main.c        **** {
+ 135               	ro_reg__
+ 136               		push r24
+ 137               		push r25
+ 138 0052 1F92      	/* prologue: Signal */
+ 139 0054 0F92      	/* frame size = 0 */
+ 141 0058 0F92      	.LM9:
+ 142 005a 1124      		lds r24,timer0_cnt
+ 143 005c 8F93      		lds r25,(timer0_cnt)+1
+ 144 005e 9F93      		adiw r24,1
+ 145               		sts (timer0_cnt)+1,r25
+ 146               		sts timer0_cnt,r24
+  54:main.c        **** 	//TCNT0 = 0x01;
+  55:main.c        **** 	
+  56:main.c        **** 	timer0_cnt++;
+ 147               	,57,.LM10-.LFBB2
+ 148               	.LM10:
+ 149 0060 8091 0000 		sbiw r24,61
+ 150 0064 9091 0000 		brne .L6
+ 152 006a 9093 0000 	.LM11:
+ 153 006e 8093 0000 		in r24,56-32
+  57:main.c        **** 	if (timer0_cnt == 61)
+ 154               	5,lo8(4)
+ 155               		eor r24,r25
+ 156 0072 CD97      		out 56-32,r24
+  58:main.c        **** 	{
+  59:main.c        **** 		PORTB ^= (0x01 << PB2);
+ 158               	2:
+ 159               		sts (timer0_cnt)+1,__zero_reg__
+ 160 0076 88B3      		sts timer0_cnt,__zero_reg__
+ 162 007a 8927      	.LM13:
+ 163 007c 88BB      		ldi r25,lo8(1)
+  60:main.c        **** 		timer0_cnt = 0;
+ 164               	end_data,r25
+ 166 007e 1092 0000 	.LM14:
+ 167 0082 1092 0000 		lds r24,tx_frame
+  61:main.c        **** 		send_data = 1;
+ 168               	 44-32,r24
+ 170 0086 91E0      	.LM15:
+ 171 0088 9093 0000 		sts tx_frame_index,r25
+  62:main.c        **** 		UDR = tx_frame[0];
+ 172               	
+ 173               	/* epilogue start */
+ 175 0090 8CB9      	.LM16:
+  63:main.c        **** 		tx_frame_index = 1;
+ 176               	p r25
+ 177               		pop r24
+ 178 0092 9093 0000 		pop r0
+ 179               		out __SREG__,r0
+ 180               		pop r0
+  64:main.c        **** 	}
+  65:main.c        **** }
+ 181               	__zero_reg__
+ 182               		reti
+ 184 0098 8F91      	.Lscope2:
+ 186 009c 0FBE      	.global	vTIMER0_ini
+ 188 00a0 1F90      	vTIMER0_ini:
+ 190               	.LM17:
+ 191               	.LFBB3:
+ 192               	/* prologue: function */
+ 193               	/* frame size = 0 */
+ 195               	.LM18:
+  66:main.c        **** 
+  67:main.c        **** int main(void)
+  68:main.c        **** {
+  69:main.c        **** 	DDRB |= (0x01 << PB2);
+  70:main.c        **** 	PORTB &= ~(0x01 << PB2);
+  71:main.c        **** 	DDRD |= (0x01 << PD5);
+  72:main.c        **** 	PORTD &= ~(0x01 << PD5);
+  73:main.c        **** 	
+  74:main.c        **** 	DDR_SDA |= (0x01 << SDA);
+  75:main.c        **** 	DDR_SCL |= (0x01 << SCL);
+  76:main.c        **** 	
+  77:main.c        **** 	/*SDA_LOW;
+  78:main.c        **** 	
+  79:main.c        **** 	for (int i = 0; i <= 40; i++)
+  80:main.c        **** 	{
+  81:main.c        **** 		_delay_ms(10);
+  82:main.c        **** 	}*/
+  83:main.c        **** 	
+  84:main.c        **** 	SDA_HIGH;
+  85:main.c        **** 	SCL_HIGH;
+  86:main.c        **** 	
+  87:main.c        **** 	
+  88:main.c        **** 	sei();										//global interrupt enable on
+  89:main.c        **** 	vTIMER0_ini();
+  90:main.c        **** 
+  91:main.c        **** 	UBRRH = 0;		//UBRR to 51 for 9600 baud @ 8MHz
+  92:main.c        **** 	UBRRL = 51;
+  93:main.c        **** 	UCSRA |= (1 << UDRE);	//Buffer is empty
+  94:main.c        **** 	UCSRB |= (1 << TXCIE); 	//Interrupt enable for RX
+  95:main.c        **** 	UCSRB |= (1 << TXEN);	//RX enable, pin is used as RX signal
+  96:main.c        **** 	//UCSRB |= (1 << RXCIE); 	//Interrupt enable for RX
+  97:main.c        **** 	//UCSRB |= (1 << RXEN);	//RX enable, pin is used as RX signal
+  98:main.c        **** 	UCSRC |= (1 << UCSZ1);	//UCSZ2 = 0, UCSZ1 = 1, UCSZ0 = 1 : 8 data bits
+  99:main.c        **** 	UCSRC |= (1 << UCSZ0);	
+ 100:main.c        **** 
+ 101:main.c        **** 	//lm75_read_temp();
+ 102:main.c        **** 
+ 103:main.c        **** 	while(1)
+ 104:main.c        **** 	{
+ 105:main.c        **** 		SDA_LOW;
+ 106:main.c        **** 		
+ 107:main.c        **** 		for (int i = 0; i <= 200; i++)
+ 108:main.c        **** 		{
+ 109:main.c        **** 			_delay_ms(10);
+ 110:main.c        **** 		}
+ 111:main.c        **** 		
+ 112:main.c        **** 		SDA_HIGH;
+ 113:main.c        **** 		SCL_HIGH;
+ 114:main.c        **** 		lm75_read_temp();
+ 115:main.c        **** 	}
+ 116:main.c        **** }
+ 117:main.c        **** 
+ 118:main.c        **** void vTIMER0_ini (void)
+ 119:main.c        **** {
+ 196               	ro_reg__
+ 198               	.LM19:
+ 199               		ldi r24,lo8(4)
+ 200               		out 83-32,r24
+ 120:main.c        **** 	TCCR0A = 0x00 | (0 << COM0A1) | (0 << COM0A0) | (0 << COM0B1) | (0 << COM0B0) | (0 << WGM01) | (0 
+ 201               	bn	68,0,126,.LM20-.LFBB3
+ 202               	.LM20:
+ 203 00a4 10BE      		in r24,89-32
+ 121:main.c        **** 	// TCCR0A = 0x00
+ 122:main.c        **** 	TCCR0B = 0x00 | (0 << FOC0A) | (0 << FOC0B) | (0 << WGM02) | (1 << CS02) | (0 << CS01) | (0 << CS0
+ 204               	i r24,lo8(2)
+ 205               		out 89-32,r24
+ 206 00a6 84E0      	/* epilogue start */
+ 123:main.c        **** 	// TCCR0B = 0x01
+ 124:main.c        **** 	//TCNT0 = 0x05;
+ 125:main.c        **** 	// TCNT0 = 0
+ 126:main.c        **** 	TIMSK |= (0 << OCIE0B) | (1 << TOIE0) | (0 << OCIE0A);
+ 208               	1:
+ 209               		ret
+ 211 00ac 8260      	.Lscope3:
+ 213               	.global	scl_clk
+ 127:main.c        **** 	// TIMSK = 0x02
+ 128:main.c        **** }
+ 214               		scl_clk, @function
+ 215               	scl_clk:
+ 217               	.LM22:
+ 218               	.LFBB4:
+ 219               	/* prologue: function */
+ 220               	/* frame size = 0 */
+ 221               	.LBB123:
+ 222               	.LBB124:
+ 129:main.c        **** 
+ 130:main.c        **** void lm75_read_temp(void)
+ 131:main.c        **** {
+ 132:main.c        **** 	unsigned char i;
+ 133:main.c        **** 	
+ 134:main.c        **** // ================================
+ 135:main.c        **** 	/* Start condition */
+ 136:main.c        **** 	SDA_HIGH;	
+ 137:main.c        **** 	_delay_us(4);
+ 138:main.c        **** 	SCL_HIGH;
+ 139:main.c        **** 	//_delay_us(10);
+ 140:main.c        **** 
+ 141:main.c        **** 	PORTD |= (0x01 << PD5);
+ 142:main.c        **** 	_delay_us(1);
+ 143:main.c        **** 	PORTD &= ~(0x01 << PD5);
+ 144:main.c        **** 	
+ 145:main.c        **** 	SDA_LOW;
+ 146:main.c        **** 	_delay_us(4);
+ 147:main.c        **** 	SCL_LOW;
+ 148:main.c        **** 	_delay_us(4);
+ 149:main.c        **** 	/* Address bit 6 */
+ 150:main.c        **** 	SDA_HIGH;
+ 151:main.c        **** 	scl_clk();	
+ 152:main.c        **** 	/* Address bit 5 */
+ 153:main.c        **** 	SDA_LOW;
+ 154:main.c        **** 	scl_clk();
+ 155:main.c        **** 	/* Address bit 4 */
+ 156:main.c        **** 	SDA_LOW;
+ 157:main.c        **** 	scl_clk();
+ 158:main.c        **** 	/* Address bit 3 */
+ 159:main.c        **** 	SDA_HIGH;
+ 160:main.c        **** 	scl_clk();	
+ 161:main.c        **** 	/* Address bit 2 */
+ 162:main.c        **** 	SDA_LOW;
+ 163:main.c        **** 	scl_clk();	
+ 164:main.c        **** 	/* Address bit 1 */
+ 165:main.c        **** 	SDA_LOW;
+ 166:main.c        **** 	scl_clk();	
+ 167:main.c        **** 	/* Address bit 0 */
+ 168:main.c        **** 	SDA_LOW;
+ 169:main.c        **** 	scl_clk();
+ 170:main.c        **** 	/* R/W */
+ 171:main.c        **** 	SDA_HIGH;
+ 172:main.c        **** 	_delay_us(4);
+ 173:main.c        **** 	SCL_HIGH;
+ 174:main.c        **** 	_delay_us(4);
+ 175:main.c        **** 	SCL_LOW;
+ 176:main.c        **** 	/* Ack from LM75 */
+ 177:main.c        **** 	DDR_SDA &= ~(0x01 << SDA); // Input
+ 178:main.c        **** 	scl_clk();
+ 179:main.c        **** 	/* Data bits 7-0 high byte */
+ 180:main.c        **** 	temp_h = 0;
+ 181:main.c        **** 	for (i = 0; i <= 7; i++)
+ 182:main.c        **** 	{
+ 183:main.c        **** 		temp_h |= get_data() << (7 - i);
+ 184:main.c        **** 	}
+ 185:main.c        **** 	tx_frame[0] = temp_h;
+ 186:main.c        **** 	/* Ack from master */
+ 187:main.c        **** 	DDR_SDA |= (0x01 << SDA); // Output
+ 188:main.c        **** 	//_delay_us(1);
+ 189:main.c        **** 	SDA_LOW;
+ 190:main.c        **** 	scl_clk();
+ 191:main.c        **** 	DDR_SDA &= ~(0x01 << SDA); // Input
+ 192:main.c        **** 	/* Data bits 7-0 low byte */
+ 193:main.c        **** 	temp_l = 0;
+ 194:main.c        **** 	for (i = 0; i <= 7; i++)
+ 195:main.c        **** 	{
+ 196:main.c        **** 		temp_l |= get_data() << (7 - i);
+ 197:main.c        **** 	}
+ 198:main.c        **** 	tx_frame[1] = temp_l;
+ 199:main.c        **** 	/* No Ack from master */
+ 200:main.c        **** 	DDR_SDA |= (0x01 << SDA); // Output
+ 201:main.c        **** 	SDA_HIGH;
+ 202:main.c        **** 	scl_clk();
+ 203:main.c        **** 	/* Stop condition */
+ 204:main.c        **** 	SDA_LOW;
+ 205:main.c        **** 	//_delay_us(4);
+ 206:main.c        **** 	SCL_HIGH;
+ 207:main.c        **** 	//_delay_us(4);
+ 208:main.c        **** 	SDA_HIGH;
+ 209:main.c        **** 	//_delay_ms(10);
+ 210:main.c        **** }
+ 211:main.c        **** 
+ 212:main.c        **** void scl_clk(void)
+ 213:main.c        **** {
+ 223               	.LBB126:
+ 225               	.Ltext1:
+ 227               	.LM23:
+ 228               		ldi r24,lo8(10)
+ 229               		mov r25,r24
+ 230               	/* #APP */
+ 231               	 ;  83 "d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 232               		1: dec r25
+ 233               		brne 1b
+   1:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** /* Copyright (c) 2002, Marek Michalkiewicz
+   2:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****    Copyright (c) 2007 Joerg Wunsch
+   3:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****    All rights reserved.
+   4:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+   5:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****    Redistribution and use in source and binary forms, with or without
+   6:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****    modification, are permitted provided that the following conditions are met:
+   7:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+   8:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****    * Redistributions of source code must retain the above copyright
+   9:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****      notice, this list of conditions and the following disclaimer.
+  10:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  11:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****    * Redistributions in binary form must reproduce the above copyright
+  12:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****      notice, this list of conditions and the following disclaimer in
+  13:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****      the documentation and/or other materials provided with the
+  14:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****      distribution.
+  15:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  16:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****    * Neither the name of the copyright holders nor the names of
+  17:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****      contributors may be used to endorse or promote products derived
+  18:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****      from this software without specific prior written permission.
+  19:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  20:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  21:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  22:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  23:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  24:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  25:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  26:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  27:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  28:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  29:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  30:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   POSSIBILITY OF SUCH DAMAGE. */
+  31:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  32:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** /* $Id: delay_basic.h,v 1.1 2007/05/13 21:23:20 joerg_wunsch Exp $ */
+  33:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  34:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** #ifndef _UTIL_DELAY_BASIC_H_
+  35:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** #define _UTIL_DELAY_BASIC_H_ 1
+  36:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  37:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** #include <inttypes.h>
+  38:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  39:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** /** \file */
+  40:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** /** \defgroup util_delay_basic <util/delay_basic.h>: Basic busy-wait delay loops
+  41:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     \code
+  42:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     #include <util/delay_basic.h>
+  43:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     \endcode
+  44:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  45:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     The functions in this header file implement simple delay loops
+  46:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     that perform a busy-waiting.  They are typically used to
+  47:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     facilitate short delays in the program execution.  They are
+  48:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     implemented as count-down loops with a well-known CPU cycle
+  49:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     count per loop iteration.  As such, no other processing can
+  50:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     occur simultaneously.  It should be kept in mind that the
+  51:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     functions described here do not disable interrupts.
+  52:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  53:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     In general, for long delays, the use of hardware timers is
+  54:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     much preferrable, as they free the CPU, and allow for
+  55:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     concurrent processing of other events while the timer is
+  56:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     running.  However, in particular for very short delays, the
+  57:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     overhead of setting up a hardware timer is too much compared
+  58:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     to the overall delay time.
+  59:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  60:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     Two inline functions are provided for the actual delay algorithms.
+  61:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  62:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** */
+  63:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  64:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** #if !defined(__DOXYGEN__)
+  65:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** static inline void _delay_loop_1(uint8_t __count) __attribute__((always_inline));
+  66:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** static inline void _delay_loop_2(uint16_t __count) __attribute__((always_inline));
+  67:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** #endif
+  68:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  69:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** /** \ingroup util_delay_basic
+  70:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  71:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     Delay loop using an 8-bit counter \c __count, so up to 256
+  72:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     iterations are possible.  (The value 256 would have to be passed
+  73:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     as 0.)  The loop executes three CPU cycles per iteration, not
+  74:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     including the overhead the compiler needs to setup the counter
+  75:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     register.
+  76:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  77:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     Thus, at a CPU speed of 1 MHz, delays of up to 768 microseconds
+  78:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     can be achieved.
+  79:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** */
+  80:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** void
+  81:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** _delay_loop_1(uint8_t __count)
+  82:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** {
+  83:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 	__asm__ volatile (
+ 234               	/* #NOAPP */
+ 235               	.LBE126:
+ 236 00b2 8AE0      	.LBE125:
+ 237 00b4 982F      	.LBE124:
+ 238               	.LBE123:
+ 240 00b6 9A95      	.Ltext2:
+ 242               	.LM24:
+ 243               		sbi 56-32,1
+ 244               	.LBB127:
+ 245               	.LBB128:
+ 246               	.LBB129:
+ 247               	.LBB130:
+ 249               	.Ltext3:
+ 214:main.c        **** 	_delay_us(4);
+ 215:main.c        **** 	SCL_HIGH;
+ 250               	.LM25-.LFBB4
+ 251               	.LM25:
+ 252 00ba C19A      	/* #APP */
+ 253               	 ;  83 "d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 254               		1: dec r24
+ 255               		brne 1b
+ 256               	 ;  0 "" 2
+ 257               	/* #NOAPP */
+ 258               	.LBE130:
+ 259               	.LBE129:
+ 260               	.LBE128:
+ 261               	.LBE127:
+ 263 00bc 8A95      	.Ltext4:
+ 265               	.LM26:
+ 266               		cbi 56-32,1
+ 267               	/* epilogue start */
+ 269               	.LM27:
+ 270               		ret
+ 272               	.Lscope4:
+ 216:main.c        **** 	_delay_us(4);
+ 217:main.c        **** 	SCL_LOW;
+ 273               	1)",36,0,0,get_data
+ 274               	.global	get_data
+ 276               	get_data:
+ 218:main.c        **** 	//_delay_us(10);
+ 219:main.c        **** }
+ 277               	abn	68,0,222,.LM28-.LFBB5
+ 278               	.LM28:
+ 279 00c2 0895      	.LFBB5:
+ 280               	/* prologue: function */
+ 281               	/* frame size = 0 */
+ 282               	.LBB131:
+ 283               	.LBB132:
+ 284               	.LBB133:
+ 285               	.LBB134:
+ 220:main.c        **** 
+ 221:main.c        **** unsigned char get_data(void)
+ 222:main.c        **** {
+ 286               	d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h",132,0,0,.Ltext5
+ 287               	.Ltext5:
+ 289               	.LM29:
+ 290               		ldi r24,lo8(10)
+ 291               		mov r25,r24
+ 292               	/* #APP */
+ 293               	 ;  83 "d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 294               		1: dec r25
+ 295               		brne 1b
+ 296               	 ;  0 "" 2
+ 297               	/* #NOAPP */
+ 298               	.LBE134:
+ 299 00c4 8AE0      	.LBE133:
+ 300 00c6 982F      	.LBE132:
+ 301               	.LBE131:
+ 303 00c8 9A95      	.Ltext6:
+ 305               	.LM30:
+ 306               		sbi 56-32,1
+ 307               	.LBB135:
+ 308               	.LBB136:
+ 309               	.LBB137:
+ 310               	.LBB138:
+ 312               	.Ltext7:
+ 223:main.c        **** 	unsigned char buffer = 0;
+ 224:main.c        **** 	
+ 225:main.c        **** 	_delay_us(4);
+ 226:main.c        **** 	SCL_HIGH;
+ 313               	5
+ 314               	.LM31:
+ 315 00cc C19A      	/* #APP */
+ 316               	 ;  83 "d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 317               		1: dec r24
+ 318               		brne 1b
+ 319               	 ;  0 "" 2
+ 320               	/* #NOAPP */
+ 321               	.LBE138:
+ 322               	.LBE137:
+ 323               	.LBE136:
+ 324               	.LBE135:
+ 326 00ce 8A95      	.Ltext8:
+ 328               	.LM32:
+ 329               		in r24,54-32
+ 331               	.LM33:
+ 332               		cbi 56-32,1
+ 334               	.LM34:
+ 335               		andi r24,lo8(1)
+ 227:main.c        **** 	_delay_us(4);
+ 228:main.c        **** 	if (PIN_SDA & (0x01 << SDA))
+ 336               	et
+ 338 00d2 86B3      	.Lscope5:
+ 229:main.c        **** 	{
+ 230:main.c        **** 		buffer = 1;
+ 231:main.c        **** 	}
+ 232:main.c        **** 	else
+ 233:main.c        **** 	{
+ 234:main.c        **** 		buffer = 0;
+ 235:main.c        **** 	}
+ 236:main.c        **** 	SCL_LOW;
+ 339               	tabs	"lm75_read_temp:F(0,15)",36,0,0,lm75_read_temp
+ 340               	.global	lm75_read_temp
+ 237:main.c        **** 
+ 238:main.c        **** 	return buffer;
+ 239:main.c        **** }...
+ 342               	5_read_temp:
+ 344 00d6 8170      	.LM35:
+ 345               	.LFBB6:
+ 346 00d8 0895      		push r17
+ 347               		push r28
+ 348               		push r29
+ 349               	/* prologue: function */
+ 350               	/* frame size = 0 */
+ 352               	.LM36:
+ 353               		sbi 56-32,0
+ 354               	.LBB139:
+ 355               	.LBB140:
+ 356 00da 1F93      	.LBB141:
+ 357 00dc CF93      	.LBB142:
+ 359               	.Ltext9:
+ 361               	.LM37:
+ 362               		ldi r17,lo8(10)
+ 363 00e0 C09A      		mov r24,r17
+ 364               	/* #APP */
+ 365               	 ;  83 "d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 366               		1: dec r24
+ 367               		brne 1b
+ 368               	 ;  0 "" 2
+ 369               	/* #NOAPP */
+ 370               	.LBE142:
+ 371               	.LBE141:
+ 372 00e2 1AE0      	.LBE140:
+ 373 00e4 812F      	.LBE139:
+ 375               	.Ltext10:
+ 377 00e8 01F4      	.LM38:
+ 378               		sbi 56-32,1
+ 380               	.LM39:
+ 381               		sbi 50-32,5
+ 382               	.LBB143:
+ 383               	.LBB144:
+ 384               	.LBB145:
+ 385               	.LBB146:
+ 387               	.Ltext11:
+ 389               	.LM40:
+ 390               		ldi r24,lo8(2)
+ 391 00ec 959A      	/* #APP */
+ 392               	 ;  83 "d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 393               		1: dec r24
+ 394               		brne 1b
+ 395               	 ;  0 "" 2
+ 396               	/* #NOAPP */
+ 397               	.LBE146:
+ 398               	.LBE145:
+ 399               	.LBE144:
+ 400 00ee 82E0      	.LBE143:
+ 402               	.Ltext12:
+ 404 00f2 01F4      	.LM41:
+ 405               		cbi 50-32,5
+ 407               	.LM42:
+ 408               		cbi 56-32,0
+ 409               	.LBB147:
+ 410               	.LBB148:
+ 411               	.LBB149:
+ 412               	.LBB150:
+ 414               	.Ltext13:
+ 416               	.LM43:
+ 417               		mov r24,r17
+ 418 00f6 C098      	/* #APP */
+ 419               	 ;  83 "d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 420               		1: dec r24
+ 421               		brne 1b
+ 422               	 ;  0 "" 2
+ 423               	/* #NOAPP */
+ 424               	.LBE150:
+ 425               	.LBE149:
+ 426               	.LBE148:
+ 427 00f8 812F      	.LBE147:
+ 429               	.Ltext14:
+ 431 00fc 01F4      	.LM44:
+ 432               		cbi 56-32,1
+ 433               	.LBB151:
+ 434               	.LBB152:
+ 435               	.LBB153:
+ 436               	.LBB154:
+ 438               	.Ltext15:
+ 440               	.LM45:
+ 441               		mov r24,r17
+ 442 00fe C198      	/* #APP */
+ 443               	 ;  83 "d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 444               		1: dec r24
+ 445               		brne 1b
+ 446               	 ;  0 "" 2
+ 447               	/* #NOAPP */
+ 448               	.LBE154:
+ 449               	.LBE153:
+ 450               	.LBE152:
+ 451 0100 812F      	.LBE151:
+ 453               	.Ltext16:
+ 455 0104 01F4      	.LM46:
+ 456               		sbi 56-32,0
+ 458               	.LM47:
+ 459               		rcall scl_clk
+ 461               	.LM48:
+ 462               		cbi 56-32,0
+ 464               	.LM49:
+ 465               		rcall scl_clk
+ 467               	.LM50:
+ 468               		cbi 56-32,0
+ 470               	.LM51:
+ 471               		rcall scl_clk
+ 473               	.LM52:
+ 474               		sbi 56-32,0
+ 476               	.LM53:
+ 477               		rcall scl_clk
+ 479               	.LM54:
+ 480               		cbi 56-32,0
+ 482               	.LM55:
+ 483               		rcall scl_clk
+ 485               	.LM56:
+ 486               		cbi 56-32,0
+ 488               	.LM57:
+ 489               		rcall scl_clk
+ 491               	.LM58:
+ 492               		cbi 56-32,0
+ 494               	.LM59:
+ 495               		rcall scl_clk
+ 497               	.LM60:
+ 498               		sbi 56-32,0
+ 499 011c 00D0      	.LBB155:
+ 500               	.LBB156:
+ 501               	.LBB157:
+ 502 011e C098      	.LBB158:
+ 504               	.Ltext17:
+ 506               	.LM61:
+ 507               		mov r24,r17
+ 508 0122 C09A      	/* #APP */
+ 509               	 ;  83 "d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 510               		1: dec r24
+ 511               		brne 1b
+ 512               	 ;  0 "" 2
+ 513               	/* #NOAPP */
+ 514               	.LBE158:
+ 515               	.LBE157:
+ 516               	.LBE156:
+ 517 0124 812F      	.LBE155:
+ 519               	.Ltext18:
+ 521 0128 01F4      	.LM62:
+ 522               		sbi 56-32,1
+ 523               	.LBB159:
+ 524               	.LBB160:
+ 525               	.LBB161:
+ 526               	.LBB162:
+ 528               	.Ltext19:
+ 530               	.LM63:
+ 531               	/* #APP */
+ 532 012a C19A      	 ;  83 "d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 533               		1: dec r17
+ 534               		brne 1b
+ 535               	 ;  0 "" 2
+ 536               	/* #NOAPP */
+ 537               	.LBE162:
+ 538               	.LBE161:
+ 539               	.LBE160:
+ 540               	.LBE159:
+ 542               	.Ltext20:
+ 544 012e 01F4      	.LM64:
+ 545               		cbi 56-32,1
+ 547               	.LM65:
+ 548               		cbi 55-32,0
+ 550               	.LM66:
+ 551               		rcall scl_clk
+ 553               	.LM67:
+ 554               		sts temp_h,__zero_reg__
+ 555 0130 C198      		ldi r28,lo8(7)
+ 556               		ldi r29,hi8(7)
+ 557               	.L14:
+ 559               	.LM68:
+ 560               		lds r17,temp_h
+ 561 0134 00D0      		rcall get_data
+ 562               		ldi r25,lo8(0)
+ 563               		mov r0,r28
+ 564 0136 1092 0000 		rjmp 2f
+ 565 013a C7E0      	1:	lsl r24
+ 566 013c D0E0      		rol r25
+ 567               	2:	dec r0
+ 568               		brpl 1b
+ 569               		or r17,r24
+ 570 013e 1091 0000 		sts temp_h,r17
+ 571 0142 00D0      		sbiw r28,1
+ 573 0146 0C2E      	.LM69:
+ 574 0148 00C0      		ldi r24,hi8(-1)
+ 575 014a 880F      		cpi r28,lo8(-1)
+ 576 014c 991F      		cpc r29,r24
+ 577 014e 0A94      		brne .L14
+ 579 0152 182B      	.LM70:
+ 580 0154 1093 0000 		sts tx_frame,r17
+ 582               	.LM71:
+ 583               		sbi 55-32,0
+ 585 015c CF3F      	.LM72:
+ 586 015e D807      		cbi 56-32,0
+ 588               	.LM73:
+ 589               		rcall scl_clk
+ 591               	.LM74:
+ 592               		cbi 55-32,0
+ 594               	.LM75:
+ 595               		sts temp_l,__zero_reg__
+ 596 0168 C098      		ldi r28,lo8(7)
+ 597               		ldi r29,hi8(7)
+ 598               	.L15:
+ 600               	.LM76:
+ 601               		lds r17,temp_l
+ 602 016c B898      		rcall get_data
+ 603               		ldi r25,lo8(0)
+ 604               		mov r0,r28
+ 605 016e 1092 0000 		rjmp 2f
+ 606 0172 C7E0      	1:	lsl r24
+ 607 0174 D0E0      		rol r25
+ 608               	2:	dec r0
+ 609               		brpl 1b
+ 610               		or r17,r24
+ 611 0176 1091 0000 		sts temp_l,r17
+ 612 017a 00D0      		sbiw r28,1
+ 614 017e 0C2E      	.LM77:
+ 615 0180 00C0      		ldi r24,hi8(-1)
+ 616 0182 880F      		cpi r28,lo8(-1)
+ 617 0184 991F      		cpc r29,r24
+ 618 0186 0A94      		brne .L15
+ 620 018a 182B      	.LM78:
+ 621 018c 1093 0000 		sts tx_frame+1,r17
+ 623               	.LM79:
+ 624               		sbi 55-32,0
+ 626 0194 CF3F      	.LM80:
+ 627 0196 D807      		sbi 56-32,0
+ 629               	.LM81:
+ 630               		rcall scl_clk
+ 632               	.LM82:
+ 633               		cbi 56-32,0
+ 635               	.LM83:
+ 636               		sbi 56-32,1
+ 638               	.LM84:
+ 639               		sbi 56-32,0
+ 640 01a2 00D0      	/* epilogue start */
+ 642               	.LM85:
+ 643 01a4 C098      		pop r29
+ 644               		pop r28
+ 645               		pop r17
+ 646 01a6 C19A      		ret
+ 648               	.Lscope6:
+ 650               	.global	main
+ 652               	main:
+ 654 01ac CF91      	.LM86:
+ 655 01ae 1F91      	.LFBB7:
+ 656 01b0 0895      		push r28
+ 657               		push r29
+ 658               	/* prologue: function */
+ 659               	/* frame size = 0 */
+ 661               	.LM87:
+ 662               		sbi 55-32,2
+ 664               	.LM88:
+ 665               		cbi 56-32,2
+ 667 01b4 DF93      	.LM89:
+ 668               		sbi 49-32,5
+ 670               	.LM90:
+ 671               		cbi 50-32,5
+ 673               	.LM91:
+ 674               		sbi 55-32,0
+ 676               	.LM92:
+ 677               		sbi 55-32,1
+ 679               	.LM93:
+ 680               		sbi 56-32,0
+ 682               	.LM94:
+ 683               		sbi 56-32,1
+ 685               	.LM95:
+ 686               	/* #APP */
+ 687 01c0 B99A      	 ;  88 "main.c" 1
+ 688               		sei
+ 689               	 ;  0 "" 2
+ 690 01c2 C09A      	/* #NOAPP */
+ 691               	.LBB163:
+ 692               	.LBB164:
+ 694               	.LM96:
+ 695               		out 80-32,__zero_reg__
+ 697               	.LM97:
+ 698 01c6 7894      		ldi r24,lo8(4)
+ 699               		out 83-32,r24
+ 701               	.LM98:
+ 702               		in r24,89-32
+ 703               		ori r24,lo8(2)
+ 704               		out 89-32,r24
+ 705 01c8 10BE      	.LBE164:
+ 706               	.LBE163:
+ 708 01ca 84E0      	.LM99:
+ 709 01cc 83BF      		out 34-32,__zero_reg__
+ 711               	.LM100:
+ 712 01ce 89B7      		ldi r24,lo8(51)
+ 713 01d0 8260      		out 41-32,r24
+ 715               	.LM101:
+ 716               		sbi 43-32,5
+ 718               	.LM102:
+ 719 01d4 12B8      		sbi 42-32,6
+ 721               	.LM103:
+ 722 01d6 83E3      		sbi 42-32,3
+ 724               	.LM104:
+ 725               		sbi 35-32,2
+ 727               	.LM105:
+ 728               		sbi 35-32,1
+ 729 01dc 569A      	.LBB165:
+ 730               	.LBB166:
+ 731               	.LBB167:
+ 732 01de 539A      	.LBB168:
+ 733               	.LBB169:
+ 735 01e0 1A9A      	.Ltext21:
+ 737               	.LM106:
+ 738 01e2 199A      		ldi r28,lo8(20000)
+ 739               		ldi r29,hi8(20000)
+ 740               	.L21:
+ 741               	.LBE169:
+ 742               	.LBE168:
+ 743               	.LBE167:
+ 744               	.LBE166:
+ 745               	.LBE165:
+  84:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 		"1: dec %0" "\n\t"
+  85:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 		"brne 1b"
+  86:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 		: "=r" (__count)
+  87:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 		: "0" (__count)
+  88:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 	);
+  89:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** }
+  90:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  91:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** /** \ingroup util_delay_basic
+  92:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  93:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     Delay loop using a 16-bit counter \c __count, so up to 65536
+  94:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     iterations are possible.  (The value 65536 would have to be
+  95:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     passed as 0.)  The loop executes four CPU cycles per iteration,
+  96:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     not including the overhead the compiler requires to setup the
+  97:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     counter register pair.
+  98:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  99:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     Thus, at a CPU speed of 1 MHz, delays of up to about 262.1
+ 100:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     milliseconds can be achieved.
+ 101:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****  */
+ 102:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** void
+ 103:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** _delay_loop_2(uint16_t __count)
+ 104:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** {
+ 105:d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 	__asm__ volatile (
+ 746               	d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h",132,0,0,.Ltext23
+ 747               	.Ltext23:
+ 749 01e6 DEE4      	.LM108:
+ 750               		movw r30,r28
+ 751               	/* #APP */
+ 752               	 ;  105 "d:/work/_programming/uc_dev/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 753               		1: sbiw r30,1
+ 754               		brne 1b
+ 755               	 ;  0 "" 2
+ 756               	/* #NOAPP */
+ 757               	.LBE170:
+ 758               	.LBE171:
+ 759               	.LBE172:
+ 760 01e8 C098      	.LBE173:
+ 762 01ec 90E0      	.Ltext24:
+ 764               	.LM109:
+ 765               		adiw r24,1
+ 766               		cpi r24,201
+ 767               		cpc r25,__zero_reg__
+ 768               		brne .L20
+ 769               	.LBE174:
+ 771               	.LM110:
+ 772               		sbi 56-32,0
+ 774               	.LM111:
+ 775               		sbi 56-32,1
+ 777 01f2 01F4      	.LM112:
+ 778               		rcall lm75_read_temp
+ 779               		rjmp .L21
+ 787               	.Lscope7:
+ 788 01f4 0196      	.global	timer0_cnt
+ 789 01f6 893C      	.global	timer0_cnt
+ 790 01f8 9105      		.section .bss
+ 793               	timer0_cnt:
+ 794               		.skip 2,0
+ 795 01fc C09A      	.global	send_data
+ 796               	.global	send_data
+ 799               	send_data:
+ 800               		.skip 1,0
+ 801 0200 00D0      	.global	tx_frame_index
+ 802 0202 00C0      	.global	tx_frame_index
+ 805               	tx_frame_index:
+ 806               		.skip 1,0
+ 807               	.global	temp_h
+ 808               	.global	temp_h
+ 811               	temp_h:
+ 812               		.skip 1,0
+ 813               	.global	temp_l
+ 814               	.global	temp_l
+ 817 0000 0000      	temp_l:
+ 818               		.skip 1,0
+ 819               	.global	tx_frame
+ 820               		.data
+ 823 0002 00        	tx_frame:
+ 824               		.byte	18
+ 825               		.byte	52
+ 826               		.byte	13
+ 833               		.text
+ 835 0004 00        	.Letext0:
+ 836               	.global __do_copy_data
+ 837               	.global __do_clear_bss
+ 838               	...
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:71     .text:00000000 __vector_9
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:822    .bss:00000002 send_data
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:828    .bss:00000003 tx_frame_index
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:846    .data:00000000 tx_frame
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:134    .text:00000052 __vector_6
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:816    .bss:00000000 timer0_cnt
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:195    .text:000000a4 vTIMER0_ini
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:222    .text:000000b2 scl_clk
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:285    .text:000000c4 get_data
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:352    .text:000000da lm75_read_temp
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:834    .bss:00000004 temp_h
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:840    .bss:00000005 temp_l
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccXemAUh.s:662    .text:000001b2 main
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

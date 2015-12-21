@@ -1,0 +1,615 @@
+Archive member included because of file (symbol)
+
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fixunssfsi.o)
+                              main.o (__fixunssfsi)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(floatsisf.o)
+                              main.o (__floatunsisf)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_split3.o)
+                              d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fixunssfsi.o) (__fp_splitA)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_zero.o)
+                              d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fixunssfsi.o) (__fp_zero)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3.o)
+                              main.o (__mulsf3)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
+                              d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3.o) (__mulsf3x)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_inf.o)
+                              d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o) (__fp_inf)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_nan.o)
+                              d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o) (__fp_nan)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_pscA.o)
+                              d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o) (__fp_pscA)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_pscB.o)
+                              d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o) (__fp_pscB)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_round.o)
+                              d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3.o) (__fp_round)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_mulsi3.o)
+                              main.o (__mulsi3)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodhi4.o)
+                              main.o (__udivmodhi4)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_divmodsi4.o)
+                              main.o (__divmodsi4)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
+                              d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o (exit)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
+                              main.o (__do_clear_bss)
+d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodsi4.o)
+                              d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_divmodsi4.o) (__udivmodsi4)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x00000000         0x00020000         xr
+data             0x00800060         0x0000ffa0         rw !x
+eeprom           0x00810000         0x00010000         rw !x
+fuse             0x00820000         0x00000400         rw !x
+lock             0x00830000         0x00000400         rw !x
+signature        0x00840000         0x00000400         rw !x
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+Address of section .data set to 0x800100
+LOAD d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+LOAD main.o
+LOAD d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a
+LOAD d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a
+LOAD d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a
+LOAD d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x00000000      0xd64
+ *(.vectors)
+ .vectors       0x00000000       0x8c d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+                0x00000000                __vectors
+                0x00000000                __vector_default
+ *(.vectors)
+ *(.progmem.gcc*)
+ *(.progmem*)
+                0x0000008c                . = ALIGN (0x2)
+                0x0000008c                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x0000008c        0x0 linker stubs
+ *(.trampolines*)
+                0x0000008c                __trampolines_end = .
+ *(.jumptables)
+ *(.jumptables*)
+ *(.lowtext)
+ *(.lowtext*)
+                0x0000008c                __ctors_start = .
+ *(.ctors)
+                0x0000008c                __ctors_end = .
+                0x0000008c                __dtors_start = .
+ *(.dtors)
+                0x0000008c                __dtors_end = .
+ SORT(*)(.ctors)
+ SORT(*)(.dtors)
+ *(.init0)
+ .init0         0x0000008c        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+                0x0000008c                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x0000008c        0xc d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x00000098       0x1a d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+                0x00000098                __do_copy_data
+ .init4         0x000000b2       0x10 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
+                0x000000b2                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x000000c2        0x8 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+ *(.init9)
+ *(.text)
+ .text          0x000000ca        0x4 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+                0x000000ca                __vector_22
+                0x000000ca                __vector_28
+                0x000000ca                __vector_1
+                0x000000ca                __vector_32
+                0x000000ca                __vector_34
+                0x000000ca                __vector_24
+                0x000000ca                __vector_12
+                0x000000ca                __bad_interrupt
+                0x000000ca                __vector_6
+                0x000000ca                __vector_31
+                0x000000ca                __vector_3
+                0x000000ca                __vector_23
+                0x000000ca                __vector_30
+                0x000000ca                __vector_25
+                0x000000ca                __vector_11
+                0x000000ca                __vector_13
+                0x000000ca                __vector_17
+                0x000000ca                __vector_19
+                0x000000ca                __vector_7
+                0x000000ca                __vector_27
+                0x000000ca                __vector_5
+                0x000000ca                __vector_33
+                0x000000ca                __vector_4
+                0x000000ca                __vector_9
+                0x000000ca                __vector_2
+                0x000000ca                __vector_15
+                0x000000ca                __vector_29
+                0x000000ca                __vector_8
+                0x000000ca                __vector_26
+                0x000000ca                __vector_14
+                0x000000ca                __vector_10
+                0x000000ca                __vector_16
+                0x000000ca                __vector_18
+                0x000000ca                __vector_20
+ .text          0x000000ce      0x978 main.o
+                0x0000055e                init_serial
+                0x000005ce                read_adc
+                0x00000600                DelayMs
+                0x000004b0                init_out_port
+                0x000003f8                init_in_pin
+                0x00000504                init_in_port
+                0x000005e8                SRAM_read
+                0x0000079e                LCD_setCursor
+                0x0000013c                set_pin
+                0x000007ee                LCD_init
+                0x000005e2                SRAM_write
+                0x0000054c                USART_Init
+                0x00000936                LCD_write_string
+                0x0000034c                init_out_pin
+                0x0000096e                main
+                0x000000ce                delay_ms
+                0x00000574                init_in_ana
+                0x000008f8                __vector_21
+                0x000001e8                reset_pin
+                0x000002a0                toggle_pin
+                0x00000584                get_in_pin
+                0x00000120                delay_s
+                0x000005ee                DelayUs
+                0x000007c6                LCD_cls
+                0x00000620                LCD_write_data
+                0x000006e0                LCD_write_command
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fixunssfsi.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(floatsisf.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_split3.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_zero.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_inf.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_nan.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_pscA.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_pscB.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_round.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_mulsi3.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodhi4.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_divmodsi4.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
+ .text          0x00000a46        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodsi4.o)
+                0x00000a46                . = ALIGN (0x2)
+ *(.text.*)
+ .text.fplib    0x00000a46       0x58 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fixunssfsi.o)
+                0x00000a46                __fixunssfsi
+ .text.fplib    0x00000a9e       0x7a d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(floatsisf.o)
+                0x00000aa2                __floatsisf
+                0x00000a9e                __floatunsisf
+ .text.fplib    0x00000b18       0x44 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_split3.o)
+                0x00000b18                __fp_split3
+                0x00000b28                __fp_splitA
+ .text.fplib    0x00000b5c        0xe d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_zero.o)
+                0x00000b5c                __fp_zero
+                0x00000b5e                __fp_szero
+ .text.fplib    0x00000b6a        0x4 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3.o)
+                0x00000b6a                __mulsf3
+ .text.fplib    0x00000b6e       0xc2 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
+                0x00000b86                __mulsf3_pse
+                0x00000b82                __mulsf3x
+ .text.fplib    0x00000c30        0xc d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_inf.o)
+                0x00000c30                __fp_inf
+ .text.fplib    0x00000c3c        0x6 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_nan.o)
+                0x00000c3c                __fp_nan
+ .text.fplib    0x00000c42        0xe d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_pscA.o)
+                0x00000c42                __fp_pscA
+ .text.fplib    0x00000c50        0xe d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_pscB.o)
+                0x00000c50                __fp_pscB
+ .text.fplib    0x00000c5e       0x22 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_round.o)
+                0x00000c5e                __fp_round
+ .text.libgcc   0x00000c80       0x3e d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_mulsi3.o)
+                0x00000c80                __mulsi3
+ .text.libgcc   0x00000cbe       0x28 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodhi4.o)
+                0x00000cbe                __udivmodhi4
+ .text.libgcc   0x00000ce6       0x36 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_divmodsi4.o)
+                0x00000ce6                __divmodsi4
+ .text.libgcc   0x00000d1c        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
+ .text.libgcc   0x00000d1c        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
+ .text.libgcc   0x00000d1c       0x44 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodsi4.o)
+                0x00000d1c                __udivmodsi4
+                0x00000d60                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x00000d60        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
+                0x00000d60                exit
+                0x00000d60                _exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x00000d60        0x4 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
+ *(.fini0)
+                0x00000d64                _etext = .
+
+.data           0x00800100        0xe load address 0x00000d64
+                0x00800100                PROVIDE (__data_start, .)
+ *(.data)
+ .data          0x00800100        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+ .data          0x00800100        0xe main.o
+                0x00800109                result_bcd
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fixunssfsi.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(floatsisf.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_split3.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_zero.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_inf.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_nan.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_pscA.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_pscB.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_round.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_mulsi3.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodhi4.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_divmodsi4.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
+ .data          0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodsi4.o)
+ *(.data*)
+ *(.rodata)
+ *(.rodata*)
+ *(.gnu.linkonce.d*)
+                0x0080010e                . = ALIGN (0x2)
+                0x0080010e                _edata = .
+                0x0080010e                PROVIDE (__data_end, .)
+
+.bss            0x0080010e        0x2
+                0x0080010e                PROVIDE (__bss_start, .)
+ *(.bss)
+ .bss           0x0080010e        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+ .bss           0x0080010e        0x2 main.o
+                0x0080010e                result
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fixunssfsi.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(floatsisf.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_split3.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_zero.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_inf.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_nan.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_pscA.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_pscB.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_round.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_mulsi3.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodhi4.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_divmodsi4.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
+ .bss           0x00800110        0x0 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodsi4.o)
+ *(.bss*)
+ *(COMMON)
+                0x00800110                PROVIDE (__bss_end, .)
+                0x00000d64                __data_load_start = LOADADDR (.data)
+                0x00000d72                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x00800110        0x0
+                0x00800110                PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                0x00800110                PROVIDE (__noinit_end, .)
+                0x00800110                _end = .
+                0x00800110                PROVIDE (__heap_start, .)
+
+.eeprom         0x00810000        0x0
+ *(.eeprom*)
+                0x00810000                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.stab           0x00000000     0x1ec0
+ *(.stab)
+ .stab          0x00000000     0x1ec0 main.o
+
+.stabstr        0x00000000      0xa2f
+ *(.stabstr)
+ .stabstr       0x00000000      0xa2f main.o
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment
+ *(.comment)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges
+ *(.debug_aranges)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info
+ *(.debug_info)
+ *(.gnu.linkonce.wi.*)
+
+.debug_abbrev
+ *(.debug_abbrev)
+
+.debug_line
+ *(.debug_line)
+
+.debug_frame
+ *(.debug_frame)
+
+.debug_str
+ *(.debug_str)
+
+.debug_loc
+ *(.debug_loc)
+
+.debug_macinfo
+ *(.debug_macinfo)
+OUTPUT(main.elf elf32-avr)
+LOAD linker stubs
+
+Cross Reference Table
+
+Symbol                                            File
+DelayMs                                           main.o
+DelayUs                                           main.o
+LCD_cls                                           main.o
+LCD_init                                          main.o
+LCD_setCursor                                     main.o
+LCD_write_command                                 main.o
+LCD_write_data                                    main.o
+LCD_write_string                                  main.o
+SRAM_read                                         main.o
+SRAM_write                                        main.o
+USART_Init                                        main.o
+__bad_interrupt                                   d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__bss_end                                         d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
+__bss_start                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
+__data_end                                        d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__data_load_start                                 d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__data_start                                      d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__divmodsi4                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_divmodsi4.o)
+                                                  main.o
+__do_clear_bss                                    d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
+                                                  main.o
+__do_copy_data                                    d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+                                                  main.o
+__fixunssfsi                                      d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fixunssfsi.o)
+                                                  main.o
+__floatsisf                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(floatsisf.o)
+__floatunsisf                                     d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(floatsisf.o)
+                                                  main.o
+__fp_inf                                          d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_inf.o)
+                                                  d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
+__fp_nan                                          d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_nan.o)
+                                                  d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
+__fp_pscA                                         d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_pscA.o)
+                                                  d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
+__fp_pscB                                         d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_pscB.o)
+                                                  d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
+__fp_round                                        d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_round.o)
+                                                  d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3.o)
+__fp_split3                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_split3.o)
+                                                  d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
+__fp_splitA                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_split3.o)
+                                                  d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fixunssfsi.o)
+__fp_szero                                        d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_zero.o)
+                                                  d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
+__fp_zero                                         d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fp_zero.o)
+                                                  d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(fixunssfsi.o)
+__heap_end                                        d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__init                                            d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__mulsf3                                          d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3.o)
+                                                  main.o
+__mulsf3_pse                                      d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
+__mulsf3x                                         d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
+                                                  d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libm.a(mulsf3.o)
+__mulsi3                                          d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_mulsi3.o)
+                                                  main.o
+__stack                                           d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__udivmodhi4                                      d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodhi4.o)
+                                                  main.o
+__udivmodsi4                                      d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodsi4.o)
+                                                  d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_divmodsi4.o)
+__vector_1                                        d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_10                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_11                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_12                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_13                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_14                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_15                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_16                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_17                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_18                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_19                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_2                                        d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_20                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_21                                       main.o
+                                                  d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_22                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_23                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_24                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_25                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_26                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_27                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_28                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_29                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_3                                        d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_30                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_31                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_32                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_33                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_34                                       d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_4                                        d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_5                                        d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_6                                        d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_7                                        d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_8                                        d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_9                                        d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vector_default                                  d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+__vectors                                         d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+_exit                                             d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
+delay_ms                                          main.o
+delay_s                                           main.o
+exit                                              d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
+                                                  d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+get_in_pin                                        main.o
+init_in_ana                                       main.o
+init_in_pin                                       main.o
+init_in_port                                      main.o
+init_out_pin                                      main.o
+init_out_port                                     main.o
+init_serial                                       main.o
+main                                              main.o
+                                                  d:/semester_03/mct/avr/winavr/winavr/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+read_adc                                          main.o
+reset_pin                                         main.o
+result                                            main.o
+result_bcd                                        main.o
+set_pin                                           main.o
+toggle_pin                                        main.o

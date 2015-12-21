@@ -1,0 +1,307 @@
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+  69               	.global	timer0_cnt
+  70               	.global	timer0_cnt
+  71               		.section .bss
+  74               	timer0_cnt:
+  75 0000 00        		.skip 1,0
+  77               		.text
+  79               	.global	main
+  81               	main:
+   1:main.c        **** #include "main.h"
+   2:main.c        **** 
+   3:main.c        **** int main(void)
+   4:main.c        **** {
+  82               	 r29,__SP_H__
+  83               	/* prologue: function */
+  84               	/* frame size = 0 */
+  86 0002 CF93      	.LM1:
+  87 0004 CDB7      	/* #APP */
+  88 0006 DEB7      	 ;  5 "main.c" 1
+  89               		sei
+  90               	 ;  0 "" 2
+   5:main.c        **** 	sei();
+  91               	8,0,6,.LM2-.LFBB1
+  92               	.LM2:
+  93               	/* #NOAPP */
+  94               		call TIMER0_ini
+  96               	.LM3:
+   6:main.c        **** 	TIMER0_ini();
+  97               	USART1_ini
+  98               	.L2:
+  99               		rjmp .L2
+   7:main.c        **** 	USART1_ini();
+ 101               	 size = 0 */
+ 103 000e 0E94 0000 	.LM1:
+ 104               	/* #APP */
+ 105 0012 00C0      	 ;  5 "main.c" 1
+ 106               		sei
+ 107               	 ;  0 "" 2
+ 109               	.LM2:
+ 110               	/* #NOAPP */
+ 111               		call TIMER0_ini
+   8:main.c        **** 
+   9:main.c        **** 	while(1)
+  10:main.c        **** 	{
+  11:main.c        **** 	}
+  12:main.c        **** }
+  13:main.c        **** 
+  14:main.c        **** SIGNAL (SIG_UART0_TRANS)								//a/d converter in interrupt mode
+  15:main.c        **** {
+ 112               	0,7,.LM3-.LFBB1
+ 113               	.LM3:
+ 114               		call USART1_ini
+ 115 0014 1F92      	.L2:
+ 116 0016 0F92      		rjmp .L2
+ 118 001a 0F92      	.Lscope1:
+ 120 001e DF93      	.global	__vector_23
+ 122 0022 CDB7      	__vector_23:
+ 124               	.LM4:
+ 125               	.LFBB2:
+ 126               		push __zero_reg__
+  16:main.c        **** }
+ 127               	USART1_ini
+ 128               	.L2:
+ 129 0026 CF91      		rjmp .L2
+ 131 002a 0F90      	.Lscope1:
+ 133 002e 0F90      	.global	__vector_23
+ 135 0032 1895      	__vector_23:
+ 137               	.LM4:
+ 138               	.LFBB2:
+ 139               		push __zero_reg__
+ 140               		push r0
+ 141               		in r0,__SREG__
+  17:main.c        **** 
+  18:main.c        **** SIGNAL (SIG_OVERFLOW0)								//a/d converter in interrupt mode
+  19:main.c        **** {
+ 143               	.Lscope1:
+ 145 0034 1F92      	.global	__vector_23
+ 147 0038 0FB6      	__vector_23:
+ 149 003c 0090 5B00 	.LM4:
+ 150 0040 0F92      	.LFBB2:
+ 151 0042 1124      		push __zero_reg__
+ 152 0044 8F93      		push r0
+ 153 0046 EF93      		in r0,__SREG__
+ 154 0048 FF93      		push r0
+ 155 004a DF93      		clr __zero_reg__
+ 156 004c CF93      		push r29
+ 157 004e CDB7      		push r28
+ 158 0050 DEB7      		in r28,__SP_L__
+ 159               		in r29,__SP_H__
+ 160               	/* prologue: Signal */
+  20:main.c        **** 	TCNT0 = 0x06;
+ 161               	or_23, @function
+ 162               	__vector_23:
+ 164 0054 F0E0      	.LM4:
+ 165 0056 86E0      	.LFBB2:
+ 166 0058 8083      		push __zero_reg__
+  21:main.c        **** 	timer0_cnt++;
+ 167               	USART1_ini
+ 168               	.L2:
+ 169 005a 8091 0000 		rjmp .L2
+ 171 0060 8093 0000 	.Lscope1:
+  22:main.c        **** 	
+  23:main.c        **** 	if (timer0_cnt == 250) //100ms
+ 172               	/
+ 174 0064 8091 0000 	.LM1:
+ 175 0068 8A3F      	/* #APP */
+ 176 006a 01F4      	 ;  5 "main.c" 1
+  24:main.c        **** 	{
+  25:main.c        **** 		timer0_cnt = 0;
+ 177               	 ;  0 "" 2
+ 179 006c 1092 0000 	.LM2:
+  26:main.c        **** 		UDR1 = 'A';
+ 180               	#NOAPP */
+ 181               		call TIMER0_ini
+ 183 0072 F0E0      	.LM3:
+ 184 0074 81E4      		call USART1_ini
+ 185 0076 8083      	.L2:
+ 186               		rjmp .L2
+  27:main.c        **** 	}
+  28:main.c        **** }
+ 188               	:
+ 190 0078 CF91      	.global	__vector_23
+ 192 007c FF91      	__vector_23:
+ 194 0080 8F91      	.LM4:
+ 195 0082 0F90      	.LFBB2:
+ 196 0084 0092 5B00 		push __zero_reg__
+ 197 0088 0F90      		push r0
+ 198 008a 0FBE      		in r0,__SREG__
+ 199 008c 0F90      		push r0
+ 200 008e 1F90      		clr __zero_reg__
+ 201 0090 1895      		push r29
+ 202               		push r28
+ 203               		in r28,__SP_L__
+ 204               		in r29,__SP_H__
+ 205               	/* prologue: Signal */
+ 206               	/* frame size = 0 */
+ 207               	/* epilogue start */
+  29:main.c        **** 
+  30:main.c        **** void TIMER0_ini (void)
+  31:main.c        **** {
+ 208               	5,.LM4-.LFBB2
+ 209               	.LM4:
+ 210               	.LFBB2:
+ 211 0092 DF93      		push __zero_reg__
+ 212 0094 CF93      		push r0
+ 213 0096 CDB7      		in r0,__SREG__
+ 214 0098 DEB7      		push r0
+ 215               		clr __zero_reg__
+ 216               		push r29
+  32:main.c        **** 	TCCR0A = (1 << CS02) | (0 << CS01) | (0 << CS00);	//Prescaler 256
+ 217               	vector_23:F(0,15)",36,0,0,__vector_23
+ 218               	.global	__vector_23
+ 220 009c F0E0      	__vector_23:
+ 222 00a0 8083      	.LM4:
+  33:main.c        **** 	//TCNT0 = 0x00;
+  34:main.c        **** 	TIMSK0 = (0 << OCIE0A) | (1 << TOIE0);
+ 223               	,0,7,.LM3-.LFBB1
+ 224               	.LM3:
+ 225 00a2 EEE6      		call USART1_ini
+ 226 00a4 F0E0      	.L2:
+ 227 00a6 81E0      		rjmp .L2
+  35:main.c        **** 	TCNT0 = 0x06;
+ 229               	 size = 0 */
+ 231 00aa E6E4      	.LM1:
+ 232 00ac F0E0      	/* #APP */
+ 233 00ae 86E0      	 ;  5 "main.c" 1
+ 234 00b0 8083      		sei
+ 235               	 ;  0 "" 2
+  36:main.c        **** }
+ 236               		68,0,6,.LM2-.LFBB1
+ 237               	.LM2:
+ 238 00b2 CF91      	/* #NOAPP */
+ 239 00b4 DF91      		call TIMER0_ini
+ 241               	.LM3:
+ 242               		call USART1_ini
+ 243               	.L2:
+ 244               		rjmp .L2
+ 246               	.Lscope1:
+  37:main.c        **** 
+  38:main.c        **** void USART1_ini (void)
+  39:main.c        **** {
+ 247               	vector_23:F(0,15)",36,0,0,__vector_23
+ 248               	.global	__vector_23
+ 250 00b8 DF93      	__vector_23:
+ 252 00bc CDB7      	.LM4:
+ 253 00be DEB7      	.LFBB2:
+ 254               		push __zero_reg__
+ 255               		push r0
+  40:main.c        **** 	/* Set baud rate */
+  41:main.c        **** 	UBRR1H = (unsigned char) (BAUD>>8);
+ 256               	
+ 257               	.L2:
+ 258 00c0 EDEC      		rjmp .L2
+ 260 00c4 1082      	.Lscope1:
+  42:main.c        **** 	UBRR1L = (unsigned char) BAUD;
+ 261               	/
+ 263 00c6 ECEC      	.LM1:
+ 264 00c8 F0E0      	/* #APP */
+ 265 00ca 88E0      	 ;  5 "main.c" 1
+ 266 00cc 8083      		sei
+  43:main.c        **** 	UCSR1C = (0 << UMSEL1) | //asynchronous
+ 267               	"" 2
+ 269 00ce EAEC      	.LM2:
+ 270 00d0 F0E0      	/* #NOAPP */
+ 271 00d2 86E0      		call TIMER0_ini
+  44:main.c        **** 			(0 << UPM10) | (0<<UPM11) |	//Mode 00: no parity
+  45:main.c        **** 			(0 << USBS1) | 	//1 stop bit
+  46:main.c        **** 			(1 << UCSZ11) | (1 << UCSZ10);	//Mode 011: 8 bit data
+  47:main.c        **** 	/* Enable transmitter, disable receiver */
+  48:main.c        **** 	UCSR1B = (0 << RXCIE1) | (0 << TXCIE1) | (0 << RXEN1) | (1 << TXEN1) | (0 << UCSZ12);
+ 273               		call USART1_ini
+ 274               	.L2:
+ 275 00d6 E9EC      		rjmp .L2
+ 277 00da 88E0      	.Lscope1:
+  49:main.c        **** 	UCSR1A = (0 << U2X1);
+ 279               	5 "main.c" 1
+ 280               		sei
+ 281 00de E8EC      	 ;  0 "" 2
+ 283 00e2 1082      	.LM2:
+ 284               	/* #NOAPP */
+  50:main.c        **** }
+ 285               	TIMER0_ini
+ 287 00e4 CF91      	.LM3:
+ 288 00e6 DF91      		call USART1_ini
+ 289 00e8 0895      	.L2:
+ 290               		rjmp .L2
+ 292               	.Lscope1:
+ 294               	.global	__vector_23
+  51:main.c        **** 
+  52:main.c        **** void USART0_ini (void)
+  53:main.c        **** {
+ 296               	BB1
+ 297               	.LM2:
+ 298               	/* #NOAPP */
+ 299 00ea DF93      		call TIMER0_ini
+ 301 00ee CDB7      	.LM3:
+ 302 00f0 DEB7      		call USART1_ini
+ 303               	.L2:
+ 304               		rjmp .L2
+  54:main.c        **** 	/* Set baud rate */
+  55:main.c        **** 	UBRR0H = (unsigned char) (BAUD>>8);
+ 305               	in, .-main
+ 306               	.Lscope1:
+ 308 00f4 F0E0      	.global	__vector_23
+  56:main.c        **** 	UBRR0L = (unsigned char) BAUD;
+ 310               	BB1
+ 311               	.LM2:
+ 312 00f8 E4EC      	/* #NOAPP */
+ 313 00fa F0E0      		call TIMER0_ini
+ 315 00fe 8083      	.LM3:
+  57:main.c        **** 	UCSR0C = (0 << UMSEL0) | //asynchronous
+ 316               	USART1_ini
+ 317               	.L2:
+ 318 0100 E2EC      		rjmp .L2
+ 320 0104 86E0      	.Lscope1:
+  58:main.c        **** 			(0 << UPM00) | (0<<UPM01) |	//Mode 00: no parity
+  59:main.c        **** 			(0 << USBS0) | 	//1 stop bit
+  60:main.c        **** 			(1 << UCSZ01) | (1 << UCSZ00);	//Mode 011: 8 bit data
+  61:main.c        **** 	/* Enable transmitter, disable receiver */
+  62:main.c        **** 	UCSR0B = (0 << RXCIE0) | (0 << TXCIE0) | (0 << RXEN0) | (1 << TXEN0) | (0 << UCSZ02);
+ 322               	5 "main.c" 1
+ 323               		sei
+ 324 0108 E1EC      	 ;  0 "" 2
+ 326 010c 88E0      	.LM2:
+ 327 010e 8083      	/* #NOAPP */
+  63:main.c        **** 	UCSR0A = (0 << U2X0);
+ 328               	TIMER0_ini
+ 330 0110 E0EC      	.LM3:
+ 331 0112 F0E0      		call USART1_ini
+ 332 0114 1082      	.L2:
+ 333               		rjmp .L2
+  64:main.c        **** }
+ 334               	 function */
+ 335               	/* frame size = 0 */
+ 337 0118 DF91      	.LM1:
+ 338 011a 0895      	/* #APP */
+ 339               	 ;  5 "main.c" 1
+ 340               		sei
+ 341               	 ;  0 "" 2
+ 343               	.LM2:
+ 344               	/* #NOAPP */
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/cccyQDwf.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/cccyQDwf.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/cccyQDwf.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/cccyQDwf.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/cccyQDwf.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/cccyQDwf.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/cccyQDwf.s:74     .bss:00000000 timer0_cnt
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/cccyQDwf.s:81     .text:00000000 main
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/cccyQDwf.s:207    .text:00000092 TIMER0_ini
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/cccyQDwf.s:246    .text:000000b8 USART1_ini
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/cccyQDwf.s:111    .text:00000014 __vector_23
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/cccyQDwf.s:141    .text:00000034 __vector_17
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/cccyQDwf.s:295    .text:000000ea USART0_ini
+
+UNDEFINED SYMBOLS
+__do_clear_bss

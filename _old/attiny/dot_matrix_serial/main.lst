@@ -1,0 +1,556 @@
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+  68               	.global	colums
+  69               	.global	colums
+  70               		.section .bss
+  73               	colums:
+  74 0000 0000 0000 		.skip 5,0
+  74      00
+  75               	.global	rec_char
+  76               	.global	rec_char
+  79               	rec_char:
+  80 0005 00        		.skip 1,0
+  81               	.global	rec_char_buffer
+  82               	.global	rec_char_buffer
+  85               	rec_char_buffer:
+  86 0006 00        		.skip 1,0
+  87               	.global	data_incoming
+  88               	.global	data_incoming
+  91               	data_incoming:
+  92 0007 00        		.skip 1,0
+  93               	.global	i
+  94               	.global	i
+  97               	i:
+  98 0008 00        		.skip 1,0
+  99               		.text
+ 101               	.global	__vector_7
+ 103               	__vector_7:
+   1:main.c        **** #define DEVICE_NUMBER 0x81
+   2:main.c        **** 
+   3:main.c        **** #include <avr/io.h>
+   4:main.c        **** #include <avr/signal.h>
+   5:main.c        **** #include <avr/interrupt.h>
+   6:main.c        **** 
+   7:main.c        **** void disp_char(unsigned char colums[5]);
+   8:main.c        **** 
+   9:main.c        **** unsigned char colums[5] = {0x00, 0x00, 0x00, 0x00, 0x00};
+  10:main.c        **** unsigned char rec_char = 0;
+  11:main.c        **** unsigned char rec_char_buffer = 0;
+  12:main.c        **** unsigned char data_incoming = 0;
+  13:main.c        **** unsigned char i = 0;
+  14:main.c        **** 
+  15:main.c        **** ISR (USART_RX_vect)
+  16:main.c        **** {
+ 104               	ero_reg__
+ 105               		push r18
+ 106               		push r24
+ 107 0000 1F92      		push r25
+ 108 0002 0F92      		push r30
+ 109 0004 0FB6      		push r31
+ 110 0006 0F92      		push r29
+ 111 0008 1124      		push r28
+ 112 000a 2F93      		in r28,__SP_L__
+ 113 000c 8F93      		in r29,__SP_H__
+ 114 000e 9F93      	/* prologue: Signal */
+ 115 0010 EF93      	/* frame size = 0 */
+ 117 0014 DF93      	.LM1:
+ 118 0016 CF93      		ldi r30,lo8(44)
+ 119 0018 CDB7      		ldi r31,hi8(44)
+ 120 001a DEB7      		ld r24,Z
+ 121               		sts rec_char_buffer,r24
+  17:main.c        **** 	rec_char_buffer = UDR;
+ 123               	_incoming
+ 124               		tst r24
+ 125 001c ECE2      		breq .L2
+ 127 0020 8081      	.LM3:
+ 128 0022 8093 0000 		lds r24,i
+  18:main.c        **** 	//colums[0] = 0xff;
+  19:main.c        **** 	//if (rec_char_buffer == DEVICE_NUMBER)
+  20:main.c        **** 		//colums[0] += 0x01;
+  21:main.c        **** 	
+  22:main.c        **** 	if (data_incoming)
+ 129               	24,r24
+ 130               		ldi r25,lo8(0)
+ 131 0026 8091 0000 		lds r18,rec_char_buffer
+ 132 002a 8823      		movw r30,r24
+ 133 002c 01F0      		subi r30,lo8(-(colums))
+  23:main.c        **** 	{
+  24:main.c        **** 		colums[i] = rec_char_buffer;
+ 134               	 r31,hi8(-(colums))
+ 135               		st Z,r18
+ 137 0032 882F      	.LM4:
+ 138 0034 90E0      		lds r24,i
+ 139 0036 2091 0000 		subi r24,lo8(-(1))
+ 140 003a FC01      		sts i,r24
+ 142 003e F040      	.LM5:
+ 143 0040 2083      		lds r24,i
+  25:main.c        **** 		i++;
+ 144               	o8(5)
+ 145               		brne .L2
+ 147 0046 8F5F      	.LM6:
+ 148 0048 8093 0000 		sts data_incoming,__zero_reg__
+  26:main.c        **** 		if (i == 5)
+ 150               	.LM7:
+ 151 004c 8091 0000 		lds r24,rec_char_buffer
+ 152 0050 8530      		cpi r24,lo8(-127)
+ 153 0052 01F4      		brne .L4
+  27:main.c        **** 			data_incoming = 0;
+ 154               	bn	68,0,32,.LM8-.LFBB1
+ 155               	.LM8:
+ 156 0054 1092 0000 		ldi r24,lo8(1)
+ 157               		sts data_incoming,r24
+  28:main.c        **** 	}
+  29:main.c        **** 	
+  30:main.c        **** 	if (rec_char_buffer == DEVICE_NUMBER)
+ 158               	abn	68,0,33,.LM9-.LFBB1
+ 159               	.LM9:
+ 160 0058 8091 0000 		sts i,__zero_reg__
+ 161 005c 8138      	.L4:
+ 162 005e 01F4      	/* epilogue start */
+  31:main.c        **** 	{
+  32:main.c        **** 		data_incoming = 1;
+ 163               	bn	68,0,35,.LM10-.LFBB1
+ 164               	.LM10:
+ 165 0060 81E0      		pop r28
+ 166 0062 8093 0000 		pop r29
+  33:main.c        **** 		i = 0;
+ 167               	 r31
+ 168               		pop r30
+ 169 0066 1092 0000 		pop r25
+ 170               		pop r24
+ 171               		pop r18
+  34:main.c        **** 	}
+  35:main.c        **** } 
+ 172               	r0
+ 173               		out __SREG__,r0
+ 174 006a CF91      		pop r0
+ 175 006c DF91      		pop __zero_reg__
+ 176 006e FF91      		reti
+ 178 0072 9F91      	.Lscope1:
+ 180 0076 2F91      	.global	main
+ 182 007a 0FBE      	main:
+ 184 007e 1F90      	.LM11:
+ 185 0080 1895      	.LFBB2:
+ 186               		push r29
+ 187               		push r28
+ 188               		in r28,__SP_L__
+ 189               		in r29,__SP_H__
+ 190               	/* prologue: function */
+ 191               	/* frame size = 0 */
+  36:main.c        **** 
+  37:main.c        **** int main(void)
+  38:main.c        **** {
+ 192               	2-.LFBB2
+ 193               	.LM12:
+ 194               		ldi r26,lo8(55)
+ 195 0082 DF93      		ldi r27,hi8(55)
+ 196 0084 CF93      		ldi r30,lo8(55)
+ 197 0086 CDB7      		ldi r31,hi8(55)
+ 198 0088 DEB7      		ld r24,Z
+ 199               		ori r24,lo8(31)
+ 200               		st X,r24
+  39:main.c        **** 	//unsigned char colums_a[5] = {0x3f, 0x48, 0x48, 0x48, 0x3f};
+  40:main.c        **** 	//unsigned char colums_b[5] = {0x7f, 0x49, 0x49, 0x49, 0x36};
+  41:main.c        **** 	//unsigned char colums_c[5] = {0x3e, 0x41, 0x41, 0x41, 0x22};
+  42:main.c        **** 	//unsigned char colums_d[5] = {0x7f, 0x41, 0x41, 0x41, 0x3e};
+  43:main.c        **** 	//unsigned char colums_e[5] = {0x7f, 0x49, 0x49, 0x49, 0x41};
+  44:main.c        **** 	//unsigned char colums_f[5] = {0x7f, 0x48, 0x48, 0x48, 0x40};
+  45:main.c        **** 	//unsigned char colums_h[5] = {0x7f, 0x08, 0x08, 0x08, 0x7f};
+  46:main.c        **** 	//unsigned char colums_l[5] = {0x7f, 0x01, 0x01, 0x01, 0x01};
+  47:main.c        **** 	//unsigned char colums_o[5] = {0x3e, 0x41, 0x41, 0x41, 0x3e};
+  48:main.c        **** 	//unsigned int i;
+  49:main.c        **** 	
+  50:main.c        **** 	DDRB |= 0x1f;
+ 201               	8,0,51,.LM13-.LFBB2
+ 202               	.LM13:
+ 203 008a A7E3      		ldi r26,lo8(49)
+ 204 008c B0E0      		ldi r27,hi8(49)
+ 205 008e E7E3      		ldi r30,lo8(49)
+ 206 0090 F0E0      		ldi r31,hi8(49)
+ 207 0092 8081      		ld r24,Z
+ 208 0094 8F61      		ori r24,lo8(124)
+ 209 0096 8C93      		st X,r24
+  51:main.c        **** 	DDRD |= 0x7c;
+ 210               	8,0,52,.LM14-.LFBB2
+ 211               	.LM14:
+ 212 0098 A1E3      		ldi r26,lo8(58)
+ 213 009a B0E0      		ldi r27,hi8(58)
+ 214 009c E1E3      		ldi r30,lo8(58)
+ 215 009e F0E0      		ldi r31,hi8(58)
+ 216 00a0 8081      		ld r24,Z
+ 217 00a2 8C67      		ori r24,lo8(3)
+ 218 00a4 8C93      		st X,r24
+  52:main.c        **** 	DDRA |= 0x03;
+ 219               	8,0,54,.LM15-.LFBB2
+ 220               	.LM15:
+ 221 00a6 AAE3      		ldi r30,lo8(34)
+ 222 00a8 B0E0      		ldi r31,hi8(34)
+ 223 00aa EAE3      		st Z,__zero_reg__
+ 225 00ae 8081      	.LM16:
+ 226 00b0 8360      		ldi r30,lo8(41)
+ 227 00b2 8C93      		ldi r31,hi8(41)
+  53:main.c        **** 
+  54:main.c        **** 	UBRRH = 0;		//UBRR to 15 for 115200bps with 14.7456Mhz
+ 228               	lo8(25)
+ 229               		st Z,r24
+ 231 00b6 F0E0      	.LM17:
+ 232 00b8 1082      		ldi r30,lo8(43)
+  55:main.c        **** 	UBRRL = 25;
+ 233               	r31,hi8(43)
+ 234               		ldi r24,lo8(98)
+ 235 00ba E9E2      		st Z,r24
+ 237 00be 89E1      	.LM18:
+ 238 00c0 8083      		ldi r30,lo8(42)
+  56:main.c        **** 	
+  57:main.c        **** 	UCSRA = 0x62;	// 
+ 239               	31,hi8(42)
+ 240               		ldi r24,lo8(24)
+ 241 00c2 EBE2      		st Z,r24
+ 243 00c6 82E6      	.LM19:
+ 244 00c8 8083      		ldi r30,lo8(35)
+  58:main.c        **** 	UCSRB = 0x18;	// interrupts disabled, transmitter and reciever enabled, 8bit, no 9th bit
+ 245               	31,hi8(35)
+ 246               		ldi r24,lo8(-122)
+ 247 00ca EAE2      		st Z,r24
+ 249 00ce 88E1      	.LM20:
+ 250 00d0 8083      		ldi r26,lo8(42)
+  59:main.c        **** 	UCSRC = 0x86; 	// no parity, asynchronous, 1 stopbit, 8bit number
+ 251               	27,hi8(42)
+ 252               		ldi r30,lo8(42)
+ 253 00d2 E3E2      		ldi r31,hi8(42)
+ 254 00d4 F0E0      		ld r24,Z
+ 255 00d6 86E8      		ori r24,lo8(-128)
+ 256 00d8 8083      		st X,r24
+  60:main.c        **** 	UCSRB |= (1 << RXCIE);
+ 257               	n	68,0,61,.LM21-.LFBB2
+ 258               	.LM21:
+ 259 00da AAE2      	/* #APP */
+ 260 00dc B0E0      	 ;  61 "main.c" 1
+ 261 00de EAE2      		sei
+ 262 00e0 F0E0      	 ;  0 "" 2
+ 264 00e4 8068      	.LM22:
+ 265 00e6 8C93      	/* #NOAPP */
+  61:main.c        **** 	sei();
+ 266               	lo8(56)
+ 267               		ldi r27,hi8(56)
+ 268               		ldi r30,lo8(56)
+ 269               		ldi r31,hi8(56)
+ 270 00e8 7894      		ld r24,Z
+ 271               		andi r24,lo8(-32)
+  62:main.c        **** 	
+  63:main.c        **** 	PORTB &= ~0x1f;
+ 272               	r24
+ 273               	.L6:
+ 275 00ea A8E3      	.LM23:
+ 276 00ec B0E0      		ldi r24,lo8(colums)
+ 277 00ee E8E3      		ldi r25,hi8(colums)
+ 278 00f0 F0E0      		rcall disp_char
+ 279 00f2 8081      		rjmp .L6
+ 281 00f6 8C93      	.Lscope2:
+  64:main.c        **** 	
+  65:main.c        **** 	while(1)
+  66:main.c        **** 	{
+  67:main.c        **** 		disp_char(colums);
+ 283               	lums:p(0,16)=*(0,11)",160,0,0,3
+ 284               	.global	disp_char
+ 286 00fa 90E0      	disp_char:
+ 288 00fe 00C0      	.LM24:
+ 289               	.LFBB3:
+ 290               		push r29
+ 291               		push r28
+ 292               		rcall .
+ 293               		rcall .
+ 294               		in r28,__SP_L__
+ 295               		in r29,__SP_H__
+  68:main.c        **** 	}
+  69:main.c        **** }
+  70:main.c        **** 
+  71:main.c        **** void disp_char(unsigned char *colums)
+  72:main.c        **** {
+ 296               	:
+ 299 0100 DF93      	.global	disp_char
+ 301 0104 00D0      	disp_char:
+ 303 0108 CDB7      	.LM24:
+ 304 010a DEB7      	.LFBB3:
+ 305               		push r29
+ 306               		push r28
+ 307 010c 9C83      		rcall .
+ 308 010e 8B83      		rcall .
+  73:main.c        **** 	unsigned char i, j;
+  74:main.c        **** 	
+  75:main.c        **** 	for (j = 0; j <= 4; j++)
+ 309               	L__
+ 310               		in r29,__SP_H__
+ 311 0110 1982      	/* prologue: function */
+ 312 0112 00C0      	/* frame size = 4 */
+ 313               		std Y+4,r25
+  76:main.c        **** 	{
+  77:main.c        **** 		if (colums[j] & (0x01 << 0))
+ 314               	:p(0,16)=*(0,11)",160,0,0,3
+ 315               	.global	disp_char
+ 317 0116 282F      	disp_char:
+ 319 011a 8B81      	.LM24:
+ 320 011c 9C81      	.LFBB3:
+ 321 011e FC01      		push r29
+ 322 0120 E20F      		push r28
+ 323 0122 F31F      		rcall .
+ 324 0124 8081      		rcall .
+ 325 0126 882F      		in r28,__SP_L__
+ 326 0128 90E0      		in r29,__SP_H__
+ 327 012a 8170      	/* prologue: function */
+ 328 012c 9070      	/* frame size = 4 */
+ 329 012e 8823      		std Y+4,r25
+ 330 0130 01F0      		std Y+3,r24
+  78:main.c        **** 			PORTA &= ~(0x01 << 0);
+ 331               	1)",160,0,0,3
+ 332               	.global	disp_char
+ 334 0134 B0E0      	disp_char:
+ 336 0138 F0E0      	.LM24:
+ 337 013a 8081      	.LFBB3:
+ 338 013c 8E7F      		push r29
+ 339 013e 8C93      		push r28
+ 340 0140 00C0      		rcall .
+ 341               		rcall .
+  79:main.c        **** 		else
+  80:main.c        **** 			PORTA |= (0x01 << 0);
+ 342               	jmp .L6
+ 344 0142 ABE3      	.Lscope2:
+ 347 0148 F0E0      	.global	disp_char
+ 349 014c 8160      	disp_char:
+ 351               	.LM24:
+  81:main.c        **** 		if (colums[j] & (0x01 << 1))
+ 352               	ush r29
+ 353               		push r28
+ 354 0150 8981      		rcall .
+ 355 0152 282F      		rcall .
+ 356 0154 30E0      		in r28,__SP_L__
+ 357 0156 8B81      		in r29,__SP_H__
+ 358 0158 9C81      	/* prologue: function */
+ 359 015a FC01      	/* frame size = 4 */
+ 360 015c E20F      		std Y+4,r25
+ 361 015e F31F      		std Y+3,r24
+ 363 0162 882F      	.LM25:
+ 364 0164 90E0      		std Y+1,__zero_reg__
+ 365 0166 8270      		rjmp .L9
+ 366 0168 9070      	.L20:
+ 368 016c 01F0      	.LM26:
+  82:main.c        **** 			PORTA &= ~(0x01 << 1);
+ 369               	ush r29
+ 370               		push r28
+ 371 016e ABE3      		rcall .
+ 372 0170 B0E0      		rcall .
+ 373 0172 EBE3      		in r28,__SP_L__
+ 374 0174 F0E0      		in r29,__SP_H__
+ 375 0176 8081      	/* prologue: function */
+ 376 0178 8D7F      	/* frame size = 4 */
+ 377 017a 8C93      		std Y+4,r25
+ 378 017c 00C0      		std Y+3,r24
+  83:main.c        **** 		else
+  84:main.c        **** 			PORTA |= (0x01 << 1);
+ 380               	r
+ 382 017e ABE3      	disp_char:
+ 384 0182 EBE3      	.LM24:
+ 385 0184 F0E0      	.LFBB3:
+ 386 0186 8081      		push r29
+ 387 0188 8260      		push r28
+ 388 018a 8C93      		rcall .
+ 389               		rcall .
+  85:main.c        **** 		for (i = 2; i <= 6; i++)
+ 390               	jmp .L6
+ 392 018c 82E0      	.Lscope2:
+ 395               	.global	disp_char
+  86:main.c        **** 		{
+  87:main.c        **** 			if (colums[j] & (0x01 << i))
+ 396               		disp_char, @function
+ 397               	disp_char:
+ 399 0194 282F      	.LM24:
+ 400 0196 30E0      	.LFBB3:
+ 401 0198 8B81      		push r29
+ 402 019a 9C81      		push r28
+ 403 019c FC01      		rcall .
+ 404 019e E20F      		rcall .
+ 405 01a0 F31F      		in r28,__SP_L__
+ 406 01a2 8081      		in r29,__SP_H__
+ 407 01a4 282F      	/* prologue: function */
+ 408 01a6 30E0      	/* frame size = 4 */
+ 409 01a8 8A81      		std Y+4,r25
+ 410 01aa 882F      		std Y+3,r24
+ 412 01ae A901      	.LM25:
+ 413 01b0 00C0      		std Y+1,__zero_reg__
+ 414 01b2 5595      		rjmp .L9
+ 415 01b4 4795      	.L20:
+ 417 01b8 02F4      	.LM26:
+ 418 01ba CA01      		ldd r24,Y+1
+ 419 01bc 8170      		mov r18,r24
+ 420 01be 9070      		ldi r19,lo8(0)
+ 421 01c0 8823      		ldd r24,Y+3
+ 422 01c2 01F0      		ldd r25,Y+4
+  88:main.c        **** 				PORTD &= ~(0x01 << i);
+ 423               	prologue: function */
+ 424               	/* frame size = 4 */
+ 425 01c4 A2E3      		std Y+4,r25
+ 426 01c6 B0E0      		std Y+3,r24
+ 428 01ca F0E0      	.LM25:
+ 429 01cc 8081      		std Y+1,__zero_reg__
+ 430 01ce 482F      		rjmp .L9
+ 431 01d0 8A81      	.L20:
+ 433 01d4 30E0      	.LM26:
+ 434 01d6 81E0      		ldd r24,Y+1
+ 435 01d8 90E0      		mov r18,r24
+ 436 01da 022E      		ldi r19,lo8(0)
+ 437 01dc 00C0      		ldd r24,Y+3
+ 438 01de 880F      		ldd r25,Y+4
+ 439 01e0 991F      		movw r30,r24
+ 440 01e2 0A94      		add r30,r18
+ 441 01e4 02F4      		adc r31,r19
+ 442 01e6 8095      		ld r24,Z
+ 443 01e8 8423      		mov r24,r24
+ 444 01ea 8C93      		ldi r25,lo8(0)
+ 445 01ec 00C0      		andi r24,lo8(1)
+ 446               		andi r25,hi8(1)
+  89:main.c        **** 			else
+  90:main.c        **** 				PORTD |= (0x01 << i);
+ 447               	reg__
+ 448               		rjmp .L9
+ 449 01ee A2E3      	.L20:
+ 451 01f2 E2E3      	.LM26:
+ 452 01f4 F0E0      		ldd r24,Y+1
+ 453 01f6 8081      		mov r18,r24
+ 454 01f8 482F      		ldi r19,lo8(0)
+ 455 01fa 8A81      		ldd r24,Y+3
+ 456 01fc 282F      		ldd r25,Y+4
+ 457 01fe 30E0      		movw r30,r24
+ 458 0200 81E0      		add r30,r18
+ 459 0202 90E0      		adc r31,r19
+ 460 0204 022E      		ld r24,Z
+ 461 0206 00C0      		mov r24,r24
+ 462 0208 880F      		ldi r25,lo8(0)
+ 463 020a 991F      		andi r24,lo8(1)
+ 464 020c 0A94      		andi r25,hi8(1)
+ 465 020e 02F4      		tst r24
+ 466 0210 842B      		breq .L10
+ 468               	.LM27:
+ 469               		ldi r26,lo8(59)
+ 470               		ldi r27,hi8(59)
+ 471 0214 8A81      		ldi r30,lo8(59)
+ 472 0216 8F5F      		ldi r31,hi8(59)
+ 473 0218 8A83      		ld r24,Z
+ 474               		andi r24,lo8(-2)
+ 475 021a 8A81      		st X,r24
+ 476 021c 8730      		rjmp .L11
+ 477 021e 00F4      	.L10:
+  91:main.c        **** 		}
+  92:main.c        **** 		PORTB |= (0x01 << j);
+ 479               		andi r25,hi8(1)
+ 480               		tst r24
+ 481 0222 A8E3      		breq .L10
+ 483 0226 E8E3      	.LM27:
+ 484 0228 F0E0      		ldi r26,lo8(59)
+ 485 022a 8081      		ldi r27,hi8(59)
+ 486 022c 482F      		ldi r30,lo8(59)
+ 487 022e 8981      		ldi r31,hi8(59)
+ 488 0230 282F      		ld r24,Z
+ 489 0232 30E0      		andi r24,lo8(-2)
+ 490 0234 81E0      		st X,r24
+ 491 0236 90E0      		rjmp .L11
+ 492 0238 022E      	.L10:
+ 494 023c 880F      	.LM28:
+ 495 023e 991F      		ldi r26,lo8(59)
+ 496 0240 0A94      		ldi r27,hi8(59)
+ 497 0242 02F4      		ldi r30,lo8(59)
+ 498 0244 842B      		ldi r31,hi8(59)
+ 499 0246 8C93      		ld r24,Z
+  93:main.c        **** 		for (i = 0; i <= 100; i++);
+ 500               	ldi r27,hi8(59)
+ 501               		ldi r30,lo8(59)
+ 502 0248 1A82      		ldi r31,hi8(59)
+ 503 024a 00C0      		ld r24,Z
+ 504               		andi r24,lo8(-2)
+ 505 024c 8A81      		st X,r24
+ 506 024e 8F5F      		rjmp .L11
+ 507 0250 8A83      	.L10:
+ 509 0252 8A81      	.LM28:
+ 510 0254 8536      		ldi r26,lo8(59)
+ 511 0256 00F0      		ldi r27,hi8(59)
+  94:main.c        **** 			//for (k = 0; k <= 100; k++);
+  95:main.c        **** 		PORTB &= ~(0x01 << j);
+ 512               		68,0,78,.LM27-.LFBB3
+ 513               	.LM27:
+ 514 0258 A8E3      		ldi r26,lo8(59)
+ 515 025a B0E0      		ldi r27,hi8(59)
+ 516 025c E8E3      		ldi r30,lo8(59)
+ 517 025e F0E0      		ldi r31,hi8(59)
+ 518 0260 8081      		ld r24,Z
+ 519 0262 482F      		andi r24,lo8(-2)
+ 520 0264 8981      		st X,r24
+ 521 0266 282F      		rjmp .L11
+ 522 0268 30E0      	.L10:
+ 524 026c 90E0      	.LM28:
+ 525 026e 022E      		ldi r26,lo8(59)
+ 526 0270 00C0      		ldi r27,hi8(59)
+ 527 0272 880F      		ldi r30,lo8(59)
+ 528 0274 991F      		ldi r31,hi8(59)
+ 529 0276 0A94      		ld r24,Z
+ 530 0278 02F4      		ori r24,lo8(1)
+ 531 027a 8095      		st X,r24
+ 532 027c 8423      	.L11:
+ 534               	.LM29:
+ 535               		ldd r24,Y+1
+ 536 0280 8981      		mov r18,r24
+ 537 0282 8F5F      		ldi r19,lo8(0)
+ 538 0284 8983      		ldd r24,Y+3
+ 539               		ldd r25,Y+4
+ 540 0286 8981      		movw r30,r24
+ 541 0288 8530      		add r30,r18
+ 542 028a 00F4      		adc r31,r19
+ 543 028c 00C0      		ld r24,Z
+ 544               		mov r24,r24
+  96:main.c        **** 	}
+  97:main.c        **** }...
+ 545               	24,Z
+ 546               		ori r24,lo8(1)
+ 547 028e 0F90      		st X,r24
+ 548 0290 0F90      	.L11:
+ 550 0294 0F90      	.LM29:
+ 551 0296 CF91      		ldd r24,Y+1
+ 552 0298 DF91      		mov r18,r24
+ 553 029a 0895      		ldi r19,lo8(0)
+ 554               		ldd r24,Y+3
+ 555               		ldd r25,Y+4
+ 556               		movw r30,r24
+ 557               		add r30,r18
+ 558               		adc r31,r19
+ 559               		ld r24,Z
+ 560               		mov r24,r24
+ 561               		ldi r25,lo8(0)
+ 562               		andi r24,lo8(2)
+ 563               		andi r25,hi8(2)
+ 564               		sbiw r24,0
+ 565               		breq .L12
+ 567               	.LM30:
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/ccek27Vs.s:2      *ABS*:0000003f __SREG__
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/ccek27Vs.s:3      *ABS*:0000003e __SP_H__
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/ccek27Vs.s:4      *ABS*:0000003d __SP_L__
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/ccek27Vs.s:5      *ABS*:00000034 __CCP__
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/ccek27Vs.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/ccek27Vs.s:7      *ABS*:00000001 __zero_reg__
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/ccek27Vs.s:73     .bss:00000000 colums
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/ccek27Vs.s:79     .bss:00000005 rec_char
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/ccek27Vs.s:85     .bss:00000006 rec_char_buffer
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/ccek27Vs.s:91     .bss:00000007 data_incoming
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/ccek27Vs.s:97     .bss:00000008 i
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/ccek27Vs.s:103    .text:00000000 __vector_7
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/ccek27Vs.s:191    .text:00000082 main
+C:\DOKUME~1\ADMINI~1\LOKALE~1\Temp/ccek27Vs.s:295    .text:00000100 disp_char
+
+UNDEFINED SYMBOLS
+__do_clear_bss

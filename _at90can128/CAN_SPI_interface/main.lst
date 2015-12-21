@@ -1,0 +1,192 @@
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+  69               	.global	main
+  71               	main:
+   1:main.c        **** #define SPIDDR 	DDRB
+   2:main.c        **** #define SPISCK	PB1
+   3:main.c        **** #define SPISS	PB0
+   4:main.c        **** #define SPIMOSI	PB2
+   5:main.c        **** #define SPIMISO	PB3
+   6:main.c        **** 
+   7:main.c        **** #include <avr/io.h>			
+   8:main.c        **** #include <avr/interrupt.h>	
+   9:main.c        **** 
+  10:main.c        **** void SPI_MasterInit(void);
+  11:main.c        **** void SPI_MasterTransmit(char cData);
+  12:main.c        **** 
+  13:main.c        **** int main(void)
+  14:main.c        **** {
+  72               	_SP_L__
+  73               		in r29,__SP_H__
+  74               	/* prologue: function */
+  75 0000 DF93      	/* frame size = 0 */
+  77 0004 CDB7      	.LM1:
+  78 0006 DEB7      		ldi r26,lo8(36)
+  79               		ldi r27,hi8(36)
+  80               		ldi r30,lo8(36)
+  15:main.c        **** 	DDRB |= (0x01 << PB4);
+  81               	 prologue: function */
+  82               	/* frame size = 0 */
+  84 000a B0E0      	.LM1:
+  85 000c E4E2      		ldi r26,lo8(36)
+  86 000e F0E0      		ldi r27,hi8(36)
+  87 0010 8081      		ldi r30,lo8(36)
+  88 0012 8061      		ldi r31,hi8(36)
+  89 0014 8C93      		ld r24,Z
+  16:main.c        **** 	
+  17:main.c        **** 	SPI_MasterInit();
+  90               	me size = 0 */
+  92 0016 0E94 0000 	.LM1:
+  93               		ldi r26,lo8(36)
+  18:main.c        **** 	while(1)
+  19:main.c        **** 	{
+  20:main.c        **** 		PORTB |= (0x01 << PB4);
+  94               		in r28,__SP_L__
+  95               		in r29,__SP_H__
+  96 001a A5E2      	/* prologue: function */
+  97 001c B0E0      	/* frame size = 0 */
+  99 0020 F0E0      	.LM1:
+ 100 0022 8081      		ldi r26,lo8(36)
+ 101 0024 8061      		ldi r27,hi8(36)
+ 102 0026 8C93      		ldi r30,lo8(36)
+  21:main.c        **** 		PORTB &= ~(0x01 << PB4);
+ 103               	 prologue: function */
+ 104               	/* frame size = 0 */
+ 106 002a B0E0      	.LM1:
+ 107 002c E5E2      		ldi r26,lo8(36)
+ 108 002e F0E0      		ldi r27,hi8(36)
+ 109 0030 8081      		ldi r30,lo8(36)
+ 110 0032 8F7E      		ldi r31,hi8(36)
+ 111 0034 8C93      		ld r24,Z
+  22:main.c        **** 		SPI_MasterTransmit('A');
+ 112               	me size = 0 */
+ 114 0036 81E4      	.LM1:
+ 115 0038 0E94 0000 		ldi r26,lo8(36)
+ 116 003c 00C0      		ldi r27,hi8(36)
+ 117               		ldi r30,lo8(36)
+ 118               		ldi r31,hi8(36)
+ 119               		ld r24,Z
+ 120               		ori r24,lo8(16)
+ 121               		st X,r24
+  23:main.c        **** 	}
+  24:main.c        **** }
+  25:main.c        **** 
+  26:main.c        **** void SPI_MasterInit(void)
+  27:main.c        **** {
+ 123               	lo8(36)
+ 124               		ldi r27,hi8(36)
+ 125               		ldi r30,lo8(36)
+ 126 003e DF93      		ldi r31,hi8(36)
+ 127 0040 CF93      		ld r24,Z
+ 128 0042 CDB7      		ori r24,lo8(16)
+ 129 0044 DEB7      		st X,r24
+ 131               	.LM2:
+  28:main.c        **** 	// SCK, SS!!, MOSI as outputs
+  29:main.c        **** 	SPIDDR |= (1<<SPISCK)|(1<<SPISS)|(1<<SPIMOSI);
+ 132               	
+ 133               		ldi r27,hi8(36)
+ 134 0046 A4E2      		ldi r30,lo8(36)
+ 135 0048 B0E0      		ldi r31,hi8(36)
+ 136 004a E4E2      		ld r24,Z
+ 137 004c F0E0      		ori r24,lo8(16)
+ 138 004e 8081      		st X,r24
+ 140 0052 8C93      	.LM2:
+  30:main.c        **** 	// MISO as input
+  31:main.c        **** 	SPIDDR &= ~(1<<SPIMISO);	// cbi(SPIDDR,SPIMISO);
+ 141               	
+ 142               		ldi r27,hi8(36)
+ 143 0054 A4E2      		ldi r30,lo8(36)
+ 144 0056 B0E0      		ldi r31,hi8(36)
+ 145 0058 E4E2      		ld r24,Z
+ 146 005a F0E0      		ori r24,lo8(16)
+ 147 005c 8081      		st X,r24
+ 149 0060 8C93      	.LM2:
+  32:main.c        **** 	// INIT interface, Master, set clock rate fck/128 TODO: check prescaler
+  33:main.c        **** 	SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0)|(1<<SPR1);
+ 150               	
+ 151               		ldi r27,hi8(36)
+ 152 0062 ECE4      		ldi r30,lo8(36)
+ 153 0064 F0E0      		ldi r31,hi8(36)
+ 154 0066 83E5      		ld r24,Z
+ 155 0068 8083      		ori r24,lo8(16)
+ 156               		st X,r24
+  34:main.c        **** }
+ 157               	5,.LM1-.LFBB1
+ 158               	.LM1:
+ 159 006a CF91      		ldi r26,lo8(36)
+ 160 006c DF91      		ldi r27,hi8(36)
+ 161 006e 0895      		ldi r30,lo8(36)
+ 162               		ldi r31,hi8(36)
+ 163               		ld r24,Z
+ 164               		ori r24,lo8(16)
+ 165               		st X,r24
+ 167               	.LM2:
+ 168               		call SPI_MasterInit
+  35:main.c        **** 
+  36:main.c        **** void SPI_MasterTransmit(char cData)
+  37:main.c        **** {
+ 169               	 r30,lo8(36)
+ 170               		ldi r31,hi8(36)
+ 171               		ld r24,Z
+ 172 0070 DF93      		ori r24,lo8(16)
+ 173 0072 CF93      		st X,r24
+ 175 0076 CDB7      	.LM2:
+ 176 0078 DEB7      		call SPI_MasterInit
+ 177               	.L2:
+ 179 007a 8A83      	.LM3:
+  38:main.c        **** 	unsigned char dummy_read;
+  39:main.c        **** 	/* Start transmission */
+  40:main.c        **** 	SPDR = cData;
+ 180               	ri r24,lo8(16)
+ 181               		st X,r24
+ 183 007e F0E0      	.LM2:
+ 184 0080 8A81      		call SPI_MasterInit
+ 185 0082 8083      	.L2:
+  41:main.c        **** 	/* Wait for transmission complete */
+  42:main.c        **** 	while(!(SPSR & (1<<SPIF)));
+ 187               	24,Z
+ 188               		ori r24,lo8(16)
+ 189 0084 EDE4      		st X,r24
+ 191 0088 8081      	.LM2:
+ 192 008a 8823      		call SPI_MasterInit
+ 193 008c 04F4      	.L2:
+  43:main.c        **** 	dummy_read = SPDR;
+ 194               	o8(36)
+ 195               		ldi r31,hi8(36)
+ 196 008e EEE4      		ld r24,Z
+ 197 0090 F0E0      		ori r24,lo8(16)
+ 198 0092 8081      		st X,r24
+ 200               	.LM2:
+  44:main.c        **** }...
+ 201               	
+ 202               		ldi r27,hi8(36)
+ 203 0096 0F90      		ldi r30,lo8(36)
+ 204 0098 0F90      		ldi r31,hi8(36)
+ 205 009a CF91      		ld r24,Z
+ 206 009c DF91      		ori r24,lo8(16)
+ 207 009e 0895      		st X,r24
+ 209               	.LM2:
+ 210               		call SPI_MasterInit
+ 211               	.L2:
+ 213               	.LM3:
+ 214               		ldi r26,lo8(37)
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccQkDVRS.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccQkDVRS.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccQkDVRS.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccQkDVRS.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccQkDVRS.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccQkDVRS.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccQkDVRS.s:71     .text:00000000 main
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccQkDVRS.s:122    .text:0000003e SPI_MasterInit
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccQkDVRS.s:168    .text:00000070 SPI_MasterTransmit
+
+NO UNDEFINED SYMBOLS

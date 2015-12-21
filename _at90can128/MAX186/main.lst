@@ -1,0 +1,388 @@
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+  71               	.global	main
+  73               	main:
+   1:main.c        **** #include "main.h"
+   2:main.c        **** 
+   3:main.c        **** int main(void)
+   4:main.c        **** {
+  74               	 r28,__SP_L__
+  75               		in r29,__SP_H__
+  76               	/* prologue: function */
+  77 0000 DF93      	/* frame size = 2 */
+  79 0004 00D0      	.LM1:
+  80 0006 CDB7      		std Y+2,__zero_reg__
+  81 0008 DEB7      		std Y+1,__zero_reg__
+  83               	.LM2:
+   5:main.c        **** 	unsigned int iResult_ADC = 0x0000;
+  84               	PI_MasterInit
+  85               	.L2:
+  87 000c 1982      	.LM3:
+   6:main.c        **** 	
+   7:main.c        **** 	SW_SPI_MasterInit();
+  88               	 r24,lo8(-121)
+  89               		call SW_SPI_ReadMAX186
+  90 000e 0E94 0000 		std Y+2,r25
+  91               		std Y+1,r24
+   8:main.c        **** 	
+   9:main.c        **** 	while(1)
+  10:main.c        **** 	{
+  11:main.c        **** 		iResult_ADC = SW_SPI_ReadMAX186(0x00 | (0x01 << MAX186_START) | (0x01 << MAX186_SGL_DIF) | (0x01 
+  92               	p .L2
+  97 001a 8983      	.Lscope1:
+  99               	.global	SW_SPI_Wait
+ 101               	SW_SPI_Wait:
+ 103               	.LM4:
+ 104               	.LFBB2:
+ 105               		push r29
+ 106               		push r28
+ 107               		rcall .
+  12:main.c        **** 	}
+  13:main.c        **** }
+  14:main.c        **** 
+  15:main.c        **** void SW_SPI_Wait(void)
+  16:main.c        **** {
+ 108               	
+ 109               		in r29,__SP_H__
+ 110               	/* prologue: function */
+ 111 001e DF93      	/* frame size = 2 */
+ 112 0020 CF93      	.LBB2:
+ 114 0024 CDB7      	.LM5:
+ 115 0026 DEB7      		ldi r24,lo8(1)
+ 116               		ldi r25,hi8(1)
+ 117               		std Y+2,r25
+ 118               		std Y+1,r24
+  17:main.c        **** 	for (int i = 1; i <= 250; i++)
+ 119               	.L6:
+ 121 0028 81E0      	.LM6:
+ 122 002a 90E0      	/* #APP */
+ 123 002c 9A83      	 ;  19 "main.c" 1
+ 124 002e 8983      		nop
+ 125 0030 00C0      	 ;  0 "" 2
+  18:main.c        **** 	{
+  19:main.c        **** 		asm("nop");
+ 127               	 #NOAPP */
+ 128               		ldd r24,Y+1
+ 129               		ldd r25,Y+2
+ 130               		adiw r24,1
+ 131 0032 0000      		std Y+2,r25
+ 132               		std Y+1,r24
+ 133               	.L5:
+ 134               		ldd r24,Y+1
+ 135               		ldd r25,Y+2
+ 136 0034 8981      		cpi r24,251
+ 137 0036 9A81      		cpc r25,__zero_reg__
+ 138 0038 0196      		brlt .L6
+ 139 003a 9A83      	/* epilogue start */
+ 140 003c 8983      	.LBE2:
+ 142 003e 8981      	.LM8:
+ 143 0040 9A81      		pop __tmp_reg__
+ 144 0042 8B3F      		pop __tmp_reg__
+ 145 0044 9105      		pop r28
+ 146 0046 04F0      		pop r29
+ 147               		ret
+  20:main.c        **** 	}
+  21:main.c        **** }
+ 149               	0,0,1
+ 152 004a 0F90      	.Lscope2:
+ 154 004e DF91      	.global	SW_SPI_SCK_Strope
+ 156               	SW_SPI_SCK_Strope:
+ 158               	.LM9:
+ 159               	.LFBB3:
+ 160               		push r29
+ 161               		push r28
+ 162               		in r28,__SP_L__
+ 163               		in r29,__SP_H__
+ 164               	/* prologue: function */
+  22:main.c        **** 
+  23:main.c        **** void SW_SPI_SCK_Strope(void)
+  24:main.c        **** {
+ 165               	0 */
+ 167               	.LM10:
+ 168 0052 DF93      		ldi r26,lo8(37)
+ 169 0054 CF93      		ldi r27,hi8(37)
+ 170 0056 CDB7      		ldi r30,lo8(37)
+ 171 0058 DEB7      		ldi r31,hi8(37)
+ 172               		ld r24,Z
+ 173               		andi r24,lo8(-2)
+  25:main.c        **** 	SPI_PORT &= ~(0x01 << SPI_SCK);
+ 174               	
+ 176 005a A5E2      	.LM11:
+ 177 005c B0E0      		call SW_SPI_Wait
+ 179 0060 F0E0      	.LM12:
+ 180 0062 8081      		ldi r26,lo8(37)
+ 181 0064 8E7F      		ldi r27,hi8(37)
+ 182 0066 8C93      		ldi r30,lo8(37)
+  26:main.c        **** 	SW_SPI_Wait();
+ 183               	ldi r27,hi8(37)
+ 184               		ldi r30,lo8(37)
+ 185 0068 0E94 0000 		ldi r31,hi8(37)
+  27:main.c        **** 	SPI_PORT |= (0x01 << SPI_SCK);
+ 186               	n	68,0,24,.LM9-.LFBB3
+ 187               	.LM9:
+ 188 006c A5E2      	.LFBB3:
+ 189 006e B0E0      		push r29
+ 190 0070 E5E2      		push r28
+ 191 0072 F0E0      		in r28,__SP_L__
+ 192 0074 8081      		in r29,__SP_H__
+ 193 0076 8160      	/* prologue: function */
+ 194 0078 8C93      	/* frame size = 0 */
+  28:main.c        **** 	SW_SPI_Wait();
+ 195               	8,0,25,.LM10-.LFBB3
+ 196               	.LM10:
+ 197 007a 0E94 0000 		ldi r26,lo8(37)
+ 198               		ldi r27,hi8(37)
+  29:main.c        **** }
+ 199               	 @function
+ 200               	SW_SPI_SCK_Strope:
+ 202 0080 DF91      	.LM9:
+ 203 0082 0895      	.LFBB3:
+ 204               		push r29
+ 205               		push r28
+ 206               		in r28,__SP_L__
+ 207               		in r29,__SP_H__
+ 208               	/* prologue: function */
+ 209               	/* frame size = 0 */
+  30:main.c        **** 
+  31:main.c        **** void SW_SPI_MasterInit(void)
+  32:main.c        **** {
+ 210               	0,25,.LM10-.LFBB3
+ 211               	.LM10:
+ 212               		ldi r26,lo8(37)
+ 213 0084 DF93      		ldi r27,hi8(37)
+ 214 0086 CF93      		ldi r30,lo8(37)
+ 215 0088 CDB7      		ldi r31,hi8(37)
+ 216 008a DEB7      		ld r24,Z
+ 217               		andi r24,lo8(-2)
+ 218               		st X,r24
+  33:main.c        **** 	SPI_DDR = (0x01 << SPI_MOSI) | (0x01 << SPI_SCK);
+ 219               	 r29
+ 220               		push r28
+ 221 008c E4E2      		in r28,__SP_L__
+ 222 008e F0E0      		in r29,__SP_H__
+ 223 0090 85E0      	/* prologue: function */
+ 224 0092 8083      	/* frame size = 0 */
+  34:main.c        **** 	SPI_DDR &= ~(0x01 << SPI_MISO);
+ 225               	n	68,0,25,.LM10-.LFBB3
+ 226               	.LM10:
+ 227 0094 A4E2      		ldi r26,lo8(37)
+ 228 0096 B0E0      		ldi r27,hi8(37)
+ 229 0098 E4E2      		ldi r30,lo8(37)
+ 230 009a F0E0      		ldi r31,hi8(37)
+ 231 009c 8081      		ld r24,Z
+ 232 009e 8F7E      		andi r24,lo8(-2)
+ 233 00a0 8C93      		st X,r24
+  35:main.c        **** }
+ 235               	_
+ 236               		in r29,__SP_H__
+ 237 00a2 CF91      	/* prologue: function */
+ 238 00a4 DF91      	/* frame size = 0 */
+ 240               	.LM10:
+ 241               		ldi r26,lo8(37)
+ 242               		ldi r27,hi8(37)
+ 243               		ldi r30,lo8(37)
+ 244               		ldi r31,hi8(37)
+ 245               		ld r24,Z
+ 246               		andi r24,lo8(-2)
+  36:main.c        **** 
+  37:main.c        **** unsigned int SW_SPI_ReadMAX186(char cData)
+  38:main.c        **** {
+ 247               	stabn	68,0,26,.LM11-.LFBB3
+ 248               	.LM11:
+ 249               		call SW_SPI_Wait
+ 251 00aa CF93      	.LM12:
+ 252 00ac 00D0      		ldi r26,lo8(37)
+ 253 00ae 00D0      		ldi r27,hi8(37)
+ 254 00b0 0F92      		ldi r30,lo8(37)
+ 255 00b2 CDB7      		ldi r31,hi8(37)
+ 256 00b4 DEB7      		ld r24,Z
+ 257               		ori r24,lo8(1)
+ 258               		st X,r24
+  39:main.c        **** 	unsigned int iInputData = 0x0000;
+ 260               	
+ 262 00b8 1C82      	.LM11:
+ 263 00ba 1B82      		call SW_SPI_Wait
+  40:main.c        **** 	
+  41:main.c        **** 	for (char i = 0; i <= 7; i++)
+ 265               	 = 0 */
+ 267 00bc 1A82      	.LM10:
+ 268 00be 00C0      		ldi r26,lo8(37)
+ 269               		ldi r27,hi8(37)
+  42:main.c        **** 	{
+  43:main.c        **** 		if (cData & (0x80 >> i))
+ 270               	r30,lo8(37)
+ 271               		ldi r31,hi8(37)
+ 272 00c0 8D81      		ld r24,Z
+ 273 00c2 482F      		andi r24,lo8(-2)
+ 274 00c4 50E0      		st X,r24
+ 276 00c8 282F      	.LM11:
+ 277 00ca 30E0      		call SW_SPI_Wait
+ 279 00ce 90E0      	.LM12:
+ 280 00d0 022E      		ldi r26,lo8(37)
+ 281 00d2 00C0      		ldi r27,hi8(37)
+ 282 00d4 9595      		ldi r30,lo8(37)
+ 283 00d6 8795      		ldi r31,hi8(37)
+ 284 00d8 0A94      		ld r24,Z
+ 285 00da 02F4      		ori r24,lo8(1)
+ 286 00dc 8423      		st X,r24
+ 288 00e0 0097      	.LM13:
+ 289 00e2 01F0      		call SW_SPI_Wait
+  44:main.c        **** 		{
+  45:main.c        **** 			SPI_PORT |= (0x01 << SPI_MOSI);
+ 290               	B3
+ 291               	.LM11:
+ 292 00e4 A5E2      		call SW_SPI_Wait
+ 294 00e8 E5E2      	.LM12:
+ 295 00ea F0E0      		ldi r26,lo8(37)
+ 296 00ec 8081      		ldi r27,hi8(37)
+ 297 00ee 8460      		ldi r30,lo8(37)
+ 298 00f0 8C93      		ldi r31,hi8(37)
+ 299 00f2 00C0      		ld r24,Z
+ 300               		ori r24,lo8(1)
+  46:main.c        **** 		}
+  47:main.c        **** 		else
+  48:main.c        **** 		{
+  49:main.c        **** 			SPI_PORT &= ~(0x01 << SPI_MOSI);
+ 301               	37)
+ 302               		ld r24,Z
+ 303 00f4 A5E2      		andi r24,lo8(-2)
+ 304 00f6 B0E0      		st X,r24
+ 306 00fa F0E0      	.LM11:
+ 307 00fc 8081      		call SW_SPI_Wait
+ 309 0100 8C93      	.LM12:
+ 310               		ldi r26,lo8(37)
+  50:main.c        **** 		}
+  51:main.c        **** 		
+  52:main.c        **** 		SW_SPI_SCK_Strope();
+ 311               	M10-.LFBB3
+ 312               	.LM10:
+ 313 0102 0E94 0000 		ldi r26,lo8(37)
+ 314               		ldi r27,hi8(37)
+ 315               		ldi r30,lo8(37)
+ 316 0106 8A81      		ldi r31,hi8(37)
+ 317 0108 8F5F      		ld r24,Z
+ 318 010a 8A83      		andi r24,lo8(-2)
+ 319               		st X,r24
+ 321 010e 8830      	.LM11:
+ 322 0110 00F0      		call SW_SPI_Wait
+  53:main.c        **** 	}
+  54:main.c        **** 	
+  55:main.c        **** 	SPI_PORT &= ~(0x01 << SPI_MOSI);
+ 324               	 = 0 */
+ 326 0112 A5E2      	.LM10:
+ 327 0114 B0E0      		ldi r26,lo8(37)
+ 328 0116 E5E2      		ldi r27,hi8(37)
+ 329 0118 F0E0      		ldi r30,lo8(37)
+ 330 011a 8081      		ldi r31,hi8(37)
+ 331 011c 8B7F      		ld r24,Z
+ 332 011e 8C93      		andi r24,lo8(-2)
+  56:main.c        **** 	SW_SPI_SCK_Strope();
+ 333               	
+ 335 0120 0E94 0000 	.LM11:
+ 336               		call SW_SPI_Wait
+  57:main.c        **** 		
+  58:main.c        **** 	for (char i = 0; i <= 11; i++)
+ 337               	gue: function */
+ 338               	/* frame size = 0 */
+ 340 0126 00C0      	.LM10:
+ 341               		ldi r26,lo8(37)
+  59:main.c        **** 	{
+  60:main.c        **** 		if (SPI_PIN & (0x01 << SPI_MISO))
+ 342               	r27,hi8(37)
+ 343               		ldi r30,lo8(37)
+ 344 0128 E3E2      		ldi r31,hi8(37)
+ 345 012a F0E0      		ld r24,Z
+ 346 012c 8081      		andi r24,lo8(-2)
+ 347 012e 882F      		st X,r24
+ 349 0132 8071      	.LM11:
+ 350 0134 9070      		call SW_SPI_Wait
+ 352 0138 01F0      	.LM12:
+  61:main.c        **** 		{
+  62:main.c        **** 			iInputData |= (0x800 >> i);
+ 354               	.LM10:
+ 355 013a 8981      		ldi r26,lo8(37)
+ 356 013c 282F      		ldi r27,hi8(37)
+ 357 013e 30E0      		ldi r30,lo8(37)
+ 358 0140 80E0      		ldi r31,hi8(37)
+ 359 0142 98E0      		ld r24,Z
+ 360 0144 00C0      		andi r24,lo8(-2)
+ 361 0146 9595      		st X,r24
+ 363 014a 2A95      	.LM11:
+ 364 014c 02F4      		call SW_SPI_Wait
+ 366 0150 8B81      	.LM12:
+ 367 0152 9C81      		ldi r26,lo8(37)
+ 368 0154 822B      		ldi r27,hi8(37)
+ 369 0156 932B      		ldi r30,lo8(37)
+ 370 0158 9C83      		ldi r31,hi8(37)
+ 371 015a 8B83      		ld r24,Z
+ 372               		ori r24,lo8(1)
+  63:main.c        **** 		}
+  64:main.c        **** 		SW_SPI_SCK_Strope();
+ 373               	,0,28,.LM13-.LFBB3
+ 374               	.LM13:
+ 375 015c 0E94 0000 		call SW_SPI_Wait
+ 376               	/* epilogue start */
+ 378 0160 8981      	.LM14:
+ 379 0162 8F5F      		pop r28
+ 380 0164 8983      		pop r29
+ 381               		ret
+ 383 0168 8C30      	.Lscope3:
+ 385               	.global	SW_SPI_MasterInit
+  65:main.c        **** 	}
+  66:main.c        **** 	SW_SPI_SCK_Strope();
+ 386               	 start */
+ 388 016c 0E94 0000 	.LM14:
+  67:main.c        **** 	SW_SPI_SCK_Strope();
+ 389               	12:
+ 390               		ldi r26,lo8(37)
+ 391 0170 0E94 0000 		ldi r27,hi8(37)
+  68:main.c        **** 	
+  69:main.c        **** 	return iInputData;
+ 392               		ldi r26,lo8(37)
+ 393               		ldi r27,hi8(37)
+ 394 0174 8B81      		ldi r30,lo8(37)
+ 395 0176 9C81      		ldi r31,hi8(37)
+ 396               		ld r24,Z
+  70:main.c        **** }
+ 397               	LM9-.LFBB3
+ 398               	.LM9:
+ 399 0178 0F90      	.LFBB3:
+ 400 017a 0F90      		push r29
+ 401 017c 0F90      		push r28
+ 402 017e 0F90      		in r28,__SP_L__
+ 403 0180 0F90      		in r29,__SP_H__
+ 404 0182 CF91      	/* prologue: function */
+ 405 0184 DF91      	/* frame size = 0 */
+ 407               	.LM10:
+ 408               		ldi r26,lo8(37)
+ 409               		ldi r27,hi8(37)
+ 410               		ldi r30,lo8(37)
+ 411               		ldi r31,hi8(37)
+ 412               		ld r24,Z
+ 413               		andi r24,lo8(-2)
+ 414               		st X,r24
+ 416               	.LM11:
+ 417               		call SW_SPI_Wait
+ 419               	.LM12:
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccPgkSdN.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccPgkSdN.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccPgkSdN.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccPgkSdN.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccPgkSdN.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccPgkSdN.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccPgkSdN.s:73     .text:00000000 main
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccPgkSdN.s:209    .text:00000084 SW_SPI_MasterInit
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccPgkSdN.s:246    .text:000000a8 SW_SPI_ReadMAX186
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccPgkSdN.s:107    .text:0000001e SW_SPI_Wait
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccPgkSdN.s:164    .text:00000052 SW_SPI_SCK_Strope
+
+NO UNDEFINED SYMBOLS

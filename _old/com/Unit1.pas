@@ -1,0 +1,135 @@
+unit Unit1;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, RS232,
+  StdCtrls, ExtCtrls;//, WinampControl;
+
+type
+  TForm1 = class(TForm)
+    Button1: TButton;
+    Button2: TButton;
+    ComboBox1: TComboBox;
+    Label1: TLabel;
+    Bevel1: TBevel;
+    Timer1: TTimer;
+    Shape1: TShape;
+    Shape2: TShape;
+    Shape3: TShape;
+    Shape4: TShape;
+    Shape5: TShape;
+    Shape6: TShape;
+    Shape7: TShape;
+    Shape8: TShape;
+    Shape9: TShape;
+    Edit1: TEdit;
+    Edit2: TEdit;
+    Edit3: TEdit;
+    Button3: TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Button1Click(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+//  	winamp : twinampcontrol;
+	com_buffer : integer;
+        com_val : integer;
+
+implementation
+
+{$R *.DFM}
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+	OPENCOM('COM1: baud=115200 data=8 parity=N stop=1');
+        //OPENCOM('COM1: baud=250000 data=8 parity=N stop=1');
+        //OPENCOM('COM1: baud=9600 data=8 parity=N stop=1');
+        form1.ComboBox1.ItemIndex := 0;
+//	OPENCOM(Pchar('com2:115200,N,8,1'));
+end;
+
+procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+	CLOSECOM;
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+	sendbyte(strtoint(form1.combobox1.Text));
+        SendByte(ord('A'));
+
+end;
+
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+	CLOSECOM;
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+	sendbyte(strtoint(form1.combobox1.Text));
+        SendByte(ord('B'));
+end;
+
+procedure TForm1.Timer1Timer(Sender: TObject);
+var
+	artist : string;
+        i : integer;
+begin
+	form1.Edit3.Text := inttostr(readbyte);
+	artist := form1.Edit2.Text;
+        if artist <> '' then
+        begin
+        	sendbyte(2);
+		for i := 0 to length(artist) do
+        	begin
+        		sendbyte(ord(artist[i]));
+        	end;
+        	sendbyte(255);
+        end
+        else
+        begin
+        	sendbyte(2);
+       		sendbyte(ord(' '));
+        	sendbyte(255);
+	end;
+end;
+
+procedure TForm1.Button3Click(Sender: TObject);
+var
+	artist : string;
+        i : integer;
+begin
+	form1.Edit3.Text := inttostr(readbyte);
+	artist := form1.Edit2.Text;
+        if artist <> '' then
+        begin
+        	sendbyte(2);
+		for i := 0 to length(artist) do
+        	begin
+        		sendbyte(ord(artist[i]));
+        	end;
+        	sendbyte(255);
+        end
+        else
+        begin
+        	sendbyte(2);
+       		sendbyte(ord(' '));
+        	sendbyte(255);
+	end;
+end;
+
+
+end.

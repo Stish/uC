@@ -1,0 +1,1331 @@
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+  81               	.global	ovrflw_cnt
+  82               		.data
+  85               	ovrflw_cnt:
+  86 0000 0100      		.word	1
+  87               	.global	rgb_buffer
+  88               	.global	rgb_buffer
+  89               		.section .bss
+  92               	rgb_buffer:
+  93 0000 0000 00   		.skip 3,0
+  94               	.global	rgb
+  95               	.global	rgb
+  98               	rgb:
+  99 0003 0000 0000 		.skip 12,0
+  99      0000 0000 
+  99      0000 0000 
+ 100               	.global	rec_char
+ 101               	.global	rec_char
+ 104               	rec_char:
+ 105 000f 00        		.skip 1,0
+ 106               	.global	rec_char_buffer
+ 107               	.global	rec_char_buffer
+ 110               	rec_char_buffer:
+ 111 0010 00        		.skip 1,0
+ 112               	.global	data_incoming
+ 113               	.global	data_incoming
+ 116               	data_incoming:
+ 117 0011 00        		.skip 1,0
+ 118               	.global	i
+ 119               	.global	i
+ 122               	i:
+ 123 0012 00        		.skip 1,0
+ 124               	.global	led_select
+ 125               	.global	led_select
+ 128               	led_select:
+ 129 0013 00        		.skip 1,0
+ 130               		.text
+ 132               	.global	__vector_7
+ 134               	__vector_7:
+   1:main.c        **** //=== Device 0x60 ===
+   2:main.c        **** /*                       _____   _____
+   3:main.c        ****              _____      |     \_/     |
+   4:main.c        ****              Reset O--1-|PA2      VCC |-20-O
+   5:main.c        ****                         |             |
+   6:main.c        ****                RXD O--2-|PD0       PB7|-19-O UCSK/SCL/PCINT7
+   7:main.c        ****                         |             |
+   8:main.c        ****                TXD O--3-|PD1       PB6|-18-O MISO/DO/PCINT6
+   9:main.c        ****                         |             |
+  10:main.c        ****              XTAL2 O--4-|PA1       PB5|-17-O MOSI/DI/PCINT5
+  11:main.c        ****                         |             |
+  12:main.c        ****              XTAL1 O--5-|PA0       PB4|-16-O OC1B/PCINT4
+  13:main.c        ****                         |             |
+  14:main.c        ****     CKOUT/XCK/INT0 O--6-|PD2       PB3|-15-O OC1A/PCINT3
+  15:main.c        ****                         |             |
+  16:main.c        ****               INT1 O--7-|PD3       PB2|-14-O OC0A/PCINT2
+  17:main.c        ****                         |             |
+  18:main.c        ****                 T0 O--8-|PD4       PB1|-13-O AIN1/PCINT1
+  19:main.c        ****                         |             |
+  20:main.c        ****            OC0B/T1 O--9-|PD5       PB0|-12-O AIN0/PCINT0
+  21:main.c        ****                         |             |
+  22:main.c        ****                GND O-10-|GND       PD6|-11-O ICP
+  23:main.c        ****                         |_____________|
+  24:main.c        ****                           ATTiny 2313
+  25:main.c        **** */ 
+  26:main.c        **** /* Device numbers */
+  27:main.c        **** #define DEVICE_NUMBER_1 0x65	//a
+  28:main.c        **** #define DEVICE_NUMBER_2 0x66	//b
+  29:main.c        **** #define DEVICE_NUMBER_3 0x67	//c
+  30:main.c        **** #define DEVICE_NUMBER_4 0x68	//d
+  31:main.c        **** /* LED pins (Kathode) */
+  32:main.c        **** #define LED_1_RED		PD2
+  33:main.c        **** #define LED_1_GREEN		PA0
+  34:main.c        **** #define LED_1_BLUE		PA1
+  35:main.c        **** 
+  36:main.c        **** #define LED_2_RED		PD5
+  37:main.c        **** #define LED_2_GREEN		PD4
+  38:main.c        **** #define LED_2_BLUE		PD3
+  39:main.c        **** 
+  40:main.c        **** #define LED_3_RED		PB4
+  41:main.c        **** #define LED_3_GREEN		PB3
+  42:main.c        **** #define LED_3_BLUE		PB2
+  43:main.c        **** 
+  44:main.c        **** #define LED_4_RED		PB1
+  45:main.c        **** #define LED_4_GREEN		PB0
+  46:main.c        **** #define LED_4_BLUE		PD6
+  47:main.c        **** 
+  48:main.c        **** /* LED DDRs */
+  49:main.c        **** #define LED_1_RED_DDR	DDRD
+  50:main.c        **** #define LED_1_GREEN_DDR	DDRA
+  51:main.c        **** #define LED_1_BLUE_DDR	DDRA
+  52:main.c        **** 
+  53:main.c        **** #define LED_2_RED_DDR	DDRD
+  54:main.c        **** #define LED_2_GREEN_DDR	DDRD
+  55:main.c        **** #define LED_2_BLUE_DDR	DDRD
+  56:main.c        **** 
+  57:main.c        **** #define LED_3_RED_DDR	DDRB
+  58:main.c        **** #define LED_3_GREEN_DDR	DDRB
+  59:main.c        **** #define LED_3_BLUE_DDR	DDRB
+  60:main.c        **** 
+  61:main.c        **** #define LED_4_RED_DDR	DDRB
+  62:main.c        **** #define LED_4_GREEN_DDR	DDRB
+  63:main.c        **** #define LED_4_BLUE_DDR	DDRD
+  64:main.c        **** /* LED PORTs */
+  65:main.c        **** #define LED_1_RED_PORT		PORTD
+  66:main.c        **** #define LED_1_GREEN_PORT	PORTA
+  67:main.c        **** #define LED_1_BLUE_PORT		PORTA
+  68:main.c        **** #define LED_2_RED_PORT		PORTD
+  69:main.c        **** #define LED_2_GREEN_PORT	PORTD
+  70:main.c        **** #define LED_2_BLUE_PORT		PORTD
+  71:main.c        **** #define LED_3_RED_PORT		PORTB
+  72:main.c        **** #define LED_3_GREEN_PORT	PORTB
+  73:main.c        **** #define LED_3_BLUE_PORT		PORTB
+  74:main.c        **** #define LED_4_RED_PORT		PORTB
+  75:main.c        **** #define LED_4_GREEN_PORT	PORTB
+  76:main.c        **** #define LED_4_BLUE_PORT		PORTD
+  77:main.c        **** /* <Macros> */
+  78:main.c        **** #define LED_1_RED_INIT()		LED_1_RED_DDR|=(0x01<<LED_1_RED)
+  79:main.c        **** #define LED_1_GREEN_INIT()		LED_1_GREEN_DDR|=(0x01<<LED_1_GREEN)
+  80:main.c        **** #define LED_1_BLUE_INIT()		LED_1_BLUE_DDR|=(0x01<<LED_1_BLUE)
+  81:main.c        **** #define LED_2_RED_INIT()		LED_2_RED_DDR|=(0x01<<LED_2_RED)
+  82:main.c        **** #define LED_2_GREEN_INIT()		LED_2_GREEN_DDR|=(0x01<<LED_2_GREEN)
+  83:main.c        **** #define LED_2_BLUE_INIT()		LED_2_BLUE_DDR|=(0x01<<LED_2_BLUE)
+  84:main.c        **** #define LED_3_RED_INIT()		LED_3_RED_DDR|=(0x01<<LED_3_RED)
+  85:main.c        **** #define LED_3_GREEN_INIT()		LED_3_GREEN_DDR|=(0x01<<LED_3_GREEN)
+  86:main.c        **** #define LED_3_BLUE_INIT()		LED_3_BLUE_DDR|=(0x01<<LED_3_BLUE)
+  87:main.c        **** #define LED_4_RED_INIT()		LED_4_RED_DDR|=(0x01<<LED_4_RED)
+  88:main.c        **** #define LED_4_GREEN_INIT()		LED_4_GREEN_DDR|=(0x01<<LED_4_GREEN)
+  89:main.c        **** #define LED_4_BLUE_INIT()		LED_4_BLUE_DDR|=(0x01<<LED_4_BLUE)
+  90:main.c        **** 
+  91:main.c        **** #define LED_1_RED_OFF()			LED_1_RED_PORT|=(0x01<<LED_1_RED)
+  92:main.c        **** #define LED_1_GREEN_OFF()		LED_1_GREEN_PORT|=(0x01<<LED_1_GREEN)
+  93:main.c        **** #define LED_1_BLUE_OFF()		LED_1_BLUE_PORT|=(0x01<<LED_1_BLUE)
+  94:main.c        **** #define LED_2_RED_OFF()			LED_2_RED_PORT|=(0x01<<LED_2_RED)
+  95:main.c        **** #define LED_2_GREEN_OFF()		LED_2_GREEN_PORT|=(0x01<<LED_2_GREEN)
+  96:main.c        **** #define LED_2_BLUE_OFF()		LED_2_BLUE_PORT|=(0x01<<LED_2_BLUE)
+  97:main.c        **** #define LED_3_RED_OFF()			LED_3_RED_PORT|=(0x01<<LED_3_RED)
+  98:main.c        **** #define LED_3_GREEN_OFF()		LED_3_GREEN_PORT|=(0x01<<LED_3_GREEN)
+  99:main.c        **** #define LED_3_BLUE_OFF()		LED_3_BLUE_PORT|=(0x01<<LED_3_BLUE)
+ 100:main.c        **** #define LED_4_RED_OFF()			LED_4_RED_PORT|=(0x01<<LED_4_RED)
+ 101:main.c        **** #define LED_4_GREEN_OFF()		LED_4_GREEN_PORT|=(0x01<<LED_4_GREEN)
+ 102:main.c        **** #define LED_4_BLUE_OFF()		LED_4_BLUE_PORT|=(0x01<<LED_4_BLUE)
+ 103:main.c        **** 
+ 104:main.c        **** #define LED_1_RED_ON()			LED_1_RED_PORT&=~(0x01<<LED_1_RED)
+ 105:main.c        **** #define LED_1_GREEN_ON()		LED_1_GREEN_PORT&=~(0x01<<LED_1_GREEN)
+ 106:main.c        **** #define LED_1_BLUE_ON()			LED_1_BLUE_PORT&=~(0x01<<LED_1_BLUE)
+ 107:main.c        **** #define LED_2_RED_ON()			LED_2_RED_PORT&=~(0x01<<LED_2_RED)
+ 108:main.c        **** #define LED_2_GREEN_ON()		LED_2_GREEN_PORT&=~(0x01<<LED_2_GREEN)
+ 109:main.c        **** #define LED_2_BLUE_ON()			LED_2_BLUE_PORT&=~(0x01<<LED_2_BLUE)
+ 110:main.c        **** #define LED_3_RED_ON()			LED_3_RED_PORT&=~(0x01<<LED_3_RED)
+ 111:main.c        **** #define LED_3_GREEN_ON()		LED_3_GREEN_PORT&=~(0x01<<LED_3_GREEN)
+ 112:main.c        **** #define LED_3_BLUE_ON()			LED_3_BLUE_PORT&=~(0x01<<LED_3_BLUE)
+ 113:main.c        **** #define LED_4_RED_ON()			LED_4_RED_PORT&=~(0x01<<LED_4_RED)
+ 114:main.c        **** #define LED_4_GREEN_ON()		LED_4_GREEN_PORT&=~(0x01<<LED_4_GREEN)
+ 115:main.c        **** #define LED_4_BLUE_ON()			LED_4_BLUE_PORT&=~(0x01<<LED_4_BLUE)
+ 116:main.c        **** /* </Macros> */
+ 117:main.c        **** 
+ 118:main.c        **** /* Includes */
+ 119:main.c        **** #include <avr/signal.h>
+ 120:main.c        **** #include <avr/interrupt.h>
+ 121:main.c        **** #include <avr/io.h>
+ 122:main.c        **** #include <stdlib.h>
+ 123:main.c        **** void vUART_init(void);
+ 124:main.c        **** /* Global variables */
+ 125:main.c        **** unsigned int ovrflw_cnt = 1;
+ 126:main.c        **** unsigned char rgb_buffer[3] = 	{0x00, 0x00, 0x00};
+ 127:main.c        **** unsigned char rgb[4][3] = 	{	{0x00, 0x00, 0x00}, 
+ 128:main.c        **** 								{0x00, 0x00, 0x00}, 
+ 129:main.c        **** 								{0x00, 0x00, 0x00}, 
+ 130:main.c        **** 								{0x00, 0x00, 0x00}};
+ 131:main.c        **** unsigned char rec_char = 0;
+ 132:main.c        **** unsigned char rec_char_buffer = 0;
+ 133:main.c        **** unsigned char data_incoming = 0;
+ 134:main.c        **** unsigned char i = 0;
+ 135:main.c        **** unsigned char led_select = 0;
+ 136:main.c        **** /* Interrupts */
+ 137:main.c        **** SIGNAL (USART_RX_vect)
+ 138:main.c        **** {
+ 135               	
+ 136               	.LFBB1:
+ 137               		push __zero_reg__
+ 138 0000 1F92      		push r0
+ 139 0002 0F92      		in r0,__SREG__
+ 140 0004 0FB6      		push r0
+ 141 0006 0F92      		clr __zero_reg__
+ 142 0008 1124      		push r18
+ 143 000a 2F93      		push r19
+ 144 000c 3F93      		push r20
+ 145 000e 4F93      		push r24
+ 146 0010 8F93      		push r25
+ 147 0012 9F93      		push r30
+ 148 0014 EF93      		push r31
+ 149 0016 FF93      		push r29
+ 150 0018 DF93      		push r28
+ 151 001a CF93      		rcall .
+ 152 001c 00D0      		in r28,__SP_L__
+ 153 001e CDB7      		in r29,__SP_H__
+ 154 0020 DEB7      	/* prologue: Signal */
+ 155               	/* frame size = 2 */
+ 139:main.c        **** 	rec_char_buffer = UDR;
+ 157               	)
+ 158               		ldi r31,hi8(44)
+ 159 0022 ECE2      		ld r24,Z
+ 160 0024 F0E0      		sts rec_char_buffer,r24
+ 162 0028 8093 0000 	.LM2:
+ 140:main.c        **** 	if (data_incoming > 0)
+ 163               	24,data_incoming
+ 164               		tst r24
+ 165 002c 8091 0000 		brne .+2
+ 166 0030 8823      		rjmp .L2
+ 168 0034 00C0      	.LM3:
+ 141:main.c        **** 	{
+ 142:main.c        **** 		rgb_buffer[i] = rec_char_buffer;
+ 169               	24,i
+ 170               		mov r24,r24
+ 171 0036 8091 0000 		ldi r25,lo8(0)
+ 172 003a 882F      		lds r18,rec_char_buffer
+ 173 003c 90E0      		movw r30,r24
+ 174 003e 2091 0000 		subi r30,lo8(-(rgb_buffer))
+ 175 0042 FC01      		sbci r31,hi8(-(rgb_buffer))
+ 176 0044 E050      		st Z,r18
+ 178 0048 2083      	.LM4:
+ 143:main.c        **** 		i++;
+ 179               	
+ 180               		subi r24,lo8(-(1))
+ 181 004a 8091 0000 		sts i,r24
+ 183 0050 8093 0000 	.LM5:
+ 144:main.c        **** 		if (i == 3)
+ 184               	 r24,i
+ 185               		cpi r24,lo8(3)
+ 186 0054 8091 0000 		brne .L2
+ 188 005a 01F4      	.LM6:
+ 145:main.c        **** 		{
+ 146:main.c        **** 			rgb[data_incoming - 1][0] = rgb_buffer[0];
+ 189               	r24,data_incoming
+ 190               		mov r24,r24
+ 191 005c 8091 0000 		ldi r25,lo8(0)
+ 192 0060 882F      		movw r18,r24
+ 193 0062 90E0      		subi r18,lo8(-(-1))
+ 194 0064 9C01      		sbci r19,hi8(-(-1))
+ 195 0066 2150      		lds r20,rgb_buffer
+ 196 0068 3040      		movw r24,r18
+ 197 006a 4091 0000 		lsl r24
+ 198 006e C901      		rol r25
+ 199 0070 880F      		add r24,r18
+ 200 0072 991F      		adc r25,r19
+ 201 0074 820F      		movw r30,r24
+ 202 0076 931F      		subi r30,lo8(-(rgb))
+ 203 0078 FC01      		sbci r31,hi8(-(rgb))
+ 204 007a E050      		st Z,r20
+ 206 007e 4083      	.LM7:
+ 147:main.c        **** 			rgb[data_incoming - 1][1] = rgb_buffer[1];
+ 207               	ming
+ 208               		mov r24,r24
+ 209 0080 8091 0000 		ldi r25,lo8(0)
+ 210 0084 882F      		movw r18,r24
+ 211 0086 90E0      		subi r18,lo8(-(-1))
+ 212 0088 9C01      		sbci r19,hi8(-(-1))
+ 213 008a 2150      		lds r20,rgb_buffer+1
+ 214 008c 3040      		movw r24,r18
+ 215 008e 4091 0000 		lsl r24
+ 216 0092 C901      		rol r25
+ 217 0094 880F      		add r24,r18
+ 218 0096 991F      		adc r25,r19
+ 219 0098 820F      		movw r30,r24
+ 220 009a 931F      		subi r30,lo8(-(rgb+1))
+ 221 009c FC01      		sbci r31,hi8(-(rgb+1))
+ 222 009e E050      		st Z,r20
+ 224 00a2 4083      	.LM8:
+ 148:main.c        **** 			rgb[data_incoming - 1][2] = rgb_buffer[2];
+ 225               	ming
+ 226               		mov r24,r24
+ 227 00a4 8091 0000 		ldi r25,lo8(0)
+ 228 00a8 882F      		movw r18,r24
+ 229 00aa 90E0      		subi r18,lo8(-(-1))
+ 230 00ac 9C01      		sbci r19,hi8(-(-1))
+ 231 00ae 2150      		lds r20,rgb_buffer+2
+ 232 00b0 3040      		movw r24,r18
+ 233 00b2 4091 0000 		lsl r24
+ 234 00b6 C901      		rol r25
+ 235 00b8 880F      		add r24,r18
+ 236 00ba 991F      		adc r25,r19
+ 237 00bc 820F      		movw r30,r24
+ 238 00be 931F      		subi r30,lo8(-(rgb+2))
+ 239 00c0 FC01      		sbci r31,hi8(-(rgb+2))
+ 240 00c2 E050      		st Z,r20
+ 242 00c6 4083      	.LM9:
+ 149:main.c        **** 			data_incoming = 0;
+ 243               	,__zero_reg__
+ 244               	.L2:
+ 246               	.LM10:
+ 150:main.c        **** 		}	
+ 151:main.c        **** 	}
+ 152:main.c        **** 	switch (rec_char_buffer)
+ 247               	 r24,rec_char_buffer
+ 248               		mov r18,r24
+ 249 00cc 8091 0000 		ldi r19,lo8(0)
+ 250 00d0 282F      		std Y+2,r19
+ 251 00d2 30E0      		std Y+1,r18
+ 252 00d4 3A83      		ldd r24,Y+1
+ 253 00d6 2983      		ldd r25,Y+2
+ 254 00d8 8981      		cpi r24,102
+ 255 00da 9A81      		cpc r25,__zero_reg__
+ 256 00dc 8636      		breq .L5
+ 257 00de 9105      		ldd r18,Y+1
+ 258 00e0 01F0      		ldd r19,Y+2
+ 259 00e2 2981      		cpi r18,103
+ 260 00e4 3A81      		cpc r19,__zero_reg__
+ 261 00e6 2736      		brge .L8
+ 262 00e8 3105      		ldd r24,Y+1
+ 263 00ea 04F4      		ldd r25,Y+2
+ 264 00ec 8981      		cpi r24,101
+ 265 00ee 9A81      		cpc r25,__zero_reg__
+ 266 00f0 8536      		breq .L4
+ 267 00f2 9105      		rjmp .L9
+ 268 00f4 01F0      	.L8:
+ 269 00f6 00C0      		ldd r18,Y+1
+ 270               		ldd r19,Y+2
+ 271 00f8 2981      		cpi r18,103
+ 272 00fa 3A81      		cpc r19,__zero_reg__
+ 273 00fc 2736      		breq .L6
+ 274 00fe 3105      		ldd r24,Y+1
+ 275 0100 01F0      		ldd r25,Y+2
+ 276 0102 8981      		cpi r24,104
+ 277 0104 9A81      		cpc r25,__zero_reg__
+ 278 0106 8836      		breq .L7
+ 279 0108 9105      		rjmp .L9
+ 280 010a 01F0      	.L4:
+ 282               	.LM11:
+ 153:main.c        **** 	{
+ 154:main.c        **** 		case DEVICE_NUMBER_1:
+ 155:main.c        **** 			data_incoming = 1;
+ 283               	24
+ 285 010e 81E0      	.LM12:
+ 286 0110 8093 0000 		sts i,__zero_reg__
+ 156:main.c        **** 			i = 0;
+ 287               	p .L9
+ 288               	.L5:
+ 290 0118 00C0      	.LM13:
+ 291               		ldi r24,lo8(2)
+ 157:main.c        **** 			break;
+ 158:main.c        **** 		case DEVICE_NUMBER_2:
+ 159:main.c        **** 			data_incoming = 2;
+ 292               	data_incoming,r24
+ 294 011a 82E0      	.LM14:
+ 295 011c 8093 0000 		sts i,__zero_reg__
+ 160:main.c        **** 			i = 0;
+ 296               	p .L9
+ 297               	.L6:
+ 299 0124 00C0      	.LM15:
+ 300               		ldi r24,lo8(3)
+ 161:main.c        **** 			break;
+ 162:main.c        **** 		case DEVICE_NUMBER_3:
+ 163:main.c        **** 			data_incoming = 3;
+ 301               	data_incoming,r24
+ 303 0126 83E0      	.LM16:
+ 304 0128 8093 0000 		sts i,__zero_reg__
+ 164:main.c        **** 			i = 0;
+ 305               	p .L9
+ 306               	.L7:
+ 308 0130 00C0      	.LM17:
+ 309               		ldi r24,lo8(4)
+ 165:main.c        **** 			break;
+ 166:main.c        **** 		case DEVICE_NUMBER_4:
+ 167:main.c        **** 			data_incoming = 4;
+ 310               	data_incoming,r24
+ 312 0132 84E0      	.LM18:
+ 313 0134 8093 0000 		sts i,__zero_reg__
+ 168:main.c        **** 			i = 0;
+ 314               	
+ 315               	/* epilogue start */
+ 317               	.LM19:
+ 318               		pop __tmp_reg__
+ 169:main.c        **** 			break;
+ 170:main.c        **** 		default:
+ 171:main.c        **** 			break;
+ 172:main.c        **** 	}
+ 173:main.c        **** } 
+ 319               	 __tmp_reg__
+ 320               		pop r28
+ 321 013c 0F90      		pop r29
+ 322 013e 0F90      		pop r31
+ 323 0140 CF91      		pop r30
+ 324 0142 DF91      		pop r25
+ 325 0144 FF91      		pop r24
+ 326 0146 EF91      		pop r20
+ 327 0148 9F91      		pop r19
+ 328 014a 8F91      		pop r18
+ 329 014c 4F91      		pop r0
+ 330 014e 3F91      		out __SREG__,r0
+ 331 0150 2F91      		pop r0
+ 332 0152 0F90      		pop __zero_reg__
+ 333 0154 0FBE      		reti
+ 335 0158 1F90      	.Lscope1:
+ 337               	.global	main
+ 339               	main:
+ 341               	.LM20:
+ 342               	.LFBB2:
+ 174:main.c        **** /* Main function */
+ 175:main.c        **** int main(void)
+ 176:main.c        **** {
+ 343               	r28,__SP_L__
+ 344               		in r29,__SP_H__
+ 345               	/* prologue: function */
+ 346 015c DF93      	/* frame size = 0 */
+ 348 0160 CDB7      	.LM21:
+ 349 0162 DEB7      		ldi r26,lo8(49)
+ 350               		ldi r27,hi8(49)
+ 351               		ldi r30,lo8(49)
+ 177:main.c        **** 	LED_1_RED_INIT();
+ 352               	hi8(49)
+ 353               		ld r24,Z
+ 354 0164 A1E3      		ori r24,lo8(4)
+ 355 0166 B0E0      		st X,r24
+ 357 016a F0E0      	.LM22:
+ 358 016c 8081      		ldi r26,lo8(58)
+ 359 016e 8460      		ldi r27,hi8(58)
+ 360 0170 8C93      		ldi r30,lo8(58)
+ 178:main.c        **** 	LED_1_GREEN_INIT();
+ 361               	hi8(58)
+ 362               		ld r24,Z
+ 363 0172 AAE3      		ori r24,lo8(1)
+ 364 0174 B0E0      		st X,r24
+ 366 0178 F0E0      	.LM23:
+ 367 017a 8081      		ldi r26,lo8(58)
+ 368 017c 8160      		ldi r27,hi8(58)
+ 369 017e 8C93      		ldi r30,lo8(58)
+ 179:main.c        **** 	LED_1_BLUE_INIT();
+ 370               	hi8(58)
+ 371               		ld r24,Z
+ 372 0180 AAE3      		ori r24,lo8(2)
+ 373 0182 B0E0      		st X,r24
+ 375 0186 F0E0      	.LM24:
+ 376 0188 8081      		ldi r26,lo8(49)
+ 377 018a 8260      		ldi r27,hi8(49)
+ 378 018c 8C93      		ldi r30,lo8(49)
+ 180:main.c        **** 	LED_2_RED_INIT();
+ 379               	hi8(49)
+ 380               		ld r24,Z
+ 381 018e A1E3      		ori r24,lo8(32)
+ 382 0190 B0E0      		st X,r24
+ 384 0194 F0E0      	.LM25:
+ 385 0196 8081      		ldi r26,lo8(49)
+ 386 0198 8062      		ldi r27,hi8(49)
+ 387 019a 8C93      		ldi r30,lo8(49)
+ 181:main.c        **** 	LED_2_GREEN_INIT();
+ 388               	hi8(49)
+ 389               		ld r24,Z
+ 390 019c A1E3      		ori r24,lo8(16)
+ 391 019e B0E0      		st X,r24
+ 393 01a2 F0E0      	.LM26:
+ 394 01a4 8081      		ldi r26,lo8(49)
+ 395 01a6 8061      		ldi r27,hi8(49)
+ 396 01a8 8C93      		ldi r30,lo8(49)
+ 182:main.c        **** 	LED_2_BLUE_INIT();
+ 397               	hi8(49)
+ 398               		ld r24,Z
+ 399 01aa A1E3      		ori r24,lo8(8)
+ 400 01ac B0E0      		st X,r24
+ 402 01b0 F0E0      	.LM27:
+ 403 01b2 8081      		ldi r26,lo8(55)
+ 404 01b4 8860      		ldi r27,hi8(55)
+ 405 01b6 8C93      		ldi r30,lo8(55)
+ 183:main.c        **** 	LED_3_RED_INIT();
+ 406               	hi8(55)
+ 407               		ld r24,Z
+ 408 01b8 A7E3      		ori r24,lo8(16)
+ 409 01ba B0E0      		st X,r24
+ 411 01be F0E0      	.LM28:
+ 412 01c0 8081      		ldi r26,lo8(55)
+ 413 01c2 8061      		ldi r27,hi8(55)
+ 414 01c4 8C93      		ldi r30,lo8(55)
+ 184:main.c        **** 	LED_3_GREEN_INIT();
+ 415               	hi8(55)
+ 416               		ld r24,Z
+ 417 01c6 A7E3      		ori r24,lo8(8)
+ 418 01c8 B0E0      		st X,r24
+ 420 01cc F0E0      	.LM29:
+ 421 01ce 8081      		ldi r26,lo8(55)
+ 422 01d0 8860      		ldi r27,hi8(55)
+ 423 01d2 8C93      		ldi r30,lo8(55)
+ 185:main.c        **** 	LED_3_BLUE_INIT();
+ 424               	hi8(55)
+ 425               		ld r24,Z
+ 426 01d4 A7E3      		ori r24,lo8(4)
+ 427 01d6 B0E0      		st X,r24
+ 429 01da F0E0      	.LM30:
+ 430 01dc 8081      		ldi r26,lo8(55)
+ 431 01de 8460      		ldi r27,hi8(55)
+ 432 01e0 8C93      		ldi r30,lo8(55)
+ 186:main.c        **** 	LED_4_RED_INIT();
+ 433               	hi8(55)
+ 434               		ld r24,Z
+ 435 01e2 A7E3      		ori r24,lo8(2)
+ 436 01e4 B0E0      		st X,r24
+ 438 01e8 F0E0      	.LM31:
+ 439 01ea 8081      		ldi r26,lo8(55)
+ 440 01ec 8260      		ldi r27,hi8(55)
+ 441 01ee 8C93      		ldi r30,lo8(55)
+ 187:main.c        **** 	LED_4_GREEN_INIT();
+ 442               	hi8(55)
+ 443               		ld r24,Z
+ 444 01f0 A7E3      		ori r24,lo8(1)
+ 445 01f2 B0E0      		st X,r24
+ 447 01f6 F0E0      	.LM32:
+ 448 01f8 8081      		ldi r26,lo8(49)
+ 449 01fa 8160      		ldi r27,hi8(49)
+ 450 01fc 8C93      		ldi r30,lo8(49)
+ 188:main.c        **** 	LED_4_BLUE_INIT();
+ 451               	hi8(49)
+ 452               		ld r24,Z
+ 453 01fe A1E3      		ori r24,lo8(64)
+ 454 0200 B0E0      		st X,r24
+ 456 0204 F0E0      	.LM33:
+ 457 0206 8081      		ldi r26,lo8(50)
+ 458 0208 8064      		ldi r27,hi8(50)
+ 459 020a 8C93      		ldi r30,lo8(50)
+ 189:main.c        **** 
+ 190:main.c        **** 	LED_1_RED_OFF();
+ 460               	hi8(50)
+ 461               		ld r24,Z
+ 462 020c A2E3      		ori r24,lo8(4)
+ 463 020e B0E0      		st X,r24
+ 465 0212 F0E0      	.LM34:
+ 466 0214 8081      		ldi r26,lo8(59)
+ 467 0216 8460      		ldi r27,hi8(59)
+ 468 0218 8C93      		ldi r30,lo8(59)
+ 191:main.c        **** 	LED_1_GREEN_OFF();
+ 469               	hi8(59)
+ 470               		ld r24,Z
+ 471 021a ABE3      		ori r24,lo8(1)
+ 472 021c B0E0      		st X,r24
+ 474 0220 F0E0      	.LM35:
+ 475 0222 8081      		ldi r26,lo8(59)
+ 476 0224 8160      		ldi r27,hi8(59)
+ 477 0226 8C93      		ldi r30,lo8(59)
+ 192:main.c        **** 	LED_1_BLUE_OFF();
+ 478               	hi8(59)
+ 479               		ld r24,Z
+ 480 0228 ABE3      		ori r24,lo8(2)
+ 481 022a B0E0      		st X,r24
+ 483 022e F0E0      	.LM36:
+ 484 0230 8081      		ldi r26,lo8(50)
+ 485 0232 8260      		ldi r27,hi8(50)
+ 486 0234 8C93      		ldi r30,lo8(50)
+ 193:main.c        **** 	LED_2_RED_OFF();
+ 487               	hi8(50)
+ 488               		ld r24,Z
+ 489 0236 A2E3      		ori r24,lo8(32)
+ 490 0238 B0E0      		st X,r24
+ 492 023c F0E0      	.LM37:
+ 493 023e 8081      		ldi r26,lo8(50)
+ 494 0240 8062      		ldi r27,hi8(50)
+ 495 0242 8C93      		ldi r30,lo8(50)
+ 194:main.c        **** 	LED_2_GREEN_OFF();
+ 496               	hi8(50)
+ 497               		ld r24,Z
+ 498 0244 A2E3      		ori r24,lo8(16)
+ 499 0246 B0E0      		st X,r24
+ 501 024a F0E0      	.LM38:
+ 502 024c 8081      		ldi r26,lo8(50)
+ 503 024e 8061      		ldi r27,hi8(50)
+ 504 0250 8C93      		ldi r30,lo8(50)
+ 195:main.c        **** 	LED_2_BLUE_OFF();
+ 505               	hi8(50)
+ 506               		ld r24,Z
+ 507 0252 A2E3      		ori r24,lo8(8)
+ 508 0254 B0E0      		st X,r24
+ 510 0258 F0E0      	.LM39:
+ 511 025a 8081      		ldi r26,lo8(56)
+ 512 025c 8860      		ldi r27,hi8(56)
+ 513 025e 8C93      		ldi r30,lo8(56)
+ 196:main.c        **** 	LED_3_RED_OFF();
+ 514               	hi8(56)
+ 515               		ld r24,Z
+ 516 0260 A8E3      		ori r24,lo8(16)
+ 517 0262 B0E0      		st X,r24
+ 519 0266 F0E0      	.LM40:
+ 520 0268 8081      		ldi r26,lo8(56)
+ 521 026a 8061      		ldi r27,hi8(56)
+ 522 026c 8C93      		ldi r30,lo8(56)
+ 197:main.c        **** 	LED_3_GREEN_OFF();
+ 523               	hi8(56)
+ 524               		ld r24,Z
+ 525 026e A8E3      		ori r24,lo8(8)
+ 526 0270 B0E0      		st X,r24
+ 528 0274 F0E0      	.LM41:
+ 529 0276 8081      		ldi r26,lo8(56)
+ 530 0278 8860      		ldi r27,hi8(56)
+ 531 027a 8C93      		ldi r30,lo8(56)
+ 198:main.c        **** 	LED_3_BLUE_OFF();
+ 532               	hi8(56)
+ 533               		ld r24,Z
+ 534 027c A8E3      		ori r24,lo8(4)
+ 535 027e B0E0      		st X,r24
+ 537 0282 F0E0      	.LM42:
+ 538 0284 8081      		ldi r26,lo8(56)
+ 539 0286 8460      		ldi r27,hi8(56)
+ 540 0288 8C93      		ldi r30,lo8(56)
+ 199:main.c        **** 	LED_4_RED_OFF();
+ 541               	hi8(56)
+ 542               		ld r24,Z
+ 543 028a A8E3      		ori r24,lo8(2)
+ 544 028c B0E0      		st X,r24
+ 546 0290 F0E0      	.LM43:
+ 547 0292 8081      		ldi r26,lo8(56)
+ 548 0294 8260      		ldi r27,hi8(56)
+ 549 0296 8C93      		ldi r30,lo8(56)
+ 200:main.c        **** 	LED_4_GREEN_OFF();
+ 550               	hi8(56)
+ 551               		ld r24,Z
+ 552 0298 A8E3      		ori r24,lo8(1)
+ 553 029a B0E0      		st X,r24
+ 555 029e F0E0      	.LM44:
+ 556 02a0 8081      		ldi r26,lo8(50)
+ 557 02a2 8160      		ldi r27,hi8(50)
+ 558 02a4 8C93      		ldi r30,lo8(50)
+ 201:main.c        **** 	LED_4_BLUE_OFF();
+ 559               	hi8(50)
+ 560               		ld r24,Z
+ 561 02a6 A2E3      		ori r24,lo8(64)
+ 562 02a8 B0E0      		st X,r24
+ 564 02ac F0E0      	.LM45:
+ 565 02ae 8081      		rcall vUART_init
+ 567 02b2 8C93      	.LM46:
+ 202:main.c        **** 	
+ 203:main.c        **** 	vUART_init();
+ 568               	/
+ 569               	 ;  205 "main.c" 1
+ 570 02b4 00D0      		sei
+ 204:main.c        **** 	//Set global interrupt enable
+ 205:main.c        **** 	sei();
+ 571               	 0 "" 2
+ 572               	/* #NOAPP */
+ 573               	.L36:
+ 575 02b6 7894      	.LM47:
+ 576               		lds r24,ovrflw_cnt
+ 577               		lds r25,(ovrflw_cnt)+1
+ 578               		ldi r18,hi8(301)
+ 206:main.c        **** 	//Endless loop
+ 207:main.c        **** 	while(1)
+ 208:main.c        **** 	{
+ 209:main.c        **** 		if (ovrflw_cnt == (300 + 1))
+ 579               	,lo8(301)
+ 580               		cpc r25,r18
+ 581 02b8 8091 0000 		brne .L11
+ 583 02c0 21E0      	.LM48:
+ 584 02c2 8D32      		ldi r24,lo8(1)
+ 585 02c4 9207      		ldi r25,hi8(1)
+ 586 02c6 01F4      		sts (ovrflw_cnt)+1,r25
+ 210:main.c        **** 		{
+ 211:main.c        **** 			ovrflw_cnt = 1;
+ 587               	flw_cnt,r24
+ 588               	.L11:
+ 590 02ca 90E0      	.LM49:
+ 591 02cc 9093 0000 		lds r24,ovrflw_cnt
+ 592 02d0 8093 0000 		lds r25,(ovrflw_cnt)+1
+ 593               		sbiw r24,0
+ 212:main.c        **** 		}
+ 213:main.c        **** 	/* LED 1 */
+ 214:main.c        **** 	//=== Red LED ===
+ 215:main.c        **** 		if ((ovrflw_cnt >= 1) && (ovrflw_cnt <= rgb[0][0]))
+ 594               	L12
+ 595               		lds r24,rgb
+ 596 02d4 8091 0000 		mov r18,r24
+ 597 02d8 9091 0000 		ldi r19,lo8(0)
+ 598 02dc 0097      		lds r24,ovrflw_cnt
+ 599 02de 01F0      		lds r25,(ovrflw_cnt)+1
+ 600 02e0 8091 0000 		cp r18,r24
+ 601 02e4 282F      		cpc r19,r25
+ 602 02e6 30E0      		brlo .L12
+ 604 02ec 9091 0000 	.LM50:
+ 605 02f0 2817      		ldi r26,lo8(50)
+ 606 02f2 3907      		ldi r27,hi8(50)
+ 607 02f4 00F0      		ldi r30,lo8(50)
+ 216:main.c        **** 		{
+ 217:main.c        **** 			LED_1_RED_ON();
+ 608               	0)
+ 609               		ld r24,Z
+ 610 02f6 A2E3      		andi r24,lo8(-5)
+ 611 02f8 B0E0      		st X,r24
+ 612 02fa E2E3      		rjmp .L13
+ 613 02fc F0E0      	.L12:
+ 615 0300 8B7F      	.LM51:
+ 616 0302 8C93      		ldi r26,lo8(50)
+ 617 0304 00C0      		ldi r27,hi8(50)
+ 618               		ldi r30,lo8(50)
+ 218:main.c        **** 		}
+ 219:main.c        **** 		else
+ 220:main.c        **** 		{
+ 221:main.c        **** 			LED_1_RED_OFF();
+ 619               	8(50)
+ 620               		ld r24,Z
+ 621 0306 A2E3      		ori r24,lo8(4)
+ 622 0308 B0E0      		st X,r24
+ 623 030a E2E3      	.L13:
+ 625 030e 8081      	.LM52:
+ 626 0310 8460      		lds r24,ovrflw_cnt
+ 627 0312 8C93      		lds r25,(ovrflw_cnt)+1
+ 628               		cpi r24,100
+ 222:main.c        **** 		}
+ 223:main.c        **** 	//=== Green LED ===
+ 224:main.c        **** 		if ((ovrflw_cnt >= 100) && (ovrflw_cnt < (100 + rgb[0][1])))
+ 629               	_zero_reg__
+ 630               		brlo .L14
+ 631 0314 8091 0000 		lds r24,rgb+1
+ 632 0318 9091 0000 		mov r24,r24
+ 633 031c 8436      		ldi r25,lo8(0)
+ 634 031e 9105      		subi r24,lo8(-(100))
+ 635 0320 00F0      		sbci r25,hi8(-(100))
+ 636 0322 8091 0000 		movw r18,r24
+ 637 0326 882F      		lds r24,ovrflw_cnt
+ 638 0328 90E0      		lds r25,(ovrflw_cnt)+1
+ 639 032a 8C59      		cp r24,r18
+ 640 032c 9F4F      		cpc r25,r19
+ 641 032e 9C01      		brsh .L14
+ 643 0334 9091 0000 	.LM53:
+ 644 0338 8217      		ldi r26,lo8(59)
+ 645 033a 9307      		ldi r27,hi8(59)
+ 646 033c 00F4      		ldi r30,lo8(59)
+ 225:main.c        **** 		{
+ 226:main.c        **** 			LED_1_GREEN_ON();
+ 647               	ld r24,Z
+ 648               		andi r24,lo8(-2)
+ 649 033e ABE3      		st X,r24
+ 650 0340 B0E0      		rjmp .L15
+ 651 0342 EBE3      	.L14:
+ 653 0346 8081      	.LM54:
+ 654 0348 8E7F      		ldi r26,lo8(59)
+ 655 034a 8C93      		ldi r27,hi8(59)
+ 656 034c 00C0      		ldi r30,lo8(59)
+ 657               		ldi r31,hi8(59)
+ 227:main.c        **** 		}
+ 228:main.c        **** 		else
+ 229:main.c        **** 		{
+ 230:main.c        **** 			LED_1_GREEN_OFF();
+ 658               	ori r24,lo8(1)
+ 659               		st X,r24
+ 660 034e ABE3      	.L15:
+ 662 0352 EBE3      	.LM55:
+ 663 0354 F0E0      		lds r24,ovrflw_cnt
+ 664 0356 8081      		lds r25,(ovrflw_cnt)+1
+ 665 0358 8160      		cpi r24,200
+ 666 035a 8C93      		cpc r25,__zero_reg__
+ 667               		brlo .L16
+ 231:main.c        **** 		}
+ 232:main.c        **** 	//=== Blue LED ===
+ 233:main.c        **** 		if ((ovrflw_cnt >= 200) && (ovrflw_cnt < (200 + rgb[0][2])))
+ 668               	gb+2
+ 669               		mov r24,r24
+ 670 035c 8091 0000 		ldi r25,lo8(0)
+ 671 0360 9091 0000 		subi r24,lo8(-(200))
+ 672 0364 883C      		sbci r25,hi8(-(200))
+ 673 0366 9105      		movw r18,r24
+ 674 0368 00F0      		lds r24,ovrflw_cnt
+ 675 036a 8091 0000 		lds r25,(ovrflw_cnt)+1
+ 676 036e 882F      		cp r24,r18
+ 677 0370 90E0      		cpc r25,r19
+ 678 0372 8853      		brsh .L16
+ 680 0376 9C01      	.LM56:
+ 681 0378 8091 0000 		ldi r26,lo8(59)
+ 682 037c 9091 0000 		ldi r27,hi8(59)
+ 683 0380 8217      		ldi r30,lo8(59)
+ 684 0382 9307      		ldi r31,hi8(59)
+ 685 0384 00F4      		ld r24,Z
+ 234:main.c        **** 		{
+ 235:main.c        **** 			LED_1_BLUE_ON();
+ 686               		st X,r24
+ 687               		rjmp .L17
+ 688 0386 ABE3      	.L16:
+ 690 038a EBE3      	.LM57:
+ 691 038c F0E0      		ldi r26,lo8(59)
+ 692 038e 8081      		ldi r27,hi8(59)
+ 693 0390 8D7F      		ldi r30,lo8(59)
+ 694 0392 8C93      		ldi r31,hi8(59)
+ 695 0394 00C0      		ld r24,Z
+ 696               		ori r24,lo8(2)
+ 236:main.c        **** 		}
+ 237:main.c        **** 		else
+ 238:main.c        **** 		{
+ 239:main.c        **** 			LED_1_BLUE_OFF();
+ 697               	L17:
+ 699 0396 ABE3      	.LM58:
+ 700 0398 B0E0      		lds r24,ovrflw_cnt
+ 701 039a EBE3      		lds r25,(ovrflw_cnt)+1
+ 702 039c F0E0      		sbiw r24,0
+ 703 039e 8081      		breq .L18
+ 704 03a0 8260      		lds r24,rgb+3
+ 705 03a2 8C93      		mov r18,r24
+ 706               		ldi r19,lo8(0)
+ 240:main.c        **** 		}
+ 241:main.c        **** 	/* LED 2 */	
+ 242:main.c        **** 	//=== Red LED ===
+ 243:main.c        **** 		if ((ovrflw_cnt >= 1) && (ovrflw_cnt <= rgb[1][0]))
+ 707               	vrflw_cnt
+ 708               		lds r25,(ovrflw_cnt)+1
+ 709 03a4 8091 0000 		cp r18,r24
+ 710 03a8 9091 0000 		cpc r19,r25
+ 711 03ac 0097      		brlo .L18
+ 713 03b0 8091 0000 	.LM59:
+ 714 03b4 282F      		ldi r26,lo8(50)
+ 715 03b6 30E0      		ldi r27,hi8(50)
+ 716 03b8 8091 0000 		ldi r30,lo8(50)
+ 717 03bc 9091 0000 		ldi r31,hi8(50)
+ 718 03c0 2817      		ld r24,Z
+ 719 03c2 3907      		andi r24,lo8(-33)
+ 720 03c4 00F0      		st X,r24
+ 244:main.c        **** 		{
+ 245:main.c        **** 			LED_2_RED_ON();
+ 721               	8:
+ 723 03c6 A2E3      	.LM60:
+ 724 03c8 B0E0      		ldi r26,lo8(50)
+ 725 03ca E2E3      		ldi r27,hi8(50)
+ 726 03cc F0E0      		ldi r30,lo8(50)
+ 727 03ce 8081      		ldi r31,hi8(50)
+ 728 03d0 8F7D      		ld r24,Z
+ 729 03d2 8C93      		ori r24,lo8(32)
+ 730 03d4 00C0      		st X,r24
+ 731               	.L19:
+ 246:main.c        **** 		}
+ 247:main.c        **** 		else
+ 248:main.c        **** 		{
+ 249:main.c        **** 			LED_2_RED_OFF();
+ 732               	0,252,.LM61-.LFBB2
+ 733               	.LM61:
+ 734 03d6 A2E3      		lds r24,ovrflw_cnt
+ 735 03d8 B0E0      		lds r25,(ovrflw_cnt)+1
+ 736 03da E2E3      		cpi r24,100
+ 737 03dc F0E0      		cpc r25,__zero_reg__
+ 738 03de 8081      		brlo .L20
+ 739 03e0 8062      		lds r24,rgb+4
+ 740 03e2 8C93      		mov r24,r24
+ 741               		ldi r25,lo8(0)
+ 250:main.c        **** 		}
+ 251:main.c        **** 	//=== Green LED ===
+ 252:main.c        **** 		if ((ovrflw_cnt >= 100) && (ovrflw_cnt < (100 + rgb[1][1])))
+ 742               	lo8(-(100))
+ 743               		sbci r25,hi8(-(100))
+ 744 03e4 8091 0000 		movw r18,r24
+ 745 03e8 9091 0000 		lds r24,ovrflw_cnt
+ 746 03ec 8436      		lds r25,(ovrflw_cnt)+1
+ 747 03ee 9105      		cp r24,r18
+ 748 03f0 00F0      		cpc r25,r19
+ 749 03f2 8091 0000 		brsh .L20
+ 751 03f8 90E0      	.LM62:
+ 752 03fa 8C59      		ldi r26,lo8(50)
+ 753 03fc 9F4F      		ldi r27,hi8(50)
+ 754 03fe 9C01      		ldi r30,lo8(50)
+ 755 0400 8091 0000 		ldi r31,hi8(50)
+ 756 0404 9091 0000 		ld r24,Z
+ 757 0408 8217      		andi r24,lo8(-17)
+ 758 040a 9307      		st X,r24
+ 759 040c 00F4      		rjmp .L21
+ 253:main.c        **** 		{
+ 254:main.c        **** 			LED_2_GREEN_ON();
+ 760               	,258,.LM63-.LFBB2
+ 761               	.LM63:
+ 762 040e A2E3      		ldi r26,lo8(50)
+ 763 0410 B0E0      		ldi r27,hi8(50)
+ 764 0412 E2E3      		ldi r30,lo8(50)
+ 765 0414 F0E0      		ldi r31,hi8(50)
+ 766 0416 8081      		ld r24,Z
+ 767 0418 8F7E      		ori r24,lo8(16)
+ 768 041a 8C93      		st X,r24
+ 769 041c 00C0      	.L21:
+ 255:main.c        **** 		}
+ 256:main.c        **** 		else
+ 257:main.c        **** 		{
+ 258:main.c        **** 			LED_2_GREEN_OFF();
+ 771               	 r24,ovrflw_cnt
+ 772               		lds r25,(ovrflw_cnt)+1
+ 773 041e A2E3      		cpi r24,200
+ 774 0420 B0E0      		cpc r25,__zero_reg__
+ 775 0422 E2E3      		brlo .L22
+ 776 0424 F0E0      		lds r24,rgb+5
+ 777 0426 8081      		mov r24,r24
+ 778 0428 8061      		ldi r25,lo8(0)
+ 779 042a 8C93      		subi r24,lo8(-(200))
+ 780               		sbci r25,hi8(-(200))
+ 259:main.c        **** 		}
+ 260:main.c        **** 	//=== Blue LED ===
+ 261:main.c        **** 		if ((ovrflw_cnt >= 200) && (ovrflw_cnt < (200 + rgb[1][2])))
+ 781               	r24
+ 782               		lds r24,ovrflw_cnt
+ 783 042c 8091 0000 		lds r25,(ovrflw_cnt)+1
+ 784 0430 9091 0000 		cp r24,r18
+ 785 0434 883C      		cpc r25,r19
+ 786 0436 9105      		brsh .L22
+ 788 043a 8091 0000 	.LM65:
+ 789 043e 882F      		ldi r26,lo8(50)
+ 790 0440 90E0      		ldi r27,hi8(50)
+ 791 0442 8853      		ldi r30,lo8(50)
+ 792 0444 9F4F      		ldi r31,hi8(50)
+ 793 0446 9C01      		ld r24,Z
+ 794 0448 8091 0000 		andi r24,lo8(-9)
+ 795 044c 9091 0000 		st X,r24
+ 796 0450 8217      		rjmp .L23
+ 797 0452 9307      	.L22:
+ 262:main.c        **** 		{
+ 263:main.c        **** 			LED_2_BLUE_ON();
+ 799               	8(50)
+ 800               		ldi r27,hi8(50)
+ 801 0456 A2E3      		ldi r30,lo8(50)
+ 802 0458 B0E0      		ldi r31,hi8(50)
+ 803 045a E2E3      		ld r24,Z
+ 804 045c F0E0      		ori r24,lo8(8)
+ 805 045e 8081      		st X,r24
+ 806 0460 877F      	.L23:
+ 808 0464 00C0      	.LM67:
+ 809               		lds r24,ovrflw_cnt
+ 264:main.c        **** 		}
+ 265:main.c        **** 		else
+ 266:main.c        **** 		{
+ 267:main.c        **** 			LED_2_BLUE_OFF();
+ 810               	vrflw_cnt)+1
+ 811               		sbiw r24,0
+ 812 0466 A2E3      		breq .L24
+ 813 0468 B0E0      		lds r24,rgb+6
+ 814 046a E2E3      		mov r18,r24
+ 815 046c F0E0      		ldi r19,lo8(0)
+ 816 046e 8081      		lds r24,ovrflw_cnt
+ 817 0470 8860      		lds r25,(ovrflw_cnt)+1
+ 818 0472 8C93      		cp r18,r24
+ 819               		cpc r19,r25
+ 268:main.c        **** 		}
+ 269:main.c        **** 	/* LED 3 */	
+ 270:main.c        **** 	//=== Red LED ===
+ 271:main.c        **** 		if ((ovrflw_cnt >= 1) && (ovrflw_cnt <= rgb[2][0]))
+ 820               	
+ 822 0474 8091 0000 	.LM68:
+ 823 0478 9091 0000 		ldi r26,lo8(56)
+ 824 047c 0097      		ldi r27,hi8(56)
+ 825 047e 01F0      		ldi r30,lo8(56)
+ 826 0480 8091 0000 		ldi r31,hi8(56)
+ 827 0484 282F      		ld r24,Z
+ 828 0486 30E0      		andi r24,lo8(-17)
+ 829 0488 8091 0000 		st X,r24
+ 830 048c 9091 0000 		rjmp .L25
+ 831 0490 2817      	.L24:
+ 833 0494 00F0      	.LM69:
+ 272:main.c        **** 		{
+ 273:main.c        **** 			LED_3_RED_ON();
+ 834               	56)
+ 835               		ldi r27,hi8(56)
+ 836 0496 A8E3      		ldi r30,lo8(56)
+ 837 0498 B0E0      		ldi r31,hi8(56)
+ 838 049a E8E3      		ld r24,Z
+ 839 049c F0E0      		ori r24,lo8(16)
+ 840 049e 8081      		st X,r24
+ 841 04a0 8F7E      	.L25:
+ 843 04a4 00C0      	.LM70:
+ 844               		lds r24,ovrflw_cnt
+ 274:main.c        **** 		}
+ 275:main.c        **** 		else
+ 276:main.c        **** 		{
+ 277:main.c        **** 			LED_3_RED_OFF();
+ 845               	vrflw_cnt)+1
+ 846               		cpi r24,100
+ 847 04a6 A8E3      		cpc r25,__zero_reg__
+ 848 04a8 B0E0      		brlo .L26
+ 849 04aa E8E3      		lds r24,rgb+7
+ 850 04ac F0E0      		mov r24,r24
+ 851 04ae 8081      		ldi r25,lo8(0)
+ 852 04b0 8061      		subi r24,lo8(-(100))
+ 853 04b2 8C93      		sbci r25,hi8(-(100))
+ 854               		movw r18,r24
+ 278:main.c        **** 		}
+ 279:main.c        **** 	//=== Green LED ===
+ 280:main.c        **** 		if ((ovrflw_cnt >= 100) && (ovrflw_cnt < (100 + rgb[2][1])))
+ 855               	vrflw_cnt
+ 856               		lds r25,(ovrflw_cnt)+1
+ 857 04b4 8091 0000 		cp r24,r18
+ 858 04b8 9091 0000 		cpc r25,r19
+ 859 04bc 8436      		brsh .L26
+ 861 04c0 00F0      	.LM71:
+ 862 04c2 8091 0000 		ldi r26,lo8(56)
+ 863 04c6 882F      		ldi r27,hi8(56)
+ 864 04c8 90E0      		ldi r30,lo8(56)
+ 865 04ca 8C59      		ldi r31,hi8(56)
+ 866 04cc 9F4F      		ld r24,Z
+ 867 04ce 9C01      		andi r24,lo8(-9)
+ 868 04d0 8091 0000 		st X,r24
+ 869 04d4 9091 0000 		rjmp .L27
+ 870 04d8 8217      	.L26:
+ 872 04dc 00F4      	.LM72:
+ 281:main.c        **** 		{
+ 282:main.c        **** 			LED_3_GREEN_ON();
+ 873               	ldi r27,hi8(56)
+ 874               		ldi r30,lo8(56)
+ 875 04de A8E3      		ldi r31,hi8(56)
+ 876 04e0 B0E0      		ld r24,Z
+ 877 04e2 E8E3      		ori r24,lo8(8)
+ 878 04e4 F0E0      		st X,r24
+ 879 04e6 8081      	.L27:
+ 881 04ea 8C93      	.LM73:
+ 882 04ec 00C0      		lds r24,ovrflw_cnt
+ 883               		lds r25,(ovrflw_cnt)+1
+ 283:main.c        **** 		}
+ 284:main.c        **** 		else
+ 285:main.c        **** 		{
+ 286:main.c        **** 			LED_3_GREEN_OFF();
+ 884               	0
+ 885               		cpc r25,__zero_reg__
+ 886 04ee A8E3      		brlo .L28
+ 887 04f0 B0E0      		lds r24,rgb+8
+ 888 04f2 E8E3      		mov r24,r24
+ 889 04f4 F0E0      		ldi r25,lo8(0)
+ 890 04f6 8081      		subi r24,lo8(-(200))
+ 891 04f8 8860      		sbci r25,hi8(-(200))
+ 892 04fa 8C93      		movw r18,r24
+ 893               		lds r24,ovrflw_cnt
+ 287:main.c        **** 		}
+ 288:main.c        **** 	//=== Blue LED ===
+ 289:main.c        **** 		if ((ovrflw_cnt >= 200) && (ovrflw_cnt < (200 + rgb[2][2])))
+ 894               	ovrflw_cnt)+1
+ 895               		cp r24,r18
+ 896 04fc 8091 0000 		cpc r25,r19
+ 897 0500 9091 0000 		brsh .L28
+ 899 0506 9105      	.LM74:
+ 900 0508 00F0      		ldi r26,lo8(56)
+ 901 050a 8091 0000 		ldi r27,hi8(56)
+ 902 050e 882F      		ldi r30,lo8(56)
+ 903 0510 90E0      		ldi r31,hi8(56)
+ 904 0512 8853      		ld r24,Z
+ 905 0514 9F4F      		andi r24,lo8(-5)
+ 906 0516 9C01      		st X,r24
+ 907 0518 8091 0000 		rjmp .L29
+ 908 051c 9091 0000 	.L28:
+ 910 0522 9307      	.LM75:
+ 911 0524 00F4      		ldi r26,lo8(56)
+ 290:main.c        **** 		{
+ 291:main.c        **** 			LED_3_BLUE_ON();
+ 912               	.L28
+ 914 0526 A8E3      	.LM74:
+ 915 0528 B0E0      		ldi r26,lo8(56)
+ 916 052a E8E3      		ldi r27,hi8(56)
+ 917 052c F0E0      		ldi r30,lo8(56)
+ 918 052e 8081      		ldi r31,hi8(56)
+ 919 0530 8B7F      		ld r24,Z
+ 920 0532 8C93      		andi r24,lo8(-5)
+ 921 0534 00C0      		st X,r24
+ 922               		rjmp .L29
+ 292:main.c        **** 		}
+ 293:main.c        **** 		else
+ 294:main.c        **** 		{
+ 295:main.c        **** 			LED_3_BLUE_OFF();
+ 923               	rflw_cnt
+ 924               		lds r25,(ovrflw_cnt)+1
+ 925 0536 A8E3      		cp r24,r18
+ 926 0538 B0E0      		cpc r25,r19
+ 927 053a E8E3      		brsh .L28
+ 929 053e 8081      	.LM74:
+ 930 0540 8460      		ldi r26,lo8(56)
+ 931 0542 8C93      		ldi r27,hi8(56)
+ 932               		ldi r30,lo8(56)
+ 296:main.c        **** 		}
+ 297:main.c        **** 	/* LED 4 */	
+ 298:main.c        **** 	//=== Red LED ===
+ 299:main.c        **** 		if ((ovrflw_cnt >= 1) && (ovrflw_cnt <= rgb[3][0]))
+ 933               	)
+ 934               		subi r24,lo8(-(200))
+ 935 0544 8091 0000 		sbci r25,hi8(-(200))
+ 936 0548 9091 0000 		movw r18,r24
+ 937 054c 0097      		lds r24,ovrflw_cnt
+ 938 054e 01F0      		lds r25,(ovrflw_cnt)+1
+ 939 0550 8091 0000 		cp r24,r18
+ 940 0554 282F      		cpc r25,r19
+ 941 0556 30E0      		brsh .L28
+ 943 055c 9091 0000 	.LM74:
+ 944 0560 2817      		ldi r26,lo8(56)
+ 945 0562 3907      		ldi r27,hi8(56)
+ 946 0564 00F0      		ldi r30,lo8(56)
+ 300:main.c        **** 		{
+ 301:main.c        **** 			LED_4_RED_ON();
+ 947               	6)
+ 948               		ld r24,Z
+ 949 0566 A8E3      		andi r24,lo8(-5)
+ 950 0568 B0E0      		st X,r24
+ 951 056a E8E3      		rjmp .L29
+ 952 056c F0E0      	.L28:
+ 954 0570 8D7F      	.LM75:
+ 955 0572 8C93      		ldi r26,lo8(56)
+ 956 0574 00C0      		ldi r27,hi8(56)
+ 957               		ldi r30,lo8(56)
+ 302:main.c        **** 		}
+ 303:main.c        **** 		else
+ 304:main.c        **** 		{
+ 305:main.c        **** 			LED_4_RED_OFF();
+ 958               	LM74:
+ 959               		ldi r26,lo8(56)
+ 960 0576 A8E3      		ldi r27,hi8(56)
+ 961 0578 B0E0      		ldi r30,lo8(56)
+ 962 057a E8E3      		ldi r31,hi8(56)
+ 963 057c F0E0      		ld r24,Z
+ 964 057e 8081      		andi r24,lo8(-5)
+ 965 0580 8260      		st X,r24
+ 966 0582 8C93      		rjmp .L29
+ 967               	.L28:
+ 306:main.c        **** 		}
+ 307:main.c        **** 	//=== Green LED ===
+ 308:main.c        **** 		if ((ovrflw_cnt >= 100) && (ovrflw_cnt < (100 + rgb[3][1])))
+ 968               	t
+ 969               		lds r25,(ovrflw_cnt)+1
+ 970 0584 8091 0000 		cp r24,r18
+ 971 0588 9091 0000 		cpc r25,r19
+ 972 058c 8436      		brsh .L28
+ 974 0590 00F0      	.LM74:
+ 975 0592 8091 0000 		ldi r26,lo8(56)
+ 976 0596 882F      		ldi r27,hi8(56)
+ 977 0598 90E0      		ldi r30,lo8(56)
+ 978 059a 8C59      		ldi r31,hi8(56)
+ 979 059c 9F4F      		ld r24,Z
+ 980 059e 9C01      		andi r24,lo8(-5)
+ 981 05a0 8091 0000 		st X,r24
+ 982 05a4 9091 0000 		rjmp .L29
+ 983 05a8 8217      	.L28:
+ 985 05ac 00F4      	.LM75:
+ 309:main.c        **** 		{
+ 310:main.c        **** 			LED_4_GREEN_ON();
+ 986               	cpc r25,r19
+ 987               		brsh .L28
+ 989 05b0 B0E0      	.LM74:
+ 990 05b2 E8E3      		ldi r26,lo8(56)
+ 991 05b4 F0E0      		ldi r27,hi8(56)
+ 992 05b6 8081      		ldi r30,lo8(56)
+ 993 05b8 8E7F      		ldi r31,hi8(56)
+ 994 05ba 8C93      		ld r24,Z
+ 995 05bc 00C0      		andi r24,lo8(-5)
+ 996               		st X,r24
+ 311:main.c        **** 		}
+ 312:main.c        **** 		else
+ 313:main.c        **** 		{
+ 314:main.c        **** 			LED_4_GREEN_OFF();
+ 997               	
+ 998               		lds r24,ovrflw_cnt
+ 999 05be A8E3      		lds r25,(ovrflw_cnt)+1
+ 1000 05c0 B0E0      		cp r24,r18
+ 1001 05c2 E8E3      		cpc r25,r19
+ 1002 05c4 F0E0      		brsh .L28
+ 1004 05c8 8160      	.LM74:
+ 1005 05ca 8C93      		ldi r26,lo8(56)
+ 1006               		ldi r27,hi8(56)
+ 315:main.c        **** 		}
+ 316:main.c        **** 	//=== Blue LED ===
+ 317:main.c        **** 		if ((ovrflw_cnt >= 200) && (ovrflw_cnt < (200 + rgb[3][2])))
+ 1007               	r24
+ 1008               		ldi r25,lo8(0)
+ 1009 05cc 8091 0000 		subi r24,lo8(-(200))
+ 1010 05d0 9091 0000 		sbci r25,hi8(-(200))
+ 1011 05d4 883C      		movw r18,r24
+ 1012 05d6 9105      		lds r24,ovrflw_cnt
+ 1013 05d8 00F0      		lds r25,(ovrflw_cnt)+1
+ 1014 05da 8091 0000 		cp r24,r18
+ 1015 05de 882F      		cpc r25,r19
+ 1016 05e0 90E0      		brsh .L28
+ 1018 05e4 9F4F      	.LM74:
+ 1019 05e6 9C01      		ldi r26,lo8(56)
+ 1020 05e8 8091 0000 		ldi r27,hi8(56)
+ 1021 05ec 9091 0000 		ldi r30,lo8(56)
+ 1022 05f0 8217      		ldi r31,hi8(56)
+ 1023 05f2 9307      		ld r24,Z
+ 1024 05f4 00F4      		andi r24,lo8(-5)
+ 318:main.c        **** 		{
+ 319:main.c        **** 			LED_4_BLUE_ON();
+ 1025               	29
+ 1026               	.L28:
+ 1028 05f8 B0E0      	.LM75:
+ 1029 05fa E2E3      		ldi r26,lo8(56)
+ 1030 05fc F0E0      		ldi r27,hi8(56)
+ 1031 05fe 8081      		ldi r30,lo8(56)
+ 1032 0600 8F7B      		ldi r31,hi8(56)
+ 1033 0602 8C93      		ld r24,Z
+ 1034 0604 00C0      		ori r24,lo8(4)
+ 1035               		st X,r24
+ 320:main.c        **** 		}
+ 321:main.c        **** 		else
+ 322:main.c        **** 		{
+ 323:main.c        **** 			LED_4_BLUE_OFF();
+ 1036               		ldi r31,hi8(56)
+ 1037               		ld r24,Z
+ 1038 0606 A2E3      		andi r24,lo8(-5)
+ 1039 0608 B0E0      		st X,r24
+ 1040 060a E2E3      		rjmp .L29
+ 1041 060c F0E0      	.L28:
+ 1043 0610 8064      	.LM75:
+ 1044 0612 8C93      		ldi r26,lo8(56)
+ 1045               		ldi r27,hi8(56)
+ 324:main.c        **** 		}
+ 325:main.c        **** 		ovrflw_cnt++;
+ 1046               	291,.LM74-.LFBB2
+ 1047               	.LM74:
+ 1048 0614 8091 0000 		ldi r26,lo8(56)
+ 1049 0618 9091 0000 		ldi r27,hi8(56)
+ 1050 061c 0196      		ldi r30,lo8(56)
+ 1051 061e 9093 0000 		ldi r31,hi8(56)
+ 1052 0622 8093 0000 		ld r24,Z
+ 1053 0626 00C0      		andi r24,lo8(-5)
+ 1054               		st X,r24
+ 1055               		rjmp .L29
+ 1056               	.L28:
+ 1058               	.LM75:
+ 1059               		ldi r26,lo8(56)
+ 326:main.c        **** 	}
+ 327:main.c        **** }
+ 328:main.c        **** 
+ 329:main.c        **** void vUART_init(void)
+ 330:main.c        **** {
+ 1060               	.L28
+ 1062               	.LM74:
+ 1063 0628 DF93      		ldi r26,lo8(56)
+ 1064 062a CF93      		ldi r27,hi8(56)
+ 1065 062c CDB7      		ldi r30,lo8(56)
+ 1066 062e DEB7      		ldi r31,hi8(56)
+ 1067               		ld r24,Z
+ 1068               		andi r24,lo8(-5)
+ 331:main.c        **** 	//Ini USART
+ 332:main.c        **** 	//UBRRH = 0;		//UBRR to 51 for 9600 baud @ 8MHz
+ 333:main.c        **** 	//UBRRL = 51;
+ 334:main.c        **** 	UBRRH = 0;		//UBRR to 12 for 38400 baud @ 8MHz
+ 1069               	ovw r18,r24
+ 1070               		lds r24,ovrflw_cnt
+ 1071 0630 E2E2      		lds r25,(ovrflw_cnt)+1
+ 1072 0632 F0E0      		cp r24,r18
+ 1073 0634 1082      		cpc r25,r19
+ 335:main.c        **** 	UBRRL = 12;
+ 1074               	5,(ovrflw_cnt)+1
+ 1075               		cpi r24,200
+ 1076 0636 E9E2      		cpc r25,__zero_reg__
+ 1077 0638 F0E0      		brlo .L28
+ 1078 063a 8CE0      		lds r24,rgb+8
+ 1079 063c 8083      		mov r24,r24
+ 336:main.c        **** 	UCSRA |= (1 << UDRE);	//Buffer is empty
+ 1080               	25,lo8(0)
+ 1081               		subi r24,lo8(-(200))
+ 1082 063e ABE2      		sbci r25,hi8(-(200))
+ 1083 0640 B0E0      		movw r18,r24
+ 1084 0642 EBE2      		lds r24,ovrflw_cnt
+ 1085 0644 F0E0      		lds r25,(ovrflw_cnt)+1
+ 1086 0646 8081      		cp r24,r18
+ 1087 0648 8062      		cpc r25,r19
+ 1088 064a 8C93      		brsh .L28
+ 337:main.c        **** 	UCSRB |= (1 << RXCIE); 	//Interrupt enable for RX
+ 1089               	8,0,291,.LM74-.LFBB2
+ 1090               	.LM74:
+ 1091 064c AAE2      		ldi r26,lo8(56)
+ 1092 064e B0E0      		ldi r27,hi8(56)
+ 1093 0650 EAE2      		ldi r30,lo8(56)
+ 1094 0652 F0E0      		ldi r31,hi8(56)
+ 1095 0654 8081      		ld r24,Z
+ 1096 0656 8068      		andi r24,lo8(-5)
+ 1097 0658 8C93      		st X,r24
+ 338:main.c        **** 	UCSRB |= (1 << RXEN);	//RX enable, pin is used as RX signal
+ 1098               	
+ 1099               		lds r24,ovrflw_cnt
+ 1100 065a AAE2      		lds r25,(ovrflw_cnt)+1
+ 1101 065c B0E0      		cp r24,r18
+ 1102 065e EAE2      		cpc r25,r19
+ 1103 0660 F0E0      		brsh .L28
+ 1105 0664 8061      	.LM74:
+ 1106 0666 8C93      		ldi r26,lo8(56)
+ 339:main.c        **** 	UCSRC |= (1 << UCSZ1);	//UCSZ2 = 0, UCSZ1 = 1, UCSZ0 = 1 : 8 data bits
+ 1107               	24,rgb+8
+ 1108               		mov r24,r24
+ 1109 0668 A3E2      		ldi r25,lo8(0)
+ 1110 066a B0E0      		subi r24,lo8(-(200))
+ 1111 066c E3E2      		sbci r25,hi8(-(200))
+ 1112 066e F0E0      		movw r18,r24
+ 1113 0670 8081      		lds r24,ovrflw_cnt
+ 1114 0672 8460      		lds r25,(ovrflw_cnt)+1
+ 1115 0674 8C93      		cp r24,r18
+ 340:main.c        **** 	UCSRC |= (1 << UCSZ0);
+ 1116               	r19
+ 1117               		brsh .L28
+ 1119 0678 B0E0      	.LM74:
+ 1120 067a E3E2      		ldi r26,lo8(56)
+ 1121 067c F0E0      		ldi r27,hi8(56)
+ 1122 067e 8081      		ldi r30,lo8(56)
+ 1123 0680 8260      		ldi r31,hi8(56)
+ 1124 0682 8C93      		ld r24,Z
+ 1125               		andi r24,lo8(-5)
+ 341:main.c        **** 	//UMSEL = 0 : asynchronous mode
+ 342:main.c        **** 	//UPM1 = 0, UPM0 = 0 : no parity
+ 343:main.c        **** 	//USBS = 0 : 1 stop bit
+ 344:main.c        **** }...
+ 1126               	ovw r18,r24
+ 1127               		lds r24,ovrflw_cnt
+ 1128 0684 CF91      		lds r25,(ovrflw_cnt)+1
+ 1129 0686 DF91      		cp r24,r18
+ 1130 0688 0895      		cpc r25,r19
+ 1131               		brsh .L28
+ 1133               	.LM74:
+ 1134               		ldi r26,lo8(56)
+ 1135               		ldi r27,hi8(56)
+ 1136               		ldi r30,lo8(56)
+ 1137               		ldi r31,hi8(56)
+ 1138               		ld r24,Z
+ 1139               		andi r24,lo8(-5)
+ 1140               		st X,r24
+ 1141               		rjmp .L29
+ 1142               	.L28:
+ 1144               	.LM75:
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:85     .data:00000000 ovrflw_cnt
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:92     .bss:00000000 rgb_buffer
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:98     .bss:00000003 rgb
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:104    .bss:0000000f rec_char
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:110    .bss:00000010 rec_char_buffer
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:116    .bss:00000011 data_incoming
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:122    .bss:00000012 i
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:128    .bss:00000013 led_select
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:134    .text:00000000 __vector_7
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:342    .text:0000015c main
+C:\DOCUME~1\SMARTG~1\LOCALS~1\Temp/ccB22t1A.s:1059   .text:00000628 vUART_init
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

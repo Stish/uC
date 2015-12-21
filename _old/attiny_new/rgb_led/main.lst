@@ -1,0 +1,614 @@
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+  81               	.global	ovrflw_cnt
+  82               		.data
+  85               	ovrflw_cnt:
+  86 0000 0100      		.word	1
+  87               	.global	rat_rd
+  90               	rat_rd:
+  91 0002 2100      		.word	33
+  92               	.global	rat_grn
+  95               	rat_grn:
+  96 0004 2100      		.word	33
+  97               	.global	rat_bl
+ 100               	rat_bl:
+ 101 0006 2100      		.word	33
+ 102               	.global	rat_rd_target
+ 105               	rat_rd_target:
+ 106 0008 2100      		.word	33
+ 107               	.global	rat_grn_target
+ 110               	rat_grn_target:
+ 111 000a 2100      		.word	33
+ 112               	.global	rat_bl_target
+ 115               	rat_bl_target:
+ 116 000c 2100      		.word	33
+ 117               		.text
+ 119               	.global	__vector_6
+ 121               	__vector_6:
+   1:main.c        **** #define RATIO_RD	33	//pin b.0
+   2:main.c        **** #define RATIO_GRN	33	//pin b.1
+   3:main.c        **** #define RATIO_BL	33	//pin b.2
+   4:main.c        **** 
+   5:main.c        **** #include <avr/signal.h>
+   6:main.c        **** #include <avr/interrupt.h>
+   7:main.c        **** #include <avr/io.h>
+   8:main.c        **** #include <stdlib.h>
+   9:main.c        **** 
+  10:main.c        **** unsigned int ovrflw_cnt = 1;
+  11:main.c        **** unsigned int rat_rd = RATIO_RD;
+  12:main.c        **** unsigned int rat_grn = RATIO_GRN;
+  13:main.c        **** unsigned int rat_bl = RATIO_BL;
+  14:main.c        **** unsigned int rat_rd_target = RATIO_RD;
+  15:main.c        **** unsigned int rat_grn_target = RATIO_GRN;
+  16:main.c        **** unsigned int rat_bl_target = RATIO_BL;
+  17:main.c        **** 
+  18:main.c        **** SIGNAL (SIG_TIMER0_OVF)
+  19:main.c        **** {
+ 122               	0-.LFBB1
+ 123               	.LM0:
+ 124               	.LFBB1:
+ 125 0000 1F92      		push __zero_reg__
+ 126 0002 0F92      		push r0
+ 127 0004 0FB6      		in r0,__SREG__
+ 128 0006 0F92      		push r0
+ 129 0008 1124      		clr __zero_reg__
+ 130 000a 2F93      		push r18
+ 131 000c 3F93      		push r19
+ 132 000e 8F93      		push r24
+ 133 0010 9F93      		push r25
+ 134 0012 AF93      		push r26
+ 135 0014 BF93      		push r27
+ 136 0016 EF93      		push r30
+ 137 0018 FF93      		push r31
+ 138 001a DF93      		push r29
+ 139 001c CF93      		push r28
+ 140 001e CDB7      		in r28,__SP_L__
+ 141 0020 DEB7      		in r29,__SP_H__
+ 142               	/* prologue: Signal */
+ 143               	/* frame size = 0 */
+  20:main.c        **** 	if (ovrflw_cnt == 101)
+ 144               	LFBB1
+ 145               	.LM1:
+ 146 0022 8091 0000 		lds r24,ovrflw_cnt
+ 147 0026 9091 0000 		lds r25,(ovrflw_cnt)+1
+ 148 002a 8536      		cpi r24,101
+ 149 002c 9105      		cpc r25,__zero_reg__
+ 150 002e 01F4      		brne .L2
+  21:main.c        **** 		ovrflw_cnt = 1;
+ 151               		68,0,21,.LM2-.LFBB1
+ 152               	.LM2:
+ 153 0030 81E0      		ldi r24,lo8(1)
+ 154 0032 90E0      		ldi r25,hi8(1)
+ 155 0034 9093 0000 		sts (ovrflw_cnt)+1,r25
+ 156 0038 8093 0000 		sts ovrflw_cnt,r24
+ 157               	.L2:
+  22:main.c        **** 	
+  23:main.c        **** //=== Red LED ===
+  24:main.c        **** 	if ((ovrflw_cnt >= 1) && (ovrflw_cnt <= rat_rd))
+ 158               		68,0,24,.LM3-.LFBB1
+ 159               	.LM3:
+ 160 003c 8091 0000 		lds r24,ovrflw_cnt
+ 161 0040 9091 0000 		lds r25,(ovrflw_cnt)+1
+ 162 0044 0097      		sbiw r24,0
+ 163 0046 01F0      		breq .L3
+ 164 0048 2091 0000 		lds r18,ovrflw_cnt
+ 165 004c 3091 0000 		lds r19,(ovrflw_cnt)+1
+ 166 0050 8091 0000 		lds r24,rat_rd
+ 167 0054 9091 0000 		lds r25,(rat_rd)+1
+ 168 0058 8217      		cp r24,r18
+ 169 005a 9307      		cpc r25,r19
+ 170 005c 00F0      		brlo .L3
+  25:main.c        **** 	{
+  26:main.c        **** 		PORTB |= (1 << 0);
+ 171               	26,.LM4-.LFBB1
+ 172               	.LM4:
+ 173 005e A8E3      		ldi r26,lo8(56)
+ 174 0060 B0E0      		ldi r27,hi8(56)
+ 175 0062 E8E3      		ldi r30,lo8(56)
+ 176 0064 F0E0      		ldi r31,hi8(56)
+ 177 0066 8081      		ld r24,Z
+ 178 0068 8160      		ori r24,lo8(1)
+ 179 006a 8C93      		st X,r24
+  27:main.c        **** 		PORTB &= ~(1 << 1) & ~(1 << 2);
+ 180               	8,0,27,.LM5-.LFBB1
+ 181               	.LM5:
+ 182 006c A8E3      		ldi r26,lo8(56)
+ 183 006e B0E0      		ldi r27,hi8(56)
+ 184 0070 E8E3      		ldi r30,lo8(56)
+ 185 0072 F0E0      		ldi r31,hi8(56)
+ 186 0074 8081      		ld r24,Z
+ 187 0076 897F      		andi r24,lo8(-7)
+ 188 0078 8C93      		st X,r24
+ 189               	.L3:
+  28:main.c        **** 	}
+  29:main.c        **** //=== Green LED ===
+  30:main.c        **** 	if ((ovrflw_cnt >= rat_rd) && (ovrflw_cnt <= (rat_rd + rat_grn)))
+ 190               	,0,30,.LM6-.LFBB1
+ 191               	.LM6:
+ 192 007a 2091 0000 		lds r18,ovrflw_cnt
+ 193 007e 3091 0000 		lds r19,(ovrflw_cnt)+1
+ 194 0082 8091 0000 		lds r24,rat_rd
+ 195 0086 9091 0000 		lds r25,(rat_rd)+1
+ 196 008a 2817      		cp r18,r24
+ 197 008c 3907      		cpc r19,r25
+ 198 008e 00F0      		brlo .L4
+ 199 0090 2091 0000 		lds r18,rat_rd
+ 200 0094 3091 0000 		lds r19,(rat_rd)+1
+ 201 0098 8091 0000 		lds r24,rat_grn
+ 202 009c 9091 0000 		lds r25,(rat_grn)+1
+ 203 00a0 280F      		add r18,r24
+ 204 00a2 391F      		adc r19,r25
+ 205 00a4 8091 0000 		lds r24,ovrflw_cnt
+ 206 00a8 9091 0000 		lds r25,(ovrflw_cnt)+1
+ 207 00ac 2817      		cp r18,r24
+ 208 00ae 3907      		cpc r19,r25
+ 209 00b0 00F0      		brlo .L4
+  31:main.c        **** 	{
+  32:main.c        **** 		PORTB |= (1 << 1);
+ 210               	-.LFBB1
+ 211               	.LM7:
+ 212 00b2 A8E3      		ldi r26,lo8(56)
+ 213 00b4 B0E0      		ldi r27,hi8(56)
+ 214 00b6 E8E3      		ldi r30,lo8(56)
+ 215 00b8 F0E0      		ldi r31,hi8(56)
+ 216 00ba 8081      		ld r24,Z
+ 217 00bc 8260      		ori r24,lo8(2)
+ 218 00be 8C93      		st X,r24
+  33:main.c        **** 		PORTB &= ~(1 << 0) & ~(1 << 2);
+ 219               	8,0,33,.LM8-.LFBB1
+ 220               	.LM8:
+ 221 00c0 A8E3      		ldi r26,lo8(56)
+ 222 00c2 B0E0      		ldi r27,hi8(56)
+ 223 00c4 E8E3      		ldi r30,lo8(56)
+ 224 00c6 F0E0      		ldi r31,hi8(56)
+ 225 00c8 8081      		ld r24,Z
+ 226 00ca 8A7F      		andi r24,lo8(-6)
+ 227 00cc 8C93      		st X,r24
+ 228               	.L4:
+  34:main.c        **** 	}
+  35:main.c        **** //=== Blue LED ===
+  36:main.c        **** 	if ((ovrflw_cnt >= (rat_rd + rat_grn)) && (ovrflw_cnt <= (rat_rd + rat_grn + rat_bl)))
+ 229               	,0,36,.LM9-.LFBB1
+ 230               	.LM9:
+ 231 00ce 2091 0000 		lds r18,rat_rd
+ 232 00d2 3091 0000 		lds r19,(rat_rd)+1
+ 233 00d6 8091 0000 		lds r24,rat_grn
+ 234 00da 9091 0000 		lds r25,(rat_grn)+1
+ 235 00de 280F      		add r18,r24
+ 236 00e0 391F      		adc r19,r25
+ 237 00e2 8091 0000 		lds r24,ovrflw_cnt
+ 238 00e6 9091 0000 		lds r25,(ovrflw_cnt)+1
+ 239 00ea 8217      		cp r24,r18
+ 240 00ec 9307      		cpc r25,r19
+ 241 00ee 00F0      		brlo .L5
+ 242 00f0 2091 0000 		lds r18,rat_rd
+ 243 00f4 3091 0000 		lds r19,(rat_rd)+1
+ 244 00f8 8091 0000 		lds r24,rat_grn
+ 245 00fc 9091 0000 		lds r25,(rat_grn)+1
+ 246 0100 280F      		add r18,r24
+ 247 0102 391F      		adc r19,r25
+ 248 0104 8091 0000 		lds r24,rat_bl
+ 249 0108 9091 0000 		lds r25,(rat_bl)+1
+ 250 010c 280F      		add r18,r24
+ 251 010e 391F      		adc r19,r25
+ 252 0110 8091 0000 		lds r24,ovrflw_cnt
+ 253 0114 9091 0000 		lds r25,(ovrflw_cnt)+1
+ 254 0118 2817      		cp r18,r24
+ 255 011a 3907      		cpc r19,r25
+ 256 011c 00F0      		brlo .L5
+  37:main.c        **** 	{
+  38:main.c        **** 		PORTB |= (1 << 2);
+ 257               	
+ 258               	.LM10:
+ 259 011e A8E3      		ldi r26,lo8(56)
+ 260 0120 B0E0      		ldi r27,hi8(56)
+ 261 0122 E8E3      		ldi r30,lo8(56)
+ 262 0124 F0E0      		ldi r31,hi8(56)
+ 263 0126 8081      		ld r24,Z
+ 264 0128 8460      		ori r24,lo8(4)
+ 265 012a 8C93      		st X,r24
+  39:main.c        **** 		PORTB &= ~(1 << 0) & ~(1 << 1);
+ 266               	68,0,39,.LM11-.LFBB1
+ 267               	.LM11:
+ 268 012c A8E3      		ldi r26,lo8(56)
+ 269 012e B0E0      		ldi r27,hi8(56)
+ 270 0130 E8E3      		ldi r30,lo8(56)
+ 271 0132 F0E0      		ldi r31,hi8(56)
+ 272 0134 8081      		ld r24,Z
+ 273 0136 8C7F      		andi r24,lo8(-4)
+ 274 0138 8C93      		st X,r24
+ 275               	.L5:
+  40:main.c        **** 	}
+  41:main.c        **** 	ovrflw_cnt++;
+ 276               	,0,41,.LM12-.LFBB1
+ 277               	.LM12:
+ 278 013a 8091 0000 		lds r24,ovrflw_cnt
+ 279 013e 9091 0000 		lds r25,(ovrflw_cnt)+1
+ 280 0142 0196      		adiw r24,1
+ 281 0144 9093 0000 		sts (ovrflw_cnt)+1,r25
+ 282 0148 8093 0000 		sts ovrflw_cnt,r24
+ 283               	/* epilogue start */
+  42:main.c        **** }
+ 284               	68,0,42,.LM13-.LFBB1
+ 285               	.LM13:
+ 286 014c CF91      		pop r28
+ 287 014e DF91      		pop r29
+ 288 0150 FF91      		pop r31
+ 289 0152 EF91      		pop r30
+ 290 0154 BF91      		pop r27
+ 291 0156 AF91      		pop r26
+ 292 0158 9F91      		pop r25
+ 293 015a 8F91      		pop r24
+ 294 015c 3F91      		pop r19
+ 295 015e 2F91      		pop r18
+ 296 0160 0F90      		pop r0
+ 297 0162 0FBE      		out __SREG__,r0
+ 298 0164 0F90      		pop r0
+ 299 0166 1F90      		pop __zero_reg__
+ 300 0168 1895      		reti
+ 302               	.Lscope1:
+ 304               	.global	main
+ 306               	main:
+  43:main.c        **** 
+  44:main.c        **** int main(void)
+  45:main.c        **** {
+ 307               	LFBB2
+ 308               	.LM14:
+ 309               	.LFBB2:
+ 310 016a DF93      		push r29
+ 311 016c CF93      		push r28
+ 312 016e CDB7      		in r28,__SP_L__
+ 313 0170 DEB7      		in r29,__SP_H__
+ 314 0172 2897      		sbiw r28,8
+ 315 0174 0FB6      		in __tmp_reg__,__SREG__
+ 316 0176 F894      		cli
+ 317 0178 DEBF      		out __SP_H__,r29
+ 318 017a 0FBE      		out __SREG__,__tmp_reg__
+ 319 017c CDBF      		out __SP_L__,r28
+ 320               	/* prologue: function */
+ 321               	/* frame size = 8 */
+  46:main.c        **** 	//unsigned int rnd_nmbr = 0;
+  47:main.c        **** 	unsigned long int i,j = 0;
+ 322               	,.LM15-.LFBB2
+ 323               	.LM15:
+ 324 017e 1982      		std Y+1,__zero_reg__
+ 325 0180 1A82      		std Y+2,__zero_reg__
+ 326 0182 1B82      		std Y+3,__zero_reg__
+ 327 0184 1C82      		std Y+4,__zero_reg__
+  48:main.c        **** 	//unsigned int mode = 0;
+  49:main.c        **** 	
+  50:main.c        **** 	DDRB |= (1 << 0) | (1 << 1) | (1 << 2);
+ 328               	n	68,0,50,.LM16-.LFBB2
+ 329               	.LM16:
+ 330 0186 A7E3      		ldi r26,lo8(55)
+ 331 0188 B0E0      		ldi r27,hi8(55)
+ 332 018a E7E3      		ldi r30,lo8(55)
+ 333 018c F0E0      		ldi r31,hi8(55)
+ 334 018e 8081      		ld r24,Z
+ 335 0190 8760      		ori r24,lo8(7)
+ 336 0192 8C93      		st X,r24
+  51:main.c        **** 	PORTB &= ~(1 << 0) & ~(1 << 1) & ~(1 << 2);
+ 337               	8,0,51,.LM17-.LFBB2
+ 338               	.LM17:
+ 339 0194 A8E3      		ldi r26,lo8(56)
+ 340 0196 B0E0      		ldi r27,hi8(56)
+ 341 0198 E8E3      		ldi r30,lo8(56)
+ 342 019a F0E0      		ldi r31,hi8(56)
+ 343 019c 8081      		ld r24,Z
+ 344 019e 887F      		andi r24,lo8(-8)
+ 345 01a0 8C93      		st X,r24
+  52:main.c        **** 	
+  53:main.c        **** 	TCNT0 = 0x00;
+ 346               	8,0,53,.LM18-.LFBB2
+ 347               	.LM18:
+ 348 01a2 E2E5      		ldi r30,lo8(82)
+ 349 01a4 F0E0      		ldi r31,hi8(82)
+ 350 01a6 1082      		st Z,__zero_reg__
+  54:main.c        **** 	TCCR0B = 0x01;
+ 351               	bn	68,0,54,.LM19-.LFBB2
+ 352               	.LM19:
+ 353 01a8 E3E5      		ldi r30,lo8(83)
+ 354 01aa F0E0      		ldi r31,hi8(83)
+ 355 01ac 81E0      		ldi r24,lo8(1)
+ 356 01ae 8083      		st Z,r24
+  55:main.c        **** 	TIMSK  |= (1 << TOIE0);
+ 357               	n	68,0,55,.LM20-.LFBB2
+ 358               	.LM20:
+ 359 01b0 A9E5      		ldi r26,lo8(89)
+ 360 01b2 B0E0      		ldi r27,hi8(89)
+ 361 01b4 E9E5      		ldi r30,lo8(89)
+ 362 01b6 F0E0      		ldi r31,hi8(89)
+ 363 01b8 8081      		ld r24,Z
+ 364 01ba 8260      		ori r24,lo8(2)
+ 365 01bc 8C93      		st X,r24
+  56:main.c        **** 	sei();
+ 366               	8,0,56,.LM21-.LFBB2
+ 367               	.LM21:
+ 368               	/* #APP */
+ 369               	 ;  56 "main.c" 1
+ 370 01be 7894      		sei
+ 371               	 ;  0 "" 2
+ 372               	/* #NOAPP */
+ 373               	.L17:
+  57:main.c        **** 
+  58:main.c        **** 	while(1)
+  59:main.c        **** 	{
+  60:main.c        **** 		if ((rat_rd_target == rat_rd) && (rat_bl_target == rat_bl) && (rat_grn_target == rat_grn))
+ 374               	0-.LFBB2
+ 375               	.LM20:
+ 376 01c0 2091 0000 		ldi r26,lo8(89)
+ 377 01c4 3091 0000 		ldi r27,hi8(89)
+ 378 01c8 8091 0000 		ldi r30,lo8(89)
+ 379 01cc 9091 0000 		ldi r31,hi8(89)
+ 380 01d0 2817      		ld r24,Z
+ 381 01d2 3907      		ori r24,lo8(2)
+ 382 01d4 01F0      		st X,r24
+ 384 01d8 2091 0000 	.LM21:
+ 385 01dc 3091 0000 	/* #APP */
+ 386 01e0 8091 0000 	 ;  56 "main.c" 1
+ 387 01e4 9091 0000 		sei
+ 388 01e8 2817      	 ;  0 "" 2
+ 389 01ea 3907      	/* #NOAPP */
+ 390 01ec 01F4      	.L17:
+ 392 01f2 3091 0000 	.LM22:
+ 393 01f6 8091 0000 		lds r18,rat_rd_target
+ 394 01fa 9091 0000 		lds r19,(rat_rd_target)+1
+ 395 01fe 2817      		lds r24,rat_rd
+ 396 0200 3907      		lds r25,(rat_rd)+1
+ 397 0202 01F4      		cp r18,r24
+  61:main.c        **** 		{
+  62:main.c        **** 			rat_rd_target = (rand()%100);
+ 398               	rjmp .L8
+ 399               		lds r18,rat_bl_target
+ 400 0204 00D0      		lds r19,(rat_bl_target)+1
+ 401 0206 24E6      		lds r24,rat_bl
+ 402 0208 30E0      		lds r25,(rat_bl)+1
+ 403 020a B901      		cp r18,r24
+ 404 020c 00D0      		cpc r19,r25
+ 405 020e 9093 0000 		brne .L8
+ 406 0212 8093 0000 		lds r18,rat_grn_target
+  63:main.c        **** 			rat_grn_target = (rand()%(100 - rat_rd_target));
+ 407               	,(rat_rd)+1
+ 408               		cp r18,r24
+ 409 0216 00D0      		cpc r19,r25
+ 410 0218 AC01      		breq .+2
+ 411 021a 2091 0000 		rjmp .L8
+ 412 021e 3091 0000 		lds r18,rat_bl_target
+ 413 0222 84E6      		lds r19,(rat_bl_target)+1
+ 414 0224 90E0      		lds r24,rat_bl
+ 415 0226 BC01      		lds r25,(rat_bl)+1
+ 416 0228 621B      		cp r18,r24
+ 417 022a 730B      		cpc r19,r25
+ 418 022c 9B01      		brne .L8
+ 419 022e CA01      		lds r18,rat_grn_target
+ 420 0230 B901      		lds r19,(rat_grn_target)+1
+ 421 0232 00D0      		lds r24,rat_grn
+ 422 0234 9093 0000 		lds r25,(rat_grn)+1
+ 423 0238 8093 0000 		cp r18,r24
+  64:main.c        **** 			rat_bl_target = (100 - rat_rd_target - rat_grn_target);
+ 424               	ds r19,(rat_bl_target)+1
+ 425               		lds r24,rat_bl
+ 426 023c 8091 0000 		lds r25,(rat_bl)+1
+ 427 0240 9091 0000 		cp r18,r24
+ 428 0244 2227      		cpc r19,r25
+ 429 0246 3327      		brne .L8
+ 430 0248 281B      		lds r18,rat_grn_target
+ 431 024a 390B      		lds r19,(rat_grn_target)+1
+ 432 024c 8091 0000 		lds r24,rat_grn
+ 433 0250 9091 0000 		lds r25,(rat_grn)+1
+ 434 0254 A901      		cp r18,r24
+ 435 0256 481B      		cpc r19,r25
+ 436 0258 590B      		brne .L8
+ 438 025c 8C59      	.LM23:
+ 439 025e 9F4F      		rcall rand
+ 440 0260 9093 0000 		ldi r18,lo8(100)
+ 441 0264 8093 0000 		ldi r19,hi8(100)
+ 442               		movw r22,r18
+  65:main.c        **** /*			switch (mode)
+  66:main.c        **** 			{
+  67:main.c        **** 				case 0:
+  68:main.c        **** 					rat_rd_target = (rand()%100);
+  69:main.c        **** 					rat_grn_target = (rand()%(100 - rat_rd_target));
+  70:main.c        **** 					rat_bl_target = (rand()%(100 - rat_rd_target - rat_grn_target));
+  71:main.c        **** 					mode = 1;
+  72:main.c        **** 					break;
+  73:main.c        **** 				case 1:
+  74:main.c        **** 					rat_bl_target = (rand()%100);
+  75:main.c        **** 					rat_rd_target = (rand()%(100 - rat_bl_target));
+  76:main.c        **** 					rat_grn_target = (rand()%(100 - rat_rd_target - rat_bl_target));
+  77:main.c        **** 					mode = 2;
+  78:main.c        **** 					break;
+  79:main.c        **** 				case 2:
+  80:main.c        **** 					rat_grn_target = (rand()%100);
+  81:main.c        **** 					rat_bl_target = (rand()%(100 - rat_grn_target));
+  82:main.c        **** 					rat_rd_target = (rand()%(100 - rat_bl_target - rat_grn_target));
+  83:main.c        **** 					mode = 0;
+  84:main.c        **** 					break;
+  85:main.c        **** 			}*/
+  86:main.c        **** 		}
+  87:main.c        **** 		if (rat_rd_target > rat_rd)
+ 443               	(rat_grn_target)+1
+ 444               		lds r24,rat_grn
+ 445 0268 2091 0000 		lds r25,(rat_grn)+1
+ 446 026c 3091 0000 		cp r18,r24
+ 447 0270 8091 0000 		cpc r19,r25
+ 448 0274 9091 0000 		brne .L8
+ 450 027a 9307      	.LM23:
+ 451 027c 00F4      		rcall rand
+  88:main.c        **** 			rat_rd++;
+ 452               	c r19,r25
+ 453               		brne .L8
+ 454 027e 8091 0000 		lds r18,rat_grn_target
+ 455 0282 9091 0000 		lds r19,(rat_grn_target)+1
+ 456 0286 0196      		lds r24,rat_grn
+ 457 0288 9093 0000 		lds r25,(rat_grn)+1
+ 458 028c 8093 0000 		cp r18,r24
+ 459               		cpc r19,r25
+  89:main.c        **** 		if (rat_rd_target < rat_rd)
+ 460               	_target)+1
+ 461               		lds r24,rat_bl
+ 462 0290 2091 0000 		lds r25,(rat_bl)+1
+ 463 0294 3091 0000 		cp r18,r24
+ 464 0298 8091 0000 		cpc r19,r25
+ 465 029c 9091 0000 		brne .L8
+ 466 02a0 2817      		lds r18,rat_grn_target
+ 467 02a2 3907      		lds r19,(rat_grn_target)+1
+ 468 02a4 00F4      		lds r24,rat_grn
+  90:main.c        **** 			rat_rd--;	
+ 469               		rjmp .L8
+ 470               		lds r18,rat_bl_target
+ 471 02a6 8091 0000 		lds r19,(rat_bl_target)+1
+ 472 02aa 9091 0000 		lds r24,rat_bl
+ 473 02ae 0197      		lds r25,(rat_bl)+1
+ 474 02b0 9093 0000 		cp r18,r24
+ 475 02b4 8093 0000 		cpc r19,r25
+ 476               		brne .L8
+  91:main.c        **** 	
+  92:main.c        **** 		if (rat_bl_target > rat_bl)
+ 477               	
+ 478               		lds r24,rat_rd
+ 479 02b8 2091 0000 		lds r25,(rat_rd)+1
+ 480 02bc 3091 0000 		cp r18,r24
+ 481 02c0 8091 0000 		cpc r19,r25
+ 482 02c4 9091 0000 		breq .+2
+ 483 02c8 8217      		rjmp .L8
+ 484 02ca 9307      		lds r18,rat_bl_target
+ 485 02cc 00F4      		lds r19,(rat_bl_target)+1
+  93:main.c        **** 			rat_bl++;
+ 486               	8,0,60,.LM22-.LFBB2
+ 487               	.LM22:
+ 488 02ce 8091 0000 		lds r18,rat_rd_target
+ 489 02d2 9091 0000 		lds r19,(rat_rd_target)+1
+ 490 02d6 0196      		lds r24,rat_rd
+ 491 02d8 9093 0000 		lds r25,(rat_rd)+1
+ 492 02dc 8093 0000 		cp r18,r24
+ 493               		cpc r19,r25
+  94:main.c        **** 		if (rat_bl_target < rat_bl)
+ 494               	
+ 495               	/* #APP */
+ 496 02e0 2091 0000 	 ;  56 "main.c" 1
+ 497 02e4 3091 0000 		sei
+ 498 02e8 8091 0000 	 ;  0 "" 2
+ 499 02ec 9091 0000 	/* #NOAPP */
+ 500 02f0 2817      	.L17:
+ 502 02f4 00F4      	.LM22:
+  95:main.c        **** 			rat_bl--;	
+ 503               	r27,hi8(89)
+ 504               		ldi r30,lo8(89)
+ 505 02f6 8091 0000 		ldi r31,hi8(89)
+ 506 02fa 9091 0000 		ld r24,Z
+ 507 02fe 0197      		ori r24,lo8(2)
+ 508 0300 9093 0000 		st X,r24
+ 510               	.LM21:
+  96:main.c        **** 
+  97:main.c        **** 		if (rat_grn_target > rat_grn)
+ 511               	o8(83)
+ 512               		ldi r31,hi8(83)
+ 513 0308 2091 0000 		ldi r24,lo8(1)
+ 514 030c 3091 0000 		st Z,r24
+ 516 0314 9091 0000 	.LM20:
+ 517 0318 8217      		ldi r26,lo8(89)
+ 518 031a 9307      		ldi r27,hi8(89)
+ 519 031c 00F4      		ldi r30,lo8(89)
+  98:main.c        **** 			rat_grn++;
+ 520               	hi8(89)
+ 521               		ld r24,Z
+ 522 031e 8091 0000 		ori r24,lo8(2)
+ 523 0322 9091 0000 		st X,r24
+ 525 0328 9093 0000 	.LM21:
+ 526 032c 8093 0000 	/* #APP */
+ 527               	 ;  56 "main.c" 1
+  99:main.c        **** 		if (rat_grn_target < rat_grn)
+ 528               	4,lo8(1)
+ 529               		st Z,r24
+ 531 0334 3091 0000 	.LM20:
+ 532 0338 8091 0000 		ldi r26,lo8(89)
+ 533 033c 9091 0000 		ldi r27,hi8(89)
+ 534 0340 2817      		ldi r30,lo8(89)
+ 535 0342 3907      		ldi r31,hi8(89)
+ 536 0344 00F4      		ld r24,Z
+ 100:main.c        **** 			rat_grn--;	
+ 537               	lo8(2)
+ 538               		st X,r24
+ 540 034a 9091 0000 	.LM21:
+ 541 034e 0197      	/* #APP */
+ 542 0350 9093 0000 	 ;  56 "main.c" 1
+ 543 0354 8093 0000 		sei
+ 544               	 ;  0 "" 2
+ 101:main.c        **** 			
+ 102:main.c        **** 		for (i = 0; i <= 2000; i++);
+ 545               	
+ 547 0358 1D82      	.LM20:
+ 548 035a 1E82      		ldi r26,lo8(89)
+ 549 035c 1F82      		ldi r27,hi8(89)
+ 550 035e 1886      		ldi r30,lo8(89)
+ 551 0360 00C0      		ldi r31,hi8(89)
+ 552               		ld r24,Z
+ 553 0362 8D81      		ori r24,lo8(2)
+ 554 0364 9E81      		st X,r24
+ 556 0368 B885      	.LM21:
+ 557 036a 0196      	/* #APP */
+ 558 036c A11D      	 ;  56 "main.c" 1
+ 559 036e B11D      		sei
+ 560 0370 8D83      	 ;  0 "" 2
+ 561 0372 9E83      	/* #NOAPP */
+ 562 0374 AF83      	.L17:
+ 564               	.LM22:
+ 565 0378 8D81      		lds r18,rat_rd_target
+ 566 037a 9E81      		lds r19,(rat_rd_target)+1
+ 567 037c AF81      		lds r24,rat_rd
+ 568 037e B885      		lds r25,(rat_rd)+1
+ 569 0380 813D      		cp r18,r24
+ 570 0382 57E0      		cpc r19,r25
+ 571 0384 9507      		breq .+2
+ 572 0386 50E0      		rjmp .L8
+ 573 0388 A507      		lds r18,rat_bl_target
+ 574 038a 50E0      		lds r19,(rat_bl_target)+1
+ 575 038c B507      		lds r24,rat_bl
+ 576 038e 00F0      		lds r25,(rat_bl)+1
+ 577 0390 00C0      		cp r18,r24
+ 578               		cpc r19,r25
+ 579               		brne .L8
+ 580               		lds r18,rat_grn_target
+ 581               		lds r19,(rat_grn_target)+1
+ 582               		lds r24,rat_grn
+ 583               		lds r25,(rat_grn)+1
+ 584               		cp r18,r24
+ 585               		cpc r19,r25
+ 586               		brne .L8
+ 588               	.LM23:
+ 589               		rcall rand
+ 590               		ldi r18,lo8(100)
+ 591               		ldi r19,hi8(100)
+ 592               		movw r22,r18
+ 593               		rcall __divmodhi4
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\Users\Alex\AppData\Local\Temp/cc5dxuNm.s:2      *ABS*:0000003f __SREG__
+C:\Users\Alex\AppData\Local\Temp/cc5dxuNm.s:3      *ABS*:0000003e __SP_H__
+C:\Users\Alex\AppData\Local\Temp/cc5dxuNm.s:4      *ABS*:0000003d __SP_L__
+C:\Users\Alex\AppData\Local\Temp/cc5dxuNm.s:5      *ABS*:00000034 __CCP__
+C:\Users\Alex\AppData\Local\Temp/cc5dxuNm.s:6      *ABS*:00000000 __tmp_reg__
+C:\Users\Alex\AppData\Local\Temp/cc5dxuNm.s:7      *ABS*:00000001 __zero_reg__
+C:\Users\Alex\AppData\Local\Temp/cc5dxuNm.s:85     .data:00000000 ovrflw_cnt
+C:\Users\Alex\AppData\Local\Temp/cc5dxuNm.s:90     .data:00000002 rat_rd
+C:\Users\Alex\AppData\Local\Temp/cc5dxuNm.s:95     .data:00000004 rat_grn
+C:\Users\Alex\AppData\Local\Temp/cc5dxuNm.s:100    .data:00000006 rat_bl
+C:\Users\Alex\AppData\Local\Temp/cc5dxuNm.s:105    .data:00000008 rat_rd_target
+C:\Users\Alex\AppData\Local\Temp/cc5dxuNm.s:110    .data:0000000a rat_grn_target
+C:\Users\Alex\AppData\Local\Temp/cc5dxuNm.s:115    .data:0000000c rat_bl_target
+C:\Users\Alex\AppData\Local\Temp/cc5dxuNm.s:121    .text:00000000 __vector_6
+C:\Users\Alex\AppData\Local\Temp/cc5dxuNm.s:306    .text:0000016a main
+
+UNDEFINED SYMBOLS
+rand
+__divmodhi4
+__udivmodhi4
+__do_copy_data

@@ -1,0 +1,3306 @@
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+  72               	.global	delay_ms
+  74               	delay_ms:
+  76               	.Ltext1:
+   1:lib/delay.c   **** #ifndef DELAY_C
+   2:lib/delay.c   **** #define DELAY_C
+   3:lib/delay.c   **** #include <avr/io.h>
+   4:lib/delay.c   **** 
+   5:lib/delay.c   **** /*
+   6:lib/delay.c   **** 	With these function you can wait a specific amount of time
+   7:lib/delay.c   **** 
+   8:lib/delay.c   **** 	Limitations:
+   9:lib/delay.c   **** 	Timer 1 is used to measure the waiting time polling mode and
+  10:lib/delay.c   **** 	therefor not available to your own program.
+  11:lib/delay.c   **** 
+  12:lib/delay.c   **** */
+  13:lib/delay.c   **** 
+  14:lib/delay.c   **** //function waits 1-4500ms and returns
+  15:lib/delay.c   **** //its using timer 1 for waiting in polling mode
+  16:lib/delay.c   **** //ms: 1-4500
+  17:lib/delay.c   **** void delay_ms(unsigned int ms);
+  18:lib/delay.c   **** 
+  19:lib/delay.c   **** //function waits 1-65535 s and returns
+  20:lib/delay.c   **** //its using timer 1 for waiting in polling mode
+  21:lib/delay.c   **** //s: 1-65535
+  22:lib/delay.c   **** void delay_s(unsigned int s);
+  23:lib/delay.c   **** 
+  24:lib/delay.c   **** 
+  25:lib/delay.c   **** 
+  26:lib/delay.c   **** /**********************end of header ************************************/
+  27:lib/delay.c   **** 
+  28:lib/delay.c   **** 
+  29:lib/delay.c   **** void delay_ms(unsigned int ms){
+  77               	size = 0 */
+  78               		movw r22,r24
+  80               	.LM1:
+  81               		sbiw r24,1
+  82 0000 BC01      		subi r24,lo8(4500)
+  30:lib/delay.c   **** 	if((ms==0)||(ms>4500)) return;
+  83               	r25,hi8(4500)
+  84               		brsh .L4
+  86 0004 8459      	.LM2:
+  87 0006 9141      		out 78-32,__zero_reg__
+  31:lib/delay.c   **** 	TCCR1B=0; //stop a running timer
+  89               		in r24,86-32
+  90               		ori r24,lo8(4)
+  91 000a 1EBC      		out 86-32,r24
+  32:lib/delay.c   **** 	TIFR|=4;  //reset the overflow flag
+  92               	tabn	68,0,33,.LM4-.LFBB1
+  93               	.LM4:
+  94 000c 86B7      		in r24,87-32
+  95 000e 8460      		andi r24,lo8(-5)
+  96 0010 86BF      		out 87-32,r24
+  33:lib/delay.c   **** 	TIMSK&=~4;  //delete the interrupt enable for this timer
+  97               	bn	68,0,34,.LM5-.LFBB1
+  98               	.LM5:
+  99 0012 87B7      		out 79-32,__zero_reg__
+ 101 0016 87BF      	.LM6:
+  34:lib/delay.c   **** 	TCCR1A=0;
+ 102               	122,__zero_reg__
+ 104 0018 1FBC      	.LM7:
+  35:lib/delay.c   **** 	TCCR1C=0;
+ 105               	i r24,lo8(0)
+ 106               		ldi r25,hi8(0)
+ 107 001a 1092 7A00 		ldi r18,lo8(144)
+  36:lib/delay.c   **** 	TCNT1=65536-(((long)ms*144)/10);
+ 108               	i r19,hi8(144)
+ 109               		ldi r20,hlo8(144)
+ 110 001e 80E0      		ldi r21,hhi8(144)
+ 111 0020 90E0      		call __mulsi3
+ 112 0022 20E9      		ldi r18,lo8(-10)
+ 113 0024 30E0      		ldi r19,hi8(-10)
+ 114 0026 40E0      		ldi r20,hlo8(-10)
+ 115 0028 50E0      		ldi r21,hhi8(-10)
+ 116 002a 0E94 0000 		call __divmodsi4
+ 117 002e 26EF      		out (76)+1-32,r19
+ 118 0030 3FEF      		out 76-32,r18
+ 120 0034 5FEF      	.LM8:
+ 121 0036 0E94 0000 		ldi r24,lo8(5)
+ 122 003a 3DBD      		out 78-32,r24
+ 123 003c 2CBD      	.L3:
+  37:lib/delay.c   **** 	TCCR1B=5; //prescalar 1024
+ 124               	.LM9-.LFBB1
+ 125               	.LM9:
+ 126 003e 85E0      		in __tmp_reg__,86-32
+ 127 0040 8EBD      		sbrs __tmp_reg__,2
+ 128               		rjmp .L3
+  38:lib/delay.c   **** 	while(!(TIFR&4));
+ 129               	bn	68,0,39,.LM10-.LFBB1
+ 130               	.LM10:
+ 131 0042 06B6      		out 78-32,__zero_reg__
+ 133 0046 00C0      	.LM11:
+  39:lib/delay.c   **** 	TCCR1B=0;  //stop the timer
+ 134               	24,86-32
+ 135               		ori r24,lo8(4)
+ 136 0048 1EBC      		out 86-32,r24
+  40:lib/delay.c   **** 	TIFR|=4;  //reset the overflow flag
+ 137               	:
+ 138               		ret
+ 140 004c 8460      	.Lscope1:
+ 143 0050 0895      	.global	delay_s
+ 145               	delay_s:
+ 147               	.LM12:
+ 148               	.LFBB2:
+ 149               		push r28
+ 150               		push r29
+  41:lib/delay.c   **** }
+  42:lib/delay.c   **** 
+  43:lib/delay.c   **** 
+  44:lib/delay.c   **** //function waits 1-4500ms and returns
+  45:lib/delay.c   **** //its using timer 1 for waiting in polling mode
+  46:lib/delay.c   **** //ms: delays for 1-4500 ms
+  47:lib/delay.c   **** void delay_s(unsigned int s){
+ 151               	unction */
+ 152               	/* frame size = 0 */
+ 153               		movw r28,r24
+ 154 0052 CF93      		rjmp .L7
+ 155 0054 DF93      	.L8:
+ 157               	.LM13:
+ 158 0056 EC01      		ldi r24,lo8(1000)
+ 159 0058 00C0      		ldi r25,hi8(1000)
+ 160               		call delay_ms
+  48:lib/delay.c   **** 	while(s!=0){
+  49:lib/delay.c   **** 		delay_ms(1000);s--;
+ 161               	1
+ 162               	.L7:
+ 164 005c 93E0      	.LM14:
+ 165 005e 0E94 0000 		sbiw r28,0
+ 166 0062 2197      		brne .L8
+ 167               	/* epilogue start */
+ 169               	.LM15:
+ 170 0064 2097      		pop r29
+ 171 0066 01F4      		pop r28
+ 172               		ret
+  50:lib/delay.c   **** 	}
+  51:lib/delay.c   **** }
+ 173               	_s, .-delay_s
+ 174               	.Lscope2:
+ 178               	.global	set_pin
+ 180               	set_pin:
+ 182               	.Ltext2:
+ 184               	.LM16:
+ 185               	.LFBB3:
+ 186               	/* prologue: function */
+ 187               	/* frame size = 0 */
+   1:lib/io_fct.c  **** #define ADC_VREF_TYPE 0xC0				// ADC Used Internal Reference
+   2:lib/io_fct.c  **** 
+   3:lib/io_fct.c  **** #include <avr/io.h>
+   4:lib/io_fct.c  **** 
+   5:lib/io_fct.c  **** void set_pin(char port, char pin)
+   6:lib/io_fct.c  **** {
+ 188               	.LM17-.LFBB3
+ 189               	.LM17:
+ 190               		cpi r24,lo8(99)
+ 191               		breq .L14
+ 192               		cpi r24,lo8(100)
+   7:lib/io_fct.c  **** 	switch(port)
+ 193               	 .L18
+ 194               		cpi r24,lo8(97)
+ 195 006e 8336      		breq .L12
+ 196 0070 01F0      		cpi r24,lo8(98)
+ 197 0072 8436      		breq .+2
+ 198 0074 00F4      		rjmp .L19
+ 199 0076 8136      		rjmp .L20
+ 200 0078 01F0      	.L18:
+ 201 007a 8236      		cpi r24,lo8(101)
+ 202 007c 01F0      		breq .L16
+ 203 007e 00C0      		cpi r24,lo8(101)
+ 204 0080 00C0      		brlo .L15
+ 205               		cpi r24,lo8(102)
+ 206 0082 8536      		breq .+2
+ 207 0084 01F0      		rjmp .L19
+ 208 0086 8536      		rjmp .L21
+ 209 0088 00F0      	.L12:
+ 211 008c 01F0      	.LM18:
+ 212 008e 00C0      		in r18,59-32
+ 213 0090 00C0      		ldi r24,lo8(1)
+ 214               		ldi r25,hi8(1)
+   8:lib/io_fct.c  **** 	{
+   9:lib/io_fct.c  **** 		case ('a'):
+  10:lib/io_fct.c  **** 			PORTA |= (0x01 << pin);
+ 215               	ol r25
+ 216               	2:	dec r22
+ 217 0092 2BB3      		brpl 1b
+ 218 0094 81E0      		or r18,r24
+ 219 0096 90E0      		out 59-32,r18
+ 220 0098 00C0      		ret
+ 221 009a 880F      	.L20:
+ 223 009e 6A95      	.LM19:
+ 224 00a0 02F4      		in r18,56-32
+ 225 00a2 282B      		ldi r24,lo8(1)
+ 226 00a4 2BBB      		ldi r25,hi8(1)
+ 227 00a6 0895      		rjmp 2f
+ 228               	1:	lsl r24
+  11:lib/io_fct.c  **** 			break;
+  12:lib/io_fct.c  **** 		case ('b'):
+  13:lib/io_fct.c  **** 			PORTB |= (0x01 << pin);
+ 229               	c r22
+ 230               		brpl 1b
+ 231 00a8 28B3      		or r18,r24
+ 232 00aa 81E0      		out 56-32,r18
+ 233 00ac 90E0      		ret
+ 234 00ae 00C0      	.L14:
+ 236 00b2 991F      	.LM20:
+ 237 00b4 6A95      		in r18,53-32
+ 238 00b6 02F4      		ldi r24,lo8(1)
+ 239 00b8 282B      		ldi r25,hi8(1)
+ 240 00ba 28BB      		rjmp 2f
+ 241 00bc 0895      	1:	lsl r24
+ 242               		rol r25
+  14:lib/io_fct.c  **** 			break;
+  15:lib/io_fct.c  **** 		case ('c'):
+  16:lib/io_fct.c  **** 			PORTC |= (0x01 << pin);
+ 243               	pl 1b
+ 244               		or r18,r24
+ 245 00be 25B3      		out 53-32,r18
+ 246 00c0 81E0      		ret
+ 247 00c2 90E0      	.L15:
+ 249 00c6 880F      	.LM21:
+ 250 00c8 991F      		in r18,50-32
+ 251 00ca 6A95      		ldi r24,lo8(1)
+ 252 00cc 02F4      		ldi r25,hi8(1)
+ 253 00ce 282B      		rjmp 2f
+ 254 00d0 25BB      	1:	lsl r24
+ 255 00d2 0895      		rol r25
+ 256               	2:	dec r22
+  17:lib/io_fct.c  **** 			break;
+  18:lib/io_fct.c  **** 		case ('d'):
+  19:lib/io_fct.c  **** 			PORTD |= (0x01 << pin);
+ 257               	18,r24
+ 258               		out 50-32,r18
+ 259 00d4 22B3      		ret
+ 260 00d6 81E0      	.L16:
+ 262 00da 00C0      	.LM22:
+ 263 00dc 880F      		in r18,35-32
+ 264 00de 991F      		ldi r24,lo8(1)
+ 265 00e0 6A95      		ldi r25,hi8(1)
+ 266 00e2 02F4      		rjmp 2f
+ 267 00e4 282B      	1:	lsl r24
+ 268 00e6 22BB      		rol r25
+ 269 00e8 0895      	2:	dec r22
+ 270               		brpl 1b
+  20:lib/io_fct.c  **** 			break;
+  21:lib/io_fct.c  **** 		case ('e'):
+  22:lib/io_fct.c  **** 			PORTE |= (0x01 << pin);
+ 271               	ut 35-32,r18
+ 272               		ret
+ 273 00ea 23B1      	.L21:
+ 275 00ee 90E0      	.LM23:
+ 276 00f0 00C0      		lds r18,98
+ 277 00f2 880F      		ldi r24,lo8(1)
+ 278 00f4 991F      		ldi r25,hi8(1)
+ 279 00f6 6A95      		rjmp 2f
+ 280 00f8 02F4      	1:	lsl r24
+ 281 00fa 282B      		rol r25
+ 282 00fc 23B9      	2:	dec r22
+ 283 00fe 0895      		brpl 1b
+ 284               		or r18,r24
+  23:lib/io_fct.c  **** 			break;
+  24:lib/io_fct.c  **** 		case ('f'):
+  25:lib/io_fct.c  **** 			PORTF |= (0x01 << pin);
+ 285               	19:
+ 286               		ret
+ 288 0104 81E0      	.Lscope3:
+ 292 010c 991F      	.global	reset_pin
+ 294 0110 02F4      	reset_pin:
+ 296 0114 2093 6200 	.LM24:
+ 297               	.LFBB4:
+ 298 0118 0895      	/* prologue: function */
+ 299               	/* frame size = 0 */
+ 301               	.LM25:
+ 302               		cpi r24,lo8(99)
+ 303               		breq .L26
+ 304               		cpi r24,lo8(100)
+ 305               		brsh .L30
+ 306               		cpi r24,lo8(97)
+  26:lib/io_fct.c  **** 			break;
+  27:lib/io_fct.c  **** 		default:
+  28:lib/io_fct.c  **** 			break;
+  29:lib/io_fct.c  **** 	}
+  30:lib/io_fct.c  **** }
+  31:lib/io_fct.c  **** 
+  32:lib/io_fct.c  **** void reset_pin(char port, char pin)
+  33:lib/io_fct.c  **** {
+ 307               	8(98)
+ 308               		breq .+2
+ 309               		rjmp .L31
+ 310               		rjmp .L32
+ 311               	.L30:
+  34:lib/io_fct.c  **** 	switch(port)
+ 312               	r24,lo8(101)
+ 313               		breq .L28
+ 314 011a 8336      		cpi r24,lo8(101)
+ 315 011c 01F0      		brlo .L27
+ 316 011e 8436      		cpi r24,lo8(102)
+ 317 0120 00F4      		breq .+2
+ 318 0122 8136      		rjmp .L31
+ 319 0124 01F0      		rjmp .L33
+ 320 0126 8236      	.L24:
+ 322 012a 00C0      	.LM26:
+ 323 012c 00C0      		in r18,59-32
+ 324               		ldi r24,lo8(1)
+ 325 012e 8536      		ldi r25,hi8(1)
+ 326 0130 01F0      		rjmp 2f
+ 327 0132 8536      	1:	lsl r24
+ 328 0134 00F0      		rol r25
+ 329 0136 8636      	2:	dec r22
+ 330 0138 01F0      		brpl 1b
+ 331 013a 00C0      		com r24
+ 332 013c 00C0      		and r24,r18
+ 333               		out 59-32,r24
+  35:lib/io_fct.c  **** 	{
+  36:lib/io_fct.c  **** 		case ('a'):
+  37:lib/io_fct.c  **** 			PORTA &= ~(0x01 << pin);
+ 334               	0,40,.LM27-.LFBB4
+ 335               	.LM27:
+ 336 013e 2BB3      		in r18,56-32
+ 337 0140 81E0      		ldi r24,lo8(1)
+ 338 0142 90E0      		ldi r25,hi8(1)
+ 339 0144 00C0      		rjmp 2f
+ 340 0146 880F      	1:	lsl r24
+ 341 0148 991F      		rol r25
+ 342 014a 6A95      	2:	dec r22
+ 343 014c 02F4      		brpl 1b
+ 344 014e 8095      		com r24
+ 345 0150 8223      		and r24,r18
+ 346 0152 8BBB      		out 56-32,r24
+ 347 0154 0895      		ret
+ 348               	.L26:
+  38:lib/io_fct.c  **** 			break;
+  39:lib/io_fct.c  **** 		case ('b'):
+  40:lib/io_fct.c  **** 			PORTB &= ~(0x01 << pin);
+ 349               	,.LM28-.LFBB4
+ 350               	.LM28:
+ 351 0156 28B3      		in r18,53-32
+ 352 0158 81E0      		ldi r24,lo8(1)
+ 353 015a 90E0      		ldi r25,hi8(1)
+ 354 015c 00C0      		rjmp 2f
+ 355 015e 880F      	1:	lsl r24
+ 356 0160 991F      		rol r25
+ 357 0162 6A95      	2:	dec r22
+ 358 0164 02F4      		brpl 1b
+ 359 0166 8095      		com r24
+ 360 0168 8223      		and r24,r18
+ 361 016a 88BB      		out 53-32,r24
+ 362 016c 0895      		ret
+ 363               	.L27:
+  41:lib/io_fct.c  **** 			break;
+  42:lib/io_fct.c  **** 		case ('c'):
+  43:lib/io_fct.c  **** 			PORTC &= ~(0x01 << pin);
+ 364               	,.LM29-.LFBB4
+ 365               	.LM29:
+ 366 016e 25B3      		in r18,50-32
+ 367 0170 81E0      		ldi r24,lo8(1)
+ 368 0172 90E0      		ldi r25,hi8(1)
+ 369 0174 00C0      		rjmp 2f
+ 370 0176 880F      	1:	lsl r24
+ 371 0178 991F      		rol r25
+ 372 017a 6A95      	2:	dec r22
+ 373 017c 02F4      		brpl 1b
+ 374 017e 8095      		com r24
+ 375 0180 8223      		and r24,r18
+ 376 0182 85BB      		out 50-32,r24
+ 377 0184 0895      		ret
+ 378               	.L28:
+  44:lib/io_fct.c  **** 			break;
+  45:lib/io_fct.c  **** 		case ('d'):
+  46:lib/io_fct.c  **** 			PORTD &= ~(0x01 << pin);
+ 379               	,.LM30-.LFBB4
+ 380               	.LM30:
+ 381 0186 22B3      		in r18,35-32
+ 382 0188 81E0      		ldi r24,lo8(1)
+ 383 018a 90E0      		ldi r25,hi8(1)
+ 384 018c 00C0      		rjmp 2f
+ 385 018e 880F      	1:	lsl r24
+ 386 0190 991F      		rol r25
+ 387 0192 6A95      	2:	dec r22
+ 388 0194 02F4      		brpl 1b
+ 389 0196 8095      		com r24
+ 390 0198 8223      		and r24,r18
+ 391 019a 82BB      		out 35-32,r24
+ 392 019c 0895      		ret
+ 393               	.L33:
+  47:lib/io_fct.c  **** 			break;
+  48:lib/io_fct.c  **** 		case ('e'):
+  49:lib/io_fct.c  **** 			PORTE &= ~(0x01 << pin);
+ 394               	,.LM31-.LFBB4
+ 395               	.LM31:
+ 396 019e 23B1      		lds r18,98
+ 397 01a0 81E0      		ldi r24,lo8(1)
+ 398 01a2 90E0      		ldi r25,hi8(1)
+ 399 01a4 00C0      		rjmp 2f
+ 400 01a6 880F      	1:	lsl r24
+ 401 01a8 991F      		rol r25
+ 402 01aa 6A95      	2:	dec r22
+ 403 01ac 02F4      		brpl 1b
+ 404 01ae 8095      		com r24
+ 405 01b0 8223      		and r24,r18
+ 406 01b2 83B9      		sts 98,r24
+ 407 01b4 0895      	.L31:
+ 408               		ret
+  50:lib/io_fct.c  **** 			break;
+  51:lib/io_fct.c  **** 		case ('f'):
+  52:lib/io_fct.c  **** 			PORTF &= ~(0x01 << pin);
+ 409               	n, .-reset_pin
+ 410               	.Lscope4:
+ 414 01be 00C0      	.global	toggle_pin
+ 416 01c2 991F      	toggle_pin:
+ 418 01c6 02F4      	.LM32:
+ 419 01c8 8095      	.LFBB5:
+ 420 01ca 8223      	/* prologue: function */
+ 421 01cc 8093 6200 	/* frame size = 0 */
+ 423 01d0 0895      	.LM33:
+ 424               		cpi r24,lo8(99)
+ 425               		breq .L38
+ 426               		cpi r24,lo8(100)
+ 427               		brsh .L42
+ 428               		cpi r24,lo8(97)
+ 429               		breq .L36
+ 430               		cpi r24,lo8(98)
+ 431               		breq .+2
+  53:lib/io_fct.c  **** 			break;
+  54:lib/io_fct.c  **** 		default:
+  55:lib/io_fct.c  **** 			break;
+  56:lib/io_fct.c  **** 	}
+  57:lib/io_fct.c  **** }
+  58:lib/io_fct.c  **** 
+  59:lib/io_fct.c  **** void toggle_pin(char port, char pin)
+  60:lib/io_fct.c  **** {
+ 432               	L42:
+ 433               		cpi r24,lo8(101)
+ 434               		breq .L40
+ 435               		cpi r24,lo8(101)
+ 436               		brlo .L39
+  61:lib/io_fct.c  **** 	switch(port)
+ 437               	r24,lo8(102)
+ 438               		breq .+2
+ 439 01d2 8336      		rjmp .L43
+ 440 01d4 01F0      		rjmp .L45
+ 441 01d6 8436      	.L36:
+ 443 01da 8136      	.LM34:
+ 444 01dc 01F0      		in r18,59-32
+ 445 01de 8236      		ldi r24,lo8(1)
+ 446 01e0 01F0      		ldi r25,hi8(1)
+ 447 01e2 00C0      		rjmp 2f
+ 448 01e4 00C0      	1:	lsl r24
+ 449               		rol r25
+ 450 01e6 8536      	2:	dec r22
+ 451 01e8 01F0      		brpl 1b
+ 452 01ea 8536      		eor r18,r24
+ 453 01ec 00F0      		out 59-32,r18
+ 454 01ee 8636      		ret
+ 455 01f0 01F0      	.L44:
+ 457 01f4 00C0      	.LM35:
+ 458               		in r18,56-32
+  62:lib/io_fct.c  **** 	{
+  63:lib/io_fct.c  **** 		case ('a'):
+  64:lib/io_fct.c  **** 			PORTA ^= (0x01 << pin);
+ 459               	25,hi8(1)
+ 460               		rjmp 2f
+ 461 01f6 2BB3      	1:	lsl r24
+ 462 01f8 81E0      		rol r25
+ 463 01fa 90E0      	2:	dec r22
+ 464 01fc 00C0      		brpl 1b
+ 465 01fe 880F      		eor r18,r24
+ 466 0200 991F      		out 56-32,r18
+ 467 0202 6A95      		ret
+ 468 0204 02F4      	.L38:
+ 470 0208 2BBB      	.LM36:
+ 471 020a 0895      		in r18,53-32
+ 472               		ldi r24,lo8(1)
+  65:lib/io_fct.c  **** 			break;
+  66:lib/io_fct.c  **** 		case ('b'):
+  67:lib/io_fct.c  **** 			PORTB ^= (0x01 << pin);
+ 473               	)
+ 474               		rjmp 2f
+ 475 020c 28B3      	1:	lsl r24
+ 476 020e 81E0      		rol r25
+ 477 0210 90E0      	2:	dec r22
+ 478 0212 00C0      		brpl 1b
+ 479 0214 880F      		eor r18,r24
+ 480 0216 991F      		out 53-32,r18
+ 481 0218 6A95      		ret
+ 482 021a 02F4      	.L39:
+ 484 021e 28BB      	.LM37:
+ 485 0220 0895      		in r18,50-32
+ 486               		ldi r24,lo8(1)
+  68:lib/io_fct.c  **** 			break;
+  69:lib/io_fct.c  **** 		case ('c'):
+  70:lib/io_fct.c  **** 			PORTC ^= (0x01 << pin);
+ 487               	)
+ 488               		rjmp 2f
+ 489 0222 25B3      	1:	lsl r24
+ 490 0224 81E0      		rol r25
+ 491 0226 90E0      	2:	dec r22
+ 492 0228 00C0      		brpl 1b
+ 493 022a 880F      		eor r18,r24
+ 494 022c 991F      		out 50-32,r18
+ 495 022e 6A95      		ret
+ 496 0230 02F4      	.L40:
+ 498 0234 25BB      	.LM38:
+ 499 0236 0895      		in r18,35-32
+ 500               		ldi r24,lo8(1)
+  71:lib/io_fct.c  **** 			break;
+  72:lib/io_fct.c  **** 		case ('d'):
+  73:lib/io_fct.c  **** 			PORTD ^= (0x01 << pin);
+ 501               	)
+ 502               		rjmp 2f
+ 503 0238 22B3      	1:	lsl r24
+ 504 023a 81E0      		rol r25
+ 505 023c 90E0      	2:	dec r22
+ 506 023e 00C0      		brpl 1b
+ 507 0240 880F      		eor r18,r24
+ 508 0242 991F      		out 35-32,r18
+ 509 0244 6A95      		ret
+ 510 0246 02F4      	.L45:
+ 512 024a 22BB      	.LM39:
+ 513 024c 0895      		lds r18,98
+ 514               		ldi r24,lo8(1)
+  74:lib/io_fct.c  **** 			break;
+  75:lib/io_fct.c  **** 		case ('e'):
+  76:lib/io_fct.c  **** 			PORTE ^= (0x01 << pin);
+ 515               	)
+ 516               		rjmp 2f
+ 517 024e 23B1      	1:	lsl r24
+ 518 0250 81E0      		rol r25
+ 519 0252 90E0      	2:	dec r22
+ 520 0254 00C0      		brpl 1b
+ 521 0256 880F      		eor r18,r24
+ 522 0258 991F      		sts 98,r18
+ 523 025a 6A95      	.L43:
+ 524 025c 02F4      		ret
+ 526 0260 23B9      	.Lscope5:
+  77:lib/io_fct.c  **** 			break;
+  78:lib/io_fct.c  **** 		case ('f'):
+  79:lib/io_fct.c  **** 			PORTF ^= (0x01 << pin);
+ 529               	(0,2)",64,0,0,22
+ 530               	.global	init_out_pin
+ 532 0268 81E0      	init_out_pin:
+ 534 026c 00C0      	.LM40:
+ 535 026e 880F      	.LFBB6:
+ 536 0270 991F      	/* prologue: function */
+ 537 0272 6A95      	/* frame size = 0 */
+ 539 0276 2827      	.LM41:
+ 540 0278 2093 6200 		cpi r24,lo8(99)
+ 541               		breq .L50
+ 542 027c 0895      		cpi r24,lo8(100)
+ 543               		brsh .L54
+ 544               		cpi r24,lo8(97)
+ 545               		breq .L48
+ 546               		cpi r24,lo8(98)
+ 547               		breq .+2
+ 548               		rjmp .L55
+ 549               		rjmp .L56
+ 550               	.L54:
+  80:lib/io_fct.c  **** 			break;
+  81:lib/io_fct.c  **** 		default:
+  82:lib/io_fct.c  **** 			break;
+  83:lib/io_fct.c  **** 	}
+  84:lib/io_fct.c  **** }
+  85:lib/io_fct.c  **** 
+  86:lib/io_fct.c  **** void init_out_pin(char port, char pin)
+  87:lib/io_fct.c  **** {
+ 551               	q .L52
+ 552               		cpi r24,lo8(101)
+ 553               		brlo .L51
+ 554               		cpi r24,lo8(102)
+ 555               		breq .+2
+  88:lib/io_fct.c  **** 	switch(port)
+ 556               	 .L55
+ 557               		rjmp .L57
+ 558 027e 8336      	.L48:
+ 560 0282 8436      	.LM42:
+ 561 0284 00F4      		in r18,58-32
+ 562 0286 8136      		ldi r24,lo8(1)
+ 563 0288 01F0      		ldi r25,hi8(1)
+ 564 028a 8236      		rjmp 2f
+ 565 028c 01F0      	1:	lsl r24
+ 566 028e 00C0      		rol r25
+ 567 0290 00C0      	2:	dec r22
+ 568               		brpl 1b
+ 569 0292 8536      		or r18,r24
+ 570 0294 01F0      		out 58-32,r18
+ 571 0296 8536      		ret
+ 572 0298 00F0      	.L56:
+ 574 029c 01F0      	.LM43:
+ 575 029e 00C0      		in r18,55-32
+ 576 02a0 00C0      		ldi r24,lo8(1)
+ 577               		ldi r25,hi8(1)
+  89:lib/io_fct.c  **** 	{
+  90:lib/io_fct.c  **** 		case ('a'):
+  91:lib/io_fct.c  **** 			DDRA |= (0x01 << pin);
+ 578               	ol r25
+ 579               	2:	dec r22
+ 580 02a2 2AB3      		brpl 1b
+ 581 02a4 81E0      		or r18,r24
+ 582 02a6 90E0      		out 55-32,r18
+ 583 02a8 00C0      		ret
+ 584 02aa 880F      	.L50:
+ 586 02ae 6A95      	.LM44:
+ 587 02b0 02F4      		in r18,52-32
+ 588 02b2 282B      		ldi r24,lo8(1)
+ 589 02b4 2ABB      		ldi r25,hi8(1)
+ 590 02b6 0895      		rjmp 2f
+ 591               	1:	lsl r24
+  92:lib/io_fct.c  **** 			break;
+  93:lib/io_fct.c  **** 		case ('b'):
+  94:lib/io_fct.c  **** 			DDRB |= (0x01 << pin);
+ 592               	c r22
+ 593               		brpl 1b
+ 594 02b8 27B3      		or r18,r24
+ 595 02ba 81E0      		out 52-32,r18
+ 596 02bc 90E0      		ret
+ 597 02be 00C0      	.L51:
+ 599 02c2 991F      	.LM45:
+ 600 02c4 6A95      		in r18,49-32
+ 601 02c6 02F4      		ldi r24,lo8(1)
+ 602 02c8 282B      		ldi r25,hi8(1)
+ 603 02ca 27BB      		rjmp 2f
+ 604 02cc 0895      	1:	lsl r24
+ 605               		rol r25
+  95:lib/io_fct.c  **** 			break;
+  96:lib/io_fct.c  **** 		case ('c'):
+  97:lib/io_fct.c  **** 			DDRC |= (0x01 << pin);
+ 606               	pl 1b
+ 607               		or r18,r24
+ 608 02ce 24B3      		out 49-32,r18
+ 609 02d0 81E0      		ret
+ 610 02d2 90E0      	.L52:
+ 612 02d6 880F      	.LM46:
+ 613 02d8 991F      		in r18,34-32
+ 614 02da 6A95      		ldi r24,lo8(1)
+ 615 02dc 02F4      		ldi r25,hi8(1)
+ 616 02de 282B      		rjmp 2f
+ 617 02e0 24BB      	1:	lsl r24
+ 618 02e2 0895      		rol r25
+ 619               	2:	dec r22
+  98:lib/io_fct.c  **** 			break;
+  99:lib/io_fct.c  **** 		case ('d'):
+ 100:lib/io_fct.c  **** 			DDRD |= (0x01 << pin);
+ 620               	18,r24
+ 621               		out 34-32,r18
+ 622 02e4 21B3      		ret
+ 623 02e6 81E0      	.L57:
+ 625 02ea 00C0      	.LM47:
+ 626 02ec 880F      		lds r18,97
+ 627 02ee 991F      		ldi r24,lo8(1)
+ 628 02f0 6A95      		ldi r25,hi8(1)
+ 629 02f2 02F4      		rjmp 2f
+ 630 02f4 282B      	1:	lsl r24
+ 631 02f6 21BB      		rol r25
+ 632 02f8 0895      	2:	dec r22
+ 633               		brpl 1b
+ 101:lib/io_fct.c  **** 			break;
+ 102:lib/io_fct.c  **** 		case ('e'):
+ 103:lib/io_fct.c  **** 			DDRE |= (0x01 << pin);
+ 634               	ts 97,r18
+ 635               	.L55:
+ 636 02fa 22B1      		ret
+ 638 02fe 90E0      	.Lscope6:
+ 642 0306 6A95      	.global	init_in_pin
+ 644 030a 282B      	init_in_pin:
+ 646 030e 0895      	.LM48:
+ 647               	.LFBB7:
+ 104:lib/io_fct.c  **** 			break;
+ 105:lib/io_fct.c  **** 		case ('f'):
+ 106:lib/io_fct.c  **** 			DDRF |= (0x01 << pin);
+ 648               	unction */
+ 649               	/* frame size = 0 */
+ 651 0314 81E0      	.LM49:
+ 652 0316 90E0      		cpi r24,lo8(99)
+ 653 0318 00C0      		breq .L62
+ 654 031a 880F      		cpi r24,lo8(100)
+ 655 031c 991F      		brsh .L66
+ 656 031e 6A95      		cpi r24,lo8(97)
+ 657 0320 02F4      		breq .L60
+ 658 0322 282B      		cpi r24,lo8(98)
+ 659 0324 2093 6100 		breq .+2
+ 660               		rjmp .L67
+ 661 0328 0895      		rjmp .L68
+ 662               	.L66:
+ 663               		cpi r24,lo8(101)
+ 664               		breq .L64
+ 665               		cpi r24,lo8(101)
+ 666               		brlo .L63
+ 667               		cpi r24,lo8(102)
+ 668               		breq .+2
+ 669               		rjmp .L67
+ 107:lib/io_fct.c  **** 			break;
+ 108:lib/io_fct.c  **** 		default:
+ 109:lib/io_fct.c  **** 			break;
+ 110:lib/io_fct.c  **** 	}
+ 111:lib/io_fct.c  **** }
+ 112:lib/io_fct.c  **** 
+ 113:lib/io_fct.c  **** void init_in_pin(char port, char pin)
+ 114:lib/io_fct.c  **** {
+ 670               	bn	68,0,118,.LM50-.LFBB7
+ 671               	.LM50:
+ 672               		in r18,58-32
+ 673               		ldi r24,lo8(1)
+ 674               		ldi r25,hi8(1)
+ 115:lib/io_fct.c  **** 	switch(port)
+ 675               	 2f
+ 676               	1:	lsl r24
+ 677 032a 8336      		rol r25
+ 678 032c 01F0      	2:	dec r22
+ 679 032e 8436      		brpl 1b
+ 680 0330 00F4      		com r24
+ 681 0332 8136      		and r24,r18
+ 682 0334 01F0      		out 58-32,r24
+ 683 0336 8236      		ret
+ 684 0338 01F0      	.L68:
+ 686 033c 00C0      	.LM51:
+ 687               		in r18,55-32
+ 688 033e 8536      		ldi r24,lo8(1)
+ 689 0340 01F0      		ldi r25,hi8(1)
+ 690 0342 8536      		rjmp 2f
+ 691 0344 00F0      	1:	lsl r24
+ 692 0346 8636      		rol r25
+ 693 0348 01F0      	2:	dec r22
+ 694 034a 00C0      		brpl 1b
+ 695 034c 00C0      		com r24
+ 696               		and r24,r18
+ 116:lib/io_fct.c  **** 	{
+ 117:lib/io_fct.c  **** 		case ('a'):
+ 118:lib/io_fct.c  **** 			DDRA &= ~(0x01 << pin);
+ 697               	62:
+ 699 034e 2AB3      	.LM52:
+ 700 0350 81E0      		in r18,52-32
+ 701 0352 90E0      		ldi r24,lo8(1)
+ 702 0354 00C0      		ldi r25,hi8(1)
+ 703 0356 880F      		rjmp 2f
+ 704 0358 991F      	1:	lsl r24
+ 705 035a 6A95      		rol r25
+ 706 035c 02F4      	2:	dec r22
+ 707 035e 8095      		brpl 1b
+ 708 0360 8223      		com r24
+ 709 0362 8ABB      		and r24,r18
+ 710 0364 0895      		out 52-32,r24
+ 711               		ret
+ 119:lib/io_fct.c  **** 			break;
+ 120:lib/io_fct.c  **** 		case ('b'):
+ 121:lib/io_fct.c  **** 			DDRB &= ~(0x01 << pin);
+ 712               	8,0,127,.LM53-.LFBB7
+ 713               	.LM53:
+ 714 0366 27B3      		in r18,49-32
+ 715 0368 81E0      		ldi r24,lo8(1)
+ 716 036a 90E0      		ldi r25,hi8(1)
+ 717 036c 00C0      		rjmp 2f
+ 718 036e 880F      	1:	lsl r24
+ 719 0370 991F      		rol r25
+ 720 0372 6A95      	2:	dec r22
+ 721 0374 02F4      		brpl 1b
+ 722 0376 8095      		com r24
+ 723 0378 8223      		and r24,r18
+ 724 037a 87BB      		out 49-32,r24
+ 725 037c 0895      		ret
+ 726               	.L64:
+ 122:lib/io_fct.c  **** 			break;
+ 123:lib/io_fct.c  **** 		case ('c'):
+ 124:lib/io_fct.c  **** 			DDRC &= ~(0x01 << pin);
+ 727               	0,.LM54-.LFBB7
+ 728               	.LM54:
+ 729 037e 24B3      		in r18,34-32
+ 730 0380 81E0      		ldi r24,lo8(1)
+ 731 0382 90E0      		ldi r25,hi8(1)
+ 732 0384 00C0      		rjmp 2f
+ 733 0386 880F      	1:	lsl r24
+ 734 0388 991F      		rol r25
+ 735 038a 6A95      	2:	dec r22
+ 736 038c 02F4      		brpl 1b
+ 737 038e 8095      		com r24
+ 738 0390 8223      		and r24,r18
+ 739 0392 84BB      		out 34-32,r24
+ 740 0394 0895      		ret
+ 741               	.L69:
+ 125:lib/io_fct.c  **** 			break;
+ 126:lib/io_fct.c  **** 		case ('d'):
+ 127:lib/io_fct.c  **** 			DDRD &= ~(0x01 << pin);
+ 742               	3,.LM55-.LFBB7
+ 743               	.LM55:
+ 744 0396 21B3      		lds r18,97
+ 745 0398 81E0      		ldi r24,lo8(1)
+ 746 039a 90E0      		ldi r25,hi8(1)
+ 747 039c 00C0      		rjmp 2f
+ 748 039e 880F      	1:	lsl r24
+ 749 03a0 991F      		rol r25
+ 750 03a2 6A95      	2:	dec r22
+ 751 03a4 02F4      		brpl 1b
+ 752 03a6 8095      		com r24
+ 753 03a8 8223      		and r24,r18
+ 754 03aa 81BB      		sts 97,r24
+ 755 03ac 0895      	.L67:
+ 756               		ret
+ 128:lib/io_fct.c  **** 			break;
+ 129:lib/io_fct.c  **** 		case ('e'):
+ 130:lib/io_fct.c  **** 			DDRE &= ~(0x01 << pin);
+ 757               	pin, .-init_in_pin
+ 758               	.Lscope7:
+ 761 03b2 90E0      	.global	init_out_port
+ 763 03b6 880F      	init_out_port:
+ 765 03ba 6A95      	.LM56:
+ 766 03bc 02F4      	.LFBB8:
+ 767 03be 8095      	/* prologue: function */
+ 768 03c0 8223      	/* frame size = 0 */
+ 770 03c4 0895      	.LM57:
+ 771               		cpi r24,lo8(99)
+ 131:lib/io_fct.c  **** 			break;
+ 132:lib/io_fct.c  **** 		case ('f'):
+ 133:lib/io_fct.c  **** 			DDRF &= ~(0x01 << pin);
+ 772               	 r24,lo8(100)
+ 773               		brsh .L78
+ 774 03c6 2091 6100 		cpi r24,lo8(97)
+ 775 03ca 81E0      		breq .L72
+ 776 03cc 90E0      		cpi r24,lo8(98)
+ 777 03ce 00C0      		brne .L79
+ 778 03d0 880F      		rjmp .L80
+ 779 03d2 991F      	.L78:
+ 780 03d4 6A95      		cpi r24,lo8(101)
+ 781 03d6 02F4      		breq .L76
+ 782 03d8 8095      		cpi r24,lo8(101)
+ 783 03da 8223      		brlo .L75
+ 784 03dc 8093 6100 		cpi r24,lo8(102)
+ 785               		brne .L79
+ 786 03e0 0895      		rjmp .L81
+ 787               	.L72:
+ 789               	.LM58:
+ 790               		in r24,58-32
+ 791               		ldi r24,lo8(-1)
+ 792               		out 58-32,r24
+ 793               		ret
+ 134:lib/io_fct.c  **** 			break;
+ 135:lib/io_fct.c  **** 		default:
+ 136:lib/io_fct.c  **** 			break;
+ 137:lib/io_fct.c  **** 	}
+ 138:lib/io_fct.c  **** }
+ 139:lib/io_fct.c  **** 
+ 140:lib/io_fct.c  **** void init_out_port(char port)
+ 141:lib/io_fct.c  **** {
+ 794               	,.LM59-.LFBB8
+ 795               	.LM59:
+ 796               		in r24,55-32
+ 797               		ldi r24,lo8(-1)
+ 798               		out 55-32,r24
+ 142:lib/io_fct.c  **** 	switch(port)
+ 799               	.L74:
+ 801 03e2 8336      	.LM60:
+ 802 03e4 01F0      		in r24,52-32
+ 803 03e6 8436      		ldi r24,lo8(-1)
+ 804 03e8 00F4      		out 52-32,r24
+ 805 03ea 8136      		ret
+ 806 03ec 01F0      	.L75:
+ 808 03f0 01F4      	.LM61:
+ 809 03f2 00C0      		in r24,49-32
+ 810               		ldi r24,lo8(-1)
+ 811 03f4 8536      		out 49-32,r24
+ 812 03f6 01F0      		ret
+ 813 03f8 8536      	.L76:
+ 815 03fc 8636      	.LM62:
+ 816 03fe 01F4      		in r24,34-32
+ 817 0400 00C0      		ldi r24,lo8(-1)
+ 818               		out 34-32,r24
+ 143:lib/io_fct.c  **** 	{
+ 144:lib/io_fct.c  **** 		case ('a'):
+ 145:lib/io_fct.c  **** 			DDRA |= 0xff;
+ 819               	8,0,160,.LM63-.LFBB8
+ 820               	.LM63:
+ 821 0402 8AB3      		lds r24,97
+ 822 0404 8FEF      		ldi r24,lo8(-1)
+ 823 0406 8ABB      		sts 97,r24
+ 824 0408 0895      	.L79:
+ 825               		ret
+ 146:lib/io_fct.c  **** 			break;
+ 147:lib/io_fct.c  **** 		case ('b'):
+ 148:lib/io_fct.c  **** 			DDRB |= 0xff;
+ 826               	init_out_port, .-init_out_port
+ 827               	.Lscope8:
+ 830 040e 87BB      	.global	init_in_port
+ 832               	init_in_port:
+ 149:lib/io_fct.c  **** 			break;
+ 150:lib/io_fct.c  **** 		case ('c'):
+ 151:lib/io_fct.c  **** 			DDRC |= 0xff;
+ 833               		68,0,168,.LM64-.LFBB9
+ 834               	.LM64:
+ 835 0412 84B3      	.LFBB9:
+ 836 0414 8FEF      	/* prologue: function */
+ 837 0416 84BB      	/* frame size = 0 */
+ 839               	.LM65:
+ 152:lib/io_fct.c  **** 			break;
+ 153:lib/io_fct.c  **** 		case ('d'):
+ 154:lib/io_fct.c  **** 			DDRD |= 0xff;
+ 840               	4,lo8(99)
+ 841               		breq .L86
+ 842 041a 81B3      		cpi r24,lo8(100)
+ 843 041c 8FEF      		brsh .L90
+ 844 041e 81BB      		cpi r24,lo8(97)
+ 845 0420 0895      		breq .L84
+ 846               		cpi r24,lo8(98)
+ 155:lib/io_fct.c  **** 			break;
+ 156:lib/io_fct.c  **** 		case ('e'):
+ 157:lib/io_fct.c  **** 			DDRE |= 0xff;
+ 847               	L91
+ 848               		rjmp .L92
+ 849 0422 82B1      	.L90:
+ 850 0424 8FEF      		cpi r24,lo8(101)
+ 851 0426 82B9      		breq .L88
+ 852 0428 0895      		cpi r24,lo8(101)
+ 853               		brlo .L87
+ 158:lib/io_fct.c  **** 			break;
+ 159:lib/io_fct.c  **** 		case ('f'):
+ 160:lib/io_fct.c  **** 			DDRF |= 0xff;
+ 854               	4,lo8(102)
+ 855               		brne .L91
+ 856 042a 8091 6100 		rjmp .L93
+ 857 042e 8FEF      	.L84:
+ 859               	.LM66:
+ 860 0434 0895      		in r24,58-32
+ 861               		out 58-32,__zero_reg__
+ 862               		ret
+ 863               	.L92:
+ 865               	.LM67:
+ 866               		in r24,55-32
+ 867               		out 55-32,__zero_reg__
+ 161:lib/io_fct.c  **** 			break;
+ 162:lib/io_fct.c  **** 		default:
+ 163:lib/io_fct.c  **** 			break;
+ 164:lib/io_fct.c  **** 	}
+ 165:lib/io_fct.c  **** }
+ 166:lib/io_fct.c  **** 
+ 167:lib/io_fct.c  **** void init_in_port(char port)
+ 168:lib/io_fct.c  **** {
+ 868               	tabn	68,0,178,.LM68-.LFBB9
+ 869               	.LM68:
+ 870               		in r24,52-32
+ 871               		out 52-32,__zero_reg__
+ 872               		ret
+ 169:lib/io_fct.c  **** 	switch(port)
+ 873               	
+ 875 0436 8336      	.LM69:
+ 876 0438 01F0      		in r24,49-32
+ 877 043a 8436      		out 49-32,__zero_reg__
+ 878 043c 00F4      		ret
+ 879 043e 8136      	.L88:
+ 881 0442 8236      	.LM70:
+ 882 0444 01F4      		in r24,34-32
+ 883 0446 00C0      		out 34-32,__zero_reg__
+ 884               		ret
+ 885 0448 8536      	.L93:
+ 887 044c 8536      	.LM71:
+ 888 044e 00F0      		lds r24,97
+ 889 0450 8636      		sts 97,__zero_reg__
+ 890 0452 01F4      	.L91:
+ 891 0454 00C0      		ret
+ 170:lib/io_fct.c  **** 	{
+ 171:lib/io_fct.c  **** 		case ('a'):
+ 172:lib/io_fct.c  **** 			DDRA &= 0x00;
+ 893               	USART_Init:F(0,15)",36,0,0,USART_Init
+ 894               	.global	USART_Init
+ 896 0458 1ABA      	USART_Init:
+ 898               	.LM72:
+ 173:lib/io_fct.c  **** 			break;
+ 174:lib/io_fct.c  **** 		case ('b'):
+ 175:lib/io_fct.c  **** 			DDRB &= 0x00;
+ 899               	0:
+ 900               	/* prologue: function */
+ 901 045c 87B3      	/* frame size = 0 */
+ 903 0460 0895      	.LM73:
+ 904               		sts 144,r25
+ 176:lib/io_fct.c  **** 			break;
+ 177:lib/io_fct.c  **** 		case ('c'):
+ 178:lib/io_fct.c  **** 			DDRC &= 0x00;
+ 905               	n	68,0,198,.LM74-.LFBB10
+ 906               	.LM74:
+ 907 0462 84B3      		out 41-32,r24
+ 909 0466 0895      	.LM75:
+ 910               		ldi r24,lo8(24)
+ 179:lib/io_fct.c  **** 			break;
+ 180:lib/io_fct.c  **** 		case ('d'):
+ 181:lib/io_fct.c  **** 			DDRD &= 0x00;
+ 911               	2-32,r24
+ 913 0468 81B3      	.LM76:
+ 914 046a 11BA      		ldi r24,lo8(14)
+ 915 046c 0895      		sts 149,r24
+ 916               	/* epilogue start */
+ 182:lib/io_fct.c  **** 			break;
+ 183:lib/io_fct.c  **** 		case ('e'):
+ 184:lib/io_fct.c  **** 			DDRE &= 0x00;
+ 917               	n	68,0,203,.LM77-.LFBB10
+ 918               	.LM77:
+ 919 046e 82B1      		ret
+ 921 0472 0895      	.Lscope10:
+ 185:lib/io_fct.c  **** 			break;
+ 186:lib/io_fct.c  **** 		case ('f'):
+ 187:lib/io_fct.c  **** 			DDRF &= 0x00;
+ 923               	l	init_serial
+ 925 0474 8091 6100 	init_serial:
+ 927               	.LM78:
+ 928 047c 0895      	.LFBB11:
+ 929               	/* prologue: function */
+ 930               	/* frame size = 0 */
+ 932               	.LM79:
+ 933               		out 43-32,__zero_reg__
+ 188:lib/io_fct.c  **** 			break;
+ 189:lib/io_fct.c  **** 		default:
+ 190:lib/io_fct.c  **** 			break;
+ 191:lib/io_fct.c  **** 	}
+ 192:lib/io_fct.c  **** }
+ 193:lib/io_fct.c  **** 
+ 194:lib/io_fct.c  **** void USART_Init( unsigned int baud )
+ 195:lib/io_fct.c  **** {
+ 935               	r24,lo8(24)
+ 936               		out 42-32,r24
+ 938               	.LM81:
+ 939               		ldi r24,lo8(-122)
+ 196:lib/io_fct.c  **** 	/* Set baud rate */
+ 197:lib/io_fct.c  **** 	UBRR0H = (unsigned char)(baud>>8);
+ 940               	149,r24
+ 942 047e 9093 9000 	.LM82:
+ 198:lib/io_fct.c  **** 	UBRR0L = (unsigned char)baud;
+ 943               	s 144,__zero_reg__
+ 945 0482 89B9      	.LM83:
+ 199:lib/io_fct.c  **** 	/* Enable receiver and transmitter */
+ 200:lib/io_fct.c  **** 	UCSR0B = (1<<RXEN)|(1<<TXEN);
+ 946               	i r24,lo8(8)
+ 947               		out 41-32,r24
+ 948 0484 88E1      	/* epilogue start */
+ 201:lib/io_fct.c  **** 	/* Set frame format: 8data, 2stop bit */
+ 202:lib/io_fct.c  **** 	UCSR0C = (1<<USBS)|(3<<UCSZ0);
+ 950               	4:
+ 951               		ret
+ 953 048a 8093 9500 	.Lscope11:
+ 203:lib/io_fct.c  **** }
+ 955               	al	init_in_ana
+ 957 048e 0895      	init_in_ana:
+ 959               	.LM85:
+ 960               	.LFBB12:
+ 961               	/* prologue: function */
+ 962               	/* frame size = 0 */
+ 204:lib/io_fct.c  **** 
+ 205:lib/io_fct.c  **** void init_serial(void)
+ 206:lib/io_fct.c  **** {
+ 964               	di r24,lo8(64)
+ 965               		out 39-32,r24
+ 967               	.LM87:
+ 968               		ldi r24,lo8(-98)
+ 207:lib/io_fct.c  **** //	UBRR0H = 0;		//UBRR to 15 for 115200bps with 20Mhz
+ 208:lib/io_fct.c  **** //	UBRR0L = 21;
+ 209:lib/io_fct.c  **** 
+ 210:lib/io_fct.c  **** 	UCSR0A=0x00;
+ 969               	38-32,r24
+ 971 0490 1BB8      	.LM88:
+ 211:lib/io_fct.c  **** 	UCSR0B=0x18;
+ 972               	 r24,38-32
+ 973               		ori r24,lo8(96)
+ 974 0492 88E1      		out 38-32,r24
+ 975 0494 8AB9      	/* epilogue start */
+ 212:lib/io_fct.c  **** 	UCSR0C=0x86;
+ 976               	abn	68,0,233,.LM89-.LFBB12
+ 977               	.LM89:
+ 978 0496 86E8      		ret
+ 213:lib/io_fct.c  **** 	UBRR0H=0x00;
+ 980               	ope12:
+ 214:lib/io_fct.c  **** 	UBRR0L=0x08;
+ 983               	tabs	"pin:P(0,11)",64,0,0,22
+ 984               	.global	get_in_pin
+ 986 04a2 89B9      	get_in_pin:
+ 215:lib/io_fct.c  **** 
+ 216:lib/io_fct.c  **** /*	UCSR0A=0x00;
+ 217:lib/io_fct.c  **** 	UCSR0B=0x18;
+ 218:lib/io_fct.c  **** 	UCSR0C=0x06;
+ 219:lib/io_fct.c  **** 	UBRR0H=0x00;
+ 220:lib/io_fct.c  **** 	UBRR0L=0x08;
+ 221:lib/io_fct.c  **** //	UBRR0L=0x08;
+ 222:lib/io_fct.c  **** 	
+ 223:lib/io_fct.c  **** /*	UCSR0A = 0x62;	// 
+ 224:lib/io_fct.c  **** 	UCSR0B = 0x18;	// interrupts disabled, transmitter and reciever enabled, 8bit, no 9th bit
+ 225:lib/io_fct.c  **** 	UCSR0C = 0x86; 	// no parity, asynchronous, 1 stopbit, 8bit number*/
+ 226:lib/io_fct.c  **** }
+ 988               	:
+ 989               	.LFBB13:
+ 990 04a4 0895      	/* prologue: function */
+ 991               	/* frame size = 0 */
+ 993               	.LM91:
+ 994               		cpi r24,lo8(99)
+ 995               		breq .L104
+ 996               		cpi r24,lo8(100)
+ 227:lib/io_fct.c  **** 
+ 228:lib/io_fct.c  **** void init_in_ana(void)
+ 229:lib/io_fct.c  **** {
+ 997               	08
+ 998               		cpi r24,lo8(97)
+ 999               		breq .L102
+ 1000               		cpi r24,lo8(98)
+ 1001               		brne .L101
+ 230:lib/io_fct.c  **** 	ADMUX = 0x40;	//connect to pin 0
+ 1002               	 .L111
+ 1003               	.L108:
+ 1004 04a6 80E4      		cpi r24,lo8(101)
+ 1005 04a8 87B9      		breq .L106
+ 231:lib/io_fct.c  **** 	ADCSRA = 0x9e;	//enable ad converter
+ 1006               	 r24,lo8(101)
+ 1007               		brlo .L105
+ 1008 04aa 8EE9      		cpi r24,lo8(102)
+ 1009 04ac 86B9      		breq .L107
+ 232:lib/io_fct.c  **** 	ADCSRA |= 0x60;	//start converter
+ 1010               	1:
+ 1011               		ldi r18,lo8(0)
+ 1012 04ae 86B1      		rjmp .L109
+ 1013 04b0 8066      	.L102:
+ 1015               	.LM92:
+ 233:lib/io_fct.c  **** }
+ 1016               	8,57-32
+ 1017               		rjmp .L109
+ 1018 04b4 0895      	.L111:
+ 1020               	.LM93:
+ 1021               		in r18,54-32
+ 1022               		rjmp .L109
+ 1023               	.L104:
+ 1025               	.LM94:
+ 1026               		in r18,51-32
+ 234:lib/io_fct.c  **** 
+ 235:lib/io_fct.c  **** unsigned char get_in_pin(unsigned char port, unsigned char pin)
+ 236:lib/io_fct.c  **** {
+ 1027               	
+ 1028               	.L105:
+ 1030               	.LM95:
+ 1031               		in r18,48-32
+ 237:lib/io_fct.c  **** 	unsigned char c = 0;
+ 238:lib/io_fct.c  **** 
+ 239:lib/io_fct.c  **** 	switch(port)
+ 1032               	p .L109
+ 1033               	.L106:
+ 1035 04b8 01F0      	.LM96:
+ 1036 04ba 8436      		in r18,33-32
+ 1037 04bc 00F4      		rjmp .L109
+ 1038 04be 8136      	.L107:
+ 1040 04c2 8236      	.LM97:
+ 1041 04c4 01F4      		in r18,32-32
+ 1042 04c6 00C0      	.L109:
+ 1044 04c8 8536      	.LM98:
+ 1045 04ca 01F0      		ldi r24,lo8(1)
+ 1046 04cc 8536      		ldi r25,hi8(1)
+ 1047 04ce 00F0      		rjmp 2f
+ 1048 04d0 8636      	1:	lsl r24
+ 1049 04d2 01F0      		rol r25
+ 1050               	2:	dec r22
+ 1051 04d4 20E0      		brpl 1b
+ 1053               	.LM99:
+ 240:lib/io_fct.c  **** 	{
+ 241:lib/io_fct.c  **** 		case ('a'):
+ 242:lib/io_fct.c  **** 			c = PINA;
+ 1054               	ue start */
+ 1055               		ret
+ 243:lib/io_fct.c  **** 			break;
+ 244:lib/io_fct.c  **** 		case ('b'):
+ 245:lib/io_fct.c  **** 			c = PINB;
+ 1059               	bn	224,0,0,.Lscope13-.LFBB13
+ 1060               	.Lscope13:
+ 1063               	.global	read_adc
+ 246:lib/io_fct.c  **** 			break;
+ 247:lib/io_fct.c  **** 		case ('c'):
+ 248:lib/io_fct.c  **** 			c = PINC;
+ 1064               	e	read_adc, @function
+ 1065               	read_adc:
+ 1067 04e2 00C0      	.LM100:
+ 1068               	.LFBB14:
+ 249:lib/io_fct.c  **** 			break;
+ 250:lib/io_fct.c  **** 		case ('d'):
+ 251:lib/io_fct.c  **** 			c = PIND;
+ 1069               	ologue: function */
+ 1070               	/* frame size = 0 */
+ 1072 04e6 00C0      	.LM101:
+ 1073               		ori r24,lo8(-64)
+ 252:lib/io_fct.c  **** 			break;
+ 253:lib/io_fct.c  **** 		case ('e'):
+ 254:lib/io_fct.c  **** 			c = PINE;
+ 1074               	39-32,r24
+ 1076 04e8 21B1      	.LM102:
+ 1077 04ea 00C0      		sbi 38-32,6
+ 1078               	.L113:
+ 255:lib/io_fct.c  **** 			break;
+ 256:lib/io_fct.c  **** 		case ('f'):
+ 257:lib/io_fct.c  **** 			c = PINF;
+ 1079               	bn	68,0,273,.LM103-.LFBB14
+ 1080               	.LM103:
+ 1081 04ec 20B1      		sbis 38-32,4
+ 1082               		rjmp .L113
+ 258:lib/io_fct.c  **** 			break;
+ 259:lib/io_fct.c  **** 		default:
+ 260:lib/io_fct.c  **** 			break;
+ 261:lib/io_fct.c  **** 	}	
+ 262:lib/io_fct.c  **** 	c &= (0x01 << pin);
+ 1083               	abn	68,0,274,.LM104-.LFBB14
+ 1084               	.LM104:
+ 1085 04ee 81E0      		sbi 38-32,4
+ 1087 04f2 00C0      	.LM105:
+ 1088 04f4 880F      		in r18,36-32
+ 1089 04f6 991F      		in r19,(36)+1-32
+ 1091 04fa 02F4      	.LM106:
+ 263:lib/io_fct.c  **** 	
+ 264:lib/io_fct.c  **** 	return c;
+ 265:lib/io_fct.c  **** }
+ 1092               	,r18
+ 1093               	/* epilogue start */
+ 1094 04fc 8223      		ret
+ 1096 04fe 0895      	.Lscope14:
+ 1099               	.global	SRAM_write
+ 1101               	SRAM_write:
+ 1103               	.Ltext3:
+ 1105               	.LM107:
+ 1106               	.LFBB15:
+ 266:lib/io_fct.c  **** 
+ 267:lib/io_fct.c  **** unsigned int read_adc(unsigned char adc_input)                  // Read Result ADC
+ 268:lib/io_fct.c  **** {
+ 1107               	nction */
+ 1108               	/* frame size = 0 */
+ 1110               	.LM108:
+ 1111               		movw r30,r24
+ 269:lib/io_fct.c  **** 	ADMUX=adc_input|ADC_VREF_TYPE;
+ 1112               	,r22
+ 1113               	/* epilogue start */
+ 1115 0502 87B9      	.LM109:
+ 270:lib/io_fct.c  **** 	
+ 271:lib/io_fct.c  **** 	ADCSRA|=0x40;                                                 // Start the AD conversion
+ 1116               	
+ 1118 0504 369A      	.Lscope15:
+ 272:lib/io_fct.c  **** 	
+ 273:lib/io_fct.c  **** 	while ((ADCSRA & 0x10)==0);                                   // Wait for the AD conversion to com
+ 1120               	obal	SRAM_read
+ 1122 0506 349B      	SRAM_read:
+ 274:lib/io_fct.c  **** 	ADCSRA|=0x10;
+ 1124               	10:
+ 1125               	.LFBB16:
+ 1126 050a 349A      	/* prologue: function */
+ 275:lib/io_fct.c  **** 	
+ 276:lib/io_fct.c  **** 	return ADCW;
+ 1127               	frame size = 0 */
+ 1129 050c 24B1      	.LM111:
+ 1130 050e 35B1      		movw r30,r24
+ 277:lib/io_fct.c  **** }
+ 1131               	r24,Z
+ 1132               	/* epilogue start */
+ 1134               	.LM112:
+ 1135 0512 0895      		ret
+ 1137               	.Lscope16:
+ 1140               	.global	DelayUs
+ 1142               	DelayUs:
+ 1144               	.LM113:
+   1:lib/lcd.c     **** #include <avr/io.h>
+   2:lib/lcd.c     **** #define F_CPU 14745600
+   3:lib/lcd.c     **** #include <util/delay.h>
+   4:lib/lcd.c     **** 
+   5:lib/lcd.c     **** #ifndef LCD_C
+   6:lib/lcd.c     **** #define LCD_C
+   7:lib/lcd.c     **** 
+   8:lib/lcd.c     **** 
+   9:lib/lcd.c     **** /*	With these functions you can access the LCD of the EVA board
+  10:lib/lcd.c     **** */
+  11:lib/lcd.c     **** 
+  12:lib/lcd.c     **** 
+  13:lib/lcd.c     **** //inits the display, NEEDS TO BE CALLED ONCE IN THE BEGINNING OF THE PROGRAM
+  14:lib/lcd.c     **** //eg: LCD_init();
+  15:lib/lcd.c     **** void LCD_init(void);
+  16:lib/lcd.c     **** 
+  17:lib/lcd.c     **** 
+  18:lib/lcd.c     **** //writes one character to the current cursor position
+  19:lib/lcd.c     **** //eg: LCD_Write_data('A');
+  20:lib/lcd.c     **** void LCD_write_data(unsigned char c);
+  21:lib/lcd.c     **** 
+  22:lib/lcd.c     **** 
+  23:lib/lcd.c     **** //sets the cursor postion
+  24:lib/lcd.c     **** //0-63:   first display line
+  25:lib/lcd.c     **** //64-127: second display line
+  26:lib/lcd.c     **** //eg: LCD_setCursor(0);
+  27:lib/lcd.c     **** void LCD_setCursor(unsigned char c);
+  28:lib/lcd.c     **** 
+  29:lib/lcd.c     **** 
+  30:lib/lcd.c     **** //clears the display screen and sets the cursor to position 0
+  31:lib/lcd.c     **** //eg: LCD_cls();
+  32:lib/lcd.c     **** void LCD_cls(void);
+  33:lib/lcd.c     **** 
+  34:lib/lcd.c     **** /**********************end of header ************************************/
+  35:lib/lcd.c     **** 
+  36:lib/lcd.c     **** //write routine for direct IO to the RAM address space
+  37:lib/lcd.c     **** void SRAM_write(unsigned int addr,unsigned char c){
+ 1145               	ologue: function */
+ 1146               	/* frame size = 0 */
+ 1147               	.LBB322:
+ 1148               	.LBB323:
+ 1149               	.LBB324:
+  38:lib/lcd.c     **** 	*(volatile unsigned char *)(addr) = (unsigned char)(c);
+ 1150               	25:
+ 1152 0514 FC01      	.Ltext4:
+ 1154               	.LM114:
+  39:lib/lcd.c     **** }
+ 1155               	r19,lo8(4)
+ 1156               		rjmp .L121
+ 1157 0518 0895      	.L122:
+ 1158               	.LBE325:
+ 1159               	.LBE324:
+ 1160               	.LBE323:
+ 1161               	.LBE322:
+ 1163               	.Ltext5:
+  40:lib/lcd.c     **** 
+  41:lib/lcd.c     **** //read routine for direct IO to the RAM address space
+  42:lib/lcd.c     **** unsigned char SRAM_read(unsigned int addr){
+ 1164               	8,0,49,.LM115-.LFBB17
+ 1165               	.LM115:
+ 1166               		sbiw r24,1
+ 1167               	.LBB329:
+ 1168               	.LBB328:
+  43:lib/lcd.c     **** 	return (*(volatile unsigned char *)(addr) );
+ 1169               	27:
+ 1170               	.LBB326:
+ 1172 051c 8081      	.Ltext6:
+  44:lib/lcd.c     **** }
+ 1174               	6:
+ 1175               		mov r18,r19
+ 1176 051e 0895      	/* #APP */
+ 1177               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 1178               		1: dec r18
+ 1179               		brne 1b
+ 1180               	 ;  0 "" 2
+ 1181               	/* #NOAPP */
+ 1182               	.L121:
+ 1183               	.LBE326:
+  45:lib/lcd.c     **** 
+  46:lib/lcd.c     **** //simple wait routine, based on a 16MHZ crytal
+  47:lib/lcd.c     **** void DelayUs(unsigned int i){
+ 1184               	LBE328:
+ 1185               	.LBE329:
+ 1187               	.Ltext7:
+ 1189               	.LM117:
+ 1190               		sbiw r24,0
+ 1191               		brne .L122
+ 1192               	/* epilogue start */
+ 1194               	.LM118:
+   1:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** /* Copyright (c) 2002, Marek Michalkiewicz
+   2:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****    Copyright (c) 2007 Joerg Wunsch
+   3:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****    All rights reserved.
+   4:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+   5:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****    Redistribution and use in source and binary forms, with or without
+   6:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****    modification, are permitted provided that the following conditions are met:
+   7:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+   8:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****    * Redistributions of source code must retain the above copyright
+   9:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****      notice, this list of conditions and the following disclaimer.
+  10:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  11:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****    * Redistributions in binary form must reproduce the above copyright
+  12:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****      notice, this list of conditions and the following disclaimer in
+  13:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****      the documentation and/or other materials provided with the
+  14:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****      distribution.
+  15:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  16:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****    * Neither the name of the copyright holders nor the names of
+  17:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****      contributors may be used to endorse or promote products derived
+  18:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****      from this software without specific prior written permission.
+  19:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  20:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  21:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  22:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  23:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  24:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  25:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  26:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  27:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  28:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  29:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  30:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****   POSSIBILITY OF SUCH DAMAGE. */
+  31:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  32:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** /* $Id: delay_basic.h,v 1.1 2007/05/13 21:23:20 joerg_wunsch Exp $ */
+  33:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  34:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** #ifndef _UTIL_DELAY_BASIC_H_
+  35:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** #define _UTIL_DELAY_BASIC_H_ 1
+  36:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  37:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** #include <inttypes.h>
+  38:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  39:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** /** \file */
+  40:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** /** \defgroup util_delay_basic <util/delay_basic.h>: Basic busy-wait delay loops
+  41:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     \code
+  42:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     #include <util/delay_basic.h>
+  43:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     \endcode
+  44:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  45:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     The functions in this header file implement simple delay loops
+  46:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     that perform a busy-waiting.  They are typically used to
+  47:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     facilitate short delays in the program execution.  They are
+  48:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     implemented as count-down loops with a well-known CPU cycle
+  49:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     count per loop iteration.  As such, no other processing can
+  50:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     occur simultaneously.  It should be kept in mind that the
+  51:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     functions described here do not disable interrupts.
+  52:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  53:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     In general, for long delays, the use of hardware timers is
+  54:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     much preferrable, as they free the CPU, and allow for
+  55:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     concurrent processing of other events while the timer is
+  56:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     running.  However, in particular for very short delays, the
+  57:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     overhead of setting up a hardware timer is too much compared
+  58:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     to the overall delay time.
+  59:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  60:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     Two inline functions are provided for the actual delay algorithms.
+  61:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  62:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** */
+  63:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  64:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** #if !defined(__DOXYGEN__)
+  65:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** static inline void _delay_loop_1(uint8_t __count) __attribute__((always_inline));
+  66:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** static inline void _delay_loop_2(uint16_t __count) __attribute__((always_inline));
+  67:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** #endif
+  68:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  69:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** /** \ingroup util_delay_basic
+  70:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  71:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     Delay loop using an 8-bit counter \c __count, so up to 256
+  72:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     iterations are possible.  (The value 256 would have to be passed
+  73:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     as 0.)  The loop executes three CPU cycles per iteration, not
+  74:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     including the overhead the compiler needs to setup the counter
+  75:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     register.
+  76:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 
+  77:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     Thus, at a CPU speed of 1 MHz, delays of up to 768 microseconds
+  78:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h ****     can be achieved.
+  79:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** */
+  80:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** void
+  81:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** _delay_loop_1(uint8_t __count)
+  82:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** {
+  83:d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h **** 	__asm__ volatile (
+ 1195               		DelayUs, .-DelayUs
+ 1196               	.Lscope17:
+ 1199               	.global	DelayMs
+ 1201               	DelayMs:
+ 1203               	.LM119:
+ 1204               	.LFBB18:
+ 1205               	/* prologue: function */
+  48:lib/lcd.c     **** 	while(i!=0){
+  49:lib/lcd.c     **** 		i--;
+ 1206               	ze = 0 */
+ 1207               	.LBB330:
+ 1208 0524 0197      	.LBB331:
+ 1209               	.LBB332:
+ 1210               	.LBB333:
+ 1211               	.LBB334:
+ 1212               	.LBB335:
+ 1214               	.Ltext8:
+ 1216               	.LM120:
+ 1217 0526 232F      		ldi r21,lo8(4)
+ 1218               		rjmp .L125
+ 1219               	.L127:
+ 1220 0528 2A95      	.LBE335:
+ 1221 052a 01F4      	.LBE334:
+ 1222               	.LBE333:
+ 1223               	.LBE332:
+ 1224               	.LBE331:
+ 1225               	.LBE330:
+ 1227               	.Ltext9:
+ 1229               	.LM121:
+ 1230               		ldi r18,lo8(1000)
+ 1231               		ldi r19,hi8(1000)
+ 1232               	.L126:
+ 1233 052c 0097      	.LBB341:
+ 1234 052e 01F4      	.LBB340:
+  50:lib/lcd.c     **** 		_delay_us(1);
+  51:lib/lcd.c     **** 	}
+  52:lib/lcd.c     **** }
+ 1236               	sbci r19,hi8(-(-1))
+ 1237               	.LBB339:
+ 1238 0530 0895      	.LBB338:
+ 1239               	.LBB337:
+ 1240               	.LBB336:
+ 1242               	.Ltext10:
+ 1244               	.LM123:
+ 1245               		mov r20,r21
+  53:lib/lcd.c     **** 
+  54:lib/lcd.c     **** //simple wait routine, based on DelayUs
+  55:lib/lcd.c     **** void DelayMs(unsigned int i){
+ 1246               	
+ 1247               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 1248               		1: dec r20
+ 1249               		brne 1b
+ 1250               	 ;  0 "" 2
+ 1251               	/* #NOAPP */
+ 1252               	.LBE336:
+ 1253               	.LBE337:
+ 1254               	.LBE338:
+ 1255               	.LBE339:
+ 1257               	.Ltext11:
+ 1259               	.LM124:
+ 1260               		cp r18,__zero_reg__
+ 1261 0532 54E0      		cpc r19,__zero_reg__
+ 1262 0534 00C0      		brne .L126
+ 1263               	.LBE340:
+ 1264               	.LBE341:
+ 1266               	.LM125:
+ 1267               		sbiw r24,1
+ 1268               	.L125:
+ 1270               	.LM126:
+ 1271               		sbiw r24,0
+  56:lib/lcd.c     **** 	while(i!=0){
+ 1272               	tart */
+ 1274 0536 28EE      	.LM127:
+ 1275 0538 33E0      		ret
+ 1283               	.Lscope18:
+ 1286               	.global	LCD_write_data
+ 1288               	LCD_write_data:
+ 1290               	.LM128:
+ 1291 053e 452F      	.LFBB19:
+ 1292               	/* prologue: function */
+ 1293               	/* frame size = 0 */
+ 1295 0542 01F4      	.LM129:
+ 1296               		mov r20,r24
+ 1297               		andi r20,lo8(-16)
+ 1298               		mov r22,r20
+ 1299               		ori r22,lo8(2)
+ 1300               	.LBB342:
+ 1301               	.LBB343:
+ 1303               	.LM130:
+ 1304               		sts -256,r22
+ 1305               		ldi r18,lo8(8)
+ 1306 0544 2115      		ldi r19,hi8(8)
+ 1307 0546 3105      	.LBE343:
+ 1308 0548 01F4      	.LBE342:
+ 1309               	.LBB344:
+ 1310               	.LBB345:
+  57:lib/lcd.c     **** 		i--;
+ 1311               	tabs	"d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h",132,0,0,.L
+ 1312               	.Ltext12:
+ 1314               	.LM131:
+ 1315               		ldi r21,lo8(4)
+ 1316               	.L131:
+ 1317 054c 0097      	.LBE349:
+ 1318 054e 01F4      	.LBE348:
+ 1319               	.LBE347:
+  58:lib/lcd.c     **** 		DelayUs(1000);
+  59:lib/lcd.c     **** 	}
+  60:lib/lcd.c     **** }
+ 1321               	.Ltext13:
+ 1323               	.LM132:
+ 1324               		subi r18,lo8(-(-1))
+ 1325               		sbci r19,hi8(-(-1))
+ 1326               	.LBB353:
+ 1327               	.LBB352:
+ 1328               	.LBB351:
+ 1329               	.LBB350:
+ 1331               	.Ltext14:
+ 1333               	.LM133:
+ 1334               		mov r25,r21
+ 1335               	/* #APP */
+  61:lib/lcd.c     **** 
+  62:lib/lcd.c     **** #define LCD_BASE 0xFF00
+  63:lib/lcd.c     **** #define LCD_ENABLE 1
+  64:lib/lcd.c     **** #define LCD_RS 2
+  65:lib/lcd.c     **** #define LCD_CLS 1
+  66:lib/lcd.c     **** #define LCD_WAIT DelayUs(8);
+  67:lib/lcd.c     **** 
+  68:lib/lcd.c     **** void LCD_write_data(unsigned char c){
+ 1336               	ter_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 1337               		1: dec r25
+ 1338               		brne 1b
+ 1339               	 ;  0 "" 2
+ 1340               	/* #NOAPP */
+  69:lib/lcd.c     **** 	//higher 4 bits first
+  70:lib/lcd.c     **** 	SRAM_write(LCD_BASE,(c&0xF0)|LCD_RS);
+ 1341               	50:
+ 1342               	.LBE351:
+ 1343 0552 482F      	.LBE352:
+ 1344 0554 407F      	.LBE353:
+ 1346 0558 6260      	.Ltext15:
+ 1348               	.LM134:
+ 1349               		cp r18,__zero_reg__
+ 1350               		cpc r19,__zero_reg__
+ 1351 055a 6093 00FF 		brne .L131
+ 1352 055e 28E0      	.LBE345:
+ 1353 0560 30E0      	.LBE344:
+ 1355               	.LM135:
+ 1356               		ori r20,lo8(3)
+ 1357               	.LBB354:
+ 1358               	.LBB355:
+ 1360               	.LM136:
+ 1361               		sts -256,r20
+ 1362               		ldi r18,lo8(8)
+ 1363               		ldi r19,hi8(8)
+ 1364               	.LBE355:
+ 1365               	.LBE354:
+ 1366 0562 54E0      	.LBB356:
+ 1367               	.LBB357:
+ 1368               	.LBB358:
+ 1369               	.LBB359:
+ 1370               	.LBB360:
+ 1371               	.LBB361:
+ 1373               	.Ltext16:
+ 1375               	.LM137:
+ 1376 0564 2150      		ldi r20,lo8(4)
+ 1377 0566 3040      	.L132:
+ 1378               	.LBE361:
+ 1379               	.LBE360:
+ 1380               	.LBE359:
+ 1381               	.LBE358:
+ 1383               	.Ltext17:
+ 1385               	.LM138:
+ 1386 0568 952F      		subi r18,lo8(-(-1))
+ 1387               		sbci r19,hi8(-(-1))
+ 1388               	.LBB365:
+ 1389 056a 9A95      	.LBB364:
+ 1390 056c 01F4      	.LBB363:
+ 1391               	.LBB362:
+ 1393               	.Ltext18:
+ 1395               	.LM139:
+ 1396               		mov r25,r20
+ 1397               	/* #APP */
+ 1398               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 1399               		1: dec r25
+ 1400               		brne 1b
+ 1401 056e 2115      	 ;  0 "" 2
+ 1402 0570 3105      	/* #NOAPP */
+ 1403 0572 01F4      	.LBE362:
+ 1404               	.LBE363:
+ 1405               	.LBE364:
+  71:lib/lcd.c     **** 	LCD_WAIT;
+  72:lib/lcd.c     **** 	//LCD_ENABLE=1
+  73:lib/lcd.c     **** 	SRAM_write(LCD_BASE,(c&0xF0)|LCD_RS|LCD_ENABLE);
+ 1406               	8,0,48,.LM140-.LFBB19
+ 1407               	.LM140:
+ 1408 0574 4360      		cp r18,__zero_reg__
+ 1409               		cpc r19,__zero_reg__
+ 1410               		brne .L132
+ 1411               	.LBE357:
+ 1412               	.LBE356:
+ 1413 0576 4093 00FF 	.LBB366:
+ 1414 057a 28E0      	.LBB367:
+ 1416               	.LM141:
+ 1417               		sts -256,r22
+ 1418               		ldi r18,lo8(8)
+ 1419               		ldi r19,hi8(8)
+ 1420               	.LBE367:
+ 1421               	.LBE366:
+ 1422               	.LBB368:
+ 1423               	.LBB369:
+ 1424               	.LBB370:
+ 1425               	.LBB371:
+ 1426               	.LBB372:
+ 1427               	.LBB373:
+ 1429               	.Ltext20:
+ 1431               	.LM142:
+ 1432               		ldi r20,lo8(4)
+ 1433               	.L133:
+ 1434               	.LBE373:
+ 1435               	.LBE372:
+ 1436               	.LBE371:
+ 1437               	.LBE370:
+ 1439 0582 3040      	.Ltext21:
+ 1441               	.LM143:
+ 1442               		subi r18,lo8(-(-1))
+ 1443               		sbci r19,hi8(-(-1))
+ 1444               	.LBB377:
+ 1445               	.LBB376:
+ 1446               	.LBB375:
+ 1447               	.LBB374:
+ 1449               	.Ltext22:
+ 1451 0586 9A95      	.LM144:
+ 1452 0588 01F4      		mov r25,r20
+ 1453               	/* #APP */
+ 1454               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 1455               		1: dec r25
+ 1456               		brne 1b
+ 1457               	 ;  0 "" 2
+ 1458               	/* #NOAPP */
+ 1459               	.LBE374:
+ 1460               	.LBE375:
+ 1461               	.LBE376:
+ 1462               	.LBE377:
+ 1464 058c 3105      	.Ltext23:
+ 1466               	.LM145:
+ 1467               		cp r18,__zero_reg__
+ 1468               		cpc r19,__zero_reg__
+ 1469               		brne .L133
+ 1470               	.LBE369:
+ 1471               	.LBE368:
+ 1473 0594 28E0      	.LM146:
+ 1474 0596 30E0      		swap r24
+ 1475               		andi r24,lo8(-16)
+ 1476               		mov r21,r24
+ 1477               		ori r21,lo8(2)
+ 1478               	.LBB378:
+ 1479               	.LBB379:
+ 1481               	.LM147:
+ 1482               		sts -256,r21
+ 1483               		ldi r18,lo8(8)
+ 1484               		ldi r19,hi8(8)
+ 1485               	.LBE379:
+ 1486               	.LBE378:
+ 1487 0598 44E0      	.LBB380:
+ 1488               	.LBB381:
+ 1489               	.LBB382:
+ 1490               	.LBB383:
+ 1491               	.LBB384:
+ 1492               	.LBB385:
+ 1494               	.Ltext24:
+ 1496               	.LM148:
+ 1497 059a 2150      		ldi r20,lo8(4)
+ 1498 059c 3040      	.L134:
+ 1499               	.LBE385:
+ 1500               	.LBE384:
+ 1501               	.LBE383:
+ 1502               	.LBE382:
+ 1504               	.Ltext25:
+ 1506               	.LM149:
+ 1507 059e 942F      		subi r18,lo8(-(-1))
+ 1508               		sbci r19,hi8(-(-1))
+ 1509               	.LBB389:
+ 1510 05a0 9A95      	.LBB388:
+ 1511 05a2 01F4      	.LBB387:
+ 1512               	.LBB386:
+ 1514               	.Ltext26:
+ 1516               	.LM150:
+ 1517               		mov r25,r20
+ 1518               	/* #APP */
+ 1519               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 1520               		1: dec r25
+ 1521               		brne 1b
+ 1522 05a4 2115      	 ;  0 "" 2
+ 1523 05a6 3105      	/* #NOAPP */
+ 1524 05a8 01F4      	.LBE386:
+ 1525               	.LBE387:
+ 1526               	.LBE388:
+  74:lib/lcd.c     **** 	LCD_WAIT;
+  75:lib/lcd.c     **** 	//LCD_ENABLE=0
+  76:lib/lcd.c     **** 	SRAM_write(LCD_BASE,(c&0xF0)|LCD_RS);
+  77:lib/lcd.c     **** 	LCD_WAIT;
+  78:lib/lcd.c     **** 	//the lower 4 bits
+  79:lib/lcd.c     **** 	SRAM_write(LCD_BASE,((c<<4)&0xF0)|LCD_RS);
+ 1527               	r19,__zero_reg__
+ 1528               		brne .L134
+ 1529 05aa 8295      	.LBE381:
+ 1530 05ac 807F      	.LBE380:
+ 1532 05b0 5260      	.LM152:
+ 1533               		ori r24,lo8(3)
+ 1534               	.LBB390:
+ 1535               	.LBB391:
+ 1537 05b2 5093 00FF 	.LM153:
+ 1538 05b6 28E0      		sts -256,r24
+ 1539 05b8 30E0      		ldi r24,lo8(8)
+ 1540               		ldi r25,hi8(8)
+ 1541               	.LBE391:
+ 1542               	.LBE390:
+ 1543               	.LBB392:
+ 1544               	.LBB393:
+ 1545               	.LBB394:
+ 1546               	.LBB395:
+ 1547               	.LBB396:
+ 1548               	.LBB397:
+ 1550               	.Ltext28:
+ 1552 05ba 44E0      	.LM154:
+ 1553               		ldi r19,lo8(4)
+ 1554               	.L135:
+ 1555               	.LBE397:
+ 1556               	.LBE396:
+ 1557               	.LBE395:
+ 1558               	.LBE394:
+ 1560               	.Ltext29:
+ 1562 05bc 2150      	.LM155:
+ 1563 05be 3040      		sbiw r24,1
+ 1564               	.LBB401:
+ 1565               	.LBB400:
+ 1566               	.LBB399:
+ 1567               	.LBB398:
+ 1569               	.Ltext30:
+ 1571               	.LM156:
+ 1572 05c0 942F      		mov r18,r19
+ 1573               	/* #APP */
+ 1574               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 1575 05c2 9A95      		1: dec r18
+ 1576 05c4 01F4      		brne 1b
+ 1577               	 ;  0 "" 2
+ 1578               	/* #NOAPP */
+ 1579               	.LBE398:
+ 1580               	.LBE399:
+ 1581               	.LBE400:
+ 1582               	.LBE401:
+ 1584               	.Ltext31:
+ 1586               	.LM157:
+ 1587 05c6 2115      		sbiw r24,0
+ 1588 05c8 3105      		brne .L135
+ 1589 05ca 01F4      	.LBE393:
+ 1590               	.LBE392:
+ 1591               	.LBB402:
+  80:lib/lcd.c     **** 	LCD_WAIT;
+  81:lib/lcd.c     **** 	SRAM_write(LCD_BASE,((c<<4)&0xF0)|LCD_RS|LCD_ENABLE);
+ 1592               	i r24,lo8(8)
+ 1593               		ldi r25,hi8(8)
+ 1594 05cc 8360      	.LBE403:
+ 1595               	.LBE402:
+ 1596               	.LBB404:
+ 1597               	.LBB405:
+ 1598               	.LBB406:
+ 1599 05ce 8093 00FF 	.LBB407:
+ 1600 05d2 88E0      	.LBB408:
+ 1601 05d4 90E0      	.LBB409:
+ 1603               	.Ltext32:
+ 1605               	.LM159:
+ 1606               		ldi r19,lo8(4)
+ 1607               	.L136:
+ 1608               	.LBE409:
+ 1609               	.LBE408:
+ 1610               	.LBE407:
+ 1611               	.LBE406:
+ 1613               	.Ltext33:
+ 1615               	.LM160:
+ 1616               		sbiw r24,1
+ 1617               	.LBB413:
+ 1618               	.LBB412:
+ 1619               	.LBB411:
+ 1620               	.LBB410:
+ 1622               	.Ltext34:
+ 1624 05d8 0197      	.LM161:
+ 1625               		mov r18,r19
+ 1626               	/* #APP */
+ 1627               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 1628               		1: dec r18
+ 1629               		brne 1b
+ 1630               	 ;  0 "" 2
+ 1631               	/* #NOAPP */
+ 1632               	.LBE410:
+ 1633 05da 232F      	.LBE411:
+ 1634               	.LBE412:
+ 1635               	.LBE413:
+ 1637 05de 01F4      	.Ltext35:
+ 1639               	.LM162:
+ 1640               		sbiw r24,0
+ 1641               		brne .L136
+ 1642               	.LBE405:
+ 1643               	.LBE404:
+ 1644               	.LBB414:
+ 1645               	.LBB415:
+ 1647               	.LM163:
+ 1648 05e0 0097      		sts -256,__zero_reg__
+ 1649 05e2 01F4      		ldi r24,lo8(8)
+ 1650               		ldi r25,hi8(8)
+ 1651               	.LBE415:
+ 1652               	.LBE414:
+ 1653               	.LBB416:
+ 1654               	.LBB417:
+ 1655               	.LBB418:
+ 1656 05e4 5093 00FF 	.LBB419:
+ 1657 05e8 88E0      	.LBB420:
+ 1658 05ea 90E0      	.LBB421:
+ 1660               	.Ltext36:
+ 1662               	.LM164:
+ 1663               		ldi r19,lo8(4)
+ 1664               	.L137:
+ 1665               	.LBE421:
+ 1666               	.LBE420:
+ 1667               	.LBE419:
+ 1668               	.LBE418:
+ 1670               	.Ltext37:
+ 1672               	.LM165:
+ 1673               		sbiw r24,1
+ 1674               	.LBB425:
+ 1675               	.LBB424:
+ 1676               	.LBB423:
+ 1677               	.LBB422:
+ 1679               	.Ltext38:
+ 1681 05ee 0197      	.LM166:
+ 1682               		mov r18,r19
+ 1683               	/* #APP */
+ 1684               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 1685               		1: dec r18
+ 1686               		brne 1b
+ 1687               	 ;  0 "" 2
+ 1688               	/* #NOAPP */
+ 1689               	.LBE422:
+ 1690 05f0 232F      	.LBE423:
+ 1691               	.LBE424:
+ 1692               	.LBE425:
+ 1694 05f4 01F4      	.Ltext39:
+ 1696               	.LM167:
+ 1697               		sbiw r24,0
+ 1698               		brne .L137
+ 1699               	/* epilogue start */
+ 1700               	.LBE417:
+ 1701               	.LBE416:
+ 1703               	.LM168:
+ 1704               		ret
+ 1727               	.Lscope19:
+ 1730               	.global	LCD_write_command
+ 1732               	LCD_write_command:
+ 1734               	.LM169:
+ 1735               	.LFBB20:
+ 1736               	/* prologue: function */
+ 1737               	/* frame size = 0 */
+ 1738 0604 0197      		mov r19,r24
+ 1740               	.LM170:
+ 1741               		mov r21,r24
+ 1742               		andi r21,lo8(-16)
+ 1743               	.LBB426:
+ 1744               	.LBB427:
+ 1746               	.LM171:
+ 1747 0606 232F      		sts -256,r21
+ 1748               		ldi r24,lo8(8)
+ 1749               		ldi r25,hi8(8)
+ 1750 0608 2A95      	.LBE427:
+ 1751 060a 01F4      	.LBE426:
+ 1752               	.LBB428:
+ 1753               	.LBB429:
+ 1754               	.LBB430:
+ 1755               	.LBB431:
+ 1756               	.LBB432:
+ 1757               	.LBB433:
+ 1759               	.Ltext40:
+ 1761               	.LM172:
+ 1762 060c 0097      		ldi r20,lo8(4)
+ 1763 060e 01F4      	.L147:
+ 1764               	.LBE433:
+ 1765               	.LBE432:
+ 1766               	.LBE431:
+  82:lib/lcd.c     **** 	LCD_WAIT;
+  83:lib/lcd.c     **** 	SRAM_write(LCD_BASE,((c<<4)&0xF0)|LCD_RS);
+  84:lib/lcd.c     **** 	LCD_WAIT;
+  85:lib/lcd.c     **** 	//make all latch pins 0
+  86:lib/lcd.c     **** 	SRAM_write(LCD_BASE,0);
+  87:lib/lcd.c     **** 	LCD_WAIT;
+  88:lib/lcd.c     **** }
+ 1767               	winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h",132,0,0,.Ltext42
+ 1768               	.Ltext42:
+ 1770               	.LM174:
+ 1771               		mov r18,r20
+ 1772               	/* #APP */
+ 1773               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 1774               		1: dec r18
+ 1775               		brne 1b
+ 1776               	 ;  0 "" 2
+ 1777               	/* #NOAPP */
+ 1778               	.LBE434:
+ 1779               	.LBE435:
+ 1780               	.LBE436:
+ 1781               	.LBE437:
+ 1783               	.Ltext43:
+ 1785               	.LM175:
+ 1786               		sbiw r24,0
+ 1787               		brne .L147
+ 1788               	.LBE429:
+ 1789               	.LBE428:
+ 1791               	.LM176:
+ 1792               		mov r24,r19
+ 1793               		andi r24,lo8(-16)
+ 1794               		ori r24,lo8(1)
+ 1795               	.LBB438:
+ 1796               	.LBB439:
+  89:lib/lcd.c     **** 
+  90:lib/lcd.c     **** void LCD_write_command(unsigned char c){
+ 1798               	lo8(8)
+ 1799               		ldi r25,hi8(8)
+ 1800               	.LBE439:
+ 1801               	.LBE438:
+ 1802               	.LBB440:
+ 1803 0612 382F      	.LBB441:
+  91:lib/lcd.c     **** 	//higher 4 bits first
+  92:lib/lcd.c     **** 	SRAM_write(LCD_BASE,(c&0xF0));
+ 1804               	2:
+ 1805               	.LBB443:
+ 1806 0614 582F      	.LBB444:
+ 1807 0616 507F      	.LBB445:
+ 1809               	.Ltext44:
+ 1811               	.LM178:
+ 1812 0618 5093 00FF 		ldi r20,lo8(4)
+ 1813 061c 88E0      	.L148:
+ 1814 061e 90E0      	.LBE445:
+ 1815               	.LBE444:
+ 1816               	.LBE443:
+ 1817               	.LBE442:
+ 1819               	.Ltext45:
+ 1821               	.LM179:
+ 1822               		sbiw r24,1
+ 1823               	.LBB449:
+ 1824               	.LBB448:
+ 1825               	.LBB447:
+ 1826               	.LBB446:
+ 1828               	.Ltext46:
+ 1830               	.LM180:
+ 1831               		mov r18,r20
+ 1832               	/* #APP */
+ 1833               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 1834               		1: dec r18
+ 1835               		brne 1b
+ 1836               	 ;  0 "" 2
+ 1837 0622 0197      	/* #NOAPP */
+ 1838               	.LBE446:
+ 1839               	.LBE447:
+ 1840               	.LBE448:
+ 1841               	.LBE449:
+ 1843               	.Ltext47:
+ 1845               	.LM181:
+ 1846 0624 242F      		sbiw r24,0
+ 1847               		brne .L148
+ 1848               	.LBE441:
+ 1849 0626 2A95      	.LBE440:
+ 1850 0628 01F4      	.LBB450:
+ 1851               	.LBB451:
+ 1853               	.LM182:
+ 1854               		sts -256,r21
+ 1855               		ldi r24,lo8(8)
+ 1856               		ldi r25,hi8(8)
+ 1857               	.LBE451:
+ 1858               	.LBE450:
+ 1859               	.LBB452:
+ 1860               	.LBB453:
+ 1861 062a 0097      	.LBB454:
+ 1862 062c 01F4      	.LBB455:
+ 1863               	.LBB456:
+ 1864               	.LBB457:
+  93:lib/lcd.c     **** 	LCD_WAIT;
+  94:lib/lcd.c     **** 	//LCD_ENABLE=1
+  95:lib/lcd.c     **** 	SRAM_write(LCD_BASE,(c&0xF0)|LCD_ENABLE);
+ 1865               	vr/include/util/delay_basic.h",132,0,0,.Ltext48
+ 1866               	.Ltext48:
+ 1868 0630 807F      	.LM183:
+ 1869 0632 8160      		ldi r20,lo8(4)
+ 1870               	.L149:
+ 1871               	.LBE457:
+ 1872               	.LBE456:
+ 1873               	.LBE455:
+ 1874 0634 8093 00FF 	.LBE454:
+ 1876 063a 90E0      	.Ltext49:
+ 1878               	.LM184:
+ 1879               		sbiw r24,1
+ 1880               	.LBB461:
+ 1881               	.LBB460:
+ 1882               	.LBB459:
+ 1883               	.LBB458:
+ 1885               	.Ltext50:
+ 1887               	.LM185:
+ 1888               		mov r18,r20
+ 1889 063c 44E0      	/* #APP */
+ 1890               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 1891               		1: dec r18
+ 1892               		brne 1b
+ 1893               	 ;  0 "" 2
+ 1894               	/* #NOAPP */
+ 1895               	.LBE458:
+ 1896               	.LBE459:
+ 1897               	.LBE460:
+ 1898               	.LBE461:
+ 1900               	.Ltext51:
+ 1902               	.LM186:
+ 1903               		sbiw r24,0
+ 1904               		brne .L149
+ 1905               	.LBE453:
+ 1906               	.LBE452:
+ 1908 0640 242F      	.LM187:
+ 1909               		mov r24,r19
+ 1910               		ldi r25,lo8(0)
+ 1911 0642 2A95      		ldi r18,4
+ 1912 0644 01F4      	1:	lsl r24
+ 1913               		rol r25
+ 1914               		dec r18
+ 1915               		brne 1b
+ 1916               		mov r22,r24
+ 1917               	.LBB462:
+ 1918               	.LBB463:
+ 1920               	.LM188:
+ 1921               		sts -256,r24
+ 1922               		ldi r18,lo8(8)
+ 1923 0646 0097      		ldi r19,hi8(8)
+ 1924 0648 01F4      	.LBE463:
+ 1925               	.LBE462:
+ 1926               	.LBB464:
+ 1927               	.LBB465:
+ 1928               	.LBB466:
+ 1929               	.LBB467:
+ 1930               	.LBB468:
+ 1931 064a 5093 00FF 	.LBB469:
+ 1933 0650 90E0      	.Ltext52:
+ 1935               	.LM189:
+ 1936               		ldi r21,lo8(4)
+ 1937               	.L150:
+ 1938               	.LBE469:
+ 1939               	.LBE468:
+ 1940               	.LBE467:
+ 1941               	.LBE466:
+ 1943               	.Ltext53:
+ 1945               	.LM190:
+ 1946 0652 44E0      		subi r18,lo8(-(-1))
+ 1947               		sbci r19,hi8(-(-1))
+ 1948               	.LBB473:
+ 1949               	.LBB472:
+ 1950               	.LBB471:
+ 1951               	.LBB470:
+ 1953               	.Ltext54:
+ 1955               	.LM191:
+ 1956 0654 0197      		mov r20,r21
+ 1957               	/* #APP */
+ 1958               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 1959               		1: dec r20
+ 1960               		brne 1b
+ 1961               	 ;  0 "" 2
+ 1962               	/* #NOAPP */
+ 1963               	.LBE470:
+ 1964               	.LBE471:
+ 1965 0656 242F      	.LBE472:
+ 1966               	.LBE473:
+ 1968 0658 2A95      	.Ltext55:
+ 1970               	.LM192:
+ 1971               		cp r18,__zero_reg__
+ 1972               		cpc r19,__zero_reg__
+ 1973               		brne .L150
+ 1974               	.LBE465:
+ 1975               	.LBE464:
+ 1977               	.LM193:
+ 1978               		ori r24,lo8(1)
+ 1979               	.LBB474:
+ 1980 065c 0097      	.LBB475:
+ 1982               	.LM194:
+ 1983               		sts -256,r24
+  96:lib/lcd.c     **** 	LCD_WAIT;
+  97:lib/lcd.c     **** 	//LCD_ENABLE=0
+  98:lib/lcd.c     **** 	SRAM_write(LCD_BASE,(c&0xF0));
+  99:lib/lcd.c     **** 	LCD_WAIT;
+ 100:lib/lcd.c     **** 	//the lower 4 bits
+ 101:lib/lcd.c     **** 	SRAM_write(LCD_BASE,((c<<4)&0xF0));
+ 1984               	ester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h",132,0,0,.Ltext56
+ 1985               	.Ltext56:
+ 1987 0662 90E0      	.LM195:
+ 1988 0664 24E0      		ldi r19,lo8(4)
+ 1989 0666 880F      	.L151:
+ 1990 0668 991F      	.LBE481:
+ 1991 066a 2A95      	.LBE480:
+ 1992 066c 01F4      	.LBE479:
+ 1993 066e 682F      	.LBE478:
+ 1995               	.Ltext57:
+ 1997               	.LM196:
+ 1998 0670 8093 00FF 		sbiw r24,1
+ 1999 0674 28E0      	.LBB485:
+ 2000 0676 30E0      	.LBB484:
+ 2001               	.LBB483:
+ 2002               	.LBB482:
+ 2004               	.Ltext58:
+ 2006               	.LM197:
+ 2007               		mov r18,r19
+ 2008               	/* #APP */
+ 2009               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 2010               		1: dec r18
+ 2011               		brne 1b
+ 2012               	 ;  0 "" 2
+ 2013 0678 54E0      	/* #NOAPP */
+ 2014               	.LBE482:
+ 2015               	.LBE483:
+ 2016               	.LBE484:
+ 2017               	.LBE485:
+ 2019               	.Ltext59:
+ 2021               	.LM198:
+ 2022               		sbiw r24,0
+ 2023 067a 2150      		brne .L151
+ 2024 067c 3040      	.LBE477:
+ 2025               	.LBE476:
+ 2026               	.LBB486:
+ 2027               	.LBB487:
+ 2029               	.LM199:
+ 2030               		sts -256,r22
+ 2031               		ldi r24,lo8(8)
+ 2032               		ldi r25,hi8(8)
+ 2033 067e 452F      	.LBE487:
+ 2034               	.LBE486:
+ 2035               	.LBB488:
+ 2036 0680 4A95      	.LBB489:
+ 2037 0682 01F4      	.LBB490:
+ 2038               	.LBB491:
+ 2039               	.LBB492:
+ 2040               	.LBB493:
+ 2042               	.Ltext60:
+ 2044               	.LM200:
+ 2045               		ldi r19,lo8(4)
+ 2046               	.L152:
+ 2047               	.LBE493:
+ 2048 0684 2115      	.LBE492:
+ 2049 0686 3105      	.LBE491:
+ 2050 0688 01F4      	.LBE490:
+ 2052               	.Ltext61:
+ 102:lib/lcd.c     **** 	LCD_WAIT;
+ 103:lib/lcd.c     **** 	SRAM_write(LCD_BASE,((c<<4)&0xF0)|LCD_ENABLE);
+ 2053               	.LBB495:
+ 2054               	.LBB494:
+ 2056               	.Ltext62:
+ 2058               	.LM202:
+ 2059               		mov r18,r19
+ 2060 068c 8093 00FF 	/* #APP */
+ 2061 0690 88E0      	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 2062 0692 90E0      		1: dec r18
+ 2063               		brne 1b
+ 2064               	 ;  0 "" 2
+ 2065               	/* #NOAPP */
+ 2066               	.LBE494:
+ 2067               	.LBE495:
+ 2068               	.LBE496:
+ 2069               	.LBE497:
+ 2071               	.Ltext63:
+ 2073               	.LM203:
+ 2074               		sbiw r24,0
+ 2075 0694 34E0      		brne .L152
+ 2076               	.LBE489:
+ 2077               	.LBE488:
+ 2078               	.LBB498:
+ 2079               	.LBB499:
+ 2081               	.LM204:
+ 2082               		sts -256,__zero_reg__
+ 2083               		ldi r24,lo8(8)
+ 2084               		ldi r25,hi8(8)
+ 2085 0696 0197      	.LBE499:
+ 2086               	.LBE498:
+ 2087               	.LBB500:
+ 2088               	.LBB501:
+ 2089               	.LBB502:
+ 2090               	.LBB503:
+ 2091               	.LBB504:
+ 2092               	.LBB505:
+ 2094 0698 232F      	.Ltext64:
+ 2096               	.LM205:
+ 2097 069a 2A95      		ldi r19,lo8(4)
+ 2098 069c 01F4      	.L153:
+ 2099               	.LBE505:
+ 2100               	.LBE504:
+ 2101               	.LBE503:
+ 2102               	.LBE502:
+ 2104               	.Ltext65:
+ 2106               	.LM206:
+ 2107               		sbiw r24,1
+ 2108               	.LBB509:
+ 2109 069e 0097      	.LBB508:
+ 2110 06a0 01F4      	.LBB507:
+ 2111               	.LBB506:
+ 2113               	.Ltext66:
+ 2115               	.LM207:
+ 2116               		mov r18,r19
+ 2117 06a2 6093 00FF 	/* #APP */
+ 2118 06a6 88E0      	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 2119 06a8 90E0      		1: dec r18
+ 2120               		brne 1b
+ 2121               	 ;  0 "" 2
+ 2122               	/* #NOAPP */
+ 2123               	.LBE506:
+ 2124               	.LBE507:
+ 2125               	.LBE508:
+ 2126               	.LBE509:
+ 2128               	.Ltext67:
+ 2130               	.LM208:
+ 2131               		sbiw r24,0
+ 2132 06aa 34E0      		brne .L153
+ 2133               	/* epilogue start */
+ 2134               	.LBE501:
+ 2135               	.LBE500:
+ 2137               	.LM209:
+ 2138               		ret
+ 2161               	.Lscope20:
+ 2164               	.global	LCD_setCursor
+ 2166 06b4 0097      	LCD_setCursor:
+ 2168               	.LM210:
+ 2169               	.LFBB21:
+ 2170               	/* prologue: function */
+ 2171               	/* frame size = 0 */
+ 2173               	.LM211:
+ 2174 06b8 1092 00FF 		ori r24,lo8(-128)
+ 2175 06bc 88E0      		call LCD_write_command
+ 2176 06be 90E0      		ldi r18,lo8(2)
+ 2177               		ldi r19,hi8(2)
+ 2178               	.LBB510:
+ 2179               	.LBB511:
+ 2180               	.LBB512:
+ 2181               	.LBB513:
+ 2182               	.LBB514:
+ 2183               	.LBB515:
+ 2184               	.LBB516:
+ 2185               	.LBB517:
+ 2187               	.Ltext68:
+ 2189 06c0 34E0      	.LM212:
+ 2190               		ldi r21,lo8(4)
+ 2191               	.L164:
+ 2192               	.LBE517:
+ 2193               	.LBE516:
+ 2194               	.LBE515:
+ 2195               	.LBE514:
+ 2196               	.LBE513:
+ 2197               	.LBE512:
+ 2199 06c2 0197      	.Ltext69:
+ 2201               	.LM213:
+ 2202               		subi r18,lo8(-(-1))
+ 2203               		sbci r19,hi8(-(-1))
+ 2204               		ldi r24,lo8(1000)
+ 2205               		ldi r25,hi8(1000)
+ 2206               	.L163:
+ 2207               	.LBB523:
+ 2208 06c4 232F      	.LBB522:
+ 2210               	.LM214:
+ 2211 06c6 2A95      		sbiw r24,1
+ 2212 06c8 01F4      	.LBB521:
+ 2213               	.LBB520:
+ 2214               	.LBB519:
+ 2215               	.LBB518:
+ 2217               	.Ltext70:
+ 2219               	.LM215:
+ 2220               		mov r20,r21
+ 2221               	/* #APP */
+ 2222               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 2223 06ca 0097      		1: dec r20
+ 2224 06cc 01F4      		brne 1b
+ 2225               	 ;  0 "" 2
+ 2226               	/* #NOAPP */
+ 2227               	.LBE518:
+ 104:lib/lcd.c     **** 	LCD_WAIT;
+ 105:lib/lcd.c     **** 	SRAM_write(LCD_BASE,((c<<4)&0xF0));
+ 106:lib/lcd.c     **** 	LCD_WAIT;
+ 107:lib/lcd.c     **** 	//make all latch pins 0
+ 108:lib/lcd.c     **** 	SRAM_write(LCD_BASE,0);
+ 109:lib/lcd.c     **** 	LCD_WAIT;
+ 110:lib/lcd.c     **** }
+ 2228               	17-.LFBB21
+ 2229               	.LM217:
+ 2230 06ce 0895      		cp r18,__zero_reg__
+ 2231               		cpc r19,__zero_reg__
+ 2232               		brne .L164
+ 2233               	/* epilogue start */
+ 2234               	.LBE511:
+ 2235               	.LBE510:
+ 2237               	.LM218:
+ 2238               		ret
+ 2249               	.Lscope21:
+ 2251               	.global	LCD_cls
+ 2253               	LCD_cls:
+ 2255               	.LM219:
+ 2256               	.LFBB22:
+ 2257               	/* prologue: function */
+ 2258               	/* frame size = 0 */
+ 111:lib/lcd.c     **** 
+ 112:lib/lcd.c     **** void LCD_setCursor(unsigned char c){
+ 2259               	
+ 2260               	.LM220:
+ 2261               		ldi r24,lo8(1)
+ 2262               		call LCD_write_command
+ 2263               		ldi r18,lo8(2)
+ 113:lib/lcd.c     **** 	LCD_write_command(0x80|c);
+ 2264               	 r19,hi8(2)
+ 2265               	.LBB524:
+ 2266 06d0 8068      	.LBB525:
+ 2267 06d2 0E94 0000 	.LBB526:
+ 2268 06d6 22E0      	.LBB527:
+ 2269 06d8 30E0      	.LBB528:
+ 2270               	.LBB529:
+ 2271               	.LBB530:
+ 2272               	.LBB531:
+ 2274               	.Ltext72:
+ 2276               	.LM221:
+ 2277               		ldi r21,lo8(4)
+ 2278               	.L170:
+ 2279               	.LBE531:
+ 2280               	.LBE530:
+ 2281               	.LBE529:
+ 2282 06da 54E0      	.LBE528:
+ 2283               	.LBE527:
+ 2284               	.LBE526:
+ 2286               	.Ltext73:
+ 2288               	.LM222:
+ 2289               		subi r18,lo8(-(-1))
+ 2290               		sbci r19,hi8(-(-1))
+ 2291               		ldi r24,lo8(1000)
+ 2292               		ldi r25,hi8(1000)
+ 2293               	.L169:
+ 2294 06dc 2150      	.LBB537:
+ 2295 06de 3040      	.LBB536:
+ 2297 06e2 93E0      	.LM223:
+ 2298               		sbiw r24,1
+ 2299               	.LBB535:
+ 2300               	.LBB534:
+ 2301               	.LBB533:
+ 2302               	.LBB532:
+ 2304               	.Ltext74:
+ 2306               	.LM224:
+ 2307               		mov r20,r21
+ 2308               	/* #APP */
+ 2309               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 2310               		1: dec r20
+ 2311               		brne 1b
+ 2312 06e6 452F      	 ;  0 "" 2
+ 2313               	/* #NOAPP */
+ 2314               	.LBE532:
+ 2315 06e8 4A95      	.LBE533:
+ 2316 06ea 01F4      	.LBE534:
+ 2317               	.LBE535:
+ 2319               	.Ltext75:
+ 2321               	.LM225:
+ 2322               		sbiw r24,0
+ 2323               		brne .L169
+ 2324               	.LBE536:
+ 2325               	.LBE537:
+ 2327 06ec 0097      	.LM226:
+ 2328 06ee 01F4      		cp r18,__zero_reg__
+ 2329               		cpc r19,__zero_reg__
+ 2330               		brne .L170
+ 2331               	/* epilogue start */
+ 2332               	.LBE525:
+ 2333 06f0 2115      	.LBE524:
+ 2335 06f4 01F4      	.LM227:
+ 2336               		ret
+ 114:lib/lcd.c     **** 	DelayMs(2);
+ 115:lib/lcd.c     **** }
+ 2339               	0,.LBB526-.LFBB22
+ 2345               	.Lscope22:
+ 2347               	.global	LCD_init
+ 2349               	LCD_init:
+ 2351               	.LM228:
+ 2352               	.LFBB23:
+ 2353               	/* prologue: function */
+ 2354               	/* frame size = 0 */
+ 2356               	.LM229:
+ 116:lib/lcd.c     **** 
+ 117:lib/lcd.c     **** void LCD_cls(void){
+ 2357               	
+ 2358               		out 85-32,r24
+ 2360               	.LM230:
+ 2361               		sts 109,__zero_reg__
+ 118:lib/lcd.c     **** 	//clear screen
+ 119:lib/lcd.c     **** 	LCD_write_command(LCD_CLS);
+ 2362               	abn	68,0,127,.LM231-.LFBB23
+ 2363               	.LM231:
+ 2364 06f8 81E0      		sts 108,r24
+ 2366 06fe 22E0      	.LM232:
+ 2367 0700 30E0      		ldi r24,lo8(51)
+ 2368               		call LCD_write_command
+ 2369               	.LBB538:
+ 2370               	.LBB539:
+ 2372               	.LM233:
+ 2373               		ldi r24,lo8(32)
+ 2374               		sts -256,r24
+ 2375               		ldi r24,lo8(8)
+ 2376               		ldi r25,hi8(8)
+ 2377               	.LBE539:
+ 2378               	.LBE538:
+ 2379               	.LBB540:
+ 2380 0702 54E0      	.LBB541:
+ 2381               	.LBB542:
+ 2382               	.LBB543:
+ 2383               	.LBB544:
+ 2384               	.LBB545:
+ 2386               	.Ltext76:
+ 2388               	.LM234:
+ 2389               		ldi r19,lo8(4)
+ 2390               	.L175:
+ 2391               	.LBE545:
+ 2392 0704 2150      	.LBE544:
+ 2393 0706 3040      	.LBE543:
+ 2394 0708 88EE      	.LBE542:
+ 2396               	.Ltext77:
+ 2398               	.LM235:
+ 2399               		sbiw r24,1
+ 2400               	.LBB549:
+ 2401 070c 0197      	.LBB548:
+ 2402               	.LBB547:
+ 2403               	.LBB546:
+ 2405               	.Ltext78:
+ 2407               	.LM236:
+ 2408               		mov r18,r19
+ 2409               	/* #APP */
+ 2410 070e 452F      	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 2411               		1: dec r18
+ 2412               		brne 1b
+ 2413 0710 4A95      	 ;  0 "" 2
+ 2414 0712 01F4      	/* #NOAPP */
+ 2415               	.LBE546:
+ 2416               	.LBE547:
+ 2417               	.LBE548:
+ 2418               	.LBE549:
+ 2420               	.Ltext79:
+ 2422               	.LM237:
+ 2423               		sbiw r24,0
+ 2424               		brne .L175
+ 2425 0714 0097      	.LBE541:
+ 2426 0716 01F4      	.LBE540:
+ 2427               	.LBB550:
+ 2428               	.LBB551:
+ 2430               	.LM238:
+ 2431 0718 2115      		ldi r24,lo8(33)
+ 2432 071a 3105      		sts -256,r24
+ 2433 071c 01F4      		ldi r24,lo8(8)
+ 2434               		ldi r25,hi8(8)
+ 2435               	.LBE551:
+ 2436               	.LBE550:
+ 120:lib/lcd.c     **** 	DelayMs(2);
+ 121:lib/lcd.c     **** }
+ 2437               	03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h",132,0,0,.Ltext80
+ 2438               	.Ltext80:
+ 2440               	.LM239:
+ 2441               		ldi r19,lo8(4)
+ 2442               	.L176:
+ 2443               	.LBE557:
+ 2444               	.LBE556:
+ 2445               	.LBE555:
+ 2446               	.LBE554:
+ 2448               	.Ltext81:
+ 2450               	.LM240:
+ 2451               		sbiw r24,1
+ 2452               	.LBB561:
+ 2453               	.LBB560:
+ 2454               	.LBB559:
+ 122:lib/lcd.c     **** 
+ 123:lib/lcd.c     **** void LCD_init(void){
+ 2455               	d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h",132,0,0,.Ltext82
+ 2456               	.Ltext82:
+ 2458               	.LM241:
+ 2459               		mov r18,r19
+ 124:lib/lcd.c     **** 	//enable the external SRAM interface
+ 125:lib/lcd.c     **** 	MCUCR=128;
+ 2460               	PP */
+ 2461               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 2462 0720 80E8      		1: dec r18
+ 2463 0722 85BF      		brne 1b
+ 126:lib/lcd.c     **** 	XMCRA=0;
+ 2464               	0 "" 2
+ 2465               	/* #NOAPP */
+ 2466 0724 1092 6D00 	.LBE558:
+ 127:lib/lcd.c     **** 	XMCRB=128;
+ 2467               	E559:
+ 2468               	.LBE560:
+ 2469 0728 8093 6C00 	.LBE561:
+ 128:lib/lcd.c     **** 	
+ 129:lib/lcd.c     **** 	LCD_write_command(0x33);
+ 2470               	tabs	"lib/lcd.c",132,0,0,.Ltext83
+ 2471               	.Ltext83:
+ 2473 072e 0E94 0000 	.LM242:
+ 2474               		sbiw r24,0
+ 2475               		brne .L176
+ 2476               	.LBE553:
+ 2477               	.LBE552:
+ 2478 0732 80E2      	.LBB562:
+ 2479 0734 8093 00FF 	.LBB563:
+ 2481 073a 90E0      	.LM243:
+ 2482               		ldi r24,lo8(32)
+ 2483               		sts -256,r24
+ 2484               		ldi r24,lo8(8)
+ 2485               		ldi r25,hi8(8)
+ 2486               	.LBE563:
+ 2487               	.LBE562:
+ 2488               	.LBB564:
+ 2489               	.LBB565:
+ 2490               	.LBB566:
+ 2491               	.LBB567:
+ 2492               	.LBB568:
+ 2493               	.LBB569:
+ 2495               	.Ltext84:
+ 2497               	.LM244:
+ 2498               		ldi r19,lo8(4)
+ 2499               	.L177:
+ 2500               	.LBE569:
+ 2501               	.LBE568:
+ 2502               	.LBE567:
+ 2503               	.LBE566:
+ 2505               	.Ltext85:
+ 2507               	.LM245:
+ 2508               		sbiw r24,1
+ 2509               	.LBB573:
+ 2510               	.LBB572:
+ 2511               	.LBB571:
+ 2512               	.LBB570:
+ 2514               	.Ltext86:
+ 2516 0742 2A95      	.LM246:
+ 2517 0744 01F4      		mov r18,r19
+ 2518               	/* #APP */
+ 2519               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 2520               		1: dec r18
+ 2521               		brne 1b
+ 2522               	 ;  0 "" 2
+ 2523               	/* #NOAPP */
+ 2524               	.LBE570:
+ 2525               	.LBE571:
+ 2526               	.LBE572:
+ 2527               	.LBE573:
+ 2529 0748 01F4      	.Ltext87:
+ 2531               	.LM247:
+ 2532               		sbiw r24,0
+ 2533               		brne .L177
+ 2534               	.LBE565:
+ 2535               	.LBE564:
+ 2536 074a 81E2      	.LBB574:
+ 2537 074c 8093 00FF 	.LBB575:
+ 2539 0752 90E0      	.LM248:
+ 2540               		sts -256,__zero_reg__
+ 2541               		ldi r24,lo8(8)
+ 2542               		ldi r25,hi8(8)
+ 2543               	.LBE575:
+ 2544               	.LBE574:
+ 2545               	.LBB576:
+ 2546               	.LBB577:
+ 2547               	.LBB578:
+ 2548               	.LBB579:
+ 2549               	.LBB580:
+ 2550               	.LBB581:
+ 2552 0754 34E0      	.Ltext88:
+ 2554               	.LM249:
+ 2555               		ldi r19,lo8(4)
+ 2556               	.L178:
+ 2557               	.LBE581:
+ 2558               	.LBE580:
+ 2559               	.LBE579:
+ 2560               	.LBE578:
+ 2562 0756 0197      	.Ltext89:
+ 2564               	.LM250:
+ 2565               		sbiw r24,1
+ 2566               	.LBB585:
+ 2567               	.LBB584:
+ 2568               	.LBB583:
+ 2569               	.LBB582:
+ 2571 0758 232F      	.Ltext90:
+ 2573               	.LM251:
+ 2574 075a 2A95      		mov r18,r19
+ 2575 075c 01F4      	/* #APP */
+ 2576               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 2577               		1: dec r18
+ 2578               		brne 1b
+ 2579               	 ;  0 "" 2
+ 2580               	/* #NOAPP */
+ 2581               	.LBE582:
+ 2582               	.LBE583:
+ 2583               	.LBE584:
+ 2584               	.LBE585:
+ 2586 075e 0097      	.Ltext91:
+ 2588               	.LM252:
+ 2589               		sbiw r24,0
+ 2590               		brne .L178
+ 2591               	.LBE577:
+ 2592               	.LBE576:
+ 2594 0762 80E2      	.LM253:
+ 2595 0764 8093 00FF 		ldi r24,lo8(1)
+ 2596 0768 88E0      		call LCD_write_command
+ 2597 076a 90E0      		ldi r18,lo8(2)
+ 2598               		ldi r19,hi8(2)
+ 2599               	.LBB586:
+ 2600               	.LBB587:
+ 2601               	.LBB588:
+ 2602               	.LBB589:
+ 2603               	.LBB590:
+ 2604               	.LBB591:
+ 2605               	.LBB592:
+ 2606               	.LBB593:
+ 2608               	.Ltext92:
+ 2610 076c 34E0      	.LM254:
+ 2611               		ldi r21,lo8(4)
+ 2612               	.L180:
+ 2613               	.LBE593:
+ 2614               	.LBE592:
+ 2615               	.LBE591:
+ 2616               	.LBE590:
+ 2617               	.LBE589:
+ 2618               	.LBE588:
+ 2620 076e 0197      	.Ltext93:
+ 2622               	.LM255:
+ 2623               		subi r18,lo8(-(-1))
+ 2624               		sbci r19,hi8(-(-1))
+ 2625               		ldi r24,lo8(1000)
+ 2626               		ldi r25,hi8(1000)
+ 2627               	.L179:
+ 2628               	.LBB599:
+ 2629 0770 232F      	.LBB598:
+ 2631               	.LM256:
+ 2632 0772 2A95      		sbiw r24,1
+ 2633 0774 01F4      	.LBB597:
+ 2634               	.LBB596:
+ 2635               	.LBB595:
+ 2636               	.LBB594:
+ 2638               	.Ltext94:
+ 2640               	.LM257:
+ 2641               		mov r20,r21
+ 2642               	/* #APP */
+ 2643               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 2644 0776 0097      		1: dec r20
+ 2645 0778 01F4      		brne 1b
+ 2646               	 ;  0 "" 2
+ 2647               	/* #NOAPP */
+ 2648               	.LBE594:
+ 2649               	.LBE595:
+ 2650               	.LBE596:
+ 2651               	.LBE597:
+ 2653 077e 88E0      	.Ltext95:
+ 2655               	.LM258:
+ 2656               		sbiw r24,0
+ 2657               		brne .L179
+ 2658               	.LBE598:
+ 2659               	.LBE599:
+ 2661               	.LM259:
+ 2662               		cp r18,__zero_reg__
+ 2663               		cpc r19,__zero_reg__
+ 2664               		brne .L180
+ 2665               	.LBE587:
+ 2666               	.LBE586:
+ 2668               	.LM260:
+ 2669               		ldi r24,lo8(40)
+ 2670               		call LCD_write_command
+ 2671               		ldi r18,lo8(2)
+ 2672               		ldi r19,hi8(2)
+ 2673               	.LBB600:
+ 2674               	.LBB601:
+ 2675               	.LBB602:
+ 2676               	.LBB603:
+ 2677 0784 0197      	.LBB604:
+ 2678               	.LBB605:
+ 2679               	.LBB606:
+ 2680               	.LBB607:
+ 2682               	.Ltext96:
+ 2684               	.LM261:
+ 2685               		ldi r21,lo8(4)
+ 2686 0786 232F      	.L182:
+ 2687               	.LBE607:
+ 2688               	.LBE606:
+ 2689 0788 2A95      	.LBE605:
+ 2690 078a 01F4      	.LBE604:
+ 2691               	.LBE603:
+ 2692               	.LBE602:
+ 2694               	.Ltext97:
+ 2696               	.LM262:
+ 2697               		subi r18,lo8(-(-1))
+ 2698               		sbci r19,hi8(-(-1))
+ 2699               		ldi r24,lo8(1000)
+ 2700               		ldi r25,hi8(1000)
+ 2701 078c 0097      	.L181:
+ 2702 078e 01F4      	.LBB613:
+ 2703               	.LBB612:
+ 130:lib/lcd.c     **** 	//function set: 4Bit interface,RS=0
+ 131:lib/lcd.c     **** 	SRAM_write(LCD_BASE,0x20);
+ 132:lib/lcd.c     **** 	LCD_WAIT;
+ 133:lib/lcd.c     **** 	//LCD_ENABLE=1
+ 134:lib/lcd.c     **** 	SRAM_write(LCD_BASE,0x20|LCD_ENABLE);
+ 135:lib/lcd.c     **** 	LCD_WAIT;
+ 136:lib/lcd.c     **** 	//LCD_ENABLE=0
+ 137:lib/lcd.c     **** 	SRAM_write(LCD_BASE,0x20);
+ 138:lib/lcd.c     **** 	LCD_WAIT;
+ 139:lib/lcd.c     **** 	//make all latch pins 0
+ 140:lib/lcd.c     **** 	SRAM_write(LCD_BASE,0);
+ 141:lib/lcd.c     **** 	LCD_WAIT;
+ 142:lib/lcd.c     **** 	//clear screen
+ 143:lib/lcd.c     **** 	LCD_write_command(LCD_CLS);
+ 2705               	LM263:
+ 2706               		sbiw r24,1
+ 2707 0790 81E0      	.LBB611:
+ 2708 0792 0E94 0000 	.LBB610:
+ 2709 0796 22E0      	.LBB609:
+ 2710 0798 30E0      	.LBB608:
+ 2712               	.Ltext98:
+ 2714               	.LM264:
+ 2715               		mov r20,r21
+ 2716               	/* #APP */
+ 2717               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 2718               		1: dec r20
+ 2719               		brne 1b
+ 2720               	 ;  0 "" 2
+ 2721               	/* #NOAPP */
+ 2722               	.LBE608:
+ 2723 079a 54E0      	.LBE609:
+ 2724               	.LBE610:
+ 2725               	.LBE611:
+ 2727               	.Ltext99:
+ 2729               	.LM265:
+ 2730               		sbiw r24,0
+ 2731               		brne .L181
+ 2732               	.LBE612:
+ 2733               	.LBE613:
+ 2735 079c 2150      	.LM266:
+ 2736 079e 3040      		cp r18,__zero_reg__
+ 2737 07a0 88EE      		cpc r19,__zero_reg__
+ 2738 07a2 93E0      		brne .L182
+ 2739               	.LBE601:
+ 2740               	.LBE600:
+ 2742               	.LM267:
+ 2743               		ldi r24,lo8(1)
+ 2744 07a4 0197      		call LCD_write_command
+ 2745               		ldi r18,lo8(2)
+ 2746               		ldi r19,hi8(2)
+ 2747               	.LBB614:
+ 2748               	.LBB615:
+ 2749               	.LBB616:
+ 2750               	.LBB617:
+ 2751               	.LBB618:
+ 2752               	.LBB619:
+ 2753 07a6 452F      	.LBB620:
+ 2754               	.LBB621:
+ 2756 07a8 4A95      	.Ltext100:
+ 2758               	.LM268:
+ 2759               		ldi r21,lo8(4)
+ 2760               	.L184:
+ 2761               	.LBE621:
+ 2762               	.LBE620:
+ 2763               	.LBE619:
+ 2764               	.LBE618:
+ 2765               	.LBE617:
+ 2766               	.LBE616:
+ 2768 07ac 0097      	.Ltext101:
+ 2770               	.LM269:
+ 2771               		subi r18,lo8(-(-1))
+ 2772               		sbci r19,hi8(-(-1))
+ 2773               		ldi r24,lo8(1000)
+ 2774 07b0 2115      		ldi r25,hi8(1000)
+ 2775 07b2 3105      	.L183:
+ 2776 07b4 01F4      	.LBB627:
+ 2777               	.LBB626:
+ 144:lib/lcd.c     **** 	DelayMs(2);
+ 145:lib/lcd.c     **** 	//function set: 4 bit mode, 2 lines
+ 146:lib/lcd.c     **** 	LCD_write_command(0x28);
+ 2779               	er_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h",132,0,0,.Ltext102
+ 2780               	.Ltext102:
+ 2782 07b8 0E94 0000 	.LM271:
+ 2783 07bc 22E0      		mov r20,r21
+ 2784 07be 30E0      	/* #APP */
+ 2785               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 2786               		1: dec r20
+ 2787               		brne 1b
+ 2788               	 ;  0 "" 2
+ 2789               	/* #NOAPP */
+ 2790               	.LBE622:
+ 2791               	.LBE623:
+ 2792               	.LBE624:
+ 2793               	.LBE625:
+ 2795               	.Ltext103:
+ 2797 07c0 54E0      	.LM272:
+ 2798               		sbiw r24,0
+ 2799               		brne .L183
+ 2800               	.LBE626:
+ 2801               	.LBE627:
+ 2803               	.LM273:
+ 2804               		cp r18,__zero_reg__
+ 2805               		cpc r19,__zero_reg__
+ 2806               		brne .L184
+ 2807               	.LBE615:
+ 2808               	.LBE614:
+ 2810 07c4 3040      	.LM274:
+ 2811 07c6 88EE      		ldi r24,lo8(12)
+ 2812 07c8 93E0      		call LCD_write_command
+ 2813               		ldi r18,lo8(2)
+ 2814               		ldi r19,hi8(2)
+ 2815               	.LBB628:
+ 2816               	.LBB629:
+ 2817               	.LBB630:
+ 2818 07ca 0197      	.LBB631:
+ 2819               	.LBB632:
+ 2820               	.LBB633:
+ 2821               	.LBB634:
+ 2822               	.LBB635:
+ 2824               	.Ltext104:
+ 2826               	.LM275:
+ 2827 07cc 452F      		ldi r21,lo8(4)
+ 2828               	.L186:
+ 2829               	.LBE635:
+ 2830 07ce 4A95      	.LBE634:
+ 2831 07d0 01F4      	.LBE633:
+ 2832               	.LBE632:
+ 2833               	.LBE631:
+ 2834               	.LBE630:
+ 2836               	.Ltext105:
+ 2838               	.LM276:
+ 2839               		subi r18,lo8(-(-1))
+ 2840               		sbci r19,hi8(-(-1))
+ 2841               		ldi r24,lo8(1000)
+ 2842 07d2 0097      		ldi r25,hi8(1000)
+ 2843 07d4 01F4      	.L185:
+ 2844               	.LBB641:
+ 2845               	.LBB640:
+ 2847               	.LM277:
+ 2848 07d6 2115      		sbiw r24,1
+ 2849 07d8 3105      	.LBB639:
+ 2850 07da 01F4      	.LBB638:
+ 2851               	.LBB637:
+ 2852               	.LBB636:
+ 147:lib/lcd.c     **** 	DelayMs(2);
+ 148:lib/lcd.c     **** 	//clear screen
+ 149:lib/lcd.c     **** 	LCD_write_command(LCD_CLS);
+ 2853               	il/delay_basic.h",132,0,0,.Ltext106
+ 2854               	.Ltext106:
+ 2856 07de 0E94 0000 	.LM278:
+ 2857 07e2 22E0      		mov r20,r21
+ 2858 07e4 30E0      	/* #APP */
+ 2859               	 ;  83 "d:/semester_03/mct/avr/winavr/winavr/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 2860               		1: dec r20
+ 2861               		brne 1b
+ 2862               	 ;  0 "" 2
+ 2863               	/* #NOAPP */
+ 2864               	.LBE636:
+ 2865               	.LBE637:
+ 2866               	.LBE638:
+ 2867               	.LBE639:
+ 2869               	.Ltext107:
+ 2871 07e6 54E0      	.LM279:
+ 2872               		sbiw r24,0
+ 2873               		brne .L185
+ 2874               	.LBE640:
+ 2875               	.LBE641:
+ 2877               	.LM280:
+ 2878               		cp r18,__zero_reg__
+ 2879               		cpc r19,__zero_reg__
+ 2880               		brne .L186
+ 2881               	/* epilogue start */
+ 2882               	.LBE629:
+ 2883 07e8 2150      	.LBE628:
+ 2885 07ec 88EE      	.LM281:
+ 2886 07ee 93E0      		ret
+ 150:lib/lcd.c     **** 	DelayMs(2);
+ 151:lib/lcd.c     **** 	//display on, blinking cursor
+ 152:lib/lcd.c     **** 	LCD_write_command(0x0c);
+ 2927               	0,4)",64,0,0,24
+ 2934               	.Lscope23:
+ 2936               	.global	__vector_21
+ 2938               	__vector_21:
+ 2940               	.Ltext108:
+ 2942               	.LM282:
+ 2943               	.LFBB24:
+ 2944               		push __zero_reg__
+ 2945 080c 54E0      		push r0
+ 2946               		in r0,__SREG__
+ 2947               		push r0
+ 2948               		clr __zero_reg__
+ 2949               		push r18
+ 2950               		push r19
+ 2951               		push r20
+ 2952               		push r24
+ 2953               		push r25
+ 2954               	/* prologue: Signal */
+ 2955               	/* frame size = 0 */
+ 2957 080e 2150      	.LM283:
+ 2958 0810 3040      		in r24,36-32
+ 2960 0814 93E0      	.LM284:
+ 2961               		in r20,37-32
+ 2962               		mov r19,r20
+ 2963               		ldi r18,lo8(0)
+ 2964               		ldi r25,lo8(0)
+ 2965               		or r18,r24
+ 2966 0816 0197      		or r19,r25
+ 2967               		sts (result)+1,r19
+ 2968               		sts result,r18
+ 2969               	/* epilogue start */
+ 2971               	.LM285:
+ 2972               		pop r25
+ 2973               		pop r24
+ 2974               		pop r20
+ 2975 0818 452F      		pop r19
+ 2976               		pop r18
+ 2977               		pop r0
+ 2978 081a 4A95      		out __SREG__,r0
+ 2979 081c 01F4      		pop r0
+ 2980               		pop __zero_reg__
+ 2981               		reti
+ 2983               	.Lscope24:
+ 2988               	.global	LCD_write_string
+ 2990 081e 0097      	LCD_write_string:
+ 2992               	.LM286:
+ 2993               	.LFBB25:
+ 2994               		push r15
+ 2995               		push r16
+ 2996 0822 2115      		push r17
+ 2997 0824 3105      		push r28
+ 2998 0826 01F4      		push r29
+ 2999               	/* prologue: function */
+ 3000               	/* frame size = 0 */
+ 3001               		mov r15,r24
+ 153:lib/lcd.c     **** 	DelayMs(2);
+ 154:lib/lcd.c     **** }
+ 3002               	lo8(0)
+ 3003               	.L203:
+ 3005               	.LM288:
+ 3006               		mov r24,r17
+ 3007               		add r24,r15
+ 3008               		call LCD_setCursor
+ 3010               	.LM289:
+ 3011               		movw r30,r28
+ 3012               		add r30,r17
+ 3013               		adc r31,__zero_reg__
+ 3014               		ld r24,Z
+ 3015               		call LCD_write_data
+ 3017               	.LM290:
+ 3018               		subi r17,lo8(-(1))
+ 3020               	.LM291:
+ 3021               		cp r16,r17
+ 3022               		brsh .L203
+ 3023               	/* epilogue start */
+ 3025               	.LM292:
+ 3026               		pop r29
+ 3027               		pop r28
+ 3028               		pop r17
+ 3029               		pop r16
+ 3030               		pop r15
+ 3031               		ret
+ 3036               	.Lscope25:
+ 3037               		.data
+ 3038               	.LC0:
+ 3039               		.string	"A/D: "
+ 3040               	.LC1:
+ 3041               		.string	"mV"
+ 3042               		.text
+ 3044               	.global	main
+ 3046               	main:
+ 3048               	.LM293:
+ 3049               	.LFBB26:
+ 3050               		push r16
+ 3051               		push r17
+ 3052               		push r28
+ 3053               		push r29
+ 3054               	/* prologue: function */
+ 3055               	/* frame size = 0 */
+ 3057               	.LM294:
+ 3058               	/* #APP */
+ 3059               	 ;  25 "main.c" 1
+ 3060               		sei
+   1:main.c        **** #define AD_PIN 0	//connect to ad0
+   2:main.c        **** 
+   3:main.c        **** #include "lib/delay.c"
+   4:main.c        **** #include "lib/io_fct.c"
+   5:main.c        **** #include "lib/lcd.c"
+   6:main.c        **** #include <avr/interrupt.h>
+   7:main.c        **** #include <avr/signal.h>
+   8:main.c        **** 
+   9:main.c        **** void LCD_write_string(unsigned char pos, unsigned char length, unsigned char str[]);
+  10:main.c        **** 
+  11:main.c        **** unsigned char result_bcd[5] = {'0','0','0','0'};
+  12:main.c        **** unsigned int result = 0;
+  13:main.c        **** 
+  14:main.c        **** SIGNAL (SIG_ADC)
+  15:main.c        **** {
+ 3061               	sh r17
+ 3062               		push r28
+ 3063               		push r29
+ 3064 082a 1F92      	/* prologue: function */
+ 3065 082c 0F92      	/* frame size = 0 */
+ 3067 0830 0F92      	.LM294:
+ 3068 0832 1124      	/* #APP */
+ 3069 0834 2F93      	 ;  25 "main.c" 1
+ 3070 0836 3F93      		sei
+ 3071 0838 4F93      	 ;  0 "" 2
+ 3073 083c 9F93      	.LM295:
+ 3074               	/* #NOAPP */
+ 3075               		ldi r24,lo8(64)
+  16:main.c        **** 	result = ADCL;
+ 3076               	,25,.LM294-.LFBB26
+ 3077               	.LM294:
+ 3078 083e 84B1      	/* #APP */
+  17:main.c        **** 	result |= (ADCH<<8);
+ 3079               	3:
+ 3080               	.LFBB26:
+ 3081 0840 45B1      		push r16
+ 3082 0842 342F      		push r17
+ 3083 0844 20E0      		push r28
+ 3084 0846 90E0      		push r29
+ 3085 0848 282B      	/* prologue: function */
+ 3086 084a 392B      	/* frame size = 0 */
+ 3088 0850 2093 0000 	.LM294:
+ 3089               	/* #APP */
+  18:main.c        **** }
+ 3090               	3:
+ 3091               	.LFBB26:
+ 3092 0854 9F91      		push r16
+ 3093 0856 8F91      		push r17
+ 3094 0858 4F91      		push r28
+ 3095 085a 3F91      		push r29
+ 3096 085c 2F91      	/* prologue: function */
+ 3097 085e 0F90      	/* frame size = 0 */
+ 3099 0862 0F90      	.LM294:
+ 3100 0864 1F90      	/* #APP */
+ 3101 0866 1895      	 ;  25 "main.c" 1
+ 3102               		sei
+ 3103               	 ;  0 "" 2
+ 3105               	.LM295:
+ 3106               	/* #NOAPP */
+ 3107               		ldi r24,lo8(64)
+ 3108               		out 39-32,r24
+ 3110               	.LM296:
+  19:main.c        **** 
+  20:main.c        **** int main (void)
+  21:main.c        **** {
+  22:main.c        **** 	unsigned char i = 0;
+  23:main.c        **** 	unsigned int buffer_result = 0;
+  24:main.c        **** 
+  25:main.c        **** 	sei();
+  26:main.c        **** 	ADMUX = 0x40|AD_PIN;	//connect to pin 0
+  27:main.c        **** 	ADCSRA = 0x9e;	//enable ad converter
+  28:main.c        **** 	ADCSRA |= 0x60;	//start converter
+  29:main.c        **** 	
+  30:main.c        **** 	LCD_init();
+  31:main.c        **** 	LCD_write_string(0, 5, "A/D: ");
+  32:main.c        **** 	LCD_write_string(9, 2, "mV");
+  33:main.c        **** 	
+  34:main.c        **** 	while(1)
+  35:main.c        **** 	{
+  36:main.c        **** 		buffer_result = result;
+  37:main.c        **** 		buffer_result *= (1000*0.0048875855327468230694037145650049);
+  38:main.c        **** 		result_bcd[0] = (buffer_result/1000)+48;
+  39:main.c        **** 		buffer_result %= 1000;
+  40:main.c        **** 		result_bcd[1] = (buffer_result/100)+48;
+  41:main.c        **** 		buffer_result %= 100;
+  42:main.c        **** 		result_bcd[2] = (buffer_result/10)+48;
+  43:main.c        **** 		buffer_result %= 10;
+  44:main.c        **** 		result_bcd[3] = buffer_result+48;
+  45:main.c        **** 	
+  46:main.c        **** 		for (i = 0; i <= 3; i++)
+  47:main.c        **** 		{
+  48:main.c        **** 			LCD_setCursor(i+5);
+  49:main.c        **** 			LCD_write_data(result_bcd[i]);
+  50:main.c        **** 		}
+  51:main.c        **** 		delay_ms(500);
+  52:main.c        **** 	}
+  53:main.c        **** }
+  54:main.c        **** 
+  55:main.c        **** void LCD_write_string(unsigned char pos, unsigned char length, unsigned char str[16])
+  56:main.c        **** {
+ 3111               	sei
+ 3112               	 ;  0 "" 2
+ 3114 0868 FF92      	.LM295:
+ 3115 086a 0F93      	/* #NOAPP */
+ 3116 086c 1F93      		ldi r24,lo8(64)
+ 3117 086e CF93      		out 39-32,r24
+ 3119               	.LM296:
+ 3120               		ldi r24,lo8(-98)
+ 3121 0872 F82E      		out 38-32,r24
+ 3123 0876 EA01      	.LM297:
+ 3124               		in r24,38-32
+ 3125               		ori r24,lo8(96)
+ 3126 0878 10E0      		out 38-32,r24
+  57:main.c        **** 	unsigned char i = 0;
+  58:main.c        **** 	
+  59:main.c        **** 	while(i <= length)
+  60:main.c        **** 	{
+  61:main.c        **** 		LCD_setCursor(pos + i);
+ 3128               	out 38-32,r24
+ 3130 087a 812F      	.LM297:
+ 3131 087c 8F0D      		in r24,38-32
+ 3132 087e 0E94 0000 		ori r24,lo8(96)
+  62:main.c        **** 		LCD_write_data(str[i]);
+ 3133               	,0,27,.LM296-.LFBB26
+ 3134               	.LM296:
+ 3135 0882 FE01      		ldi r24,lo8(-98)
+ 3136 0884 E10F      		out 38-32,r24
+ 3138 0888 8081      	.LM297:
+ 3139 088a 0E94 0000 		in r24,38-32
+  63:main.c        **** 		i++;
+ 3140               	-32,r24
+ 3142 088e 1F5F      	.LM296:
+ 3143               		ldi r24,lo8(-98)
+ 3144               		out 38-32,r24
+ 3146 0892 00F4      	.LM297:
+ 3147               		in r24,38-32
+  64:main.c        **** 	}
+  65:main.c        **** }
+ 3148               	-32,r24
+ 3150 0894 DF91      	.LM296:
+ 3151 0896 CF91      		ldi r24,lo8(-98)
+ 3152 0898 1F91      		out 38-32,r24
+ 3154 089c FF90      	.LM297:
+ 3155 089e 0895      		in r24,38-32
+ 3156               		ori r24,lo8(96)
+ 3157               		out 38-32,r24
+ 3159               	.LM298:
+ 3160               		call LCD_init
+ 3162               	.LM299:
+ 3163 0000 412F 443A 		ldi r24,lo8(0)
+ 3163      2000 
+ 3164               		ldi r22,lo8(5)
+ 3165 0006 6D56 00   		ldi r20,lo8(.LC0)
+ 3166               		ldi r21,hi8(.LC0)
+ 3167               		call LCD_write_string
+ 3169               	.LM300:
+ 3170               		ldi r24,lo8(9)
+ 3171               		ldi r22,lo8(2)
+ 3172               		ldi r20,lo8(.LC1)
+ 3173               		ldi r21,hi8(.LC1)
+ 3174 08a0 0F93      		call LCD_write_string
+ 3175 08a2 1F93      	.L208:
+ 3177 08a6 DF93      	.LM301:
+ 3178               		lds r22,result
+ 3179               		lds r23,(result)+1
+ 3180               		ldi r24,lo8(0)
+ 3181               		ldi r25,hi8(0)
+ 3182               		call __floatunsisf
+ 3183               		ldi r18,lo8(0x409c671a)
+ 3184 08a8 7894      		ldi r19,hi8(0x409c671a)
+ 3185               		ldi r20,hlo8(0x409c671a)
+ 3186               		ldi r21,hhi8(0x409c671a)
+ 3187               		call __mulsf3
+ 3188               		call __fixunssfsi
+ 3189 08aa 80E4      		movw r16,r22
+ 3190 08ac 87B9      		movw r18,r24
+ 3192               	.LM302:
+ 3193 08ae 8EE9      		movw r24,r22
+ 3194 08b0 86B9      		ldi r22,lo8(1000)
+ 3195               		ldi r23,hi8(1000)
+ 3196               		call __udivmodhi4
+ 3197 08b2 86B1      		subi r22,lo8(-(48))
+ 3198 08b4 8066      		sts result_bcd,r22
+ 3200               	.LM303:
+ 3201               		movw r24,r16
+ 3202 08b8 0E94 0000 		ldi r22,lo8(1000)
+ 3203               		ldi r23,hi8(1000)
+ 3204               		call __udivmodhi4
+ 3205 08bc 80E0      		movw r18,r24
+ 3207 08c0 40E0      	.LM304:
+ 3208 08c2 50E0      		ldi r22,lo8(100)
+ 3209 08c4 0E94 0000 		ldi r23,hi8(100)
+ 3210               		call __udivmodhi4
+ 3211               		subi r22,lo8(-(48))
+ 3212 08c8 89E0      		sts result_bcd+1,r22
+ 3214 08cc 40E0      	.LM305:
+ 3215 08ce 50E0      		movw r24,r18
+ 3216 08d0 0E94 0000 		ldi r22,lo8(100)
+ 3217               		ldi r23,hi8(100)
+ 3218               		call __udivmodhi4
+ 3219               		movw r18,r24
+ 3221 08d8 7091 0000 	.LM306:
+ 3222 08dc 80E0      		ldi r22,lo8(10)
+ 3223 08de 90E0      		ldi r23,hi8(10)
+ 3224 08e0 0E94 0000 		call __udivmodhi4
+ 3225 08e4 2AE1      		subi r22,lo8(-(48))
+ 3226 08e6 37E6      		sts result_bcd+2,r22
+ 3228 08ea 50E4      	.LM307:
+ 3229 08ec 0E94 0000 		movw r24,r18
+ 3230 08f0 0E94 0000 		ldi r22,lo8(10)
+ 3231 08f4 8B01      		ldi r23,hi8(10)
+ 3232 08f6 9C01      		call __udivmodhi4
+ 3233               		subi r24,lo8(-(48))
+ 3234               		sts result_bcd+3,r24
+ 3235 08f8 CB01      		ldi r28,lo8(0)
+ 3236 08fa 68EE      		ldi r29,hi8(0)
+ 3237 08fc 73E0      	.L207:
+ 3239 0902 605D      	.LM308:
+ 3240 0904 6093 0000 		movw r18,r28
+ 3241               		subi r18,lo8(-(5))
+ 3242               		mov r24,r18
+ 3243 0908 C801      		call LCD_setCursor
+ 3245 090c 73E0      	.LM309:
+ 3246 090e 0E94 0000 		movw r30,r28
+ 3247 0912 9C01      		subi r30,lo8(-(result_bcd))
+ 3248               		sbci r31,hi8(-(result_bcd))
+ 3249               		ld r24,Z
+ 3250 0914 64E6      		call LCD_write_data
+ 3251 0916 70E0      		adiw r28,1
+ 3253 091c 605D      	.LM310:
+ 3254 091e 6093 0000 		cpi r28,4
+ 3255               		cpc r29,__zero_reg__
+ 3256               		brne .L207
+ 3258 0924 64E6      	.LM311:
+ 3259 0926 70E0      		ldi r24,lo8(500)
+ 3260 0928 0E94 0000 		ldi r25,hi8(500)
+ 3261 092c 9C01      		call delay_ms
+ 3262               		rjmp .L208
+ 3264 092e 6AE0      	.Lscope26:
+ 3265 0930 70E0      	.global	result_bcd
+ 3266 0932 0E94 0000 		.data
+ 3269               	result_bcd:
+ 3270               		.byte	48
+ 3271 093c C901      		.byte	48
+ 3272 093e 6AE0      		.byte	48
+ 3273 0940 70E0      		.byte	48
+ 3274 0942 0E94 0000 		.skip 1,0
+ 3275 0946 805D      	.global	result
+ 3276 0948 8093 0000 	.global	result
+ 3277 094c C0E0      		.section .bss
+ 3280               	result:
+ 3281               		.skip 2,0
+ 3284 0954 822F      		.text
+ 3286               	.Letext0:
+ 3287               	.global __do_copy_data
+ 3288 095a FE01      	.global __do_clear_bss
+ 3289 095c E050      	...
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:74     .text:00000000 delay_ms
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:150    .text:00000052 delay_s
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:185    .text:0000006e set_pin
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:306    .text:0000011a reset_pin
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:431    .text:000001d2 toggle_pin
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:550    .text:0000027e init_out_pin
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:669    .text:0000032a init_in_pin
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:793    .text:000003e2 init_out_port
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:867    .text:00000436 init_in_port
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:934    .text:0000047e USART_Init
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:963    .text:00000490 init_serial
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:996    .text:000004a6 init_in_ana
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:1026   .text:000004b6 get_in_pin
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:1106   .text:00000500 read_adc
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:1142   .text:00000514 SRAM_write
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:1163   .text:0000051a SRAM_read
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:1183   .text:00000520 DelayUs
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:1245   .text:00000532 DelayMs
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:1335   .text:00000552 LCD_write_data
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:1797   .text:00000612 LCD_write_command
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:2258   .text:000006d0 LCD_setCursor
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:2356   .text:000006f8 LCD_cls
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:2454   .text:00000720 LCD_init
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:3058   .text:0000082a __vector_21
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:3322   .bss:00000000 result
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:3110   .text:00000868 LCD_write_string
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:3170   .text:000008a0 main
+C:\DOCUME~1\ALEXAN~1.WEG\LOCALS~1\Temp/ccbNPu4X.s:3311   .data:00000009 result_bcd
+
+UNDEFINED SYMBOLS
+__mulsi3
+__divmodsi4
+__floatunsisf
+__mulsf3
+__fixunssfsi
+__udivmodhi4
+__do_copy_data
+__do_clear_bss
