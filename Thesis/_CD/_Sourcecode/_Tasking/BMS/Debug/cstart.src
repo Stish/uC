@@ -1,0 +1,989 @@
+	; TASKING VX-toolset for C166: C compiler v3.0r3 Build 707
+	; Options: -f cc3056a --dep-file=.cstart.obj.d -c99 -Mn --no-tasking-sfr -Cxc2267 --core=xc16x --global-type-checking --tradeoff=4 -g --make-target=cstart.obj --language=+cmp14,+div32,-gcc,-volatile,+strings -O2 --source --compact-max-size=200 -o cstart.src
+	; Module start
+	.source	'..\\cstart.c'
+_$cstart_rb	.regbank	r0-r15
+code__cstart	.section	code, cluster '_cstart', new
+	.global	__cstart
+
+; ..\cstart.c	     1  /**************************************************************************
+; ..\cstart.c	     2  **                                                                        *
+; ..\cstart.c	     3  **  FILE        :  cstart.c                                               *
+; ..\cstart.c	     4  **                                                                        *
+; ..\cstart.c	     5  **  VERSION     :  @(#)cstart.c 1.42                                                      *
+; ..\cstart.c	     6  **                                                                        *
+; ..\cstart.c	     7  **  DESCRIPTION :                                                         *
+; ..\cstart.c	     8  **                                                                        *
+; ..\cstart.c	     9  **      The system startup code initializes the processor's registers     *
+; ..\cstart.c	    10  **      and the application C variables.                                  *
+; ..\cstart.c	    11  **      SFR initializations for any device are included. But only when a  *
+; ..\cstart.c	    12  **      SFR is actually defined in the SFR file it can be initialized.    *
+; ..\cstart.c	    13  **      The initialization values are defined in cstart.h as well as      *
+; ..\cstart.c	    14  **      a macro to enable/disable initialization of an SFR.               *
+; ..\cstart.c	    15  **                                                                        *
+; ..\cstart.c	    16  **  Copyright 1996-2011 Altium BV                                         *
+; ..\cstart.c	    17  **                                                                        *
+; ..\cstart.c	    18  **************************************************************************/
+; ..\cstart.c	    19  
+; ..\cstart.c	    20  #ifndef __LITE__                                /* the Lite edition does not support MISRA-C */
+; ..\cstart.c	    21  # pragma nomisrac                               /* Suppress MISRA-C checking */
+; ..\cstart.c	    22  #endif
+; ..\cstart.c	    23  
+; ..\cstart.c	    24  #include <stdlib.h>
+; ..\cstart.c	    25  #include <_cptable.h>
+; ..\cstart.c	    26  #ifdef __CPU__
+; ..\cstart.c	    27  #include __SFRFILE__(__CPU__)                   /* include SFR file for selected CPU */
+; ..\cstart.c	    28                                                  /* (gives indexer warnings in Eclipse) */
+; ..\cstart.c	    29  #endif
+; ..\cstart.c	    30  #include "cstart.h"                             /* include configuration */
+; ..\cstart.c	    31  
+; ..\cstart.c	    32  /*
+; ..\cstart.c	    33   * library references
+; ..\cstart.c	    34   */
+; ..\cstart.c	    35  #if     __PROF_ENABLE__
+; ..\cstart.c	    36  extern  void    __prof_init( void );
+; ..\cstart.c	    37  #endif
+; ..\cstart.c	    38  #pragma extern main
+; ..\cstart.c	    39  extern  int     main( int argc, char *argv[] );
+; ..\cstart.c	    40  
+; ..\cstart.c	    41  #pragma weak exit
+; ..\cstart.c	    42  #pragma extern _Exit
+; ..\cstart.c	    43  #ifndef __LITE__                                /* these pragmas are not available in Lite edition */
+; ..\cstart.c	    44  # pragma profiling off                          /* prevent profiling information on cstart */
+; ..\cstart.c	    45  # pragma optimize abcefgIKlpoRsy                /* preset optimizations */
+; ..\cstart.c	    46  # pragma runtime BCM                            /* disable runtime error checking for cstart */
+; ..\cstart.c	    47  #endif
+; ..\cstart.c	    48  #pragma tradeoff 4                              /* preset tradeoff level */
+; ..\cstart.c	    49  
+; ..\cstart.c	    50  #if __USE_ARGC_ARGV
+; ..\cstart.c	    51  static char argcv[__ARGCV_BUFSIZE];
+; ..\cstart.c	    52  extern  int     _argcv( const char *, size_t );
+; ..\cstart.c	    53  #endif
+; ..\cstart.c	    54  
+; ..\cstart.c	    55  
+; ..\cstart.c	    56  /*
+; ..\cstart.c	    57   * locator defined symbols
+; ..\cstart.c	    58   */
+; ..\cstart.c	    59  extern __near   char    _lc_ub_user_stack[];
+; ..\cstart.c	    60  extern __near   char    _lc_ub_user_stack1[];
+; ..\cstart.c	    61  extern __near   char    _lc_ub_user_stack2[];
+; ..\cstart.c	    62  extern __near   char    _lc_ub_user_stack3[];
+; ..\cstart.c	    63  extern __huge   char    _lc_ub_system_stack[];
+; ..\cstart.c	    64  extern __huge   char    _lc_ue_system_stack[];
+; ..\cstart.c	    65  extern __huge   char    _lc_base_dpp0[];
+; ..\cstart.c	    66  extern __huge   char    _lc_base_dpp1[];
+; ..\cstart.c	    67  extern __huge   char    _lc_base_dpp2[];
+; ..\cstart.c	    68  extern __huge   char    _lc_vector_table[];
+; ..\cstart.c	    69  extern          cptab_t _lc_copy_table[];
+; ..\cstart.c	    70  
+; ..\cstart.c	    71  /*********************************************************************************
+; ..\cstart.c	    72   * _cstart() - startup code, invoked from the RESET vector
+; ..\cstart.c	    73   *********************************************************************************/
+; ..\cstart.c	    74  void __interrupt(0)  __registerbank( cstart_rb ) _cstart( void )
+; Function __cstart
+_4:
+__cstart	.proc	intno _cstart_trap = 0
+	movw	CP,#_$cstart_rb
+_47:
+
+; ..\cstart.c	    75  {
+; ..\cstart.c	    76  #if !__WDT_ENABLED
+; ..\cstart.c	    77          __diswdt();                             /* disable watchdog timer */
+	diswdt
+_48:
+
+; ..\cstart.c	    78  #endif
+; ..\cstart.c	    79  
+; ..\cstart.c	    80          /*
+; ..\cstart.c	    81           * Initialize registers
+; ..\cstart.c	    82           */
+; ..\cstart.c	    83  #ifdef __WDTCON
+; ..\cstart.c	    84          if (__WDTCON_INIT)      __WDTCON.U = __WDTCON_VALUE;
+; ..\cstart.c	    85  #else  /* when no WDTCON available, use WDTREL and WDTCS */
+; ..\cstart.c	    86  # ifdef __WDTREL
+; ..\cstart.c	    87          if (__WDTREL_INIT)      __WDTREL.U = __WDTREL_VALUE;
+; ..\cstart.c	    88  # endif
+; ..\cstart.c	    89  # ifdef __WDTCS
+; ..\cstart.c	    90          if (__WDTCS_INIT)       __WDTCS.U = (__WDTCS.U & ~__WDTCS_MASK) | (__WDTCS_VALUE & __WDTCS_MASK);
+; ..\cstart.c	    91  # endif
+; ..\cstart.c	    92  #endif
+; ..\cstart.c	    93  #if __WDT_ENABLED
+; ..\cstart.c	    94          __srvwdt();                             /* serve watchdog timer */
+; ..\cstart.c	    95  #endif
+; ..\cstart.c	    96  
+; ..\cstart.c	    97  #ifdef __XPERCON
+; ..\cstart.c	    98          if (__XPERCON_INIT)     __XPERCON.U = __XPERCON_VALUE;
+; ..\cstart.c	    99  #endif
+; ..\cstart.c	   100  
+; ..\cstart.c	   101  #ifdef __SYSCON
+; ..\cstart.c	   102  # if __SYSCON_DO_MASK
+; ..\cstart.c	   103          if ( __SYSCON_INIT)     __bfld( &__SYSCON.U, ~__SYSCON_MASK,  __SYSCON_VALUE & ~__SYSCON_MASK );
+; ..\cstart.c	   104  # else
+; ..\cstart.c	   105          if ( __SYSCON_INIT)     __SYSCON.U = __SYSCON_VALUE;
+; ..\cstart.c	   106  # endif
+; ..\cstart.c	   107  #endif
+; ..\cstart.c	   108  
+; ..\cstart.c	   109  #if defined(XPEREMU) && defined(XPERCON) && defined(SYSCON)
+; ..\cstart.c	   110  # if (__XPERCON_VALUE & 0x07D3) && (__SYSCON_VALUE & 0x0004) && __XPEREMU_INIT
+; ..\cstart.c	   111          __XPEREMU.U = __XPEREMU_VALUE;
+; ..\cstart.c	   112  # endif
+; ..\cstart.c	   113  #endif
+; ..\cstart.c	   114  
+; ..\cstart.c	   115  #ifdef __RSTCON
+; ..\cstart.c	   116  # if __RSTCON_DO_MASK
+; ..\cstart.c	   117          if ( __RSTCON_INIT)     __RSTCON.U = (__RSTCON.U & ~__RSTCON_MASK) | (__RSTCON_MASK & __RSTCON_VALUE);
+; ..\cstart.c	   118  # else
+; ..\cstart.c	   119          if ( __RSTCON_INIT)     __RSTCON.U = __RSTCON_VALUE;
+; ..\cstart.c	   120  # endif 
+; ..\cstart.c	   121  #endif  
+; ..\cstart.c	   122  
+; ..\cstart.c	   123  #ifdef __CPUCON1
+; ..\cstart.c	   124          if ( __CPUCON1_INIT)    __CPUCON1.U = __CPUCON1_VALUE;
+; ..\cstart.c	   125  #endif
+; ..\cstart.c	   126  
+; ..\cstart.c	   127  #ifdef __CPUCON2
+; ..\cstart.c	   128          if ( __CPUCON2_INIT)    __CPUCON2.U = __CPUCON2_VALUE;
+; ..\cstart.c	   129  #endif
+; ..\cstart.c	   130  
+; ..\cstart.c	   131  #ifdef __SYSCON0
+; ..\cstart.c	   132          if(__SYSCON0_INIT)      __SYSCON0.U = __SYSCON0_VALUE;
+; ..\cstart.c	   133  #endif
+; ..\cstart.c	   134  
+; ..\cstart.c	   135  #ifdef __SYSCON1
+; ..\cstart.c	   136          if(__SYSCON1_INIT)      __SYSCON1.U = __SYSCON1_VALUE;
+; ..\cstart.c	   137  #endif
+; ..\cstart.c	   138  
+; ..\cstart.c	   139  #ifdef __SYSCON2
+; ..\cstart.c	   140          if(__SYSCON2_INIT)      __bfld( &__SYSCON2.U, 0x04,__SYSCON2_VALUE & 0x4 );
+; ..\cstart.c	   141  #endif
+; ..\cstart.c	   142  
+; ..\cstart.c	   143  #ifdef __SYSCON3
+; ..\cstart.c	   144          if(__SYSCON3_INIT)      __SYSCON3.U = __SYSCON3_VALUE;
+; ..\cstart.c	   145  #endif
+; ..\cstart.c	   146  
+; ..\cstart.c	   147  #ifdef __PLLCON
+; ..\cstart.c	   148          if(__PLLCON_INIT)       __PLLCON.U = __PLLCON_VALUE;
+; ..\cstart.c	   149  #endif
+; ..\cstart.c	   150  
+; ..\cstart.c	   151          /*
+; ..\cstart.c	   152           * Bus configuration
+; ..\cstart.c	   153           */
+; ..\cstart.c	   154  #ifdef __EBCMOD0
+; ..\cstart.c	   155  # if __EBCMOD0_DO_MASK
+; ..\cstart.c	   156          if ( __EBCMOD0_INIT)    __EBCMOD0.U |= __EBCMOD0_VALUE & ~__EBCMOD0_MASK;
+; ..\cstart.c	   157  # else
+; ..\cstart.c	   158          if ( __EBCMOD0_INIT)    __EBCMOD0.U = __EBCMOD0_VALUE;
+; ..\cstart.c	   159  # endif
+; ..\cstart.c	   160  #endif
+; ..\cstart.c	   161  
+; ..\cstart.c	   162  #ifdef __EBCMOD1
+; ..\cstart.c	   163          if(__EBCMOD1_INIT)      __EBCMOD1.U = __EBCMOD1_VALUE;
+; ..\cstart.c	   164  #endif
+; ..\cstart.c	   165  
+; ..\cstart.c	   166  #ifdef __BUSCON0
+; ..\cstart.c	   167  # if __BUSCON0_DO_MASK
+; ..\cstart.c	   168          if ( __BUSCON0_INIT)    __bfld( &__BUSCON0.U, ~__BUSCON0_MASK,  __BUSCON0_VALUE & ~__BUSCON0_MASK );
+; ..\cstart.c	   169  # else
+; ..\cstart.c	   170          if ( __BUSCON0_INIT)    __BUSCON0.U = __BUSCON0_VALUE;
+; ..\cstart.c	   171  # endif
+; ..\cstart.c	   172  #endif
+; ..\cstart.c	   173  
+; ..\cstart.c	   174  #ifdef __BUSCON1
+; ..\cstart.c	   175          if(__ADDRSEL1_INIT)     __ADDRSEL1.U = __ADDRSEL1_VALUE;
+; ..\cstart.c	   176          if(__BUSCON1_INIT)      __BUSCON1.U = __BUSCON1_VALUE;
+; ..\cstart.c	   177  #endif
+; ..\cstart.c	   178  
+; ..\cstart.c	   179  #ifdef __BUSCON2
+; ..\cstart.c	   180          if(__ADDRSEL2_INIT)     __ADDRSEL2.U = __ADDRSEL2_VALUE;
+; ..\cstart.c	   181          if(__BUSCON2_INIT)      __BUSCON2.U = __BUSCON2_VALUE;
+; ..\cstart.c	   182  #endif
+; ..\cstart.c	   183  
+; ..\cstart.c	   184  #ifdef __BUSCON3
+; ..\cstart.c	   185          if(__ADDRSEL3_INIT)     __ADDRSEL3.U = __ADDRSEL3_VALUE;
+; ..\cstart.c	   186          if(__BUSCON3_INIT)      __BUSCON3.U = __BUSCON3_VALUE;
+; ..\cstart.c	   187  #endif
+; ..\cstart.c	   188  
+; ..\cstart.c	   189  #ifdef __BUSCON4
+; ..\cstart.c	   190          if(__ADDRSEL4_INIT)     __ADDRSEL4.U = __ADDRSEL4_VALUE;
+; ..\cstart.c	   191          if(__BUSCON4_INIT)      __BUSCON4.U = __BUSCON4_VALUE;
+; ..\cstart.c	   192  #endif
+; ..\cstart.c	   193  
+; ..\cstart.c	   194  #ifdef __XBCON1
+; ..\cstart.c	   195          if(__XBCON1_INIT)       __bfld( &__XBCON1.U, 0x1fff, __XBCON1_VALUE & 0x1fff);
+; ..\cstart.c	   196  #endif
+; ..\cstart.c	   197  #ifdef __XADRS1
+; ..\cstart.c	   198          if(__XADRS1_INIT)       __XADRS1.U = __XADRS1_VALUE;
+; ..\cstart.c	   199  #endif
+; ..\cstart.c	   200  
+; ..\cstart.c	   201  #ifdef __XBCON2
+; ..\cstart.c	   202          if(__XBCON2_INIT)       __bfld( &__XBCON2.U, 0x1fff, __XBCON2_VALUE & 0x1fff);
+; ..\cstart.c	   203  #endif
+; ..\cstart.c	   204  #ifdef __XADRS2
+; ..\cstart.c	   205          if(__XADRS2_INIT)       __XADRS2.U = __XADRS2_VALUE;
+; ..\cstart.c	   206  #endif
+; ..\cstart.c	   207  
+; ..\cstart.c	   208  #ifdef __XBCON3
+; ..\cstart.c	   209          if(__XBCON3_INIT)       __bfld( &__XBCON3.U, 0x1fff, __XBCON3_VALUE & 0x1fff);
+; ..\cstart.c	   210          if(__XADRS3_INIT)       __XADRS3.U = __XADRS3_VALUE;
+; ..\cstart.c	   211  #endif
+; ..\cstart.c	   212  
+; ..\cstart.c	   213  #ifdef __XBCON4
+; ..\cstart.c	   214          if(__XBCON4_INIT)       __bfld( &__XBCON4.U, 0x1fff, __XBCON4_VALUE & 0x1fff);
+; ..\cstart.c	   215          if(__XADRS4_INIT)       __XADRS4.U = __XADRS4_VALUE;
+; ..\cstart.c	   216  #endif
+; ..\cstart.c	   217  
+; ..\cstart.c	   218  #ifdef __XBCON5
+; ..\cstart.c	   219          if(__XBCON5_INIT)       __bfld( &__XBCON5.U, 0x1fff, __XBCON5_VALUE & 0x1fff);
+; ..\cstart.c	   220          if(__XADRS5_INIT)       __XADRS5.U = __XADRS5_VALUE;
+; ..\cstart.c	   221  #endif
+; ..\cstart.c	   222  
+; ..\cstart.c	   223  #ifdef __XBCON6
+; ..\cstart.c	   224          if(__XBCON6_INIT)       __bfld( &__XBCON6.U, 0x1fff, __XBCON6_VALUE & 0x1fff);
+; ..\cstart.c	   225          if(__XADRS6_INIT)       __XADRS6.U = __XADRS6_VALUE;
+; ..\cstart.c	   226  #endif
+; ..\cstart.c	   227  
+; ..\cstart.c	   228  #ifdef __TCONBURSTCS0
+; ..\cstart.c	   229          if(__TCONBURSTCS0_INIT) TCONBURSTCS0 = __TCONBURSTCS0_VALUE;
+; ..\cstart.c	   230  #endif
+; ..\cstart.c	   231  #ifdef __TCONCS0
+; ..\cstart.c	   232          if(__TCONCS0_INIT)      __TCONCS0.U = __TCONCS0_VALUE;
+; ..\cstart.c	   233  # if __FCONCS0_DO_MASK
+; ..\cstart.c	   234          if ( __FCONCS0_INIT)    __FCONCS0.U |= __FCONCS0_VALUE & ~__FCONCS0_MASK;
+; ..\cstart.c	   235  # else
+; ..\cstart.c	   236          if ( __FCONCS0_INIT)    __FCONCS0.U = __FCONCS0_VALUE;
+; ..\cstart.c	   237  # endif 
+; ..\cstart.c	   238  #endif
+; ..\cstart.c	   239  
+; ..\cstart.c	   240  #ifdef __TCONBURSTCS0
+; ..\cstart.c	   241          if(__TCONBURSTCS0_INIT) __TCONBURSTCS0.U = __TCONBURSTCS0_VALUE;
+; ..\cstart.c	   242  #endif
+; ..\cstart.c	   243  #ifdef __TCONCS0
+; ..\cstart.c	   244          if(__TCONCS0_INIT)      __TCONCS0.U = __TCONCS0_VALUE;
+; ..\cstart.c	   245          if(__FCONCS0_INIT)      __FCONCS0.U = __FCONCS0_VALUE;
+; ..\cstart.c	   246  #endif
+; ..\cstart.c	   247  
+; ..\cstart.c	   248  #ifdef __TCONBURSTCS1
+; ..\cstart.c	   249          if(__TCONBURSTCS1_INIT) __TCONBURSTCS1.U = __TCONBURSTCS1_VALUE;
+; ..\cstart.c	   250  #endif
+; ..\cstart.c	   251  #ifdef __TCONCS1
+; ..\cstart.c	   252          if(__ADDRSEL1_INIT)     __ADDRSEL1.U = __ADDRSEL1_VALUE;
+; ..\cstart.c	   253          if(__TCONCS1_INIT)      __TCONCS1.U = __TCONCS1_VALUE;
+; ..\cstart.c	   254          if(__FCONCS1_INIT)      __FCONCS1.U = __FCONCS1_VALUE;
+; ..\cstart.c	   255  #endif
+; ..\cstart.c	   256  
+; ..\cstart.c	   257  #ifdef __TCONBURSTCS2
+; ..\cstart.c	   258          if(__TCONBURSTCS2_INIT) __TCONBURSTCS2.U = __TCONBURSTCS2_VALUE;
+; ..\cstart.c	   259  #endif
+; ..\cstart.c	   260  #ifdef __TCONCS2
+; ..\cstart.c	   261          if(__ADDRSEL2_INIT)     __ADDRSEL2.U = __ADDRSEL2_VALUE;
+; ..\cstart.c	   262          if(__TCONCS2_INIT)      __TCONCS2.U = __TCONCS2_VALUE;
+; ..\cstart.c	   263          if(__FCONCS2_INIT)      __FCONCS2.U = __FCONCS2_VALUE;
+; ..\cstart.c	   264  #endif
+; ..\cstart.c	   265  
+; ..\cstart.c	   266  #ifdef __TCONBURSTCS3
+; ..\cstart.c	   267          if(__TCONBURSTCS3_INIT) __TCONBURSTCS3.U = __TCONBURSTCS3_VALUE;
+; ..\cstart.c	   268  #endif
+; ..\cstart.c	   269  #ifdef __TCONCS3
+; ..\cstart.c	   270          if(__ADDRSEL3_INIT)     __ADDRSEL3.U = __ADDRSEL3_VALUE;
+; ..\cstart.c	   271          if(__TCONCS3_INIT)      __TCONCS3.U = __TCONCS3_VALUE;
+; ..\cstart.c	   272          if(__FCONCS3_INIT)      __FCONCS3.U = __FCONCS3_VALUE;
+; ..\cstart.c	   273  #endif
+; ..\cstart.c	   274  
+; ..\cstart.c	   275  #ifdef __TCONBURSTCS4
+; ..\cstart.c	   276          if(__TCONBURSTCS4_INIT) __TCONBURSTCS4.U = __TCONBURSTCS4_VALUE;
+; ..\cstart.c	   277  #endif
+; ..\cstart.c	   278  #ifdef __TCONCS4
+; ..\cstart.c	   279          if(__ADDRSEL4_INIT)     __ADDRSEL4.U = __ADDRSEL4_VALUE;
+; ..\cstart.c	   280          if(__TCONCS4_INIT)      __TCONCS4.U = __TCONCS4_VALUE;
+; ..\cstart.c	   281          if(__FCONCS4_INIT)      __FCONCS4.U = __FCONCS4_VALUE;
+; ..\cstart.c	   282  #endif
+; ..\cstart.c	   283  
+; ..\cstart.c	   284  #ifdef __TCONBURSTCS5
+; ..\cstart.c	   285          if(__TCONBURSTCS5_INIT) __TCONBURSTCS5.U = __TCONBURSTCS5_VALUE;
+; ..\cstart.c	   286  #endif
+; ..\cstart.c	   287  #ifdef __TCONCS5
+; ..\cstart.c	   288          if(__ADDRSEL5_INIT)     __ADDRSEL5.U = __ADDRSEL5_VALUE;
+; ..\cstart.c	   289          if(__TCONCS5_INIT)      __TCONCS5.U = __TCONCS5_VALUE;
+; ..\cstart.c	   290          if(__FCONCS5_INIT)      __FCONCS5.U = __FCONCS5_VALUE;
+; ..\cstart.c	   291  #endif
+; ..\cstart.c	   292  
+; ..\cstart.c	   293  #ifdef __TCONBURSTCS6
+; ..\cstart.c	   294          if(__TCONBURSTCS6_INIT) __TCONBURSTCS6.U = __TCONBURSTCS6_VALUE;
+; ..\cstart.c	   295  #endif
+; ..\cstart.c	   296  #ifdef __TCONCS6
+; ..\cstart.c	   297          if(__ADDRSEL6_INIT)     __ADDRSEL6.U = __ADDRSEL6_VALUE;
+; ..\cstart.c	   298          if(__TCONCS6_INIT)      __TCONCS6.U = __TCONCS6_VALUE;
+; ..\cstart.c	   299          if(__FCONCS6_INIT)      __FCONCS6.U = __FCONCS6_VALUE;
+; ..\cstart.c	   300  #endif
+; ..\cstart.c	   301  
+; ..\cstart.c	   302  #ifdef __TCONBURSTCS7
+; ..\cstart.c	   303          if(__TCONBURSTCS7_INIT) __TCONBURSTCS7.U = __TCONBURSTCS7_VALUE;
+; ..\cstart.c	   304  #endif
+; ..\cstart.c	   305  #ifdef __TCONCS7
+; ..\cstart.c	   306          if(__ADDRSEL7_INIT)     __ADDRSEL7.U = __ADDRSEL7_VALUE;
+; ..\cstart.c	   307          if(__TCONCS7_INIT)      __TCONCS7.U = __TCONCS7_VALUE;
+; ..\cstart.c	   308          if(__FCONCS7_INIT)      __FCONCS7.U = __FCONCS7_VALUE;
+; ..\cstart.c	   309  #endif
+; ..\cstart.c	   310  
+; ..\cstart.c	   311          /*
+; ..\cstart.c	   312           * Miscellaneous
+; ..\cstart.c	   313           */
+; ..\cstart.c	   314  #ifdef __EXICON
+; ..\cstart.c	   315          if(__EXICON_INIT)       __EXICON.U = __EXICON_VALUE;
+; ..\cstart.c	   316  #endif
+; ..\cstart.c	   317  
+; ..\cstart.c	   318  #ifdef __EXISEL0
+; ..\cstart.c	   319          if(__EXISEL0_INIT)      __EXISEL0.U = __EXISEL0_VALUE;
+; ..\cstart.c	   320  #endif
+; ..\cstart.c	   321  
+; ..\cstart.c	   322  #ifdef __EXISEL1
+; ..\cstart.c	   323          if(__EXISEL1_INIT)      __EXISEL1.U = __EXISEL1_VALUE;
+; ..\cstart.c	   324  #endif
+; ..\cstart.c	   325  
+; ..\cstart.c	   326  #ifdef __IMBCTR
+; ..\cstart.c	   327          if(__IMBCTR_INIT)       __IMBCTR.U = __IMBCTR_VALUE;
+; ..\cstart.c	   328  #endif
+; ..\cstart.c	   329  #ifdef __IMB_IMBCTRL
+; ..\cstart.c	   330          if(__IMB_IMBCTRL_INIT)  __IMB_IMBCTRL.U = __IMB_IMBCTRL_VALUE;
+; ..\cstart.c	   331  #endif
+; ..\cstart.c	   332  #ifdef __IMB_IMBCTRH
+; ..\cstart.c	   333          if(__IMB_IMBCTRH_INIT)  __IMB_IMBCTRH.U = __IMB_IMBCTRH_VALUE;
+; ..\cstart.c	   334  #endif
+; ..\cstart.c	   335  
+; ..\cstart.c	   336  #ifdef __ADC_EVS
+; ..\cstart.c	   337          if(__ADC_EVS_INIT)      __ADC_EVS.U = __ADC_EVS_VALUE;
+; ..\cstart.c	   338  #endif
+; ..\cstart.c	   339  
+; ..\cstart.c	   340  #ifdef __CAPCOM_EVS
+; ..\cstart.c	   341          if(__CAPCOM_EVS_INIT)   __CAPCOM_EVS.U = __CAPCOM_EVS_VALUE;
+; ..\cstart.c	   342  #endif
+; ..\cstart.c	   343  
+; ..\cstart.c	   344  #ifdef __CLK_CONF
+; ..\cstart.c	   345          if(__CLK_CONF_INIT)     __CLK_CONF.U = __CLK_CONF_VALUE;
+; ..\cstart.c	   346  #endif
+; ..\cstart.c	   347  
+; ..\cstart.c	   348  #ifdef __CMCTR
+; ..\cstart.c	   349          if(__CMCTR_INIT)        __CMCTR.U = __CMCTR_VALUE;
+; ..\cstart.c	   350  #endif
+; ..\cstart.c	   351  
+; ..\cstart.c	   352  #ifdef __EBCCSEN
+; ..\cstart.c	   353          if(__EBCCSEN_INIT)      __EBCCSEN.U = __EBCCSEN_VALUE;
+; ..\cstart.c	   354  #endif
+; ..\cstart.c	   355  
+; ..\cstart.c	   356  #ifdef __EMUPCON
+; ..\cstart.c	   357          if(__EMUPCON_INIT)      __EMUPCON.U = __EMUPCON_VALUE;
+; ..\cstart.c	   358  #endif
+; ..\cstart.c	   359  
+; ..\cstart.c	   360  #ifdef __EMU_XPCON
+; ..\cstart.c	   361          if(__EMU_XPCON_INIT)    __EMU_XPCON.U = __EMU_XPCON_VALUE;
+; ..\cstart.c	   362  #endif
+; ..\cstart.c	   363  
+; ..\cstart.c	   364  #ifdef __EXISEL
+; ..\cstart.c	   365          if(__EXISEL_INIT)       __EXISEL.U = __EXISEL_VALUE;
+; ..\cstart.c	   366  #endif
+; ..\cstart.c	   367  
+; ..\cstart.c	   368  #ifdef __FOCON
+; ..\cstart.c	   369          if(__FOCON_INIT)        __FOCON.U = __FOCON_VALUE;
+; ..\cstart.c	   370  #endif
+; ..\cstart.c	   371  
+; ..\cstart.c	   372  #ifdef __GPT_EVS
+; ..\cstart.c	   373          if(__GPT_EVS_INIT)      __GPT_EVS.U = __GPT_EVS_VALUE;
+; ..\cstart.c	   374  #endif
+; ..\cstart.c	   375  
+; ..\cstart.c	   376  #ifdef __OPSEN
+; ..\cstart.c	   377          if(__OPSEN_INIT)        __OPSEN.U = __OPSEN_VALUE;
+; ..\cstart.c	   378  #endif
+; ..\cstart.c	   379  
+; ..\cstart.c	   380  #ifdef __PLL_CONF
+; ..\cstart.c	   381          if(__PLL_CONF_INIT)     __PLL_CONF.U = __PLL_CONF_VALUE;
+; ..\cstart.c	   382  #endif
+; ..\cstart.c	   383  
+; ..\cstart.c	   384  #ifdef __SYS_MEM
+; ..\cstart.c	   385          if(__SYS_MEM_INIT)      __SYS_MEM.U = __SYS_MEM_VALUE;
+; ..\cstart.c	   386  #endif
+; ..\cstart.c	   387  
+; ..\cstart.c	   388  #ifdef __SYS_PALT
+; ..\cstart.c	   389          if(__SYS_PALT_INIT)     __SYS_PALT.U = __SYS_PALT_VALUE;
+; ..\cstart.c	   390  #endif
+; ..\cstart.c	   391  
+; ..\cstart.c	   392  #ifdef __TCONCSMM
+; ..\cstart.c	   393          if(__TCONCSMM_INIT)     __TCONCSMM.U = __TCONCSMM_VALUE;
+; ..\cstart.c	   394  #endif
+; ..\cstart.c	   395  
+; ..\cstart.c	   396  #ifdef __TCONCSSM
+; ..\cstart.c	   397          if(__TCONCSSM_INIT)     __TCONCSSM.U = __TCONCSSM_VALUE;
+; ..\cstart.c	   398  #endif
+; ..\cstart.c	   399  
+; ..\cstart.c	   400  #ifdef __VREG_CONF
+; ..\cstart.c	   401          if(__VREG_CONF_INIT)    __VREG_CONF.U = __VREG_CONF_VALUE;
+; ..\cstart.c	   402  #endif
+; ..\cstart.c	   403  
+; ..\cstart.c	   404  #ifdef __XPERCONC
+; ..\cstart.c	   405          if(__XPERCONC_INIT)     __XPERCONC.U = __XPERCONC_VALUE;
+; ..\cstart.c	   406  #endif
+; ..\cstart.c	   407  
+; ..\cstart.c	   408  #ifdef __XPERCONS
+; ..\cstart.c	   409          if(__XPERCONS_INIT)     __XPERCONS.U = __XPERCONS_VALUE;
+; ..\cstart.c	   410  #endif
+; ..\cstart.c	   411  
+; ..\cstart.c	   412  
+; ..\cstart.c	   413          /*
+; ..\cstart.c	   414           * Kernel State Configuration Registers
+; ..\cstart.c	   415           */
+; ..\cstart.c	   416  #ifdef __RTC_KSCCFG
+; ..\cstart.c	   417          if(__RTC_KSCCFG_INIT)   __RTC_KSCCFG.U = __RTC_KSCCFG_VALUE;
+; ..\cstart.c	   418  #endif
+; ..\cstart.c	   419  
+; ..\cstart.c	   420  #ifdef __GPT12E_KSCCFG
+; ..\cstart.c	   421          if(__GPT12E_KSCCFG_INIT)__GPT12E_KSCCFG.U = __GPT12E_KSCCFG_VALUE;
+; ..\cstart.c	   422  #endif
+; ..\cstart.c	   423  
+; ..\cstart.c	   424  #ifdef __CC2_KSCCFG
+; ..\cstart.c	   425          if(__CC2_KSCCFG_INIT)   __CC2_KSCCFG.U = __CC2_KSCCFG_VALUE;
+; ..\cstart.c	   426  #endif
+; ..\cstart.c	   427  
+; ..\cstart.c	   428  #ifdef __MEM_KSCCFG
+; ..\cstart.c	   429          if(__MEM_KSCCFG_INIT)   __MEM_KSCCFG.U = __MEM_KSCCFG_VALUE;
+; ..\cstart.c	   430  #endif
+; ..\cstart.c	   431  
+; ..\cstart.c	   432  #ifdef __FL_KSCCFG
+; ..\cstart.c	   433          if(__FL_KSCCFG_INIT)    __FL_KSCCFG.U = __FL_KSCCFG_VALUE;
+; ..\cstart.c	   434  #endif
+; ..\cstart.c	   435  
+; ..\cstart.c	   436  #ifdef __MCAN_KSCCFG
+; ..\cstart.c	   437          if(__MCAN_KSCCFG_INIT)  __MCAN_KSCCFG.U = __MCAN_KSCCFG_VALUE;
+; ..\cstart.c	   438  #endif
+; ..\cstart.c	   439          /*
+; ..\cstart.c	   440           * ICACHE
+; ..\cstart.c	   441           */
+; ..\cstart.c	   442  #ifdef __ICACHE_CTRL
+; ..\cstart.c	   443  # if __ICACHE_CTRL_DO_MASK
+; ..\cstart.c	   444          if ( __ICACHE_CTRL_INIT) __ICACHE_CTRL.U |= __ICACHE_CTRL_VALUE & ~__ICACHE_CTRL_MASK;
+; ..\cstart.c	   445  # else
+; ..\cstart.c	   446          if(__ICACHE_CTRL_INIT)  __ICACHE_CTRL.U = __ICACHE_CTRL_VALUE;
+; ..\cstart.c	   447  # endif 
+; ..\cstart.c	   448  #endif
+; ..\cstart.c	   449  #ifdef __ICACHE_EDCON
+; ..\cstart.c	   450          if(__ICACHE_EDCON_INIT) __ICACHE_EDCON.U = __ICACHE_EDCON_VALUE;
+; ..\cstart.c	   451  #endif
+; ..\cstart.c	   452  #ifdef __ICACHE_DACON
+; ..\cstart.c	   453  # if __ICACHE_DACON_DO_MASK
+; ..\cstart.c	   454          if ( __ICACHE_DACON_INIT) __ICACHE_DACON.U |= __ICACHE_DACON_VALUE & ~__ICACHE_DACON_MASK;
+; ..\cstart.c	   455  # else
+; ..\cstart.c	   456          if(__ICACHE_DACON_INIT) __ICACHE_DACON.U = __ICACHE_DACON_VALUE;
+; ..\cstart.c	   457  # endif 
+; ..\cstart.c	   458  #endif
+; ..\cstart.c	   459          /*
+; ..\cstart.c	   460           * Vector table segment
+; ..\cstart.c	   461           */
+; ..\cstart.c	   462  #if __SET_VECSEG
+; ..\cstart.c	   463          __VECSEG.U = __seg( _lc_vector_table ); /* use linker symbol */
+	movw	0xff12,#@seg(__lc_vector_table)
+_49:
+
+; ..\cstart.c	   464  #endif
+; ..\cstart.c	   465  
+; ..\cstart.c	   466  
+; ..\cstart.c	   467          
+; ..\cstart.c	   468          /*
+; ..\cstart.c	   469           * Initialize system stack pointer and underflow and overflow registers
+; ..\cstart.c	   470           */
+; ..\cstart.c	   471           __asm("$nowarning(735)" );             /* do not complain about the labels in the atomic sequence */
+	$nowarning(735)
+_50:
+
+; ..\cstart.c	   472  #if __SET_SPSEG
+; ..\cstart.c	   473          __asm( "atomic #4" );
+	atomic #4
+_51:
+
+; ..\cstart.c	   474          __SPSEG.U = __seg( _lc_ub_system_stack );       /* use linker symbol */
+	movw	0xff0c,#@seg(__lc_ub_system_stack)
+_52:
+
+; ..\cstart.c	   475  #else
+; ..\cstart.c	   476          __asm( "atomic #3" );
+; ..\cstart.c	   477  #endif
+; ..\cstart.c	   478          __SP.U    = (int)_lc_ub_system_stack;
+	movw	0xfe12,#@sof(__lc_ub_system_stack)
+_53:
+
+; ..\cstart.c	   479          __STKOV.U = (int)(_lc_ue_system_stack + 6 * 2);
+	movw	0xfe14,#@sof(__lc_ue_system_stack+0xc)
+_54:
+
+; ..\cstart.c	   480          __STKUN.U = (int)_lc_ub_system_stack;
+	movw	0xfe16,#@sof(__lc_ub_system_stack)
+_55:
+
+; ..\cstart.c	   481  
+; ..\cstart.c	   482  
+; ..\cstart.c	   483          /*
+; ..\cstart.c	   484           * einit: end-of-initialization, set reset output pin /RSTOUT high
+; ..\cstart.c	   485           */
+; ..\cstart.c	   486  #if __EXECUTE_EINIT
+; ..\cstart.c	   487          __einit();
+	einit
+_56:
+
+; ..\cstart.c	   488  #endif
+; ..\cstart.c	   489  
+; ..\cstart.c	   490  #if __WDT_ENABLED
+; ..\cstart.c	   491          __srvwdt();
+; ..\cstart.c	   492  #endif
+; ..\cstart.c	   493  
+; ..\cstart.c	   494          /*
+; ..\cstart.c	   495           * Initialize user stack pointer
+; ..\cstart.c	   496           */
+; ..\cstart.c	   497          __setsp( _lc_ub_user_stack );
+	movw	r15,#__lc_ub_user_stack
+_57:
+
+; ..\cstart.c	   498          
+; ..\cstart.c	   499  
+; ..\cstart.c	   500          /*
+; ..\cstart.c	   501           * Initialize user stack pointers in local register banks 
+; ..\cstart.c	   502           */
+; ..\cstart.c	   503  #if     defined(__CORE_XC16X__) || defined(__CORE_SUPER10__)
+; ..\cstart.c	   504  #ifndef BANK                                    /* BANK not defined in new style SFR files */
+; ..\cstart.c	   505  #define BANK            __PSW.B.BANK
+; ..\cstart.c	   506  #endif
+; ..\cstart.c	   507  # if __INIT_USER_STACK1
+; ..\cstart.c	   508          BANK = 2;                               /* local registerbank 1 */
+; ..\cstart.c	   509          __setsp( _lc_ub_user_stack1 );          /* initialize user stack pointer */
+; ..\cstart.c	   510  # endif
+; ..\cstart.c	   511  # if __INIT_USER_STACK2
+; ..\cstart.c	   512          BANK = 3;                               /* local registerbank 2 */
+; ..\cstart.c	   513          __setsp( _lc_ub_user_stack2 );          /* initialize user stack pointer */
+; ..\cstart.c	   514  # endif
+; ..\cstart.c	   515  # if __INIT_USER_STACK1 || __INIT_USER_STACK2
+; ..\cstart.c	   516          BANK = 0;                               /* back to global registerbank */
+; ..\cstart.c	   517  # endif
+; ..\cstart.c	   518  #endif
+; ..\cstart.c	   519  
+; ..\cstart.c	   520  
+; ..\cstart.c	   521  
+; ..\cstart.c	   522          /*
+; ..\cstart.c	   523           * DPPs for near __addressing
+; ..\cstart.c	   524           */
+; ..\cstart.c	   525          __DPP0.U = __pag(_lc_base_dpp0);
+	movw	0xfe00,#@pag(__lc_base_dpp0)
+_58:
+
+; ..\cstart.c	   526          __DPP1.U = __pag(_lc_base_dpp1);
+	movw	0xfe02,#@pag(__lc_base_dpp1)
+_59:
+
+; ..\cstart.c	   527          __DPP2.U = __pag(_lc_base_dpp2);
+	movw	0xfe04,#@pag(__lc_base_dpp2)
+_60:
+
+; ..\cstart.c	   528  
+; ..\cstart.c	   529  
+; ..\cstart.c	   530  
+; ..\cstart.c	   531          /*
+; ..\cstart.c	   532           * Initialize C variables
+; ..\cstart.c	   533           */
+; ..\cstart.c	   534          if( _lc_copy_table[0].action != ac_stop )       /* only initialize if copy table contains data */
+	movb	rh4,#0x0
+	extp	#@pag(__lc_copy_table),#0x1
+	cmpb	rh4,@pof(__lc_copy_table)
+	jmp	cc_eq,_2
+_61:
+
+; ..\cstart.c	   535                  _init( __WDT_ENABLED );                 /* library routine: initialize C variables */
+	movw	r2,#0x0
+	call	__init
+_2:
+
+; ..\cstart.c	   536  
+; ..\cstart.c	   537  
+; ..\cstart.c	   538  
+; ..\cstart.c	   539          /*
+; ..\cstart.c	   540           * Set up profiling
+; ..\cstart.c	   541           */
+; ..\cstart.c	   542  #if  __PROF_ENABLE__
+; ..\cstart.c	   543          __prof_init();
+; ..\cstart.c	   544  #endif
+; ..\cstart.c	   545  
+; ..\cstart.c	   546  
+; ..\cstart.c	   547  #ifndef IEN                                     /* IEN not defined in new style SFR files */
+; ..\cstart.c	   548  #define IEN             __PSW.B.IEN
+; ..\cstart.c	   549  #endif
+; ..\cstart.c	   550          if( __ENABLE_INTERRUPTS )
+; ..\cstart.c	   551                  IEN = 1;                        /* enable interrupts */
+	bset	0xff10.11
+_62:
+
+; ..\cstart.c	   552  
+; ..\cstart.c	   553  
+; ..\cstart.c	   554  #if __WDT_ENABLED
+; ..\cstart.c	   555          __srvwdt();                             /* serve watchdog timer */
+; ..\cstart.c	   556  #endif
+; ..\cstart.c	   557  
+; ..\cstart.c	   558          
+; ..\cstart.c	   559  #if __USE_ARGC_ARGV
+; ..\cstart.c	   560          exit( main( _argcv( argcv, __ARGCV_BUFSIZE ), (char **)argcv ) );
+; ..\cstart.c	   561  #else
+; ..\cstart.c	   562          exit( main( 0, NULL ) );                /* argc is 0 */
+	movw	r2,#0x0
+	movw	r3,#0x0
+	call	_main
+_63:
+	jmp	_exit
+_13:
+	; End of function
+	; End of section
+
+	.calls	'__cstart','__init'
+	.calls	'__cstart','_main'
+	.calls	'__cstart','_exit'
+	.calls	'__cstart','',0,0
+	.weak	_exit
+	.extern	_exit : far
+	.extern	__Exit : far
+	.extern	__init : far
+	.extern	_main : far
+	.extern	__lc_ub_user_stack : nearbyte
+	.extern	__lc_ub_system_stack : byte
+	.extern	__lc_ue_system_stack : byte
+	.extern	__lc_base_dpp0 : byte
+	.extern	__lc_base_dpp1 : byte
+	.extern	__lc_base_dpp2 : byte
+	.extern	__lc_vector_table : byte
+	.extern	__lc_copy_table : word
+	.debug		.debug_info
+_6:
+	.dl	1144
+	.dw	3
+	.dl	_7
+	.db	4
+_5:
+	.db	1
+	.db	'..\\cstart.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_8
+	.db	2
+	.db	'__einit',0,6,1,1,1,1,2
+	.db	'__diswdt',0,6,1,1,1,1,3
+	.db	'__setsp',0,6,1,1,1,1,4
+	.db	'stack',0
+	.dl	_14-_6
+	.db	0,5,2
+	.dl	_15-_6
+_15:
+	.db	6
+	.db	'void',0
+_14:
+	.db	7
+	.db	'__getsetsp_t',0,1,1,1
+	.dl	_16-_6
+_16:
+	.db	5,2
+	.dl	190
+	.db	8
+	.db	'exit',0,2,114,33,6,1,1,1,1,9,2,114,44
+	.dl	_17-_6
+	.db	0
+_17:
+	.db	10
+	.db	'int',0,2,5,8
+	.db	'_init',0,3,64,17,6,1,1,1,1,11
+	.db	'wdt_enabled',0,3,64,28
+	.dl	246
+	.db	0,7
+	.db	'__wchar_t',0,1,1,1
+	.dl	_18-_6
+_18:
+	.db	10
+	.db	'unsigned short int',0,2,7,7
+	.db	'__size_t',0,1,1,1
+	.dl	_19-_6
+_19:
+	.db	10
+	.db	'unsigned int',0,2,7,7
+	.db	'__codeptr',0,1,1,1
+	.dl	_20-_6
+_20:
+	.db	10
+	.db	'unsigned long int',0,4,7,7
+	.db	'len_t',0,3,20,43
+	.dl	380
+	.db	7
+	.db	'src_t',0,3,21,43
+	.dl	_21-_6
+_21:
+	.db	5,4
+	.dl	_22-_6
+_22:
+	.db	12
+	.dl	_23-_6
+_23:
+	.db	10
+	.db	'unsigned char',0,1,8,7
+	.db	'dst_t',0,3,29,3
+	.dl	_24-_6
+_24:
+	.db	13
+	.db	'dst_s',0,3,23,15,4,14
+	.db	'pbit',0,2
+	.dl	_25-_6
+	.db	2,35,0,14
+	.db	'pnear',0,2
+	.dl	_26-_6
+	.db	2,35,0,14
+	.db	'pshuge',0,4
+	.dl	_27-_6
+	.db	2,35,0,14
+	.db	'phuge',0,4
+	.dl	_28-_6
+	.db	2,35,0,0
+_25:
+	.db	5,1
+	.dl	_29-_6
+_29:
+	.db	10
+	.db	'__bit',0,0,2
+_26:
+	.db	5,2
+	.dl	440
+_27:
+	.db	5,4
+	.dl	440
+_28:
+	.db	5,5
+	.dl	440
+	.db	7
+	.db	'space_t',0,3,44,3
+	.dl	_30-_6
+_30:
+	.db	15
+	.db	'space_s',0,3,33,17,1,16
+	.db	'spc_bit',0,1,16
+	.db	'spc_min',0,1,16
+	.db	'spc_bita',0,2,16
+	.db	'spc_iram',0,3,16
+	.db	'spc_near',0,4,16
+	.db	'spc_far',0,5,16
+	.db	'spc_shuge',0,6,16
+	.db	'spc_max',0,7,16
+	.db	'spc_huge',0,7,0,7
+	.db	'action_t',0,3,52,3
+	.dl	_31-_6
+_31:
+	.db	15
+	.db	'action_s',0,3,46,17,1,16
+	.db	'ac_stop',0,0,16
+	.db	'ac_copy',0,1,16
+	.db	'ac_clear',0,2,16
+	.db	'ac_decompress',0,3,0,7
+	.db	'cptab_t',0,3,62,17
+	.dl	_32-_6
+_32:
+	.db	12
+	.dl	_33-_6
+_33:
+	.db	17
+	.db	'cptab_s',0,3,55,17,14,14
+	.db	'action',0,1
+	.dl	719
+	.db	2,35,0,14
+	.db	'space',0,1
+	.dl	592
+	.db	2,35,1,14
+	.db	'dst',0,4
+	.dl	471
+	.db	2,35,2,14
+	.db	'src',0,4
+	.dl	415
+	.db	2,35,6,14
+	.db	'length',0,4
+	.dl	380
+	.db	2,35,10,0,5,4
+	.dl	_34-_6
+_34:
+	.db	12
+	.dl	440
+	.db	18
+	.db	'_lc_ub_user_stack',0,1,59,25,2
+	.dl	_35-_6
+	.db	1,1
+_35:
+	.db	19
+	.dl	_36-_6
+	.db	20,0
+_36:
+	.db	10
+	.db	'char',0,1,6,18
+	.db	'_lc_ub_system_stack',0,1,63,25,5
+	.dl	929
+	.db	1,1,18
+	.db	'_lc_ue_system_stack',0,1,64,25,5
+	.dl	929
+	.db	1,1,18
+	.db	'_lc_base_dpp0',0,1,65,25,5
+	.dl	929
+	.db	1,1,18
+	.db	'_lc_base_dpp1',0,1,66,25,5
+	.dl	929
+	.db	1,1,18
+	.db	'_lc_base_dpp2',0,1,67,25,5
+	.dl	929
+	.db	1,1,18
+	.db	'_lc_vector_table',0,1,68,25,5
+	.dl	929
+	.db	1,1,18
+	.db	'_lc_copy_table',0,1,69,25,4
+	.dl	_37-_6
+	.db	1,1
+_37:
+	.db	12
+	.dl	_38-_6
+_38:
+	.db	19
+	.dl	802
+	.db	20,0,0
+	; End of section
+
+	.debug		.debug_abbrev
+_7:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,46,0,3,8,51,15,54,15,39,12,63,12,60,12,0,0,3,46,1,3,8
+	.db	51,15,54,15,39,12,63,12,60,12,0,0,4,5,0,3,8,73,19,0,0,5,15,0,51,15,73,19,0,0,6,59,0,3,8,0,0,7,22,0,3,8
+	.db	58,15,59,15,57,15,73,19,0,0,8,46,1,3,8,58,15,59,15,57,15,51,15,54,15,39,12,63,12,60,12,0,0,9,5,0,58,15
+	.db	59,15,57,15,73,19,0,0,10,36,0,3,8,11,15,62,15,0,0,11,5,0,3,8,58,15,59,15,57,15,73,19,0,0,12,38,0,73,19
+	.db	0,0,13,23,1,3,8,58,15,59,15,57,15,11,15,0,0,14,13,0,3,8,11,15,73,19,56,9,0,0,15,4,1,3,8,58,15,59,15,57
+	.db	15,11,15,0,0,16,40,0,3,8,28,13,0,0,17,19,1,3,8,58,15,59,15,57,15,11,15,0,0,18,52,0,3,8,58,15,59,15,57
+	.db	15,51,15,73,19,63,12,60,12,0,0,19,1,1,73,19,0,0,20,33,0,0,0,0
+	; End of section
+
+	.debug		.debug_line
+_8:
+	.dl	_40-_39
+_39:
+	.dw	3
+	.dl	_42-_41
+_41:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\cstart.c',0,0,0,0
+	.db	'C:\\Program Files\\TASKING\\C166-VX v3.0r3\\include\\stdlib.h',0,0,0,0
+	.db	'C:\\Program Files\\TASKING\\C166-VX v3.0r3\\include\\_cptable.h',0,0,0,0,0
+_42:
+_40:
+	; End of section
+
+	.debug		.debug_info, cluster '_cstart'
+_9:
+	.dl	176
+	.dw	3
+	.dl	_10
+	.db	4,1
+	.db	'..\\cstart.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_12,_11
+	.db	2
+	.dl	_5
+	.db	3
+	.db	'_cstart',0,1,74,50,6,101,1,1
+	.dl	_4,_13,_3
+	.db	2,145,0,4
+	.dl	_4,_13
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster '_cstart'
+_10:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,11,0,17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster '_cstart'
+_11:
+	.dl	_44-_43
+_43:
+	.dw	3
+	.dl	_46-_45
+_45:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\cstart.c',0,0,0,0,0
+_46:
+	.db	5,50,7,0,5,2
+	.dl	_4
+	.db	3,201,0,1,5,19,9
+	.dw	_47-_4
+	.db	3,3,1,5,47,9
+	.dw	_48-_47
+	.db	3,130,3,1,5,10,9
+	.dw	_49-_48
+	.db	3,8,1,5,9,9
+	.dw	_50-_49
+	.db	3,2,1,5,49,9
+	.dw	_51-_50
+	.db	3,1,1,5,45,9
+	.dw	_52-_51
+	.db	3,4,1,5,55,9
+	.dw	_53-_52
+	.db	3,1,1,5,45,9
+	.dw	_54-_53
+	.db	3,1,1,5,18,9
+	.dw	_55-_54
+	.db	3,7,1,5,37,9
+	.dw	_56-_55
+	.db	3,10,1,5,40,9
+	.dw	_57-_56
+	.db	3,28,1,9
+	.dw	_58-_57
+	.db	3,1,1,9
+	.dw	_59-_58
+	.db	3,1,1,5,9,9
+	.dw	_60-_59
+	.db	3,7,1,5,39,9
+	.dw	_61-_60
+	.db	3,1,1,5,24,9
+	.dw	_2-_61
+	.db	3,16,1,5,19,9
+	.dw	_62-_2
+	.db	3,11,1,5,32,9
+	.dw	_63-_62
+	.db	1,5,1,9
+	.dw	_13-_63
+	.db	3,2,0,1,1
+_44:
+	; End of section
+
+	.debug		.debug_ranges, cluster '_cstart'
+_12:
+	.dl	-1,_4,0,_13-_4,0,0
+	; End of section
+
+	.debug		.debug_loc, cluster '_cstart'
+_3:
+	.dl	-1,_4,_4-_4,_13-_4
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,0,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_frame
+_64:
+	.dl	112
+	.dl	-1
+	.db	3,0,2,2,173,2,15,11,146,176,2,0,64,36,146,161,2,0,33,7,173,2,8,15,8,161,2,8,162,2,8,166,2,8,160,2,8,177
+	.db	2,8,178,2,8,179,2,8,180,2,8,0,8,1,8,2,8,3,8,4,8,5,8,6,8,7,8,8,8,9,8,10,8,11,8,12,8,13,8,14,8,167,2,8,168
+	.db	2,8,169,2,8,170,2,8,171,2,8,172,2,8,174,2,8,175,2,8,176,2,0,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster '_cstart'
+	.dl	12
+	.dl	_64,_4,_13-_4
+	; End of section
+
+
+; ..\cstart.c	   563  #endif
+; ..\cstart.c	   564  } 
+; ..\cstart.c	   565  
+; ..\cstart.c	   566  
+
+	; Module end
+	.end

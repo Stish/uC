@@ -1,0 +1,4347 @@
+	; TASKING VX-toolset for C166: C compiler v3.0r3 Build 707
+	; Options: -f cc5660a --dep-file=.CAN.obj.d -c99 -Mn --no-tasking-sfr -Cxc2267 --core=xc16x --global-type-checking --tradeoff=4 -g --make-target=CAN.obj --language=+cmp14,+div32,-gcc,-volatile,+strings -O2 --source --compact-max-size=200 -o CAN.src
+	; Module start
+	.source	'..\\CAN.c'
+code_CAN_vInit	.section	code, cluster 'CAN_vInit', new
+	.global	_CAN_vInit
+
+; ..\CAN.c	     1  //****************************************************************************
+; ..\CAN.c	     2  // @Module        MultiCAN Module (CAN)
+; ..\CAN.c	     3  // @Filename      CAN.c
+; ..\CAN.c	     4  // @Project       can_test.dav
+; ..\CAN.c	     5  //----------------------------------------------------------------------------
+; ..\CAN.c	     6  // @Controller    Infineon XC2267-96F80
+; ..\CAN.c	     7  //
+; ..\CAN.c	     8  // @Compiler      Tasking Viper
+; ..\CAN.c	     9  //
+; ..\CAN.c	    10  // @Codegenerator 2.2
+; ..\CAN.c	    11  //
+; ..\CAN.c	    12  // @Description   This file contains functions that use the CAN module.
+; ..\CAN.c	    13  //
+; ..\CAN.c	    14  //----------------------------------------------------------------------------
+; ..\CAN.c	    15  // @Date          26.09.2012 12:39:24
+; ..\CAN.c	    16  //
+; ..\CAN.c	    17  //****************************************************************************
+; ..\CAN.c	    18  
+; ..\CAN.c	    19  
+; ..\CAN.c	    20  
+; ..\CAN.c	    21  // USER CODE BEGIN (CAN_General,1)
+; ..\CAN.c	    22  
+; ..\CAN.c	    23  // USER CODE END
+; ..\CAN.c	    24  
+; ..\CAN.c	    25  
+; ..\CAN.c	    26  
+; ..\CAN.c	    27  //****************************************************************************
+; ..\CAN.c	    28  // @Project Includes
+; ..\CAN.c	    29  //****************************************************************************
+; ..\CAN.c	    30  
+; ..\CAN.c	    31  #include "MAIN.h"
+; ..\CAN.c	    32  
+; ..\CAN.c	    33  // USER CODE BEGIN (CAN_General,2)
+; ..\CAN.c	    34  
+; ..\CAN.c	    35  // USER CODE END
+; ..\CAN.c	    36  
+; ..\CAN.c	    37  
+; ..\CAN.c	    38  //****************************************************************************
+; ..\CAN.c	    39  // @Macros
+; ..\CAN.c	    40  //****************************************************************************
+; ..\CAN.c	    41  
+; ..\CAN.c	    42  // USER CODE BEGIN (CAN_General,3)
+; ..\CAN.c	    43  
+; ..\CAN.c	    44  // USER CODE END
+; ..\CAN.c	    45  
+; ..\CAN.c	    46  
+; ..\CAN.c	    47  //****************************************************************************
+; ..\CAN.c	    48  // @Defines
+; ..\CAN.c	    49  //****************************************************************************
+; ..\CAN.c	    50  
+; ..\CAN.c	    51  // USER CODE BEGIN (CAN_General,4)
+; ..\CAN.c	    52  
+; ..\CAN.c	    53  // USER CODE END
+; ..\CAN.c	    54  
+; ..\CAN.c	    55  
+; ..\CAN.c	    56  //****************************************************************************
+; ..\CAN.c	    57  // @Typedefs
+; ..\CAN.c	    58  //****************************************************************************
+; ..\CAN.c	    59  
+; ..\CAN.c	    60  // USER CODE BEGIN (CAN_General,5)
+; ..\CAN.c	    61  
+; ..\CAN.c	    62  // USER CODE END
+; ..\CAN.c	    63  
+; ..\CAN.c	    64  
+; ..\CAN.c	    65  //****************************************************************************
+; ..\CAN.c	    66  // @Imported Global Variables
+; ..\CAN.c	    67  //****************************************************************************
+; ..\CAN.c	    68  
+; ..\CAN.c	    69  // USER CODE BEGIN (CAN_General,6)
+; ..\CAN.c	    70  
+; ..\CAN.c	    71  // USER CODE END
+; ..\CAN.c	    72  
+; ..\CAN.c	    73  
+; ..\CAN.c	    74  //****************************************************************************
+; ..\CAN.c	    75  // @Global Variables
+; ..\CAN.c	    76  //****************************************************************************
+; ..\CAN.c	    77  
+; ..\CAN.c	    78  
+; ..\CAN.c	    79  // USER CODE BEGIN (CAN_General,7)
+; ..\CAN.c	    80  
+; ..\CAN.c	    81  // USER CODE END
+; ..\CAN.c	    82  
+; ..\CAN.c	    83  
+; ..\CAN.c	    84  //****************************************************************************
+; ..\CAN.c	    85  // @External Prototypes
+; ..\CAN.c	    86  //****************************************************************************
+; ..\CAN.c	    87  
+; ..\CAN.c	    88  // USER CODE BEGIN (CAN_General,8)
+; ..\CAN.c	    89  
+; ..\CAN.c	    90  // USER CODE END
+; ..\CAN.c	    91  
+; ..\CAN.c	    92  
+; ..\CAN.c	    93  //****************************************************************************
+; ..\CAN.c	    94  // @Prototypes Of Local Functions
+; ..\CAN.c	    95  //****************************************************************************
+; ..\CAN.c	    96  
+; ..\CAN.c	    97  // USER CODE BEGIN (CAN_General,9)
+; ..\CAN.c	    98  
+; ..\CAN.c	    99  // USER CODE END
+; ..\CAN.c	   100  
+; ..\CAN.c	   101  
+; ..\CAN.c	   102  //****************************************************************************
+; ..\CAN.c	   103  // @Function      void CAN_vInit(void) 
+; ..\CAN.c	   104  //
+; ..\CAN.c	   105  //----------------------------------------------------------------------------
+; ..\CAN.c	   106  // @Description   This is the initialization function of the CAN function 
+; ..\CAN.c	   107  //                library. It is assumed that the SFRs used by this library 
+; ..\CAN.c	   108  //                are in reset state. 
+; ..\CAN.c	   109  //
+; ..\CAN.c	   110  //----------------------------------------------------------------------------
+; ..\CAN.c	   111  // @Returnvalue   None
+; ..\CAN.c	   112  //
+; ..\CAN.c	   113  //----------------------------------------------------------------------------
+; ..\CAN.c	   114  // @Parameters    None
+; ..\CAN.c	   115  //
+; ..\CAN.c	   116  //----------------------------------------------------------------------------
+; ..\CAN.c	   117  // @Date          26.09.2012
+; ..\CAN.c	   118  //
+; ..\CAN.c	   119  //****************************************************************************
+; ..\CAN.c	   120  
+; ..\CAN.c	   121  // USER CODE BEGIN (Init,1)
+; ..\CAN.c	   122  
+; ..\CAN.c	   123  // USER CODE END
+; ..\CAN.c	   124  
+; ..\CAN.c	   125  void CAN_vInit(void)
+; Function _CAN_vInit
+_30:
+_CAN_vInit	.proc	far
+
+; ..\CAN.c	   126  {
+; ..\CAN.c	   127  
+; ..\CAN.c	   128    // USER CODE BEGIN (Init,2)
+; ..\CAN.c	   129  
+; ..\CAN.c	   130    // USER CODE END
+; ..\CAN.c	   131  
+; ..\CAN.c	   132    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   133    ///  Configuration of Kernel State Configuration Register:
+; ..\CAN.c	   134    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   135    ///  - Enable the CAN module(MODEN)
+; ..\CAN.c	   136    ///  - Enable Bit Protection for MODEN
+; ..\CAN.c	   137  
+; ..\CAN.c	   138      MCAN_KSCCFG  =  0x0003;      // load Kernel State Configuration Register
+	movw	0xfe1e,#0x3
+_206:
+
+; ..\CAN.c	   139  
+; ..\CAN.c	   140      _nop();  // one cycle delay 
+	nop
+_207:
+
+; ..\CAN.c	   141  
+; ..\CAN.c	   142      _nop();  // one cycle delay 
+	nop
+_208:
+
+; ..\CAN.c	   143  
+; ..\CAN.c	   144  
+; ..\CAN.c	   145    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   146    ///  Configuration of the Module Clock:
+; ..\CAN.c	   147    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   148    ///  - the CAN module clock = 40,00 MHz
+; ..\CAN.c	   149    ///  - Normal divider mode selected
+; ..\CAN.c	   150  
+; ..\CAN.c	   151      CAN_FDRL     =  0x43FE;      // load Fractional Divider Register
+	movw	r11,#0x43fe
+	extp	#0x80,#0x1
+	movw	0xc,r11
+_209:
+
+; ..\CAN.c	   152  
+; ..\CAN.c	   153    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   154    ///  Panel Control
+; ..\CAN.c	   155    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   156    ///  - wait until Panel has finished the initialisation
+; ..\CAN.c	   157  
+; ..\CAN.c	   158      while(CAN_PANCTRL & CAN_PANCTR_BUSY){ // wait until Panel has finished 
+	call	_$cocofun_2
+_210:
+
+; ..\CAN.c	   159                                            // the initialisation
+; ..\CAN.c	   160        }                         
+; ..\CAN.c	   161  
+; ..\CAN.c	   162    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   163    ///  Configuration of CAN Node 0:
+; ..\CAN.c	   164    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   165  
+; ..\CAN.c	   166    ///  General Configuration of the Node 0:
+; ..\CAN.c	   167    ///  - set INIT and CCE
+; ..\CAN.c	   168  
+; ..\CAN.c	   169      CAN_NCR0     =  0x0041;      // load NODE 0 control register[15-0]
+	movw	r11,#0x41
+_211:
+	extp	#0x80,#0x2
+	movw	0x200,r11
+
+; ..\CAN.c	   170  
+; ..\CAN.c	   171    ///  - load NODE 0 interrupt pointer register
+; ..\CAN.c	   172  
+; ..\CAN.c	   173      CAN_NIPR0    =  0x0000;      // load NIPR0_LECINP, ALINP, CFCINP and TRINP
+	movw	0x208,ZEROS
+_212:
+
+; ..\CAN.c	   174  
+; ..\CAN.c	   175    ///  Configuration of the used CAN Port Pins:
+; ..\CAN.c	   176    ///  - Loop-back mode is disabled
+; ..\CAN.c	   177    ///  - P2.0 is used for CAN0 Receive input(RXDC0C)
+; ..\CAN.c	   178    ///  - P2.1 is used for CAN0 Transmit output(TXDC0C)
+; ..\CAN.c	   179  
+; ..\CAN.c	   180    P2_IOCR01 = 0x0090;    //set direction register
+	movw	r12,#0x90
+	movw	0xe842,r12
+_213:
+
+; ..\CAN.c	   181      CAN_NPCR0    =  0x0002;      // load node0 port control register
+	movw	r12,#0x2
+	extp	#0x80,#0x1
+	movw	0x20c,r12
+_214:
+
+; ..\CAN.c	   182  
+; ..\CAN.c	   183  
+; ..\CAN.c	   184    ///  Configuration of the Node 0 Baud Rate:
+; ..\CAN.c	   185    ///  - required baud rate = 125,000 kbaud
+; ..\CAN.c	   186    ///  - real baud rate     = 125,000 kbaud
+; ..\CAN.c	   187    ///  - sample point       = 60,00 %
+; ..\CAN.c	   188    ///  - there are 5 time quanta before sample point
+; ..\CAN.c	   189    ///  - there are 4 time quanta after sample point
+; ..\CAN.c	   190    ///  - the (re)synchronization jump width is 2 time quanta
+; ..\CAN.c	   191  
+; ..\CAN.c	   192      CAN_NBTR0L   =  0x345F;      // load NBTR0_DIV8, TSEG2, TSEG1, SJW and BRP
+	movw	r13,#0x345f
+	extp	#0x80,#0x1
+	movw	0x210,r13
+_215:
+
+; ..\CAN.c	   193  
+; ..\CAN.c	   194    ///  Configuration of the Node 0 Error Counter:
+; ..\CAN.c	   195    ///  - the error warning threshold value (warning level) is 96
+; ..\CAN.c	   196  
+; ..\CAN.c	   197      CAN_NECNT0H = 0x0060;        // load NECNT0_EWRNLVL register
+	movw	r13,#0x60
+_216:
+_217:
+_218:
+	extp	#0x80,#0x4
+	movw	0x216,r13
+
+; ..\CAN.c	   198      CAN_NECNT0L = 0x0000;       
+	movw	0x214,ZEROS
+
+; ..\CAN.c	   199  
+; ..\CAN.c	   200    ///  Configuration of the Frame Counter:
+; ..\CAN.c	   201    ///  - Frame Counter Mode: the counter is incremented upon the reception 
+; ..\CAN.c	   202    ///    and transmission of frames
+; ..\CAN.c	   203    ///  - frame counter: 0x0000
+; ..\CAN.c	   204  
+; ..\CAN.c	   205      CAN_NFCR0H = 0x0000;         // load NFCR0_CFCOV, CFCIE, CFMOD, CFSEL
+	movw	0x21a,ZEROS
+
+; ..\CAN.c	   206      CAN_NFCR0L = 0x0000;         // load NFCR0_CFC
+	movw	0x218,ZEROS
+_219:
+
+; ..\CAN.c	   207  
+; ..\CAN.c	   208    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   209    ///  Configuration of CAN Node 1:
+; ..\CAN.c	   210    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   211  
+; ..\CAN.c	   212    ///  General Configuration of the Node 1:
+; ..\CAN.c	   213    ///  - set INIT and CCE
+; ..\CAN.c	   214  
+; ..\CAN.c	   215      CAN_NCR1     =  0x0041;      // load NODE 1 control register[15-0]
+_220:
+_221:
+_222:
+	extp	#0x80,#0x4
+	movw	0x300,r11
+
+; ..\CAN.c	   216  
+; ..\CAN.c	   217    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   218    ///  Configuration of CAN Node 2:
+; ..\CAN.c	   219    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   220  
+; ..\CAN.c	   221    ///  General Configuration of the Node 2:
+; ..\CAN.c	   222    ///  - set INIT and CCE
+; ..\CAN.c	   223  
+; ..\CAN.c	   224      CAN_NCR2     =  0x0041;      // load NODE 2 control register[15-0]
+	movw	0x400,r11
+
+; ..\CAN.c	   225  
+; ..\CAN.c	   226    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   227    ///  Configuration of CAN Node 3:
+; ..\CAN.c	   228    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   229  
+; ..\CAN.c	   230    ///  General Configuration of the Node 3:
+; ..\CAN.c	   231    ///  - set INIT and CCE
+; ..\CAN.c	   232  
+; ..\CAN.c	   233      CAN_NCR3     =  0x0041;      // load NODE 3 control register[15-0]
+	movw	0x500,r11
+
+; ..\CAN.c	   234  
+; ..\CAN.c	   235    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   236    ///  Configuration of CAN Node 4:
+; ..\CAN.c	   237    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   238  
+; ..\CAN.c	   239    ///  General Configuration of the Node 4:
+; ..\CAN.c	   240    ///  - set INIT and CCE
+; ..\CAN.c	   241  
+; ..\CAN.c	   242      CAN_NCR4     =  0x0041;      // load NODE 4 control register[15-0]
+	movw	0x600,r11
+_223:
+
+; ..\CAN.c	   243  
+; ..\CAN.c	   244    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   245    ///  Configuration of the CAN Message Object List Structure:
+; ..\CAN.c	   246    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   247  
+; ..\CAN.c	   248    ///  Allocate MOs for list 1:
+; ..\CAN.c	   249  
+; ..\CAN.c	   250      SetListCommand(0x0109,0x0002);  // MO9 for list 1 (Node 0)
+	movw	r11,#0x109
+	extp	#0x80,#0x2
+	movw	0x1c6,r11
+	movw	0x1c4,r12
+	call	_$cocofun_2
+_224:
+
+; ..\CAN.c	   251  
+; ..\CAN.c	   252      SetListCommand(0x0108,0x0002);  // MO8 for list 1 (Node 0)
+	movw	r11,#0x108
+	call	_$cocofun_1
+_225:
+
+; ..\CAN.c	   253  
+; ..\CAN.c	   254      SetListCommand(0x0107,0x0002);  // MO7 for list 1 (Node 0)
+	movw	r11,#0x107
+	call	_$cocofun_1
+_226:
+
+; ..\CAN.c	   255  
+; ..\CAN.c	   256      SetListCommand(0x0106,0x0002);  // MO6 for list 1 (Node 0)
+	movw	r11,#0x106
+	call	_$cocofun_1
+_227:
+
+; ..\CAN.c	   257  
+; ..\CAN.c	   258      SetListCommand(0x0105,0x0002);  // MO5 for list 1 (Node 0)
+	movw	r11,#0x105
+	call	_$cocofun_1
+_228:
+
+; ..\CAN.c	   259  
+; ..\CAN.c	   260      SetListCommand(0x0104,0x0002);  // MO4 for list 1 (Node 0)
+	movw	r11,#0x104
+	call	_$cocofun_1
+_229:
+
+; ..\CAN.c	   261  
+; ..\CAN.c	   262      SetListCommand(0x0103,0x0002);  // MO3 for list 1 (Node 0)
+	movw	r11,#0x103
+	call	_$cocofun_1
+_230:
+
+; ..\CAN.c	   263  
+; ..\CAN.c	   264      SetListCommand(0x0102,0x0002);  // MO2 for list 1 (Node 0)
+	movw	r11,#0x102
+	call	_$cocofun_1
+_231:
+
+; ..\CAN.c	   265  
+; ..\CAN.c	   266      SetListCommand(0x0101,0x0002);  // MO1 for list 1 (Node 0)
+	movw	r11,#0x101
+	call	_$cocofun_1
+_232:
+
+; ..\CAN.c	   267  
+; ..\CAN.c	   268      SetListCommand(0x0100,0x0002);  // MO0 for list 1 (Node 0)
+	movw	r11,#0x100
+	call	_$cocofun_1
+_233:
+
+; ..\CAN.c	   269  
+; ..\CAN.c	   270    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   271    ///  Configuration of the CAN Message Objects 0 - 127:
+; ..\CAN.c	   272    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   273    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   274    ///  Configuration of Message Object 0:
+; ..\CAN.c	   275    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   276  
+; ..\CAN.c	   277    ///  General Configuration of the Message Object 0 :
+; ..\CAN.c	   278    ///  - message object 0 is valid
+; ..\CAN.c	   279    ///  - message object is used as transmit object
+; ..\CAN.c	   280    ///  - this message object is assigned to list 1 (node 0)
+; ..\CAN.c	   281  
+; ..\CAN.c	   282      CAN_MOCTR0H = 0x0EA8;        // load MO0 control register high
+	movw	r13,#0xea8
+_234:
+	extp	#0x80,#0x2
+	movw	0x101e,r13
+
+; ..\CAN.c	   283      CAN_MOCTR0L = 0x0000;        // load MO0 control register low
+	movw	0x101c,ZEROS
+_235:
+
+; ..\CAN.c	   284  
+; ..\CAN.c	   285    ///  Configuration of Message Object 0 Arbitration:
+; ..\CAN.c	   286    ///  - priority class 2; transmit acceptance filtering is based on the CAN 
+; ..\CAN.c	   287    ///    identifier
+; ..\CAN.c	   288    ///  - standard 11-bit identifier
+; ..\CAN.c	   289    ///  - identifier 11-bit:      0x030
+; ..\CAN.c	   290  
+; ..\CAN.c	   291      CAN_MOAR0H = 0x80C0;         // load MO0 arbitration register high
+	movw	r11,#0x80c0
+_236:
+_237:
+_238:
+	extp	#0x80,#0x4
+	movw	0x101a,r11
+
+; ..\CAN.c	   292      CAN_MOAR0L = 0x0000;         // load MO0 arbitration register low
+	movw	0x1018,ZEROS
+
+; ..\CAN.c	   293  
+; ..\CAN.c	   294    ///  Configuration of Message Object 0 Data:
+; ..\CAN.c	   295  
+; ..\CAN.c	   296      CAN_MODATA0HH = 0x0000;      // load MO0 Data Bytes(DB7 & DB6)
+	movw	0x1016,ZEROS
+
+; ..\CAN.c	   297      CAN_MODATA0HL = 0x0000;      // load MO0 Data Bytes(DB5 & DB4)
+	movw	0x1014,ZEROS
+_239:
+
+; ..\CAN.c	   298      CAN_MODATA0LH = 0x0000;      // load MO0 Data Bytes(DB3 & DB2)
+_240:
+	extp	#0x80,#0x2
+	movw	0x1012,ZEROS
+
+; ..\CAN.c	   299      CAN_MODATA0LL = 0x0000;      // load MO0 Data Bytes(DB1 & DB0)
+	movw	0x1010,ZEROS
+_241:
+
+; ..\CAN.c	   300  
+; ..\CAN.c	   301    ///  Configuration of Message Object 0 acceptance mask:
+; ..\CAN.c	   302    ///  - only accept receive frames with matching IDE bit
+; ..\CAN.c	   303    ///  - acceptance mask 11-bit: 0x7FF
+; ..\CAN.c	   304  
+; ..\CAN.c	   305      CAN_MOAMR0H = 0x3FFF;        // load MO0 acceptance mask register high
+	movw	r12,#0x3fff
+_242:
+_243:
+_244:
+	extp	#0x80,#0x4
+	movw	0x100e,r12
+
+; ..\CAN.c	   306      CAN_MOAMR0L = 0xFFFF;        // load MO0 acceptance mask register low
+	movw	0x100c,ONES
+
+; ..\CAN.c	   307  
+; ..\CAN.c	   308    ///  Configuration of Message Object 0 interrupt pointer:
+; ..\CAN.c	   309    ///  - use message pending register 0 bit position 0
+; ..\CAN.c	   310  
+; ..\CAN.c	   311      CAN_MOIPR0H = 0x0000;        // load MO0 interrupt pointer register high
+	movw	0x100a,ZEROS
+
+; ..\CAN.c	   312      CAN_MOIPR0L = 0x0000;        // load MO0 interrupt pointer register low
+	movw	0x1008,ZEROS
+_245:
+
+; ..\CAN.c	   313  
+; ..\CAN.c	   314    ///  Configuration of Message Object 0 FIFO/Gateway pointer:
+; ..\CAN.c	   315  
+; ..\CAN.c	   316      CAN_MOFGPR0H = 0x0000;       // load MO0 FIFO/gateway pointer register 
+_246:
+	extp	#0x80,#0x2
+	movw	0x1006,ZEROS
+
+; ..\CAN.c	   317                                   // high
+; ..\CAN.c	   318      CAN_MOFGPR0L = 0x0000;       // load MO0 FIFO/gateway pointer register low
+	movw	0x1004,ZEROS
+_247:
+
+; ..\CAN.c	   319  
+; ..\CAN.c	   320  
+; ..\CAN.c	   321    ///  Configuration of Message Object 0 Function control:
+; ..\CAN.c	   322    ///  - this object is a STANDARD MESSAGE OBJECT
+; ..\CAN.c	   323    ///  - 8 valid data bytes
+; ..\CAN.c	   324  
+; ..\CAN.c	   325      CAN_MOFCR0H = 0x0800;        // load MO0 function control register high
+	movw	r14,#0x800
+_248:
+_249:
+_250:
+	extp	#0x80,#0x4
+	movw	0x1002,r14
+
+; ..\CAN.c	   326      CAN_MOFCR0L = 0x0000;        // load MO0 function control register low
+	movw	0x1000,ZEROS
+
+; ..\CAN.c	   327  
+; ..\CAN.c	   328    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   329    ///  Configuration of Message Object 1:
+; ..\CAN.c	   330    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   331  
+; ..\CAN.c	   332    ///  General Configuration of the Message Object 1 :
+; ..\CAN.c	   333    ///  - message object 1 is valid
+; ..\CAN.c	   334    ///  - message object is used as transmit object
+; ..\CAN.c	   335    ///  - this message object is assigned to list 1 (node 0)
+; ..\CAN.c	   336  
+; ..\CAN.c	   337      CAN_MOCTR1H = 0x0EA8;        // load MO1 control register high
+	movw	0x103e,r13
+
+; ..\CAN.c	   338      CAN_MOCTR1L = 0x0000;        // load MO1 control register low
+	movw	0x103c,ZEROS
+_251:
+
+; ..\CAN.c	   339  
+; ..\CAN.c	   340    ///  Configuration of Message Object 1 Arbitration:
+; ..\CAN.c	   341    ///  - priority class 1; transmit acceptance filtering is based on the list 
+; ..\CAN.c	   342    ///    order
+; ..\CAN.c	   343    ///  - standard 11-bit identifier
+; ..\CAN.c	   344    ///  - identifier 11-bit:      0x031
+; ..\CAN.c	   345  
+; ..\CAN.c	   346      CAN_MOAR1H = 0x40C4;         // load MO1 arbitration register high
+	movw	r11,#0x40c4
+_252:
+_253:
+_254:
+	extp	#0x80,#0x4
+	movw	0x103a,r11
+
+; ..\CAN.c	   347      CAN_MOAR1L = 0x0000;         // load MO1 arbitration register low
+	movw	0x1038,ZEROS
+
+; ..\CAN.c	   348  
+; ..\CAN.c	   349    ///  Configuration of Message Object 1 Data:
+; ..\CAN.c	   350  
+; ..\CAN.c	   351      CAN_MODATA1HH = 0x0000;      // load MO1 Data Bytes(DB7 & DB6)
+	movw	0x1036,ZEROS
+
+; ..\CAN.c	   352      CAN_MODATA1HL = 0x0000;      // load MO1 Data Bytes(DB5 & DB4)
+	movw	0x1034,ZEROS
+_255:
+
+; ..\CAN.c	   353      CAN_MODATA1LH = 0x0000;      // load MO1 Data Bytes(DB3 & DB2)
+_256:
+_257:
+_258:
+	extp	#0x80,#0x4
+	movw	0x1032,ZEROS
+
+; ..\CAN.c	   354      CAN_MODATA1LL = 0x0000;      // load MO1 Data Bytes(DB1 & DB0)
+	movw	0x1030,ZEROS
+
+; ..\CAN.c	   355  
+; ..\CAN.c	   356    ///  Configuration of Message Object 1 acceptance mask:
+; ..\CAN.c	   357    ///  - only accept receive frames with matching IDE bit
+; ..\CAN.c	   358    ///  - acceptance mask 11-bit: 0x7FF
+; ..\CAN.c	   359  
+; ..\CAN.c	   360      CAN_MOAMR1H = 0x3FFF;        // load MO1 acceptance mask register high
+	movw	0x102e,r12
+
+; ..\CAN.c	   361      CAN_MOAMR1L = 0xFFFF;        // load MO1 acceptance mask register low
+	movw	0x102c,ONES
+_259:
+
+; ..\CAN.c	   362  
+; ..\CAN.c	   363    ///  Configuration of Message Object 1 interrupt pointer:
+; ..\CAN.c	   364    ///  - use message pending register 0 bit position 1
+; ..\CAN.c	   365  
+; ..\CAN.c	   366      CAN_MOIPR1H = 0x0000;        // load MO1 interrupt pointer register high
+	extp	#0x80,#0x1
+	movw	0x102a,ZEROS
+_260:
+
+; ..\CAN.c	   367      CAN_MOIPR1L = 0x0100;        // load MO1 interrupt pointer register low
+	movw	r11,#0x100
+_261:
+_262:
+_263:
+	extp	#0x80,#0x4
+	movw	0x1028,r11
+
+; ..\CAN.c	   368  
+; ..\CAN.c	   369    ///  Configuration of Message Object 1 FIFO/Gateway pointer:
+; ..\CAN.c	   370  
+; ..\CAN.c	   371      CAN_MOFGPR1H = 0x0000;       // load MO1 FIFO/gateway pointer register 
+	movw	0x1026,ZEROS
+
+; ..\CAN.c	   372                                   // high
+; ..\CAN.c	   373      CAN_MOFGPR1L = 0x0000;       // load MO1 FIFO/gateway pointer register low
+	movw	0x1024,ZEROS
+
+; ..\CAN.c	   374  
+; ..\CAN.c	   375  
+; ..\CAN.c	   376    ///  Configuration of Message Object 1 Function control:
+; ..\CAN.c	   377    ///  - this object is a STANDARD MESSAGE OBJECT
+; ..\CAN.c	   378    ///  - 8 valid data bytes
+; ..\CAN.c	   379  
+; ..\CAN.c	   380      CAN_MOFCR1H = 0x0800;        // load MO1 function control register high
+	movw	0x1022,r14
+_264:
+
+; ..\CAN.c	   381      CAN_MOFCR1L = 0x0000;        // load MO1 function control register low
+_265:
+_266:
+	extp	#0x80,#0x3
+	movw	0x1020,ZEROS
+
+; ..\CAN.c	   382  
+; ..\CAN.c	   383    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   384    ///  Configuration of Message Object 2:
+; ..\CAN.c	   385    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   386  
+; ..\CAN.c	   387    ///  General Configuration of the Message Object 2 :
+; ..\CAN.c	   388    ///  - message object 2 is valid
+; ..\CAN.c	   389    ///  - message object is used as transmit object
+; ..\CAN.c	   390    ///  - this message object is assigned to list 1 (node 0)
+; ..\CAN.c	   391  
+; ..\CAN.c	   392      CAN_MOCTR2H = 0x0EA8;        // load MO2 control register high
+	movw	0x105e,r13
+
+; ..\CAN.c	   393      CAN_MOCTR2L = 0x0000;        // load MO2 control register low
+	movw	0x105c,ZEROS
+_267:
+
+; ..\CAN.c	   394  
+; ..\CAN.c	   395    ///  Configuration of Message Object 2 Arbitration:
+; ..\CAN.c	   396    ///  - priority class 1; transmit acceptance filtering is based on the list 
+; ..\CAN.c	   397    ///    order
+; ..\CAN.c	   398    ///  - standard 11-bit identifier
+; ..\CAN.c	   399    ///  - identifier 11-bit:      0x040
+; ..\CAN.c	   400  
+; ..\CAN.c	   401      CAN_MOAR2H = 0x4100;         // load MO2 arbitration register high
+	movw	r11,#0x4100
+_268:
+_269:
+_270:
+	extp	#0x80,#0x4
+	movw	0x105a,r11
+
+; ..\CAN.c	   402      CAN_MOAR2L = 0x0000;         // load MO2 arbitration register low
+	movw	0x1058,ZEROS
+
+; ..\CAN.c	   403  
+; ..\CAN.c	   404    ///  Configuration of Message Object 2 Data:
+; ..\CAN.c	   405  
+; ..\CAN.c	   406      CAN_MODATA2HH = 0x0000;      // load MO2 Data Bytes(DB7 & DB6)
+	movw	0x1056,ZEROS
+
+; ..\CAN.c	   407      CAN_MODATA2HL = 0x0000;      // load MO2 Data Bytes(DB5 & DB4)
+	movw	0x1054,ZEROS
+_271:
+
+; ..\CAN.c	   408      CAN_MODATA2LH = 0x0000;      // load MO2 Data Bytes(DB3 & DB2)
+_272:
+_273:
+_274:
+	extp	#0x80,#0x4
+	movw	0x1052,ZEROS
+
+; ..\CAN.c	   409      CAN_MODATA2LL = 0x0000;      // load MO2 Data Bytes(DB1 & DB0)
+	movw	0x1050,ZEROS
+
+; ..\CAN.c	   410  
+; ..\CAN.c	   411    ///  Configuration of Message Object 2 acceptance mask:
+; ..\CAN.c	   412    ///  - only accept receive frames with matching IDE bit
+; ..\CAN.c	   413    ///  - acceptance mask 11-bit: 0x7FF
+; ..\CAN.c	   414  
+; ..\CAN.c	   415      CAN_MOAMR2H = 0x3FFF;        // load MO2 acceptance mask register high
+	movw	0x104e,r12
+
+; ..\CAN.c	   416      CAN_MOAMR2L = 0xFFFF;        // load MO2 acceptance mask register low
+	movw	0x104c,ONES
+_275:
+
+; ..\CAN.c	   417  
+; ..\CAN.c	   418    ///  Configuration of Message Object 2 interrupt pointer:
+; ..\CAN.c	   419    ///  - use message pending register 0 bit position 2
+; ..\CAN.c	   420  
+; ..\CAN.c	   421      CAN_MOIPR2H = 0x0000;        // load MO2 interrupt pointer register high
+	extp	#0x80,#0x1
+	movw	0x104a,ZEROS
+_276:
+
+; ..\CAN.c	   422      CAN_MOIPR2L = 0x0200;        // load MO2 interrupt pointer register low
+	movw	r11,#0x200
+_277:
+_278:
+_279:
+	extp	#0x80,#0x4
+	movw	0x1048,r11
+
+; ..\CAN.c	   423  
+; ..\CAN.c	   424    ///  Configuration of Message Object 2 FIFO/Gateway pointer:
+; ..\CAN.c	   425  
+; ..\CAN.c	   426      CAN_MOFGPR2H = 0x0000;       // load MO2 FIFO/gateway pointer register 
+	movw	0x1046,ZEROS
+
+; ..\CAN.c	   427                                   // high
+; ..\CAN.c	   428      CAN_MOFGPR2L = 0x0000;       // load MO2 FIFO/gateway pointer register low
+	movw	0x1044,ZEROS
+
+; ..\CAN.c	   429  
+; ..\CAN.c	   430  
+; ..\CAN.c	   431    ///  Configuration of Message Object 2 Function control:
+; ..\CAN.c	   432    ///  - this object is a STANDARD MESSAGE OBJECT
+; ..\CAN.c	   433    ///  - 8 valid data bytes
+; ..\CAN.c	   434  
+; ..\CAN.c	   435      CAN_MOFCR2H = 0x0800;        // load MO2 function control register high
+	movw	0x1042,r14
+_280:
+
+; ..\CAN.c	   436      CAN_MOFCR2L = 0x0000;        // load MO2 function control register low
+_281:
+_282:
+	extp	#0x80,#0x3
+	movw	0x1040,ZEROS
+
+; ..\CAN.c	   437  
+; ..\CAN.c	   438    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   439    ///  Configuration of Message Object 3:
+; ..\CAN.c	   440    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   441  
+; ..\CAN.c	   442    ///  General Configuration of the Message Object 3 :
+; ..\CAN.c	   443    ///  - message object 3 is valid
+; ..\CAN.c	   444    ///  - message object is used as transmit object
+; ..\CAN.c	   445    ///  - this message object is assigned to list 1 (node 0)
+; ..\CAN.c	   446  
+; ..\CAN.c	   447      CAN_MOCTR3H = 0x0EA8;        // load MO3 control register high
+	movw	0x107e,r13
+
+; ..\CAN.c	   448      CAN_MOCTR3L = 0x0000;        // load MO3 control register low
+	movw	0x107c,ZEROS
+_283:
+
+; ..\CAN.c	   449  
+; ..\CAN.c	   450    ///  Configuration of Message Object 3 Arbitration:
+; ..\CAN.c	   451    ///  - priority class 1; transmit acceptance filtering is based on the list 
+; ..\CAN.c	   452    ///    order
+; ..\CAN.c	   453    ///  - standard 11-bit identifier
+; ..\CAN.c	   454    ///  - identifier 11-bit:      0x041
+; ..\CAN.c	   455  
+; ..\CAN.c	   456      CAN_MOAR3H = 0x4104;         // load MO3 arbitration register high
+	movw	r11,#0x4104
+_284:
+_285:
+_286:
+	extp	#0x80,#0x4
+	movw	0x107a,r11
+
+; ..\CAN.c	   457      CAN_MOAR3L = 0x0000;         // load MO3 arbitration register low
+	movw	0x1078,ZEROS
+
+; ..\CAN.c	   458  
+; ..\CAN.c	   459    ///  Configuration of Message Object 3 Data:
+; ..\CAN.c	   460  
+; ..\CAN.c	   461      CAN_MODATA3HH = 0x0000;      // load MO3 Data Bytes(DB7 & DB6)
+	movw	0x1076,ZEROS
+
+; ..\CAN.c	   462      CAN_MODATA3HL = 0x0000;      // load MO3 Data Bytes(DB5 & DB4)
+	movw	0x1074,ZEROS
+_287:
+
+; ..\CAN.c	   463      CAN_MODATA3LH = 0x0000;      // load MO3 Data Bytes(DB3 & DB2)
+_288:
+_289:
+_290:
+	extp	#0x80,#0x4
+	movw	0x1072,ZEROS
+
+; ..\CAN.c	   464      CAN_MODATA3LL = 0x0000;      // load MO3 Data Bytes(DB1 & DB0)
+	movw	0x1070,ZEROS
+
+; ..\CAN.c	   465  
+; ..\CAN.c	   466    ///  Configuration of Message Object 3 acceptance mask:
+; ..\CAN.c	   467    ///  - only accept receive frames with matching IDE bit
+; ..\CAN.c	   468    ///  - acceptance mask 11-bit: 0x7FF
+; ..\CAN.c	   469  
+; ..\CAN.c	   470      CAN_MOAMR3H = 0x3FFF;        // load MO3 acceptance mask register high
+	movw	0x106e,r12
+
+; ..\CAN.c	   471      CAN_MOAMR3L = 0xFFFF;        // load MO3 acceptance mask register low
+	movw	0x106c,ONES
+_291:
+
+; ..\CAN.c	   472  
+; ..\CAN.c	   473    ///  Configuration of Message Object 3 interrupt pointer:
+; ..\CAN.c	   474    ///  - use message pending register 0 bit position 3
+; ..\CAN.c	   475  
+; ..\CAN.c	   476      CAN_MOIPR3H = 0x0000;        // load MO3 interrupt pointer register high
+	extp	#0x80,#0x1
+	movw	0x106a,ZEROS
+_292:
+
+; ..\CAN.c	   477      CAN_MOIPR3L = 0x0300;        // load MO3 interrupt pointer register low
+	movw	r11,#0x300
+_293:
+_294:
+_295:
+	extp	#0x80,#0x4
+	movw	0x1068,r11
+
+; ..\CAN.c	   478  
+; ..\CAN.c	   479    ///  Configuration of Message Object 3 FIFO/Gateway pointer:
+; ..\CAN.c	   480  
+; ..\CAN.c	   481      CAN_MOFGPR3H = 0x0000;       // load MO3 FIFO/gateway pointer register 
+	movw	0x1066,ZEROS
+
+; ..\CAN.c	   482                                   // high
+; ..\CAN.c	   483      CAN_MOFGPR3L = 0x0000;       // load MO3 FIFO/gateway pointer register low
+	movw	0x1064,ZEROS
+
+; ..\CAN.c	   484  
+; ..\CAN.c	   485  
+; ..\CAN.c	   486    ///  Configuration of Message Object 3 Function control:
+; ..\CAN.c	   487    ///  - this object is a STANDARD MESSAGE OBJECT
+; ..\CAN.c	   488    ///  - 8 valid data bytes
+; ..\CAN.c	   489  
+; ..\CAN.c	   490      CAN_MOFCR3H = 0x0800;        // load MO3 function control register high
+	movw	0x1062,r14
+_296:
+
+; ..\CAN.c	   491      CAN_MOFCR3L = 0x0000;        // load MO3 function control register low
+_297:
+_298:
+	extp	#0x80,#0x3
+	movw	0x1060,ZEROS
+
+; ..\CAN.c	   492  
+; ..\CAN.c	   493    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   494    ///  Configuration of Message Object 4:
+; ..\CAN.c	   495    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   496  
+; ..\CAN.c	   497    ///  General Configuration of the Message Object 4 :
+; ..\CAN.c	   498    ///  - message object 4 is valid
+; ..\CAN.c	   499    ///  - message object is used as transmit object
+; ..\CAN.c	   500    ///  - this message object is assigned to list 1 (node 0)
+; ..\CAN.c	   501  
+; ..\CAN.c	   502      CAN_MOCTR4H = 0x0EA8;        // load MO4 control register high
+	movw	0x109e,r13
+
+; ..\CAN.c	   503      CAN_MOCTR4L = 0x0000;        // load MO4 control register low
+	movw	0x109c,ZEROS
+_299:
+
+; ..\CAN.c	   504  
+; ..\CAN.c	   505    ///  Configuration of Message Object 4 Arbitration:
+; ..\CAN.c	   506    ///  - priority class 1; transmit acceptance filtering is based on the list 
+; ..\CAN.c	   507    ///    order
+; ..\CAN.c	   508    ///  - standard 11-bit identifier
+; ..\CAN.c	   509    ///  - identifier 11-bit:      0x050
+; ..\CAN.c	   510  
+; ..\CAN.c	   511      CAN_MOAR4H = 0x4140;         // load MO4 arbitration register high
+	movw	r11,#0x4140
+_300:
+_301:
+_302:
+	extp	#0x80,#0x4
+	movw	0x109a,r11
+
+; ..\CAN.c	   512      CAN_MOAR4L = 0x0000;         // load MO4 arbitration register low
+	movw	0x1098,ZEROS
+
+; ..\CAN.c	   513  
+; ..\CAN.c	   514    ///  Configuration of Message Object 4 Data:
+; ..\CAN.c	   515  
+; ..\CAN.c	   516      CAN_MODATA4HH = 0x0000;      // load MO4 Data Bytes(DB7 & DB6)
+	movw	0x1096,ZEROS
+
+; ..\CAN.c	   517      CAN_MODATA4HL = 0x0000;      // load MO4 Data Bytes(DB5 & DB4)
+	movw	0x1094,ZEROS
+_303:
+
+; ..\CAN.c	   518      CAN_MODATA4LH = 0x0000;      // load MO4 Data Bytes(DB3 & DB2)
+_304:
+_305:
+_306:
+	extp	#0x80,#0x4
+	movw	0x1092,ZEROS
+
+; ..\CAN.c	   519      CAN_MODATA4LL = 0x0000;      // load MO4 Data Bytes(DB1 & DB0)
+	movw	0x1090,ZEROS
+
+; ..\CAN.c	   520  
+; ..\CAN.c	   521    ///  Configuration of Message Object 4 acceptance mask:
+; ..\CAN.c	   522    ///  - only accept receive frames with matching IDE bit
+; ..\CAN.c	   523    ///  - acceptance mask 11-bit: 0x7FF
+; ..\CAN.c	   524  
+; ..\CAN.c	   525      CAN_MOAMR4H = 0x3FFF;        // load MO4 acceptance mask register high
+	movw	0x108e,r12
+
+; ..\CAN.c	   526      CAN_MOAMR4L = 0xFFFF;        // load MO4 acceptance mask register low
+	movw	0x108c,ONES
+_307:
+
+; ..\CAN.c	   527  
+; ..\CAN.c	   528    ///  Configuration of Message Object 4 interrupt pointer:
+; ..\CAN.c	   529    ///  - use message pending register 0 bit position 4
+; ..\CAN.c	   530  
+; ..\CAN.c	   531      CAN_MOIPR4H = 0x0000;        // load MO4 interrupt pointer register high
+	extp	#0x80,#0x1
+	movw	0x108a,ZEROS
+_308:
+
+; ..\CAN.c	   532      CAN_MOIPR4L = 0x0400;        // load MO4 interrupt pointer register low
+	movw	r11,#0x400
+_309:
+_310:
+_311:
+	extp	#0x80,#0x4
+	movw	0x1088,r11
+
+; ..\CAN.c	   533  
+; ..\CAN.c	   534    ///  Configuration of Message Object 4 FIFO/Gateway pointer:
+; ..\CAN.c	   535  
+; ..\CAN.c	   536      CAN_MOFGPR4H = 0x0000;       // load MO4 FIFO/gateway pointer register 
+	movw	0x1086,ZEROS
+
+; ..\CAN.c	   537                                   // high
+; ..\CAN.c	   538      CAN_MOFGPR4L = 0x0000;       // load MO4 FIFO/gateway pointer register low
+	movw	0x1084,ZEROS
+
+; ..\CAN.c	   539  
+; ..\CAN.c	   540  
+; ..\CAN.c	   541    ///  Configuration of Message Object 4 Function control:
+; ..\CAN.c	   542    ///  - this object is a STANDARD MESSAGE OBJECT
+; ..\CAN.c	   543    ///  - 8 valid data bytes
+; ..\CAN.c	   544  
+; ..\CAN.c	   545      CAN_MOFCR4H = 0x0800;        // load MO4 function control register high
+	movw	0x1082,r14
+_312:
+
+; ..\CAN.c	   546      CAN_MOFCR4L = 0x0000;        // load MO4 function control register low
+_313:
+_314:
+	extp	#0x80,#0x3
+	movw	0x1080,ZEROS
+
+; ..\CAN.c	   547  
+; ..\CAN.c	   548    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   549    ///  Configuration of Message Object 5:
+; ..\CAN.c	   550    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   551  
+; ..\CAN.c	   552    ///  General Configuration of the Message Object 5 :
+; ..\CAN.c	   553    ///  - message object 5 is valid
+; ..\CAN.c	   554    ///  - message object is used as transmit object
+; ..\CAN.c	   555    ///  - this message object is assigned to list 1 (node 0)
+; ..\CAN.c	   556  
+; ..\CAN.c	   557      CAN_MOCTR5H = 0x0EA8;        // load MO5 control register high
+	movw	0x10be,r13
+
+; ..\CAN.c	   558      CAN_MOCTR5L = 0x0000;        // load MO5 control register low
+	movw	0x10bc,ZEROS
+_315:
+
+; ..\CAN.c	   559  
+; ..\CAN.c	   560    ///  Configuration of Message Object 5 Arbitration:
+; ..\CAN.c	   561    ///  - priority class 1; transmit acceptance filtering is based on the list 
+; ..\CAN.c	   562    ///    order
+; ..\CAN.c	   563    ///  - standard 11-bit identifier
+; ..\CAN.c	   564    ///  - identifier 11-bit:      0x051
+; ..\CAN.c	   565  
+; ..\CAN.c	   566      CAN_MOAR5H = 0x4144;         // load MO5 arbitration register high
+	movw	r11,#0x4144
+_316:
+_317:
+_318:
+	extp	#0x80,#0x4
+	movw	0x10ba,r11
+
+; ..\CAN.c	   567      CAN_MOAR5L = 0x0000;         // load MO5 arbitration register low
+	movw	0x10b8,ZEROS
+
+; ..\CAN.c	   568  
+; ..\CAN.c	   569    ///  Configuration of Message Object 5 Data:
+; ..\CAN.c	   570  
+; ..\CAN.c	   571      CAN_MODATA5HH = 0x0000;      // load MO5 Data Bytes(DB7 & DB6)
+	movw	0x10b6,ZEROS
+
+; ..\CAN.c	   572      CAN_MODATA5HL = 0x0000;      // load MO5 Data Bytes(DB5 & DB4)
+	movw	0x10b4,ZEROS
+_319:
+
+; ..\CAN.c	   573      CAN_MODATA5LH = 0x0000;      // load MO5 Data Bytes(DB3 & DB2)
+_320:
+_321:
+_322:
+	extp	#0x80,#0x4
+	movw	0x10b2,ZEROS
+
+; ..\CAN.c	   574      CAN_MODATA5LL = 0x0000;      // load MO5 Data Bytes(DB1 & DB0)
+	movw	0x10b0,ZEROS
+
+; ..\CAN.c	   575  
+; ..\CAN.c	   576    ///  Configuration of Message Object 5 acceptance mask:
+; ..\CAN.c	   577    ///  - only accept receive frames with matching IDE bit
+; ..\CAN.c	   578    ///  - acceptance mask 11-bit: 0x7FF
+; ..\CAN.c	   579  
+; ..\CAN.c	   580      CAN_MOAMR5H = 0x3FFF;        // load MO5 acceptance mask register high
+	movw	0x10ae,r12
+
+; ..\CAN.c	   581      CAN_MOAMR5L = 0xFFFF;        // load MO5 acceptance mask register low
+	movw	0x10ac,ONES
+_323:
+
+; ..\CAN.c	   582  
+; ..\CAN.c	   583    ///  Configuration of Message Object 5 interrupt pointer:
+; ..\CAN.c	   584    ///  - use message pending register 0 bit position 5
+; ..\CAN.c	   585  
+; ..\CAN.c	   586      CAN_MOIPR5H = 0x0000;        // load MO5 interrupt pointer register high
+	extp	#0x80,#0x1
+	movw	0x10aa,ZEROS
+_324:
+
+; ..\CAN.c	   587      CAN_MOIPR5L = 0x0500;        // load MO5 interrupt pointer register low
+	movw	r11,#0x500
+_325:
+_326:
+_327:
+	extp	#0x80,#0x4
+	movw	0x10a8,r11
+
+; ..\CAN.c	   588  
+; ..\CAN.c	   589    ///  Configuration of Message Object 5 FIFO/Gateway pointer:
+; ..\CAN.c	   590  
+; ..\CAN.c	   591      CAN_MOFGPR5H = 0x0000;       // load MO5 FIFO/gateway pointer register 
+	movw	0x10a6,ZEROS
+
+; ..\CAN.c	   592                                   // high
+; ..\CAN.c	   593      CAN_MOFGPR5L = 0x0000;       // load MO5 FIFO/gateway pointer register low
+	movw	0x10a4,ZEROS
+
+; ..\CAN.c	   594  
+; ..\CAN.c	   595  
+; ..\CAN.c	   596    ///  Configuration of Message Object 5 Function control:
+; ..\CAN.c	   597    ///  - this object is a STANDARD MESSAGE OBJECT
+; ..\CAN.c	   598    ///  - 8 valid data bytes
+; ..\CAN.c	   599  
+; ..\CAN.c	   600      CAN_MOFCR5H = 0x0800;        // load MO5 function control register high
+	movw	0x10a2,r14
+_328:
+
+; ..\CAN.c	   601      CAN_MOFCR5L = 0x0000;        // load MO5 function control register low
+_329:
+_330:
+	extp	#0x80,#0x3
+	movw	0x10a0,ZEROS
+
+; ..\CAN.c	   602  
+; ..\CAN.c	   603    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   604    ///  Configuration of Message Object 6:
+; ..\CAN.c	   605    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   606  
+; ..\CAN.c	   607    ///  General Configuration of the Message Object 6 :
+; ..\CAN.c	   608    ///  - message object 6 is valid
+; ..\CAN.c	   609    ///  - message object is used as transmit object
+; ..\CAN.c	   610    ///  - this message object is assigned to list 1 (node 0)
+; ..\CAN.c	   611  
+; ..\CAN.c	   612      CAN_MOCTR6H = 0x0EA8;        // load MO6 control register high
+	movw	0x10de,r13
+
+; ..\CAN.c	   613      CAN_MOCTR6L = 0x0000;        // load MO6 control register low
+	movw	0x10dc,ZEROS
+_331:
+
+; ..\CAN.c	   614  
+; ..\CAN.c	   615    ///  Configuration of Message Object 6 Arbitration:
+; ..\CAN.c	   616    ///  - priority class 1; transmit acceptance filtering is based on the list 
+; ..\CAN.c	   617    ///    order
+; ..\CAN.c	   618    ///  - standard 11-bit identifier
+; ..\CAN.c	   619    ///  - identifier 11-bit:      0x020
+; ..\CAN.c	   620  
+; ..\CAN.c	   621      CAN_MOAR6H = 0x4080;         // load MO6 arbitration register high
+	movw	r11,#0x4080
+_332:
+_333:
+_334:
+	extp	#0x80,#0x4
+	movw	0x10da,r11
+
+; ..\CAN.c	   622      CAN_MOAR6L = 0x0000;         // load MO6 arbitration register low
+	movw	0x10d8,ZEROS
+
+; ..\CAN.c	   623  
+; ..\CAN.c	   624    ///  Configuration of Message Object 6 Data:
+; ..\CAN.c	   625  
+; ..\CAN.c	   626      CAN_MODATA6HH = 0x0000;      // load MO6 Data Bytes(DB7 & DB6)
+	movw	0x10d6,ZEROS
+
+; ..\CAN.c	   627      CAN_MODATA6HL = 0x0000;      // load MO6 Data Bytes(DB5 & DB4)
+	movw	0x10d4,ZEROS
+_335:
+
+; ..\CAN.c	   628      CAN_MODATA6LH = 0x0000;      // load MO6 Data Bytes(DB3 & DB2)
+_336:
+_337:
+_338:
+	extp	#0x80,#0x4
+	movw	0x10d2,ZEROS
+
+; ..\CAN.c	   629      CAN_MODATA6LL = 0x0000;      // load MO6 Data Bytes(DB1 & DB0)
+	movw	0x10d0,ZEROS
+
+; ..\CAN.c	   630  
+; ..\CAN.c	   631    ///  Configuration of Message Object 6 acceptance mask:
+; ..\CAN.c	   632    ///  - only accept receive frames with matching IDE bit
+; ..\CAN.c	   633    ///  - acceptance mask 11-bit: 0x7FF
+; ..\CAN.c	   634  
+; ..\CAN.c	   635      CAN_MOAMR6H = 0x3FFF;        // load MO6 acceptance mask register high
+	movw	0x10ce,r12
+
+; ..\CAN.c	   636      CAN_MOAMR6L = 0xFFFF;        // load MO6 acceptance mask register low
+	movw	0x10cc,ONES
+_339:
+
+; ..\CAN.c	   637  
+; ..\CAN.c	   638    ///  Configuration of Message Object 6 interrupt pointer:
+; ..\CAN.c	   639    ///  - use message pending register 0 bit position 6
+; ..\CAN.c	   640  
+; ..\CAN.c	   641      CAN_MOIPR6H = 0x0000;        // load MO6 interrupt pointer register high
+	extp	#0x80,#0x1
+	movw	0x10ca,ZEROS
+_340:
+
+; ..\CAN.c	   642      CAN_MOIPR6L = 0x0600;        // load MO6 interrupt pointer register low
+	movw	r11,#0x600
+_341:
+_342:
+_343:
+	extp	#0x80,#0x4
+	movw	0x10c8,r11
+
+; ..\CAN.c	   643  
+; ..\CAN.c	   644    ///  Configuration of Message Object 6 FIFO/Gateway pointer:
+; ..\CAN.c	   645  
+; ..\CAN.c	   646      CAN_MOFGPR6H = 0x0000;       // load MO6 FIFO/gateway pointer register 
+	movw	0x10c6,ZEROS
+
+; ..\CAN.c	   647                                   // high
+; ..\CAN.c	   648      CAN_MOFGPR6L = 0x0000;       // load MO6 FIFO/gateway pointer register low
+	movw	0x10c4,ZEROS
+
+; ..\CAN.c	   649  
+; ..\CAN.c	   650  
+; ..\CAN.c	   651    ///  Configuration of Message Object 6 Function control:
+; ..\CAN.c	   652    ///  - this object is a STANDARD MESSAGE OBJECT
+; ..\CAN.c	   653    ///  - 8 valid data bytes
+; ..\CAN.c	   654  
+; ..\CAN.c	   655      CAN_MOFCR6H = 0x0800;        // load MO6 function control register high
+	movw	0x10c2,r14
+_344:
+
+; ..\CAN.c	   656      CAN_MOFCR6L = 0x0000;        // load MO6 function control register low
+_345:
+_346:
+	extp	#0x80,#0x3
+	movw	0x10c0,ZEROS
+
+; ..\CAN.c	   657  
+; ..\CAN.c	   658    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   659    ///  Configuration of Message Object 7:
+; ..\CAN.c	   660    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   661  
+; ..\CAN.c	   662    ///  General Configuration of the Message Object 7 :
+; ..\CAN.c	   663    ///  - message object 7 is valid
+; ..\CAN.c	   664    ///  - message object is used as transmit object
+; ..\CAN.c	   665    ///  - this message object is assigned to list 1 (node 0)
+; ..\CAN.c	   666  
+; ..\CAN.c	   667      CAN_MOCTR7H = 0x0EA8;        // load MO7 control register high
+	movw	0x10fe,r13
+
+; ..\CAN.c	   668      CAN_MOCTR7L = 0x0000;        // load MO7 control register low
+	movw	0x10fc,ZEROS
+_347:
+
+; ..\CAN.c	   669  
+; ..\CAN.c	   670    ///  Configuration of Message Object 7 Arbitration:
+; ..\CAN.c	   671    ///  - priority class 1; transmit acceptance filtering is based on the list 
+; ..\CAN.c	   672    ///    order
+; ..\CAN.c	   673    ///  - standard 11-bit identifier
+; ..\CAN.c	   674    ///  - identifier 11-bit:      0x021
+; ..\CAN.c	   675  
+; ..\CAN.c	   676      CAN_MOAR7H = 0x4084;         // load MO7 arbitration register high
+	movw	r11,#0x4084
+_348:
+_349:
+_350:
+	extp	#0x80,#0x4
+	movw	0x10fa,r11
+
+; ..\CAN.c	   677      CAN_MOAR7L = 0x0000;         // load MO7 arbitration register low
+	movw	0x10f8,ZEROS
+
+; ..\CAN.c	   678  
+; ..\CAN.c	   679    ///  Configuration of Message Object 7 Data:
+; ..\CAN.c	   680  
+; ..\CAN.c	   681      CAN_MODATA7HH = 0x0000;      // load MO7 Data Bytes(DB7 & DB6)
+	movw	0x10f6,ZEROS
+
+; ..\CAN.c	   682      CAN_MODATA7HL = 0x0000;      // load MO7 Data Bytes(DB5 & DB4)
+	movw	0x10f4,ZEROS
+_351:
+
+; ..\CAN.c	   683      CAN_MODATA7LH = 0x0000;      // load MO7 Data Bytes(DB3 & DB2)
+_352:
+_353:
+_354:
+	extp	#0x80,#0x4
+	movw	0x10f2,ZEROS
+
+; ..\CAN.c	   684      CAN_MODATA7LL = 0x0000;      // load MO7 Data Bytes(DB1 & DB0)
+	movw	0x10f0,ZEROS
+
+; ..\CAN.c	   685  
+; ..\CAN.c	   686    ///  Configuration of Message Object 7 acceptance mask:
+; ..\CAN.c	   687    ///  - only accept receive frames with matching IDE bit
+; ..\CAN.c	   688    ///  - acceptance mask 11-bit: 0x7FF
+; ..\CAN.c	   689  
+; ..\CAN.c	   690      CAN_MOAMR7H = 0x3FFF;        // load MO7 acceptance mask register high
+	movw	0x10ee,r12
+
+; ..\CAN.c	   691      CAN_MOAMR7L = 0xFFFF;        // load MO7 acceptance mask register low
+	movw	0x10ec,ONES
+_355:
+
+; ..\CAN.c	   692  
+; ..\CAN.c	   693    ///  Configuration of Message Object 7 interrupt pointer:
+; ..\CAN.c	   694    ///  - use message pending register 0 bit position 7
+; ..\CAN.c	   695  
+; ..\CAN.c	   696      CAN_MOIPR7H = 0x0000;        // load MO7 interrupt pointer register high
+	extp	#0x80,#0x1
+	movw	0x10ea,ZEROS
+_356:
+
+; ..\CAN.c	   697      CAN_MOIPR7L = 0x0700;        // load MO7 interrupt pointer register low
+	movw	r11,#0x700
+_357:
+_358:
+_359:
+	extp	#0x80,#0x4
+	movw	0x10e8,r11
+
+; ..\CAN.c	   698  
+; ..\CAN.c	   699    ///  Configuration of Message Object 7 FIFO/Gateway pointer:
+; ..\CAN.c	   700  
+; ..\CAN.c	   701      CAN_MOFGPR7H = 0x0000;       // load MO7 FIFO/gateway pointer register 
+	movw	0x10e6,ZEROS
+
+; ..\CAN.c	   702                                   // high
+; ..\CAN.c	   703      CAN_MOFGPR7L = 0x0000;       // load MO7 FIFO/gateway pointer register low
+	movw	0x10e4,ZEROS
+
+; ..\CAN.c	   704  
+; ..\CAN.c	   705  
+; ..\CAN.c	   706    ///  Configuration of Message Object 7 Function control:
+; ..\CAN.c	   707    ///  - this object is a STANDARD MESSAGE OBJECT
+; ..\CAN.c	   708    ///  - 8 valid data bytes
+; ..\CAN.c	   709  
+; ..\CAN.c	   710      CAN_MOFCR7H = 0x0800;        // load MO7 function control register high
+	movw	0x10e2,r14
+_360:
+
+; ..\CAN.c	   711      CAN_MOFCR7L = 0x0000;        // load MO7 function control register low
+_361:
+_362:
+	extp	#0x80,#0x3
+	movw	0x10e0,ZEROS
+
+; ..\CAN.c	   712  
+; ..\CAN.c	   713    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   714    ///  Configuration of Message Object 8:
+; ..\CAN.c	   715    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   716  
+; ..\CAN.c	   717    ///  General Configuration of the Message Object 8 :
+; ..\CAN.c	   718    ///  - message object 8 is valid
+; ..\CAN.c	   719    ///  - message object is used as transmit object
+; ..\CAN.c	   720    ///  - this message object is assigned to list 1 (node 0)
+; ..\CAN.c	   721  
+; ..\CAN.c	   722      CAN_MOCTR8H = 0x0EA8;        // load MO8 control register high
+	movw	0x111e,r13
+
+; ..\CAN.c	   723      CAN_MOCTR8L = 0x0000;        // load MO8 control register low
+	movw	0x111c,ZEROS
+_363:
+
+; ..\CAN.c	   724  
+; ..\CAN.c	   725    ///  Configuration of Message Object 8 Arbitration:
+; ..\CAN.c	   726    ///  - priority class 1; transmit acceptance filtering is based on the list 
+; ..\CAN.c	   727    ///    order
+; ..\CAN.c	   728    ///  - standard 11-bit identifier
+; ..\CAN.c	   729    ///  - identifier 11-bit:      0x022
+; ..\CAN.c	   730  
+; ..\CAN.c	   731      CAN_MOAR8H = 0x4088;         // load MO8 arbitration register high
+	movw	r11,#0x4088
+_364:
+_365:
+_366:
+	extp	#0x80,#0x4
+	movw	0x111a,r11
+
+; ..\CAN.c	   732      CAN_MOAR8L = 0x0000;         // load MO8 arbitration register low
+	movw	0x1118,ZEROS
+
+; ..\CAN.c	   733  
+; ..\CAN.c	   734    ///  Configuration of Message Object 8 Data:
+; ..\CAN.c	   735  
+; ..\CAN.c	   736      CAN_MODATA8HH = 0x0000;      // load MO8 Data Bytes(DB7 & DB6)
+	movw	0x1116,ZEROS
+
+; ..\CAN.c	   737      CAN_MODATA8HL = 0x0000;      // load MO8 Data Bytes(DB5 & DB4)
+	movw	0x1114,ZEROS
+_367:
+
+; ..\CAN.c	   738      CAN_MODATA8LH = 0x0000;      // load MO8 Data Bytes(DB3 & DB2)
+_368:
+_369:
+_370:
+	extp	#0x80,#0x4
+	movw	0x1112,ZEROS
+
+; ..\CAN.c	   739      CAN_MODATA8LL = 0x0000;      // load MO8 Data Bytes(DB1 & DB0)
+	movw	0x1110,ZEROS
+
+; ..\CAN.c	   740  
+; ..\CAN.c	   741    ///  Configuration of Message Object 8 acceptance mask:
+; ..\CAN.c	   742    ///  - only accept receive frames with matching IDE bit
+; ..\CAN.c	   743    ///  - acceptance mask 11-bit: 0x7FF
+; ..\CAN.c	   744  
+; ..\CAN.c	   745      CAN_MOAMR8H = 0x3FFF;        // load MO8 acceptance mask register high
+	movw	0x110e,r12
+
+; ..\CAN.c	   746      CAN_MOAMR8L = 0xFFFF;        // load MO8 acceptance mask register low
+	movw	0x110c,ONES
+_371:
+
+; ..\CAN.c	   747  
+; ..\CAN.c	   748    ///  Configuration of Message Object 8 interrupt pointer:
+; ..\CAN.c	   749    ///  - use message pending register 0 bit position 8
+; ..\CAN.c	   750  
+; ..\CAN.c	   751      CAN_MOIPR8H = 0x0000;        // load MO8 interrupt pointer register high
+_372:
+_373:
+_374:
+	extp	#0x80,#0x4
+	movw	0x110a,ZEROS
+
+; ..\CAN.c	   752      CAN_MOIPR8L = 0x0800;        // load MO8 interrupt pointer register low
+	movw	0x1108,r14
+
+; ..\CAN.c	   753  
+; ..\CAN.c	   754    ///  Configuration of Message Object 8 FIFO/Gateway pointer:
+; ..\CAN.c	   755  
+; ..\CAN.c	   756      CAN_MOFGPR8H = 0x0000;       // load MO8 FIFO/gateway pointer register 
+	movw	0x1106,ZEROS
+
+; ..\CAN.c	   757                                   // high
+; ..\CAN.c	   758      CAN_MOFGPR8L = 0x0000;       // load MO8 FIFO/gateway pointer register low
+	movw	0x1104,ZEROS
+_375:
+
+; ..\CAN.c	   759  
+; ..\CAN.c	   760  
+; ..\CAN.c	   761    ///  Configuration of Message Object 8 Function control:
+; ..\CAN.c	   762    ///  - this object is a STANDARD MESSAGE OBJECT
+; ..\CAN.c	   763    ///  - 8 valid data bytes
+; ..\CAN.c	   764  
+; ..\CAN.c	   765      CAN_MOFCR8H = 0x0800;        // load MO8 function control register high
+_376:
+	extp	#0x80,#0x2
+	movw	0x1102,r14
+
+; ..\CAN.c	   766      CAN_MOFCR8L = 0x0000;        // load MO8 function control register low
+	movw	0x1100,ZEROS
+_377:
+
+; ..\CAN.c	   767  
+; ..\CAN.c	   768    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   769    ///  Configuration of Message Object 9:
+; ..\CAN.c	   770    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   771  
+; ..\CAN.c	   772    ///  General Configuration of the Message Object 9 :
+; ..\CAN.c	   773    ///  - message object 9 is valid
+; ..\CAN.c	   774    ///  - message object is used as receive object
+; ..\CAN.c	   775    ///  - this message object is assigned to list 1 (node 0)
+; ..\CAN.c	   776  
+; ..\CAN.c	   777      CAN_MOCTR9H = 0x00A0;        // load MO9 control register high
+	movw	r11,#0xa0
+_378:
+	extp	#0x80,#0x2
+	movw	0x113e,r11
+
+; ..\CAN.c	   778      CAN_MOCTR9L = 0x0000;        // load MO9 control register low
+	movw	0x113c,ZEROS
+_379:
+
+; ..\CAN.c	   779  
+; ..\CAN.c	   780    ///  Configuration of Message Object 9 Arbitration:
+; ..\CAN.c	   781    ///  - priority class 1; transmit acceptance filtering is based on the list 
+; ..\CAN.c	   782    ///    order
+; ..\CAN.c	   783    ///  - standard 11-bit identifier
+; ..\CAN.c	   784    ///  - identifier 11-bit:      0x010
+; ..\CAN.c	   785  
+; ..\CAN.c	   786      CAN_MOAR9H = 0x4040;         // load MO9 arbitration register high
+	movw	r11,#0x4040
+_380:
+_381:
+_382:
+	extp	#0x80,#0x4
+	movw	0x113a,r11
+
+; ..\CAN.c	   787      CAN_MOAR9L = 0x0000;         // load MO9 arbitration register low
+	movw	0x1138,ZEROS
+
+; ..\CAN.c	   788  
+; ..\CAN.c	   789    ///  Configuration of Message Object 9 acceptance mask:
+; ..\CAN.c	   790    ///  - only accept receive frames with matching IDE bit
+; ..\CAN.c	   791    ///  - acceptance mask 11-bit: 0x7FF
+; ..\CAN.c	   792  
+; ..\CAN.c	   793      CAN_MOAMR9H = 0x3FFF;        // load MO9 acceptance mask register high
+	movw	0x112e,r12
+
+; ..\CAN.c	   794      CAN_MOAMR9L = 0xFFFF;        // load MO9 acceptance mask register low
+	movw	0x112c,ONES
+_383:
+
+; ..\CAN.c	   795  
+; ..\CAN.c	   796    ///  Configuration of Message Object 9 interrupt pointer:
+; ..\CAN.c	   797    ///  - use message pending register 0 bit position 9
+; ..\CAN.c	   798    ///  - receive interrupt node pointer: MultiCAN SRN 0
+; ..\CAN.c	   799  
+; ..\CAN.c	   800      CAN_MOIPR9H = 0x0000;        // load MO9 interrupt pointer register high
+	extp	#0x80,#0x1
+	movw	0x112a,ZEROS
+_384:
+
+; ..\CAN.c	   801      CAN_MOIPR9L = 0x0900;        // load MO9 interrupt pointer register low
+	movw	r11,#0x900
+_385:
+_386:
+	extp	#0x80,#0x3
+	movw	0x1128,r11
+
+; ..\CAN.c	   802  
+; ..\CAN.c	   803    ///  Configuration of Message Object 9 FIFO/Gateway pointer:
+; ..\CAN.c	   804  
+; ..\CAN.c	   805      CAN_MOFGPR9H = 0x0000;       // load MO9 FIFO/gateway pointer register 
+	movw	0x1126,ZEROS
+
+; ..\CAN.c	   806                                   // high
+; ..\CAN.c	   807      CAN_MOFGPR9L = 0x0000;       // load MO9 FIFO/gateway pointer register low
+	movw	0x1124,ZEROS
+_387:
+
+; ..\CAN.c	   808  
+; ..\CAN.c	   809  
+; ..\CAN.c	   810    ///  Configuration of Message Object 9 Function control:
+; ..\CAN.c	   811    ///  - this object is a STANDARD MESSAGE OBJECT
+; ..\CAN.c	   812    ///  - 8 valid data bytes
+; ..\CAN.c	   813    ///  - enable receive interrupt; bit RXPND is set after successful 
+; ..\CAN.c	   814    ///    reception of a frame
+; ..\CAN.c	   815  
+; ..\CAN.c	   816      CAN_MOFCR9H = 0x0801;        // load MO9 function control register high
+	movw	r11,#0x801
+_388:
+	extp	#0x80,#0x2
+	movw	0x1122,r11
+
+; ..\CAN.c	   817      CAN_MOFCR9L = 0x0000;        // load MO9 function control register low
+	movw	0x1120,ZEROS
+_389:
+
+; ..\CAN.c	   818  
+; ..\CAN.c	   819    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   820    ///  Configuration of Message Object 10:
+; ..\CAN.c	   821    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   822    ///  - message object 10 is not valid
+; ..\CAN.c	   823    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   824    ///  Configuration of Message Object 11:
+; ..\CAN.c	   825    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   826    ///  - message object 11 is not valid
+; ..\CAN.c	   827    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   828    ///  Configuration of Message Object 12:
+; ..\CAN.c	   829    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   830    ///  - message object 12 is not valid
+; ..\CAN.c	   831    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   832    ///  Configuration of Message Object 13:
+; ..\CAN.c	   833    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   834    ///  - message object 13 is not valid
+; ..\CAN.c	   835    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   836    ///  Configuration of Message Object 14:
+; ..\CAN.c	   837    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   838    ///  - message object 14 is not valid
+; ..\CAN.c	   839    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   840    ///  Configuration of Message Object 15:
+; ..\CAN.c	   841    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   842    ///  - message object 15 is not valid
+; ..\CAN.c	   843    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   844    ///  Configuration of Message Object 16:
+; ..\CAN.c	   845    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   846    ///  - message object 16 is not valid
+; ..\CAN.c	   847    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   848    ///  Configuration of Message Object 17:
+; ..\CAN.c	   849    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   850    ///  - message object 17 is not valid
+; ..\CAN.c	   851    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   852    ///  Configuration of Message Object 18:
+; ..\CAN.c	   853    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   854    ///  - message object 18 is not valid
+; ..\CAN.c	   855    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   856    ///  Configuration of Message Object 19:
+; ..\CAN.c	   857    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   858    ///  - message object 19 is not valid
+; ..\CAN.c	   859    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   860    ///  Configuration of Message Object 20:
+; ..\CAN.c	   861    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   862    ///  - message object 20 is not valid
+; ..\CAN.c	   863    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   864    ///  Configuration of Message Object 21:
+; ..\CAN.c	   865    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   866    ///  - message object 21 is not valid
+; ..\CAN.c	   867    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   868    ///  Configuration of Message Object 22:
+; ..\CAN.c	   869    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   870    ///  - message object 22 is not valid
+; ..\CAN.c	   871    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   872    ///  Configuration of Message Object 23:
+; ..\CAN.c	   873    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   874    ///  - message object 23 is not valid
+; ..\CAN.c	   875    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   876    ///  Configuration of Message Object 24:
+; ..\CAN.c	   877    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   878    ///  - message object 24 is not valid
+; ..\CAN.c	   879    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   880    ///  Configuration of Message Object 25:
+; ..\CAN.c	   881    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   882    ///  - message object 25 is not valid
+; ..\CAN.c	   883    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   884    ///  Configuration of Message Object 26:
+; ..\CAN.c	   885    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   886    ///  - message object 26 is not valid
+; ..\CAN.c	   887    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   888    ///  Configuration of Message Object 27:
+; ..\CAN.c	   889    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   890    ///  - message object 27 is not valid
+; ..\CAN.c	   891    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   892    ///  Configuration of Message Object 28:
+; ..\CAN.c	   893    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   894    ///  - message object 28 is not valid
+; ..\CAN.c	   895    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   896    ///  Configuration of Message Object 29:
+; ..\CAN.c	   897    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   898    ///  - message object 29 is not valid
+; ..\CAN.c	   899    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   900    ///  Configuration of Message Object 30:
+; ..\CAN.c	   901    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   902    ///  - message object 30 is not valid
+; ..\CAN.c	   903    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   904    ///  Configuration of Message Object 31:
+; ..\CAN.c	   905    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   906    ///  - message object 31 is not valid
+; ..\CAN.c	   907    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   908    ///  Configuration of Message Object 32:
+; ..\CAN.c	   909    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   910    ///  - message object 32 is not valid
+; ..\CAN.c	   911    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   912    ///  Configuration of Message Object 33:
+; ..\CAN.c	   913    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   914    ///  - message object 33 is not valid
+; ..\CAN.c	   915    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   916    ///  Configuration of Message Object 34:
+; ..\CAN.c	   917    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   918    ///  - message object 34 is not valid
+; ..\CAN.c	   919    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   920    ///  Configuration of Message Object 35:
+; ..\CAN.c	   921    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   922    ///  - message object 35 is not valid
+; ..\CAN.c	   923    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   924    ///  Configuration of Message Object 36:
+; ..\CAN.c	   925    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   926    ///  - message object 36 is not valid
+; ..\CAN.c	   927    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   928    ///  Configuration of Message Object 37:
+; ..\CAN.c	   929    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   930    ///  - message object 37 is not valid
+; ..\CAN.c	   931    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   932    ///  Configuration of Message Object 38:
+; ..\CAN.c	   933    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   934    ///  - message object 38 is not valid
+; ..\CAN.c	   935    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   936    ///  Configuration of Message Object 39:
+; ..\CAN.c	   937    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   938    ///  - message object 39 is not valid
+; ..\CAN.c	   939    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   940    ///  Configuration of Message Object 40:
+; ..\CAN.c	   941    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   942    ///  - message object 40 is not valid
+; ..\CAN.c	   943    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   944    ///  Configuration of Message Object 41:
+; ..\CAN.c	   945    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   946    ///  - message object 41 is not valid
+; ..\CAN.c	   947    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   948    ///  Configuration of Message Object 42:
+; ..\CAN.c	   949    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   950    ///  - message object 42 is not valid
+; ..\CAN.c	   951    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   952    ///  Configuration of Message Object 43:
+; ..\CAN.c	   953    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   954    ///  - message object 43 is not valid
+; ..\CAN.c	   955    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   956    ///  Configuration of Message Object 44:
+; ..\CAN.c	   957    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   958    ///  - message object 44 is not valid
+; ..\CAN.c	   959    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   960    ///  Configuration of Message Object 45:
+; ..\CAN.c	   961    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   962    ///  - message object 45 is not valid
+; ..\CAN.c	   963    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   964    ///  Configuration of Message Object 46:
+; ..\CAN.c	   965    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   966    ///  - message object 46 is not valid
+; ..\CAN.c	   967    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   968    ///  Configuration of Message Object 47:
+; ..\CAN.c	   969    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   970    ///  - message object 47 is not valid
+; ..\CAN.c	   971    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   972    ///  Configuration of Message Object 48:
+; ..\CAN.c	   973    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   974    ///  - message object 48 is not valid
+; ..\CAN.c	   975    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   976    ///  Configuration of Message Object 49:
+; ..\CAN.c	   977    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   978    ///  - message object 49 is not valid
+; ..\CAN.c	   979    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   980    ///  Configuration of Message Object 50:
+; ..\CAN.c	   981    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   982    ///  - message object 50 is not valid
+; ..\CAN.c	   983    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   984    ///  Configuration of Message Object 51:
+; ..\CAN.c	   985    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   986    ///  - message object 51 is not valid
+; ..\CAN.c	   987    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   988    ///  Configuration of Message Object 52:
+; ..\CAN.c	   989    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   990    ///  - message object 52 is not valid
+; ..\CAN.c	   991    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   992    ///  Configuration of Message Object 53:
+; ..\CAN.c	   993    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   994    ///  - message object 53 is not valid
+; ..\CAN.c	   995    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   996    ///  Configuration of Message Object 54:
+; ..\CAN.c	   997    ///  -----------------------------------------------------------------------
+; ..\CAN.c	   998    ///  - message object 54 is not valid
+; ..\CAN.c	   999    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1000    ///  Configuration of Message Object 55:
+; ..\CAN.c	  1001    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1002    ///  - message object 55 is not valid
+; ..\CAN.c	  1003    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1004    ///  Configuration of Message Object 56:
+; ..\CAN.c	  1005    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1006    ///  - message object 56 is not valid
+; ..\CAN.c	  1007    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1008    ///  Configuration of Message Object 57:
+; ..\CAN.c	  1009    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1010    ///  - message object 57 is not valid
+; ..\CAN.c	  1011    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1012    ///  Configuration of Message Object 58:
+; ..\CAN.c	  1013    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1014    ///  - message object 58 is not valid
+; ..\CAN.c	  1015    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1016    ///  Configuration of Message Object 59:
+; ..\CAN.c	  1017    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1018    ///  - message object 59 is not valid
+; ..\CAN.c	  1019    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1020    ///  Configuration of Message Object 60:
+; ..\CAN.c	  1021    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1022    ///  - message object 60 is not valid
+; ..\CAN.c	  1023    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1024    ///  Configuration of Message Object 61:
+; ..\CAN.c	  1025    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1026    ///  - message object 61 is not valid
+; ..\CAN.c	  1027    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1028    ///  Configuration of Message Object 62:
+; ..\CAN.c	  1029    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1030    ///  - message object 62 is not valid
+; ..\CAN.c	  1031    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1032    ///  Configuration of Message Object 63:
+; ..\CAN.c	  1033    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1034    ///  - message object 63 is not valid
+; ..\CAN.c	  1035    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1036    ///  Configuration of Message Object 64:
+; ..\CAN.c	  1037    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1038    ///  - message object 64 is not valid
+; ..\CAN.c	  1039    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1040    ///  Configuration of Message Object 65:
+; ..\CAN.c	  1041    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1042    ///  - message object 65 is not valid
+; ..\CAN.c	  1043    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1044    ///  Configuration of Message Object 66:
+; ..\CAN.c	  1045    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1046    ///  - message object 66 is not valid
+; ..\CAN.c	  1047    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1048    ///  Configuration of Message Object 67:
+; ..\CAN.c	  1049    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1050    ///  - message object 67 is not valid
+; ..\CAN.c	  1051    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1052    ///  Configuration of Message Object 68:
+; ..\CAN.c	  1053    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1054    ///  - message object 68 is not valid
+; ..\CAN.c	  1055    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1056    ///  Configuration of Message Object 69:
+; ..\CAN.c	  1057    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1058    ///  - message object 69 is not valid
+; ..\CAN.c	  1059    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1060    ///  Configuration of Message Object 70:
+; ..\CAN.c	  1061    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1062    ///  - message object 70 is not valid
+; ..\CAN.c	  1063    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1064    ///  Configuration of Message Object 71:
+; ..\CAN.c	  1065    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1066    ///  - message object 71 is not valid
+; ..\CAN.c	  1067    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1068    ///  Configuration of Message Object 72:
+; ..\CAN.c	  1069    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1070    ///  - message object 72 is not valid
+; ..\CAN.c	  1071    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1072    ///  Configuration of Message Object 73:
+; ..\CAN.c	  1073    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1074    ///  - message object 73 is not valid
+; ..\CAN.c	  1075    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1076    ///  Configuration of Message Object 74:
+; ..\CAN.c	  1077    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1078    ///  - message object 74 is not valid
+; ..\CAN.c	  1079    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1080    ///  Configuration of Message Object 75:
+; ..\CAN.c	  1081    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1082    ///  - message object 75 is not valid
+; ..\CAN.c	  1083    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1084    ///  Configuration of Message Object 76:
+; ..\CAN.c	  1085    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1086    ///  - message object 76 is not valid
+; ..\CAN.c	  1087    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1088    ///  Configuration of Message Object 77:
+; ..\CAN.c	  1089    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1090    ///  - message object 77 is not valid
+; ..\CAN.c	  1091    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1092    ///  Configuration of Message Object 78:
+; ..\CAN.c	  1093    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1094    ///  - message object 78 is not valid
+; ..\CAN.c	  1095    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1096    ///  Configuration of Message Object 79:
+; ..\CAN.c	  1097    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1098    ///  - message object 79 is not valid
+; ..\CAN.c	  1099    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1100    ///  Configuration of Message Object 80:
+; ..\CAN.c	  1101    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1102    ///  - message object 80 is not valid
+; ..\CAN.c	  1103    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1104    ///  Configuration of Message Object 81:
+; ..\CAN.c	  1105    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1106    ///  - message object 81 is not valid
+; ..\CAN.c	  1107    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1108    ///  Configuration of Message Object 82:
+; ..\CAN.c	  1109    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1110    ///  - message object 82 is not valid
+; ..\CAN.c	  1111    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1112    ///  Configuration of Message Object 83:
+; ..\CAN.c	  1113    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1114    ///  - message object 83 is not valid
+; ..\CAN.c	  1115    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1116    ///  Configuration of Message Object 84:
+; ..\CAN.c	  1117    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1118    ///  - message object 84 is not valid
+; ..\CAN.c	  1119    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1120    ///  Configuration of Message Object 85:
+; ..\CAN.c	  1121    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1122    ///  - message object 85 is not valid
+; ..\CAN.c	  1123    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1124    ///  Configuration of Message Object 86:
+; ..\CAN.c	  1125    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1126    ///  - message object 86 is not valid
+; ..\CAN.c	  1127    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1128    ///  Configuration of Message Object 87:
+; ..\CAN.c	  1129    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1130    ///  - message object 87 is not valid
+; ..\CAN.c	  1131    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1132    ///  Configuration of Message Object 88:
+; ..\CAN.c	  1133    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1134    ///  - message object 88 is not valid
+; ..\CAN.c	  1135    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1136    ///  Configuration of Message Object 89:
+; ..\CAN.c	  1137    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1138    ///  - message object 89 is not valid
+; ..\CAN.c	  1139    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1140    ///  Configuration of Message Object 90:
+; ..\CAN.c	  1141    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1142    ///  - message object 90 is not valid
+; ..\CAN.c	  1143    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1144    ///  Configuration of Message Object 91:
+; ..\CAN.c	  1145    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1146    ///  - message object 91 is not valid
+; ..\CAN.c	  1147    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1148    ///  Configuration of Message Object 92:
+; ..\CAN.c	  1149    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1150    ///  - message object 92 is not valid
+; ..\CAN.c	  1151    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1152    ///  Configuration of Message Object 93:
+; ..\CAN.c	  1153    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1154    ///  - message object 93 is not valid
+; ..\CAN.c	  1155    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1156    ///  Configuration of Message Object 94:
+; ..\CAN.c	  1157    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1158    ///  - message object 94 is not valid
+; ..\CAN.c	  1159    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1160    ///  Configuration of Message Object 95:
+; ..\CAN.c	  1161    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1162    ///  - message object 95 is not valid
+; ..\CAN.c	  1163    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1164    ///  Configuration of Message Object 96:
+; ..\CAN.c	  1165    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1166    ///  - message object 96 is not valid
+; ..\CAN.c	  1167    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1168    ///  Configuration of Message Object 97:
+; ..\CAN.c	  1169    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1170    ///  - message object 97 is not valid
+; ..\CAN.c	  1171    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1172    ///  Configuration of Message Object 98:
+; ..\CAN.c	  1173    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1174    ///  - message object 98 is not valid
+; ..\CAN.c	  1175    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1176    ///  Configuration of Message Object 99:
+; ..\CAN.c	  1177    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1178    ///  - message object 99 is not valid
+; ..\CAN.c	  1179    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1180    ///  Configuration of Message Object 100:
+; ..\CAN.c	  1181    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1182    ///  - message object 100 is not valid
+; ..\CAN.c	  1183    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1184    ///  Configuration of Message Object 101:
+; ..\CAN.c	  1185    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1186    ///  - message object 101 is not valid
+; ..\CAN.c	  1187    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1188    ///  Configuration of Message Object 102:
+; ..\CAN.c	  1189    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1190    ///  - message object 102 is not valid
+; ..\CAN.c	  1191    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1192    ///  Configuration of Message Object 103:
+; ..\CAN.c	  1193    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1194    ///  - message object 103 is not valid
+; ..\CAN.c	  1195    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1196    ///  Configuration of Message Object 104:
+; ..\CAN.c	  1197    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1198    ///  - message object 104 is not valid
+; ..\CAN.c	  1199    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1200    ///  Configuration of Message Object 105:
+; ..\CAN.c	  1201    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1202    ///  - message object 105 is not valid
+; ..\CAN.c	  1203    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1204    ///  Configuration of Message Object 106:
+; ..\CAN.c	  1205    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1206    ///  - message object 106 is not valid
+; ..\CAN.c	  1207    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1208    ///  Configuration of Message Object 107:
+; ..\CAN.c	  1209    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1210    ///  - message object 107 is not valid
+; ..\CAN.c	  1211    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1212    ///  Configuration of Message Object 108:
+; ..\CAN.c	  1213    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1214    ///  - message object 108 is not valid
+; ..\CAN.c	  1215    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1216    ///  Configuration of Message Object 109:
+; ..\CAN.c	  1217    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1218    ///  - message object 109 is not valid
+; ..\CAN.c	  1219    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1220    ///  Configuration of Message Object 110:
+; ..\CAN.c	  1221    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1222    ///  - message object 110 is not valid
+; ..\CAN.c	  1223    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1224    ///  Configuration of Message Object 111:
+; ..\CAN.c	  1225    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1226    ///  - message object 111 is not valid
+; ..\CAN.c	  1227    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1228    ///  Configuration of Message Object 112:
+; ..\CAN.c	  1229    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1230    ///  - message object 112 is not valid
+; ..\CAN.c	  1231    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1232    ///  Configuration of Message Object 113:
+; ..\CAN.c	  1233    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1234    ///  - message object 113 is not valid
+; ..\CAN.c	  1235    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1236    ///  Configuration of Message Object 114:
+; ..\CAN.c	  1237    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1238    ///  - message object 114 is not valid
+; ..\CAN.c	  1239    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1240    ///  Configuration of Message Object 115:
+; ..\CAN.c	  1241    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1242    ///  - message object 115 is not valid
+; ..\CAN.c	  1243    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1244    ///  Configuration of Message Object 116:
+; ..\CAN.c	  1245    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1246    ///  - message object 116 is not valid
+; ..\CAN.c	  1247    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1248    ///  Configuration of Message Object 117:
+; ..\CAN.c	  1249    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1250    ///  - message object 117 is not valid
+; ..\CAN.c	  1251    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1252    ///  Configuration of Message Object 118:
+; ..\CAN.c	  1253    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1254    ///  - message object 118 is not valid
+; ..\CAN.c	  1255    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1256    ///  Configuration of Message Object 119:
+; ..\CAN.c	  1257    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1258    ///  - message object 119 is not valid
+; ..\CAN.c	  1259    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1260    ///  Configuration of Message Object 120:
+; ..\CAN.c	  1261    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1262    ///  - message object 120 is not valid
+; ..\CAN.c	  1263    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1264    ///  Configuration of Message Object 121:
+; ..\CAN.c	  1265    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1266    ///  - message object 121 is not valid
+; ..\CAN.c	  1267    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1268    ///  Configuration of Message Object 122:
+; ..\CAN.c	  1269    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1270    ///  - message object 122 is not valid
+; ..\CAN.c	  1271    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1272    ///  Configuration of Message Object 123:
+; ..\CAN.c	  1273    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1274    ///  - message object 123 is not valid
+; ..\CAN.c	  1275    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1276    ///  Configuration of Message Object 124:
+; ..\CAN.c	  1277    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1278    ///  - message object 124 is not valid
+; ..\CAN.c	  1279    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1280    ///  Configuration of Message Object 125:
+; ..\CAN.c	  1281    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1282    ///  - message object 125 is not valid
+; ..\CAN.c	  1283    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1284    ///  Configuration of Message Object 126:
+; ..\CAN.c	  1285    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1286    ///  - message object 126 is not valid
+; ..\CAN.c	  1287    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1288    ///  Configuration of Message Object 127:
+; ..\CAN.c	  1289    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1290    ///  - message object 127 is not valid
+; ..\CAN.c	  1291  
+; ..\CAN.c	  1292    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1293    ///  Configuration of Service Request Nodes 0 - 15:
+; ..\CAN.c	  1294    ///  -----------------------------------------------------------------------
+; ..\CAN.c	  1295    ///  SRN0 service request node configuration:
+; ..\CAN.c	  1296    ///  - SRN0 interrupt priority level (ILVL) = 13
+; ..\CAN.c	  1297    ///  - SRN0 interrupt group level (GLVL) = 0
+; ..\CAN.c	  1298    ///  - SRN0 group priority extension (GPX) = 0
+; ..\CAN.c	  1299  
+; ..\CAN.c	  1300    CAN_0IC        =  0x0074;     
+	extr	#0x1
+	movw	0xf140,#0x74
+_390:
+
+; ..\CAN.c	  1301  
+; ..\CAN.c	  1302  
+; ..\CAN.c	  1303    //   -----------------------------------------------------------------------
+; ..\CAN.c	  1304    //   Start the CAN Nodes:
+; ..\CAN.c	  1305    //   -----------------------------------------------------------------------
+; ..\CAN.c	  1306  
+; ..\CAN.c	  1307    ///  - ------------- CAN_NCR0 ----------------------------------------------
+; ..\CAN.c	  1308  
+; ..\CAN.c	  1309      CAN_NCR0 &= ~ (uword) 0x0041; // reset INIT and CCE
+	movw	r11,#0xffbe
+	extp	#0x80,#0x1
+	andw	0x200,r11
+_391:
+
+; ..\CAN.c	  1310  
+; ..\CAN.c	  1311  
+; ..\CAN.c	  1312  
+; ..\CAN.c	  1313    // USER CODE BEGIN (Init,3)
+; ..\CAN.c	  1314  
+; ..\CAN.c	  1315    // USER CODE END
+; ..\CAN.c	  1316  
+; ..\CAN.c	  1317  } //  End of function CAN_vInit
+	ret
+_110:
+	; End of function
+	; End of section
+
+code__cocofun_2	.section	code, cluster '$cocofun_2', new
+; Function _$cocofun_2
+_$cocofun_2	.proc	far
+; Function body _$cocofun_2, coco_iter:1
+_2:
+_453:
+	extp	#0x80,#0x1
+	movw	r11,0x1c4
+	jb	r11.8,_2
+_454:
+	ret
+_140:
+	; End of function
+	; End of section
+
+code__cocofun_1	.section	code, cluster '$cocofun_1', new
+; Function _$cocofun_1
+_53:
+_$cocofun_1	.proc	far
+; Function body _$cocofun_1, coco_iter:0
+_445:
+	extp	#0x80,#0x1
+	movw	0x1c6,r11
+	movw	r11,#0x2
+_446:
+_447:
+	extp	#0x80,#0x1
+	movw	0x1c4,r11
+_448:
+	jmp	_$cocofun_2
+_135:
+	; End of function
+	; End of section
+
+code_CAN_vGetMsgObj	.section	code, cluster 'CAN_vGetMsgObj', new
+	.global	_CAN_vGetMsgObj
+
+; ..\CAN.c	  1318  
+; ..\CAN.c	  1319  //****************************************************************************
+; ..\CAN.c	  1320  // @Function      void CAN_vGetMsgObj(ubyte ubObjNr, stCAN_SWObj *pstObj) 
+; ..\CAN.c	  1321  //
+; ..\CAN.c	  1322  //----------------------------------------------------------------------------
+; ..\CAN.c	  1323  // @Description   This function fills the forwarded SW message object with 
+; ..\CAN.c	  1324  //                the content of the chosen HW message object.
+; ..\CAN.c	  1325  //                
+; ..\CAN.c	  1326  //                For Receive Message object use function CAN_vReleaseObj, to 
+; ..\CAN.c	  1327  //                release the message object. 
+; ..\CAN.c	  1328  //                
+; ..\CAN.c	  1329  //                The structure of the SW message object is defined in the 
+; ..\CAN.c	  1330  //                header file CAN.h (see stCAN_SWObj).
+; ..\CAN.c	  1331  //
+; ..\CAN.c	  1332  //----------------------------------------------------------------------------
+; ..\CAN.c	  1333  // @Returnvalue   None
+; ..\CAN.c	  1334  //
+; ..\CAN.c	  1335  //----------------------------------------------------------------------------
+; ..\CAN.c	  1336  // @Parameters    ubObjNr: 
+; ..\CAN.c	  1337  //                Number of the message object to be read (0-127)
+; ..\CAN.c	  1338  // @Parameters    *pstObj: 
+; ..\CAN.c	  1339  //                Pointer on a message object to be filled by this function
+; ..\CAN.c	  1340  //
+; ..\CAN.c	  1341  //----------------------------------------------------------------------------
+; ..\CAN.c	  1342  // @Date          26.09.2012
+; ..\CAN.c	  1343  //
+; ..\CAN.c	  1344  //****************************************************************************
+; ..\CAN.c	  1345  
+; ..\CAN.c	  1346  // USER CODE BEGIN (GetMsgObj,1)
+; ..\CAN.c	  1347  
+; ..\CAN.c	  1348  // USER CODE END
+; ..\CAN.c	  1349  
+; ..\CAN.c	  1350  void CAN_vGetMsgObj(ubyte ubObjNr, stCAN_SWObj *pstObj)
+; Function _CAN_vGetMsgObj
+_65:
+_CAN_vGetMsgObj	.proc	far
+
+; ..\CAN.c	  1351  {
+; ..\CAN.c	  1352    ubyte i;
+; ..\CAN.c	  1353  
+; ..\CAN.c	  1354    //----- get DLC -------------------------------------------------------
+; ..\CAN.c	  1355    pstObj->ubMOCfg = (ubyte)((CAN_HWOBJ[ubObjNr].uwMOFCRH & 0x0F00) >> 8); //MOFCRnH[11-8] DLC
+	movbz	r11,rl2
+_159:
+	movw	r13,#0x1000
+	shl	r11,#0x5
+_160:
+	addw	r13,r11
+	movw	r14,#0x80
+	extp	r14,#0x1
+	movw	r4,[r13+#0x2]
+	shr	r4,#0x8
+	andb	rl4,#0xf
+	movb	[r3],rl4
+_396:
+
+; ..\CAN.c	  1356  
+; ..\CAN.c	  1357    //----- get MODATA ----------------------------------------------------
+; ..\CAN.c	  1358    for(i = 0; i < pstObj->ubMOCfg; i++)
+	movb	rh4,#0x0
+_157:
+	jmp	_13
+_14:
+
+; ..\CAN.c	  1359    {
+; ..\CAN.c	  1360      pstObj->ubData[i] = CAN_HWOBJ[ubObjNr].ubData[i];
+	movbz	r11,rh4
+	addw	r11,r3
+	movbz	r12,rh4
+	addw	r12,r13
+_397:
+	addb	rh4,#0x1
+_398:
+	extp	r14,#0x1
+	movb	rl4,[r12+#0x10]
+	movb	[r11+#0xa],rl4
+_13:
+	cmpb	rh4,[r3]
+	jmp	cc_ult,_14
+_399:
+
+; ..\CAN.c	  1361    }
+; ..\CAN.c	  1362  
+; ..\CAN.c	  1363    //----- get DIR -------------------------------------------------------
+; ..\CAN.c	  1364      pstObj->ubMOCfg |= (ubyte)((CAN_HWOBJ[ubObjNr].uwMOCTRL & 0x0800) >> 7);  // set DIR if transmit object
+	extp	r14,#0x1
+	movw	r4,[r13+#0x1c]
+_158:
+	shr	r4,#0x7
+	andb	rl4,#0x10
+	orb	rl4,[r3]
+	movb	[r3],rl4
+_400:
+
+; ..\CAN.c	  1365  
+; ..\CAN.c	  1366    //----- get Identifier ------------------------------------------------
+; ..\CAN.c	  1367    if(CAN_HWOBJ[ubObjNr].uwMOARH & 0x2000)    // if extended identifier
+	extp	r14,#0x1
+	movw	r11,[r13+#0x1a]
+	jnb	r11.13,_15
+_401:
+
+; ..\CAN.c	  1368    {
+; ..\CAN.c	  1369      //----- get Extended Identifier -------------------------------------
+; ..\CAN.c	  1370      pstObj->ulID = (((ulong)(CAN_HWOBJ[ubObjNr].uwMOARH & 0x1FFF))<<16) + CAN_HWOBJ[ubObjNr].uwMOARL;
+	extp	r14,#0x1
+	movw	r11,[r13+#0x1a]
+	andw	r11,#0x1fff
+_402:
+	extp	r14,#0x1
+	movw	r12,[r13+#0x18]
+	movw	r4,#0x0
+	addw	r4,r12
+	addcw	r11,#0x0
+	movw	[r3+#0x2],r4
+	movw	[r3+#0x4],r11
+_403:
+
+; ..\CAN.c	  1371  
+; ..\CAN.c	  1372      pstObj->ubMOCfg = pstObj->ubMOCfg | 0x20;  // set IDE
+	movb	rh4,[r3]
+	bset	r4.13
+	movb	[r3],rh4
+_404:
+	jmp	_16
+_15:
+
+; ..\CAN.c	  1373    }
+; ..\CAN.c	  1374    else                                       // standard identifier
+; ..\CAN.c	  1375    {
+; ..\CAN.c	  1376      //----- get Standard Identifier -------------------------------------
+; ..\CAN.c	  1377      pstObj->ulID = (CAN_HWOBJ[ubObjNr].uwMOARH & 0x1FFF) >> 2;
+	extp	r14,#0x1
+	movw	r11,[r13+#0x1a]
+	shr	r11,#0x2
+	andw	r11,#0x7ff
+	movw	r12,#0x0
+	movw	[r3+#0x2],r11
+	movw	[r3+#0x4],r12
+_16:
+
+; ..\CAN.c	  1378    }
+; ..\CAN.c	  1379  
+; ..\CAN.c	  1380    //----- get Acceptance Mask -----------------------------------------
+; ..\CAN.c	  1381    if(((CAN_HWOBJ[ubObjNr].uwMOARH & 0x2000) == 0) && (CAN_HWOBJ[ubObjNr].uwMOAMRH & 0x2000))    // if IDE = 0 & MIDE = 1
+	extp	r14,#0x1
+	movw	r11,[r13+#0x1a]
+	jb	r11.13,_17
+_405:
+	extp	r14,#0x1
+	movw	r11,[r13+#0xe]
+	jnb	r11.13,_18
+_406:
+
+; ..\CAN.c	  1382    {
+; ..\CAN.c	  1383      pstObj->ulMask = (CAN_HWOBJ[ubObjNr].uwMOAMRH & 0x1FFF) >> 2;
+	extp	r14,#0x1
+	movw	r11,[r13+#0xe]
+	shr	r11,#0x2
+	andw	r11,#0x7ff
+	movw	r12,#0x0
+	movw	[r3+#0x6],r11
+	movw	[r3+#0x8],r12
+	jmp	_19
+_18:
+_17:
+
+; ..\CAN.c	  1384    }
+; ..\CAN.c	  1385    else
+; ..\CAN.c	  1386    {
+; ..\CAN.c	  1387      pstObj->ulMask = (((ulong)(CAN_HWOBJ[ubObjNr].uwMOAMRH & 0x1FFF))<<16) + CAN_HWOBJ[ubObjNr].uwMOAMRL;
+	extp	r14,#0x1
+	movw	r11,[r13+#0xe]
+	andw	r11,#0x1fff
+_407:
+	extp	r14,#0x1
+	movw	r12,[r13+#0xc]
+	movw	r4,#0x0
+	addw	r4,r12
+	addcw	r11,#0x0
+	movw	[r3+#0x6],r4
+	movw	[r3+#0x8],r11
+_19:
+
+; ..\CAN.c	  1388    }
+; ..\CAN.c	  1389  
+; ..\CAN.c	  1390    //----- get Acceptance Mask bit ---------------------------------------
+; ..\CAN.c	  1391    pstObj->ubMOCfg |= (ubyte)((CAN_HWOBJ[ubObjNr].uwMOAMRH & 0x2000) >> 7); // set MIDE
+	extp	r14,#0x1
+	movw	r4,[r13+#0xe]
+	shr	r4,#0x7
+	andb	rl4,#0x40
+	orb	rl4,[r3]
+	movb	[r3],rl4
+_408:
+
+; ..\CAN.c	  1392  
+; ..\CAN.c	  1393    //----- get Frame Counter Value ---------------------------------------
+; ..\CAN.c	  1394    pstObj->uwCounter = CAN_HWOBJ[ubObjNr].uwMOIPRH;
+	extp	r14,#0x1
+	movw	r11,[r13+#0xa]
+	movw	[r3+#0x12],r11
+_409:
+
+; ..\CAN.c	  1395  
+; ..\CAN.c	  1396  } //  End of function CAN_vGetMsgObj
+	ret
+_115:
+	; End of function
+	; End of section
+
+code_CAN_vTransmit	.section	code, cluster 'CAN_vTransmit', new
+	.global	_CAN_vTransmit
+
+; ..\CAN.c	  1397  
+; ..\CAN.c	  1398  //****************************************************************************
+; ..\CAN.c	  1399  // @Function      void CAN_vTransmit(ubyte ubObjNr) 
+; ..\CAN.c	  1400  //
+; ..\CAN.c	  1401  //----------------------------------------------------------------------------
+; ..\CAN.c	  1402  // @Description   This function triggers the CAN controller to send the 
+; ..\CAN.c	  1403  //                selected message.
+; ..\CAN.c	  1404  //                If the selected message object is a TRANSMIT OBJECT then 
+; ..\CAN.c	  1405  //                this function triggers the sending of a data frame. If 
+; ..\CAN.c	  1406  //                however the selected message object is a RECEIVE OBJECT 
+; ..\CAN.c	  1407  //                this function triggers the sending of a remote frame.
+; ..\CAN.c	  1408  //
+; ..\CAN.c	  1409  //----------------------------------------------------------------------------
+; ..\CAN.c	  1410  // @Returnvalue   None
+; ..\CAN.c	  1411  //
+; ..\CAN.c	  1412  //----------------------------------------------------------------------------
+; ..\CAN.c	  1413  // @Parameters    ubObjNr: 
+; ..\CAN.c	  1414  //                Number of the message object (0-127)
+; ..\CAN.c	  1415  //
+; ..\CAN.c	  1416  //----------------------------------------------------------------------------
+; ..\CAN.c	  1417  // @Date          26.09.2012
+; ..\CAN.c	  1418  //
+; ..\CAN.c	  1419  //****************************************************************************
+; ..\CAN.c	  1420  
+; ..\CAN.c	  1421  // USER CODE BEGIN (Transmit,1)
+; ..\CAN.c	  1422  
+; ..\CAN.c	  1423  // USER CODE END
+; ..\CAN.c	  1424  
+; ..\CAN.c	  1425  void CAN_vTransmit(ubyte ubObjNr)
+; Function _CAN_vTransmit
+_77:
+_CAN_vTransmit	.proc	far
+
+; ..\CAN.c	  1426  {
+; ..\CAN.c	  1427  
+; ..\CAN.c	  1428    CAN_HWOBJ[ubObjNr].uwMOCTRH = 0x0720;  // set TXRQ,TXEN0,TXEN1,MSGVAL
+	movbz	r11,rl2
+_162:
+	shl	r11,#0x5
+_161:
+	movw	r12,#0x80
+	movw	r13,#0x720
+	extp	r12,#0x1
+	movw	[r11+#0x101e],r13
+_414:
+
+; ..\CAN.c	  1429  
+; ..\CAN.c	  1430  } //  End of function CAN_vTransmit
+	ret
+_120:
+	; End of function
+	; End of section
+
+code_CAN_vLoadData	.section	code, cluster 'CAN_vLoadData', new
+	.global	_CAN_vLoadData
+
+; ..\CAN.c	  1431  
+; ..\CAN.c	  1432  //****************************************************************************
+; ..\CAN.c	  1433  // @Function      void CAN_vLoadData(ubyte ubObjNr, ubyte *ubpubData) 
+; ..\CAN.c	  1434  //
+; ..\CAN.c	  1435  //----------------------------------------------------------------------------
+; ..\CAN.c	  1436  // @Description   If a hardware TRANSMIT OBJECT has to be loaded with data 
+; ..\CAN.c	  1437  //                but not with a new identifier, this function may be used 
+; ..\CAN.c	  1438  //                instead of the function CAN_vConfigMsgObj. The message 
+; ..\CAN.c	  1439  //                object should be accessed by calling the function 
+; ..\CAN.c	  1440  //                CAN_ubRequestMsgObj before calling this function. This 
+; ..\CAN.c	  1441  //                prevents the CAN controller from working with invalid data.
+; ..\CAN.c	  1442  //
+; ..\CAN.c	  1443  //----------------------------------------------------------------------------
+; ..\CAN.c	  1444  // @Returnvalue   None
+; ..\CAN.c	  1445  //
+; ..\CAN.c	  1446  //----------------------------------------------------------------------------
+; ..\CAN.c	  1447  // @Parameters    ubObjNr: 
+; ..\CAN.c	  1448  //                Number of the message object to be configured (0-127)
+; ..\CAN.c	  1449  // @Parameters    *ubpubData: 
+; ..\CAN.c	  1450  //                Pointer on a data buffer
+; ..\CAN.c	  1451  //
+; ..\CAN.c	  1452  //----------------------------------------------------------------------------
+; ..\CAN.c	  1453  // @Date          26.09.2012
+; ..\CAN.c	  1454  //
+; ..\CAN.c	  1455  //****************************************************************************
+; ..\CAN.c	  1456  
+; ..\CAN.c	  1457  // USER CODE BEGIN (LoadData,1)
+; ..\CAN.c	  1458  
+; ..\CAN.c	  1459  // USER CODE END
+; ..\CAN.c	  1460  
+; ..\CAN.c	  1461  void CAN_vLoadData(ubyte ubObjNr, ubyte *ubpubData)
+; Function _CAN_vLoadData
+_89:
+_CAN_vLoadData	.proc	far
+
+; ..\CAN.c	  1462  {
+; ..\CAN.c	  1463    ubyte i;
+; ..\CAN.c	  1464  
+; ..\CAN.c	  1465    CAN_HWOBJ[ubObjNr].uwMOCTRH = 0x0008;       // set NEWDAT
+	movw	r11,#0x1000
+	movw	r12,#0x80
+	movbz	r13,rl2
+_166:
+	shl	r13,#0x5
+_165:
+	addw	r11,r13
+	movw	r13,#0x8
+_167:
+	extp	r12,#0x1
+	movw	[r11+#0x1e],r13
+_419:
+
+; ..\CAN.c	  1466  
+; ..\CAN.c	  1467    for(i = 0; i < (CAN_HWOBJ[ubObjNr].uwMOFCRH & 0x0F00) >> 8; i++)
+	movb	rh4,#0x0
+_164:
+	extp	r12,#0x1
+	movw	r13,[r11+#0x2]
+	shr	r13,#0x8
+	andw	r13,#0xf
+	jmp	cc_ule,_20
+_21:
+
+; ..\CAN.c	  1468    {
+; ..\CAN.c	  1469      CAN_HWOBJ[ubObjNr].ubData[i] = *(ubpubData++); //load MODATA
+	movbz	r13,rh4
+	addw	r13,r11
+	movb	rl4,[r3+]
+	extp	r12,#0x1
+	movb	[r13+#0x10],rl4
+_420:
+	addb	rh4,#0x1
+_421:
+	movbz	r13,rh4
+_163:
+	extp	r12,#0x1
+	movw	r14,[r11+#0x2]
+	shr	r14,#0x8
+	andw	r14,#0xf
+	cmpw	r13,r14
+	jmp	cc_ult,_21
+_20:
+
+; ..\CAN.c	  1470    }
+; ..\CAN.c	  1471  
+; ..\CAN.c	  1472    CAN_HWOBJ[ubObjNr].uwMOCTRH = 0x0020;       // set MSGVAL
+	movw	r13,#0x20
+	extp	r12,#0x1
+	movw	[r11+#0x1e],r13
+_422:
+
+; ..\CAN.c	  1473    CAN_HWOBJ[ubObjNr].uwMOCTRL = 0x0040;       // reset RTSEL
+	movw	r13,#0x40
+	extp	r12,#0x1
+	movw	[r11+#0x1c],r13
+_423:
+
+; ..\CAN.c	  1474  
+; ..\CAN.c	  1475  } //  End of function CAN_vLoadData
+	ret
+_125:
+	; End of function
+	; End of section
+
+code_CAN_viSRN0	.section	code, cluster 'CAN_viSRN0', new
+	.global	_CAN_viSRN0
+
+; ..\CAN.c	  1476  
+; ..\CAN.c	  1477  
+; ..\CAN.c	  1478  
+; ..\CAN.c	  1479  //****************************************************************************
+; ..\CAN.c	  1480  // @Macro         CAN_viSRN0() 
+; ..\CAN.c	  1481  //
+; ..\CAN.c	  1482  //----------------------------------------------------------------------------
+; ..\CAN.c	  1483  // @Description   
+; ..\CAN.c	  1484  //
+; ..\CAN.c	  1485  //----------------------------------------------------------------------------
+; ..\CAN.c	  1486  // @Returnvalue   
+; ..\CAN.c	  1487  //
+; ..\CAN.c	  1488  //----------------------------------------------------------------------------
+; ..\CAN.c	  1489  // @Parameters    None
+; ..\CAN.c	  1490  //
+; ..\CAN.c	  1491  //----------------------------------------------------------------------------
+; ..\CAN.c	  1492  // @Date          26.09.2012
+; ..\CAN.c	  1493  //
+; ..\CAN.c	  1494  //****************************************************************************
+; ..\CAN.c	  1495  
+; ..\CAN.c	  1496  // USER CODE BEGIN (SRN0,1)
+; ..\CAN.c	  1497  
+; ..\CAN.c	  1498  // USER CODE END
+; ..\CAN.c	  1499  
+; ..\CAN.c	  1500  _interrupt(CAN_SRN0INT)  void CAN_viSRN0(void)
+; Function _CAN_viSRN0
+_101:
+_CAN_viSRN0	.proc	intno CAN_viSRN0_trap = 64
+	push	MDH
+_168:
+	push	MDL
+_169:
+	push	r2
+_170:
+	push	r3
+_171:
+	push	r4
+_172:
+	push	r5
+_173:
+	push	r8
+_174:
+	push	r9
+_175:
+	push	r11
+_176:
+	push	r12
+_177:
+	push	r13
+_178:
+	push	r14
+_179:
+
+; ..\CAN.c	  1501  {
+; ..\CAN.c	  1502  
+; ..\CAN.c	  1503    uword uwSRN0ObjHandler;
+; ..\CAN.c	  1504  
+; ..\CAN.c	  1505    // USER CODE BEGIN (SRN0,2)
+; ..\CAN.c	  1506  
+; ..\CAN.c	  1507    // USER CODE END
+; ..\CAN.c	  1508  
+; ..\CAN.c	  1509    CAN_MSIMASKH = 0x0000;          // set message index mask register
+	extp	#0x80,#0x1
+	movw	0x1c2,ZEROS
+_428:
+
+; ..\CAN.c	  1510    CAN_MSIMASKL = 0x0200;
+	movw	r11,#0x200
+	extp	#0x80,#0x1
+	movw	0x1c0,r11
+_429:
+
+; ..\CAN.c	  1511  
+; ..\CAN.c	  1512    while (CAN_MSID0 != 0x0020)
+	jmp	_22
+_23:
+
+; ..\CAN.c	  1513    {
+; ..\CAN.c	  1514      switch(CAN_MSID0){
+	movw	r11,#0x9
+	extp	#0x80,#0x1
+	cmpw	r11,0x180
+	jmp	cc_ne,_24
+_430:
+
+; ..\CAN.c	  1515  
+; ..\CAN.c	  1516      case 9: // message object 9 interrupt 
+; ..\CAN.c	  1517      
+; ..\CAN.c	  1518        uwSRN0ObjHandler = CAN_HWOBJ[9].uwMOCTRL;
+	movw	r8,#0x113c
+	movw	r9,#0x80
+	extp	r9,#0x1
+	movw	r11,[r8]
+_192:
+
+; ..\CAN.c	  1519  
+; ..\CAN.c	  1520        if(uwSRN0ObjHandler & MOSTAT_RXPND)          // if message object 9 receive interrupt
+	jnb	r11.0,_25
+_431:
+
+; ..\CAN.c	  1521        {
+; ..\CAN.c	  1522              // USER CODE BEGIN (SRN0_OBJ9,1)
+; ..\CAN.c	  1523      	    //IO_vTogglePin(IO_P10_7);
+; ..\CAN.c	  1524      	  	CAN_vGetMsgObj(9, &canBMCCommands);
+	movw	r3,#_canBMCCommands
+	movb	rl2,#0x9
+	call	_CAN_vGetMsgObj
+_193:
+	movb	rh5,_LTC_CFG1R1
+_154:
+
+; ..\CAN.c	  1525  			#if BMC_ID == 1
+; ..\CAN.c	  1526  			for (unsigned char i = 0; i <= 7; i++)
+; ..\CAN.c	  1527  			{
+; ..\CAN.c	  1528  				if ((canBMCCommands.ubData[0] & (0x01 << i)) != 0)
+; ..\CAN.c	  1529  				{
+; ..\CAN.c	  1530  					ucBalanceCell[i] = 1;
+; ..\CAN.c	  1531  					LTC_CFG1R1 |= 0x01 << i;
+; ..\CAN.c	  1532  				}
+; ..\CAN.c	  1533  				else
+; ..\CAN.c	  1534  				{
+; ..\CAN.c	  1535  					ucBalanceCell[i] = 0;
+; ..\CAN.c	  1536  					LTC_CFG1R1 &= ~(0x01 << i);
+; ..\CAN.c	  1537  				}
+; ..\CAN.c	  1538  			}
+; ..\CAN.c	  1539  			#endif
+; ..\CAN.c	  1540  			#if BMC_ID == 2
+; ..\CAN.c	  1541  				//CFG1R1 = 0x00;
+; ..\CAN.c	  1542  				for (unsigned char i = 0; i <= 7; i++)
+; ..\CAN.c	  1543  				{
+; ..\CAN.c	  1544  					if ((canBMCCommands.ubData[1] & (0x01 << i)) != 0)
+; ..\CAN.c	  1545  					{
+; ..\CAN.c	  1546  						ucBalanceCell[i] = 1;
+; ..\CAN.c	  1547  						LTC_CFG1R1 |= 0x01 << i;
+; ..\CAN.c	  1548  					}
+; ..\CAN.c	  1549  					else
+; ..\CAN.c	  1550  					{
+; ..\CAN.c	  1551  						ucBalanceCell[i] = 0;
+; ..\CAN.c	  1552  						LTC_CFG1R1 &= ~(0x01 << i);
+; ..\CAN.c	  1553  					}
+; ..\CAN.c	  1554  				}
+; ..\CAN.c	  1555  			#endif
+; ..\CAN.c	  1556  			#if BMC_ID == 3
+; ..\CAN.c	  1557  				for (unsigned char i = 0; i <= 7; i++)
+	movw	r11,#_ucBalanceCell
+_432:
+	movw	r4,#0x0
+_26:
+
+; ..\CAN.c	  1558  				{
+; ..\CAN.c	  1559  					if ((canBMCCommands.ubData[2] & (0x01 << i)) != 0)
+	movw	r2,#0x1
+	movbz	r12,rl4
+	shl	r2,r12
+	movbz	r12,_canBMCCommands+0xc
+	andw	r12,r2
+	jmp	cc_eq,_27
+_433:
+
+; ..\CAN.c	  1560  					{
+; ..\CAN.c	  1561  						ucBalanceCell[i] = 1;
+	movb	rl5,#0x1
+	movb	[r11],rl5
+_434:
+
+; ..\CAN.c	  1562  						LTC_CFG1R1 |= 0x01 << i;
+	orb	rh5,rl2
+_435:
+	jmp	_28
+_27:
+
+; ..\CAN.c	  1563  					}
+; ..\CAN.c	  1564  					else
+; ..\CAN.c	  1565  					{
+; ..\CAN.c	  1566  						ucBalanceCell[i] = 0;
+	movb	[r11],ZEROS
+_436:
+
+; ..\CAN.c	  1567  						LTC_CFG1R1 &= ~(0x01 << i);
+	cplb	rl2
+	andb	rh5,rl2
+_28:
+	addw	r11,#0x1
+_437:
+	cmpi1	r4,#0x7
+	jmp	cc_ult,_26
+_155:
+
+; ..\CAN.c	  1568  					}
+; ..\CAN.c	  1569  				}
+; ..\CAN.c	  1570  			#endif
+; ..\CAN.c	  1571  			LTC_CalcPec();
+	movb	_LTC_CFG1R1,rh5
+	call	_LTC_CalcPec
+_438:
+
+; ..\CAN.c	  1572              // USER CODE END
+; ..\CAN.c	  1573  
+; ..\CAN.c	  1574          if(uwSRN0ObjHandler & MOSTAT_NEWDAT)       // if NEWDAT is set
+; ..\CAN.c	  1575          {
+; ..\CAN.c	  1576              // USER CODE BEGIN (SRN0_OBJ9,2)
+; ..\CAN.c	  1577  
+; ..\CAN.c	  1578              // USER CODE END
+; ..\CAN.c	  1579  
+; ..\CAN.c	  1580            if (uwSRN0ObjHandler & MOSTAT_MSGLST)    // if MSGLST is set
+; ..\CAN.c	  1581            {
+; ..\CAN.c	  1582              // Indicates that the CAN controller has stored a new 
+; ..\CAN.c	  1583              // message into this object, while NEWDAT was still set,
+; ..\CAN.c	  1584              // ie. the previously stored message is lost.
+; ..\CAN.c	  1585  
+; ..\CAN.c	  1586              // USER CODE BEGIN (SRN0_OBJ9,3)
+; ..\CAN.c	  1587  
+; ..\CAN.c	  1588              // USER CODE END
+; ..\CAN.c	  1589  
+; ..\CAN.c	  1590            }
+; ..\CAN.c	  1591            else
+; ..\CAN.c	  1592            {
+; ..\CAN.c	  1593              // The CAN controller has stored a new message into this object.
+; ..\CAN.c	  1594  
+; ..\CAN.c	  1595              // USER CODE BEGIN (SRN0_OBJ9,4)
+; ..\CAN.c	  1596  
+; ..\CAN.c	  1597              // USER CODE END
+; ..\CAN.c	  1598            }
+; ..\CAN.c	  1599  
+; ..\CAN.c	  1600          }
+; ..\CAN.c	  1601  
+; ..\CAN.c	  1602          CAN_HWOBJ[9].uwMOCTRL = MOSTAT_RST_MNR;            // reset MSGLST + NEWDAT + RXPND
+	movw	r11,#0x19
+	extp	r9,#0x1
+	movw	[r8],r11
+_25:
+
+; ..\CAN.c	  1603  
+; ..\CAN.c	  1604        }  // End of RXPND9
+; ..\CAN.c	  1605  
+; ..\CAN.c	  1606  
+; ..\CAN.c	  1607        CAN_MSPND0H = ~(uword) 0x0000; // reset PND bit
+	extp	#0x80,#0x1
+	movw	0x142,ONES
+_439:
+
+; ..\CAN.c	  1608        CAN_MSPND0L = ~(uword) 0x0200;
+	movw	r11,#0xfdff
+	extp	#0x80,#0x1
+	movw	0x140,r11
+
+; ..\CAN.c	  1609  
+; ..\CAN.c	  1610        // USER CODE BEGIN (SRN0_OBJ9,7)
+; ..\CAN.c	  1611  
+; ..\CAN.c	  1612        // USER CODE END
+; ..\CAN.c	  1613  
+; ..\CAN.c	  1614        break;
+; ..\CAN.c	  1615  
+; ..\CAN.c	  1616      default:
+_24:
+_22:
+	movw	r11,#0x20
+	extp	#0x80,#0x1
+	cmpw	r11,0x180
+	jmp	cc_ne,_23
+_440:
+
+; ..\CAN.c	  1617  
+; ..\CAN.c	  1618        // USER CODE BEGIN (SRN0,3)
+; ..\CAN.c	  1619  
+; ..\CAN.c	  1620        // USER CODE END
+; ..\CAN.c	  1621  
+; ..\CAN.c	  1622        break;
+; ..\CAN.c	  1623  
+; ..\CAN.c	  1624      }  // end switch 
+; ..\CAN.c	  1625  
+; ..\CAN.c	  1626      // USER CODE BEGIN (SRN0,7)
+; ..\CAN.c	  1627  
+; ..\CAN.c	  1628      // USER CODE END
+; ..\CAN.c	  1629  
+; ..\CAN.c	  1630    }  // end of while CAN_MSID
+; ..\CAN.c	  1631  
+; ..\CAN.c	  1632  
+; ..\CAN.c	  1633    // USER CODE BEGIN (SRN0,15)
+; ..\CAN.c	  1634  
+; ..\CAN.c	  1635    // USER CODE END
+; ..\CAN.c	  1636  
+; ..\CAN.c	  1637  } //  End of function CAN_viSRN0
+	pop	r14
+_180:
+	pop	r13
+_181:
+	pop	r12
+_182:
+	pop	r11
+_183:
+	pop	r9
+_184:
+	pop	r8
+_185:
+	pop	r5
+_186:
+	pop	r4
+_187:
+	pop	r3
+_188:
+	pop	r2
+_189:
+	pop	MDL
+_190:
+	pop	MDH
+_191:
+	reti
+_130:
+	; End of function
+	; End of section
+
+	.calls	'_CAN_vInit','_$cocofun_2'
+	.calls	'_CAN_vInit','_$cocofun_1'
+	.calls	'_$cocofun_1','_$cocofun_2'
+	.calls	'_CAN_viSRN0','_CAN_vGetMsgObj'
+	.calls	'_CAN_viSRN0','_LTC_CalcPec'
+	.calls	'_CAN_vInit','',4,0
+	.calls	'_$cocofun_2','',4,0
+	.calls	'_$cocofun_1','',4,0
+	.calls	'_CAN_vGetMsgObj','',4,0
+	.calls	'_CAN_vTransmit','',4,0
+	.calls	'_CAN_vLoadData','',4,0
+	.calls	'_CAN_viSRN0','',30,0
+	.extern	_ucBalanceCell : nearbyte
+	.extern	_LTC_CalcPec : far
+	.extern	_LTC_CFG1R1 : nearbyte
+	.extern	_canBMCCommands : nearword
+	.debug		.debug_info
+_103:
+	.dl	484
+	.dw	3
+	.dl	_104
+	.db	4
+_102:
+	.db	1
+	.db	'..\\CAN.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_105
+	.db	2
+	.db	'__nop',0,6,1,1,1,1
+_142:
+	.db	3
+	.db	'unsigned char',0,1,8
+_144:
+	.db	4,2
+	.dl	_194-_103
+_194:
+	.db	5,1,131,1,10,20,6
+	.db	'ubMOCfg',0,1
+	.dl	138
+	.db	2,35,0,6
+	.db	'ulID',0,4
+	.dl	_195-_103
+	.db	2,35,2,6
+	.db	'ulMask',0,4
+	.dl	_195-_103
+	.db	2,35,6,6
+	.db	'ubData',0,8
+	.dl	_196-_103
+	.db	2,35,10,6
+	.db	'uwCounter',0,2
+	.dl	_152-_103
+	.db	2,35,18,0
+_195:
+	.db	3
+	.db	'unsigned long int',0,4,7
+_196:
+	.db	7,8
+	.dl	138
+	.db	8,7,0
+_152:
+	.db	3
+	.db	'unsigned int',0,2,7
+_149:
+	.db	4,2
+	.dl	138
+	.db	9
+	.db	'LTC_CalcPec',0,2,41,6,6,1,1,1,1,10
+	.db	'__codeptr',0,3,1,1
+	.dl	250
+	.db	11
+	.db	'ucBalanceCell',0,4,102,22,2
+	.dl	_197-_103
+	.db	1,1
+_197:
+	.db	7,8
+	.dl	138
+	.db	8,7,0,10
+	.db	'ubyte',0,5,25,24
+	.dl	138
+	.db	10
+	.db	'uword',0,5,27,24
+	.dl	280
+	.db	10
+	.db	'ulong',0,5,29,24
+	.dl	250
+	.db	10
+	.db	'stCAN_SWObj',0,1,138,1,3
+	.dl	161
+	.db	11
+	.db	'LTC_CFG1R1',0,2,46,22,2
+	.dl	138
+	.db	1,1,11
+	.db	'canBMCCommands',0,4,147,1,20,2
+	.dl	161
+	.db	1,1,0
+	; End of section
+
+	.debug		.debug_abbrev
+_104:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,46,0,3,8,51,15,54,15,39,12,63,12,60,12,0,0,3,36,0,3,8
+	.db	11,15,62,15,0,0,4,15,0,51,15,73,19,0,0,5,19,1,58,15,59,15,57,15,11,15,0,0,6,13,0,3,8,11,15,73,19,56,9
+	.db	0,0,7,1,1,11,15,73,19,0,0,8,33,0,47,15,0,0,9,46,0,3,8,58,15,59,15,57,15,51,15,54,15,39,12,63,12,60,12
+	.db	0,0,10,22,0,3,8,58,15,59,15,57,15,73,19,0,0,11,52,0,3,8,58,15,59,15,57,15,51,15,73,19,63,12,60,12,0,0
+	.db	0
+	; End of section
+
+	.debug		.debug_line
+_105:
+	.dl	_199-_198
+_198:
+	.dw	3
+	.dl	_201-_200
+_200:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\CAN.h',0,0,0,0
+	.db	'..\\LTC_Comm.h',0,0,0,0
+	.db	'..\\CAN.c',0,0,0,0
+	.db	'..\\MAIN.h',0,0,0,0
+	.db	'..\\XC22xxREGS.h',0,0,0,0,0
+_201:
+_199:
+	; End of section
+
+	.debug		.debug_info, cluster 'CAN_vInit'
+_106:
+	.dl	181
+	.dw	3
+	.dl	_107
+	.db	4,1
+	.db	'..\\CAN.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_109,_108
+	.db	2
+	.dl	_102
+	.db	3
+	.db	'CAN_vInit',0,1,125,6,6,1,1,1
+	.dl	_30,_110,_29
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.dl	_141
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'CAN_vInit'
+_107:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,11,0,85,6,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'CAN_vInit'
+_108:
+	.dl	_203-_202
+_202:
+	.dw	3
+	.dl	_205-_204
+_204:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\CAN.c',0,0,0,0,0
+_205:
+	.db	5,27,7,0,5,2
+	.dl	_30
+	.db	3,137,1,1,5,11,9
+	.dw	_206-_30
+	.db	3,2,1,9
+	.dw	_207-_206
+	.db	3,2,1,5,27,9
+	.dw	_208-_207
+	.db	3,9,1,5,40,9
+	.dw	_209-_208
+	.db	3,7,1,5,27,9
+	.dw	_210-_209
+	.db	3,11,1,9
+	.dw	_211-_210
+	.db	3,4,1,5,21,9
+	.dw	_212-_211
+	.db	3,7,1,5,27,9
+	.dw	_213-_212
+	.db	3,1,1,9
+	.dw	_214-_213
+	.db	3,11,1,5,25,9
+	.dw	_215-_214
+	.db	3,5,1,9
+	.dw	_216-_215
+	.db	3,1,1,5,24,9
+	.dw	_217-_216
+	.db	3,7,1,9
+	.dw	_218-_217
+	.db	3,1,1,5,27,9
+	.dw	_219-_218
+	.db	3,9,1,9
+	.dw	_220-_219
+	.db	3,9,1,9
+	.dw	_221-_220
+	.db	3,9,1,9
+	.dw	_222-_221
+	.db	3,9,1,5,5,9
+	.dw	_223-_222
+	.db	3,8,1,9
+	.dw	_224-_223
+	.db	3,2,1,9
+	.dw	_225-_224
+	.db	3,2,1,9
+	.dw	_226-_225
+	.db	3,2,1,9
+	.dw	_227-_226
+	.db	3,2,1,9
+	.dw	_228-_227
+	.db	3,2,1,9
+	.dw	_229-_228
+	.db	3,2,1,9
+	.dw	_230-_229
+	.db	3,2,1,9
+	.dw	_231-_230
+	.db	3,2,1,9
+	.dw	_232-_231
+	.db	3,2,1,5,25,9
+	.dw	_233-_232
+	.db	3,14,1,9
+	.dw	_234-_233
+	.db	3,1,1,5,24,9
+	.dw	_235-_234
+	.db	3,8,1,9
+	.dw	_236-_235
+	.db	3,1,1,5,27,9
+	.dw	_237-_236
+	.db	3,4,1,9
+	.dw	_238-_237
+	.db	3,1,1,9
+	.dw	_239-_238
+	.db	3,1,1,9
+	.dw	_240-_239
+	.db	3,1,1,5,25,9
+	.dw	_241-_240
+	.db	3,6,1,9
+	.dw	_242-_241
+	.db	3,1,1,9
+	.dw	_243-_242
+	.db	3,5,1,9
+	.dw	_244-_243
+	.db	3,1,1,5,26,9
+	.dw	_245-_244
+	.db	3,4,1,9
+	.dw	_246-_245
+	.db	3,2,1,5,25,9
+	.dw	_247-_246
+	.db	3,7,1,9
+	.dw	_248-_247
+	.db	3,1,1,9
+	.dw	_249-_248
+	.db	3,11,1,9
+	.dw	_250-_249
+	.db	3,1,1,5,24,9
+	.dw	_251-_250
+	.db	3,8,1,9
+	.dw	_252-_251
+	.db	3,1,1,5,27,9
+	.dw	_253-_252
+	.db	3,4,1,9
+	.dw	_254-_253
+	.db	3,1,1,9
+	.dw	_255-_254
+	.db	3,1,1,9
+	.dw	_256-_255
+	.db	3,1,1,5,25,9
+	.dw	_257-_256
+	.db	3,6,1,9
+	.dw	_258-_257
+	.db	3,1,1,9
+	.dw	_259-_258
+	.db	3,5,1,9
+	.dw	_260-_259
+	.db	3,1,1,5,26,9
+	.dw	_261-_260
+	.db	3,4,1,9
+	.dw	_262-_261
+	.db	3,2,1,5,25,9
+	.dw	_263-_262
+	.db	3,7,1,9
+	.dw	_264-_263
+	.db	3,1,1,9
+	.dw	_265-_264
+	.db	3,11,1,9
+	.dw	_266-_265
+	.db	3,1,1,5,24,9
+	.dw	_267-_266
+	.db	3,8,1,9
+	.dw	_268-_267
+	.db	3,1,1,5,27,9
+	.dw	_269-_268
+	.db	3,4,1,9
+	.dw	_270-_269
+	.db	3,1,1,9
+	.dw	_271-_270
+	.db	3,1,1,9
+	.dw	_272-_271
+	.db	3,1,1,5,25,9
+	.dw	_273-_272
+	.db	3,6,1,9
+	.dw	_274-_273
+	.db	3,1,1,9
+	.dw	_275-_274
+	.db	3,5,1,9
+	.dw	_276-_275
+	.db	3,1,1,5,26,9
+	.dw	_277-_276
+	.db	3,4,1,9
+	.dw	_278-_277
+	.db	3,2,1,5,25,9
+	.dw	_279-_278
+	.db	3,7,1,9
+	.dw	_280-_279
+	.db	3,1,1,9
+	.dw	_281-_280
+	.db	3,11,1,9
+	.dw	_282-_281
+	.db	3,1,1,5,24,9
+	.dw	_283-_282
+	.db	3,8,1,9
+	.dw	_284-_283
+	.db	3,1,1,5,27,9
+	.dw	_285-_284
+	.db	3,4,1,9
+	.dw	_286-_285
+	.db	3,1,1,9
+	.dw	_287-_286
+	.db	3,1,1,9
+	.dw	_288-_287
+	.db	3,1,1,5,25,9
+	.dw	_289-_288
+	.db	3,6,1,9
+	.dw	_290-_289
+	.db	3,1,1,9
+	.dw	_291-_290
+	.db	3,5,1,9
+	.dw	_292-_291
+	.db	3,1,1,5,26,9
+	.dw	_293-_292
+	.db	3,4,1,9
+	.dw	_294-_293
+	.db	3,2,1,5,25,9
+	.dw	_295-_294
+	.db	3,7,1,9
+	.dw	_296-_295
+	.db	3,1,1,9
+	.dw	_297-_296
+	.db	3,11,1,9
+	.dw	_298-_297
+	.db	3,1,1,5,24,9
+	.dw	_299-_298
+	.db	3,8,1,9
+	.dw	_300-_299
+	.db	3,1,1,5,27,9
+	.dw	_301-_300
+	.db	3,4,1,9
+	.dw	_302-_301
+	.db	3,1,1,9
+	.dw	_303-_302
+	.db	3,1,1,9
+	.dw	_304-_303
+	.db	3,1,1,5,25,9
+	.dw	_305-_304
+	.db	3,6,1,9
+	.dw	_306-_305
+	.db	3,1,1,9
+	.dw	_307-_306
+	.db	3,5,1,9
+	.dw	_308-_307
+	.db	3,1,1,5,26,9
+	.dw	_309-_308
+	.db	3,4,1,9
+	.dw	_310-_309
+	.db	3,2,1,5,25,9
+	.dw	_311-_310
+	.db	3,7,1,9
+	.dw	_312-_311
+	.db	3,1,1,9
+	.dw	_313-_312
+	.db	3,11,1,9
+	.dw	_314-_313
+	.db	3,1,1,5,24,9
+	.dw	_315-_314
+	.db	3,8,1,9
+	.dw	_316-_315
+	.db	3,1,1,5,27,9
+	.dw	_317-_316
+	.db	3,4,1,9
+	.dw	_318-_317
+	.db	3,1,1,9
+	.dw	_319-_318
+	.db	3,1,1,9
+	.dw	_320-_319
+	.db	3,1,1,5,25,9
+	.dw	_321-_320
+	.db	3,6,1,9
+	.dw	_322-_321
+	.db	3,1,1,9
+	.dw	_323-_322
+	.db	3,5,1,9
+	.dw	_324-_323
+	.db	3,1,1,5,26,9
+	.dw	_325-_324
+	.db	3,4,1,9
+	.dw	_326-_325
+	.db	3,2,1,5,25,9
+	.dw	_327-_326
+	.db	3,7,1,9
+	.dw	_328-_327
+	.db	3,1,1,9
+	.dw	_329-_328
+	.db	3,11,1,9
+	.dw	_330-_329
+	.db	3,1,1,5,24,9
+	.dw	_331-_330
+	.db	3,8,1,9
+	.dw	_332-_331
+	.db	3,1,1,5,27,9
+	.dw	_333-_332
+	.db	3,4,1,9
+	.dw	_334-_333
+	.db	3,1,1,9
+	.dw	_335-_334
+	.db	3,1,1,9
+	.dw	_336-_335
+	.db	3,1,1,5,25,9
+	.dw	_337-_336
+	.db	3,6,1,9
+	.dw	_338-_337
+	.db	3,1,1,9
+	.dw	_339-_338
+	.db	3,5,1,9
+	.dw	_340-_339
+	.db	3,1,1,5,26,9
+	.dw	_341-_340
+	.db	3,4,1,9
+	.dw	_342-_341
+	.db	3,2,1,5,25,9
+	.dw	_343-_342
+	.db	3,7,1,9
+	.dw	_344-_343
+	.db	3,1,1,9
+	.dw	_345-_344
+	.db	3,11,1,9
+	.dw	_346-_345
+	.db	3,1,1,5,24,9
+	.dw	_347-_346
+	.db	3,8,1,9
+	.dw	_348-_347
+	.db	3,1,1,5,27,9
+	.dw	_349-_348
+	.db	3,4,1,9
+	.dw	_350-_349
+	.db	3,1,1,9
+	.dw	_351-_350
+	.db	3,1,1,9
+	.dw	_352-_351
+	.db	3,1,1,5,25,9
+	.dw	_353-_352
+	.db	3,6,1,9
+	.dw	_354-_353
+	.db	3,1,1,9
+	.dw	_355-_354
+	.db	3,5,1,9
+	.dw	_356-_355
+	.db	3,1,1,5,26,9
+	.dw	_357-_356
+	.db	3,4,1,9
+	.dw	_358-_357
+	.db	3,2,1,5,25,9
+	.dw	_359-_358
+	.db	3,7,1,9
+	.dw	_360-_359
+	.db	3,1,1,9
+	.dw	_361-_360
+	.db	3,11,1,9
+	.dw	_362-_361
+	.db	3,1,1,5,24,9
+	.dw	_363-_362
+	.db	3,8,1,9
+	.dw	_364-_363
+	.db	3,1,1,5,27,9
+	.dw	_365-_364
+	.db	3,4,1,9
+	.dw	_366-_365
+	.db	3,1,1,9
+	.dw	_367-_366
+	.db	3,1,1,9
+	.dw	_368-_367
+	.db	3,1,1,5,25,9
+	.dw	_369-_368
+	.db	3,6,1,9
+	.dw	_370-_369
+	.db	3,1,1,9
+	.dw	_371-_370
+	.db	3,5,1,9
+	.dw	_372-_371
+	.db	3,1,1,5,26,9
+	.dw	_373-_372
+	.db	3,4,1,9
+	.dw	_374-_373
+	.db	3,2,1,5,25,9
+	.dw	_375-_374
+	.db	3,7,1,9
+	.dw	_376-_375
+	.db	3,1,1,9
+	.dw	_377-_376
+	.db	3,11,1,9
+	.dw	_378-_377
+	.db	3,1,1,5,24,9
+	.dw	_379-_378
+	.db	3,8,1,9
+	.dw	_380-_379
+	.db	3,1,1,5,25,9
+	.dw	_381-_380
+	.db	3,6,1,9
+	.dw	_382-_381
+	.db	3,1,1,9
+	.dw	_383-_382
+	.db	3,6,1,9
+	.dw	_384-_383
+	.db	3,1,1,5,26,9
+	.dw	_385-_384
+	.db	3,4,1,9
+	.dw	_386-_385
+	.db	3,2,1,5,25,9
+	.dw	_387-_386
+	.db	3,9,1,9
+	.dw	_388-_387
+	.db	3,1,1,5,27,9
+	.dw	_389-_388
+	.db	3,227,3,1,5,33,9
+	.dw	_390-_389
+	.db	3,9,1,5,1,9
+	.dw	_391-_390
+	.db	3,8,1,7,9
+	.dw	_110-_391
+	.db	0,1,1
+_203:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'CAN_vInit'
+_109:
+	.dl	-1,_30,0,_110-_30,0,0
+_141:
+	.dl	-1,_30,0,_110-_30,-1,_2,0,_140-_2,-1,_53,0,_135-_53,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'CAN_vGetMsgObj'
+_111:
+	.dl	249
+	.dw	3
+	.dl	_112
+	.db	4,1
+	.db	'..\\CAN.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_114,_113
+	.db	2
+	.dl	_102
+	.db	3
+	.db	'CAN_vGetMsgObj',0,1,198,10,6,6,1,1,1
+	.dl	_65,_115,_64
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'ubObjNr',0,1,198,10,27
+	.dl	_142,_143
+	.db	4
+	.db	'pstObj',0,1,198,10,49
+	.dl	_144,_145
+	.db	5
+	.dl	_65,_115
+	.db	6
+	.db	'i',0,1,200,10,9,2
+	.dl	_142,_146
+	.db	0,0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'CAN_vGetMsgObj'
+_112:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0
+	.db	0,6,52,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'CAN_vGetMsgObj'
+_113:
+	.dl	_393-_392
+_392:
+	.dw	3
+	.dl	_395-_394
+_394:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\CAN.c',0,0,0,0,0
+_395:
+	.db	5,73,7,0,5,2
+	.dl	_65
+	.db	3,202,10,1,5,12,9
+	.dw	_396-_65
+	.db	3,3,1,5,33,9
+	.dw	_157-_396
+	.db	1,5,53,9
+	.dw	_14-_157
+	.db	3,2,1,5,38,9
+	.dw	_397-_14
+	.db	3,126,1,5,53,9
+	.dw	_398-_397
+	.db	3,2,1,5,33,9
+	.dw	_13-_398
+	.db	3,126,1,5,76,9
+	.dw	_399-_13
+	.db	3,6,1,5,3,9
+	.dw	_400-_399
+	.db	3,3,1,5,73,9
+	.dw	_401-_400
+	.db	3,3,1,5,101,9
+	.dw	_402-_401
+	.db	1,5,45,9
+	.dw	_403-_402
+	.db	3,2,1,5,73,9
+	.dw	_404-_403
+	.db	3,126,1,5,62,9
+	.dw	_15-_404
+	.db	3,7,1,5,6,9
+	.dw	_16-_15
+	.db	3,4,1,5,83,9
+	.dw	_405-_16
+	.db	1,5,65,9
+	.dw	_406-_405
+	.db	3,2,1,5,76,9
+	.dw	_17-_406
+	.db	3,4,1,5,105,9
+	.dw	_407-_17
+	.db	1,5,74,9
+	.dw	_19-_407
+	.db	3,4,1,5,50,9
+	.dw	_408-_19
+	.db	3,3,1,5,1,9
+	.dw	_409-_408
+	.db	3,2,1,7,9
+	.dw	_115-_409
+	.db	0,1,1
+_393:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'CAN_vGetMsgObj'
+_114:
+	.dl	-1,_65,0,_115-_65,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'CAN_vTransmit'
+_116:
+	.dl	211
+	.dw	3
+	.dl	_117
+	.db	4,1
+	.db	'..\\CAN.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_119,_118
+	.db	2
+	.dl	_102
+	.db	3
+	.db	'CAN_vTransmit',0,1,145,11,6,6,1,1,1
+	.dl	_77,_120,_76
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'ubObjNr',0,1,145,11,26
+	.dl	_142,_147
+	.db	5
+	.dl	_77,_120
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'CAN_vTransmit'
+_117:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0
+	.db	0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'CAN_vTransmit'
+_118:
+	.dl	_411-_410
+_410:
+	.dw	3
+	.dl	_413-_412
+_412:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\CAN.c',0,0,0,0,0
+_413:
+	.db	5,39,7,0,5,2
+	.dl	_77
+	.db	3,147,11,1,5,1,9
+	.dw	_414-_77
+	.db	3,2,1,7,9
+	.dw	_120-_414
+	.db	0,1,1
+_411:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'CAN_vTransmit'
+_119:
+	.dl	-1,_77,0,_120-_77,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'CAN_vLoadData'
+_121:
+	.dl	251
+	.dw	3
+	.dl	_122
+	.db	4,1
+	.db	'..\\CAN.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_124,_123
+	.db	2
+	.dl	_102
+	.db	3
+	.db	'CAN_vLoadData',0,1,181,11,6,6,1,1,1
+	.dl	_89,_125,_88
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'ubObjNr',0,1,181,11,26
+	.dl	_142,_148
+	.db	4
+	.db	'ubpubData',0,1,181,11,42
+	.dl	_149,_150
+	.db	5
+	.dl	_89,_125
+	.db	6
+	.db	'i',0,1,183,11,9,2
+	.dl	_142,_151
+	.db	0,0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'CAN_vLoadData'
+_122:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0
+	.db	0,6,52,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'CAN_vLoadData'
+_123:
+	.dl	_416-_415
+_415:
+	.dw	3
+	.dl	_418-_417
+_417:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\CAN.c',0,0,0,0,0
+_418:
+	.db	5,39,7,0,5,2
+	.dl	_89
+	.db	3,184,11,1,5,12,9
+	.dw	_419-_89
+	.db	3,2,1,5,61,9
+	.dw	_164-_419
+	.db	1,5,50,9
+	.dw	_21-_164
+	.db	3,2,1,5,66,9
+	.dw	_420-_21
+	.db	3,126,1,5,61,9
+	.dw	_421-_420
+	.db	1,5,39,9
+	.dw	_20-_421
+	.db	3,5,1,9
+	.dw	_422-_20
+	.db	3,1,1,5,1,9
+	.dw	_423-_422
+	.db	3,2,1,7,9
+	.dw	_125-_423
+	.db	0,1,1
+_416:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'CAN_vLoadData'
+_124:
+	.dl	-1,_89,0,_125-_89,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'CAN_viSRN0'
+_126:
+	.dl	235
+	.dw	3
+	.dl	_127
+	.db	4,1
+	.db	'..\\CAN.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_129,_128
+	.db	2
+	.dl	_102
+	.db	3
+	.db	'CAN_viSRN0',0,1,220,11,31,6,101,1,1
+	.dl	_101,_130,_100
+	.db	2,145,0,4
+	.dl	_101,_130
+	.db	5
+	.db	'uwSRN0ObjHandler',0,1,223,11,9,2
+	.dl	_152,_153
+	.db	4
+	.dl	_154,_155
+	.db	5
+	.db	'i',0,1,149,12,24,2
+	.dl	_142,_156
+	.db	0,0,0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'CAN_viSRN0'
+_127:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,11,1,17,1,18,1,0,0,5,52,0,3,8,58,15,59,15,57,15,51,15,73,16
+	.db	2,6,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'CAN_viSRN0'
+_128:
+	.dl	_425-_424
+_424:
+	.dw	3
+	.dl	_427-_426
+_426:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\CAN.c',0,0,0,0,0
+_427:
+	.db	5,31,7,0,5,2
+	.dl	_101
+	.db	3,219,11,1,5,24,9
+	.dw	_179-_101
+	.db	3,9,1,9
+	.dw	_428-_179
+	.db	3,1,1,5,29,9
+	.dw	_429-_428
+	.db	3,2,1,5,5,9
+	.dw	_23-_429
+	.db	3,2,1,5,47,9
+	.dw	_430-_23
+	.db	3,4,1,5,7,9
+	.dw	_192-_430
+	.db	3,2,1,5,43,7,9
+	.dw	_431-_192
+	.db	3,4,1,5,42,9
+	.dw	_154-_431
+	.db	3,33,1,5,37,9
+	.dw	_432-_154
+	.db	1,5,6,9
+	.dw	_26-_432
+	.db	3,2,1,5,27,9
+	.dw	_433-_26
+	.db	3,2,1,5,30,9
+	.dw	_434-_433
+	.db	3,1,1,5,27,9
+	.dw	_435-_434
+	.db	3,127,1,9
+	.dw	_27-_435
+	.db	3,5,1,5,33,9
+	.dw	_436-_27
+	.db	3,1,1,5,40,9
+	.dw	_28-_436
+	.db	3,118,1,5,37,9
+	.dw	_437-_28
+	.db	1,5,17,9
+	.dw	_155-_437
+	.db	3,14,1,5,47,9
+	.dw	_438-_155
+	.db	3,31,1,5,36,9
+	.dw	_25-_438
+	.db	3,5,1,9
+	.dw	_439-_25
+	.db	3,1,1,5,29,9
+	.dw	_22-_439
+	.db	3,160,127,1,5,1,9
+	.dw	_440-_22
+	.db	3,253,0,1,9
+	.dw	_130-_440
+	.db	0,1,1
+_425:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'CAN_viSRN0'
+_129:
+	.dl	-1,_101,0,_130-_101,0,0
+	; End of section
+
+	.debug		.debug_info, cluster '$cocofun_1'
+_131:
+	.dl	174
+	.dw	3
+	.dl	_132
+	.db	4,1
+	.db	'..\\CAN.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_134,_133
+	.db	2
+	.dl	_102
+	.db	3
+	.db	'.cocofun_1',0,1,1,1,6,1
+	.dl	_53,_135,_52
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster '$cocofun_1'
+_132:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,0,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,17,1,18,1,64,6,42,9,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster '$cocofun_1'
+_133:
+	.dl	_442-_441
+_441:
+	.dw	3
+	.dl	_444-_443
+_443:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\CAN.c',0,0,0,0,0
+_444:
+	.db	5,5,7,0,5,2
+	.dl	_53
+	.db	3,251,1,1,9
+	.dw	_135-_53
+	.db	0,1,1,5,5,0,5,2
+	.dl	_53
+	.db	3,251,1,1,9
+	.dw	_445-_53
+	.db	3,2,1,9
+	.dw	_446-_445
+	.db	3,126,1,9
+	.dw	_447-_446
+	.db	3,2,1,9
+	.dw	_448-_447
+	.db	3,126,1,9
+	.dw	_135-_448
+	.db	0,1,1,5,5,0,5,2
+	.dl	_53
+	.db	3,251,1,1,9
+	.dw	_445-_53
+	.db	3,4,1,9
+	.dw	_446-_445
+	.db	3,124,1,9
+	.dw	_447-_446
+	.db	3,4,1,9
+	.dw	_448-_447
+	.db	3,124,1,9
+	.dw	_135-_448
+	.db	0,1,1,5,5,0,5,2
+	.dl	_53
+	.db	3,251,1,1,9
+	.dw	_445-_53
+	.db	3,6,1,9
+	.dw	_446-_445
+	.db	3,122,1,9
+	.dw	_447-_446
+	.db	3,6,1,9
+	.dw	_448-_447
+	.db	3,122,1,9
+	.dw	_135-_448
+	.db	0,1,1,5,5,0,5,2
+	.dl	_53
+	.db	3,251,1,1,9
+	.dw	_445-_53
+	.db	3,8,1,9
+	.dw	_446-_445
+	.db	3,120,1,9
+	.dw	_447-_446
+	.db	3,8,1,9
+	.dw	_448-_447
+	.db	3,120,1,9
+	.dw	_135-_448
+	.db	0,1,1,5,5,0,5,2
+	.dl	_53
+	.db	3,251,1,1,9
+	.dw	_445-_53
+	.db	3,10,1,9
+	.dw	_446-_445
+	.db	3,118,1,9
+	.dw	_447-_446
+	.db	3,10,1,9
+	.dw	_448-_447
+	.db	3,118,1,9
+	.dw	_135-_448
+	.db	0,1,1,5,5,0,5,2
+	.dl	_53
+	.db	3,251,1,1,9
+	.dw	_445-_53
+	.db	3,12,1,9
+	.dw	_446-_445
+	.db	3,116,1,9
+	.dw	_447-_446
+	.db	3,12,1,9
+	.dw	_448-_447
+	.db	3,116,1,9
+	.dw	_135-_448
+	.db	0,1,1,5,5,0,5,2
+	.dl	_53
+	.db	3,251,1,1,9
+	.dw	_445-_53
+	.db	3,14,1,9
+	.dw	_446-_445
+	.db	3,114,1,9
+	.dw	_447-_446
+	.db	3,14,1,9
+	.dw	_448-_447
+	.db	3,114,1,9
+	.dw	_135-_448
+	.db	0,1,1,5,5,0,5,2
+	.dl	_53
+	.db	3,251,1,1,9
+	.dw	_445-_53
+	.db	3,16,1,9
+	.dw	_446-_445
+	.db	3,112,1,9
+	.dw	_447-_446
+	.db	3,16,1,9
+	.dw	_448-_447
+	.db	3,112,1,9
+	.dw	_135-_448
+	.db	0,1,1
+_442:
+	; End of section
+
+	.debug		.debug_ranges, cluster '$cocofun_1'
+_134:
+	.dl	-1,_53,0,_135-_53,0,0
+	; End of section
+
+	.debug		.debug_info, cluster '$cocofun_2'
+_136:
+	.dl	174
+	.dw	3
+	.dl	_137
+	.db	4,1
+	.db	'..\\CAN.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_139,_138
+	.db	2
+	.dl	_102
+	.db	3
+	.db	'.cocofun_2',0,1,1,1,6,1
+	.dl	_2,_140,_41
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster '$cocofun_2'
+_137:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,0,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,17,1,18,1,64,6,42,9,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster '$cocofun_2'
+_138:
+	.dl	_450-_449
+_449:
+	.dw	3
+	.dl	_452-_451
+_451:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\CAN.c',0,0,0,0,0
+_452:
+	.db	5,40,7,0,5,2
+	.dl	_2
+	.db	3,157,1,1,9
+	.dw	_140-_2
+	.db	0,1,1,5,40,0,5,2
+	.dl	_2
+	.db	3,157,1,1,5,5,9
+	.dw	_453-_2
+	.db	3,220,0,1,5,40,9
+	.dw	_454-_453
+	.db	3,164,127,1,7,9
+	.dw	_140-_454
+	.db	0,1,1,5,40,0,5,2
+	.dl	_2
+	.db	3,157,1,1,5,5,9
+	.dw	_453-_2
+	.db	3,222,0,1,5,40,9
+	.dw	_454-_453
+	.db	3,162,127,1,7,9
+	.dw	_140-_454
+	.db	0,1,1,5,40,0,5,2
+	.dl	_2
+	.db	3,157,1,1,5,5,9
+	.dw	_453-_2
+	.db	3,224,0,1,5,40,9
+	.dw	_454-_453
+	.db	3,160,127,1,7,9
+	.dw	_140-_454
+	.db	0,1,1,5,40,0,5,2
+	.dl	_2
+	.db	3,157,1,1,5,5,9
+	.dw	_453-_2
+	.db	3,226,0,1,5,40,9
+	.dw	_454-_453
+	.db	3,158,127,1,7,9
+	.dw	_140-_454
+	.db	0,1,1,5,40,0,5,2
+	.dl	_2
+	.db	3,157,1,1,5,5,9
+	.dw	_453-_2
+	.db	3,228,0,1,5,40,9
+	.dw	_454-_453
+	.db	3,156,127,1,7,9
+	.dw	_140-_454
+	.db	0,1,1,5,40,0,5,2
+	.dl	_2
+	.db	3,157,1,1,5,5,9
+	.dw	_453-_2
+	.db	3,230,0,1,5,40,9
+	.dw	_454-_453
+	.db	3,154,127,1,7,9
+	.dw	_140-_454
+	.db	0,1,1,5,40,0,5,2
+	.dl	_2
+	.db	3,157,1,1,5,5,9
+	.dw	_453-_2
+	.db	3,232,0,1,5,40,9
+	.dw	_454-_453
+	.db	3,152,127,1,7,9
+	.dw	_140-_454
+	.db	0,1,1,5,40,0,5,2
+	.dl	_2
+	.db	3,157,1,1,5,5,9
+	.dw	_453-_2
+	.db	3,234,0,1,5,40,9
+	.dw	_454-_453
+	.db	3,150,127,1,7,9
+	.dw	_140-_454
+	.db	0,1,1,5,40,0,5,2
+	.dl	_2
+	.db	3,157,1,1,5,5,9
+	.dw	_453-_2
+	.db	3,236,0,1,5,40,9
+	.dw	_454-_453
+	.db	3,148,127,1,7,9
+	.dw	_140-_454
+	.db	0,1,1,5,40,0,5,2
+	.dl	_2
+	.db	3,157,1,1,5,5,9
+	.dw	_453-_2
+	.db	3,238,0,1,5,40,9
+	.dw	_454-_453
+	.db	3,146,127,1,7,9
+	.dw	_140-_454
+	.db	0,1,1
+_450:
+	; End of section
+
+	.debug		.debug_ranges, cluster '$cocofun_2'
+_139:
+	.dl	-1,_2,0,_140-_2,0,0
+	; End of section
+
+	.debug		.debug_loc, cluster '$cocofun_1'
+_52:
+	.dl	-1,_53,_53-_53,_135-_53
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_54-_58
+_58:
+	.db	146,177,2,0,47
+	.dw	_57-_59
+_59:
+_54:
+	.db	18,49,46,40
+	.dw	_55-_60
+_60:
+	.db	146,178,2,0,47
+	.dw	_57-_61
+_61:
+_55:
+	.db	18,50,46,40
+	.dw	_56-_62
+_62:
+	.db	146,179,2,0,47
+	.dw	_57-_63
+_63:
+_56:
+	.db	146,180,2,0
+_57:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster '$cocofun_2'
+_41:
+	.dl	-1,_2,_2-_2,_140-_2
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_42-_46
+_46:
+	.db	146,177,2,0,47
+	.dw	_45-_47
+_47:
+_42:
+	.db	18,49,46,40
+	.dw	_43-_48
+_48:
+	.db	146,178,2,0,47
+	.dw	_45-_49
+_49:
+_43:
+	.db	18,50,46,40
+	.dw	_44-_50
+_50:
+	.db	146,179,2,0,47
+	.dw	_45-_51
+_51:
+_44:
+	.db	146,180,2,0
+_45:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'CAN_vGetMsgObj'
+_64:
+	.dl	-1,_65,_65-_65,_115-_65
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_66-_70
+_70:
+	.db	146,177,2,0,47
+	.dw	_69-_71
+_71:
+_66:
+	.db	18,49,46,40
+	.dw	_67-_72
+_72:
+	.db	146,178,2,0,47
+	.dw	_69-_73
+_73:
+_67:
+	.db	18,50,46,40
+	.dw	_68-_74
+_74:
+	.db	146,179,2,0,47
+	.dw	_69-_75
+_75:
+_68:
+	.db	146,180,2,0
+_69:
+	.db	22,19,62,36,33
+	.dl	0,0
+_146:
+	.dl	-1,_65,_157-_65,_158-_65
+	.dw	4
+	.db	84,157,8,8
+	.dl	0,0
+_145:
+	.dl	-1,_65,_65-_65,_115-_65
+	.dw	1
+	.db	83
+	.dl	0,0
+_143:
+	.dl	-1,_65,_159-_65,_14-_65
+	.dw	1
+	.db	91
+	.dl	_65-_65,_160-_65
+	.dw	4
+	.db	82,157,8,0
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'CAN_vInit'
+_29:
+	.dl	-1,_30,_30-_30,_110-_30
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_31-_35
+_35:
+	.db	146,177,2,0,47
+	.dw	_34-_36
+_36:
+_31:
+	.db	18,49,46,40
+	.dw	_32-_37
+_37:
+	.db	146,178,2,0,47
+	.dw	_34-_38
+_38:
+_32:
+	.db	18,50,46,40
+	.dw	_33-_39
+_39:
+	.db	146,179,2,0,47
+	.dw	_34-_40
+_40:
+_33:
+	.db	146,180,2,0
+_34:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'CAN_vLoadData'
+_88:
+	.dl	-1,_89,_89-_89,_125-_89
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_90-_94
+_94:
+	.db	146,177,2,0,47
+	.dw	_93-_95
+_95:
+_90:
+	.db	18,49,46,40
+	.dw	_91-_96
+_96:
+	.db	146,178,2,0,47
+	.dw	_93-_97
+_97:
+_91:
+	.db	18,50,46,40
+	.dw	_92-_98
+_98:
+	.db	146,179,2,0,47
+	.dw	_93-_99
+_99:
+_92:
+	.db	146,180,2,0
+_93:
+	.db	22,19,62,36,33
+	.dl	0,0
+_151:
+	.dl	-1,_89,_163-_89,_20-_89
+	.dw	1
+	.db	93
+	.dl	_164-_89,_125-_89
+	.dw	4
+	.db	84,157,8,8
+	.dl	0,0
+_148:
+	.dl	-1,_89,_89-_89,_165-_89
+	.dw	4
+	.db	82,157,8,0
+	.dl	_166-_89,_167-_89
+	.dw	1
+	.db	93
+	.dl	0,0
+_150:
+	.dl	-1,_89,_89-_89,_125-_89
+	.dw	1
+	.db	83
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'CAN_vTransmit'
+_76:
+	.dl	-1,_77,_77-_77,_120-_77
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_78-_82
+_82:
+	.db	146,177,2,0,47
+	.dw	_81-_83
+_83:
+_78:
+	.db	18,49,46,40
+	.dw	_79-_84
+_84:
+	.db	146,178,2,0,47
+	.dw	_81-_85
+_85:
+_79:
+	.db	18,50,46,40
+	.dw	_80-_86
+_86:
+	.db	146,179,2,0,47
+	.dw	_81-_87
+_87:
+_80:
+	.db	146,180,2,0
+_81:
+	.db	22,19,62,36,33
+	.dl	0,0
+_147:
+	.dl	-1,_77,_77-_77,_161-_77
+	.dw	4
+	.db	82,157,8,0
+	.dl	_162-_77,_120-_77
+	.dw	1
+	.db	91
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'CAN_viSRN0'
+_100:
+	.dl	-1,_101,_101-_101,_168-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,0,33
+	.dl	_168-_101,_169-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,2,33
+	.dl	_169-_101,_170-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,4,33
+	.dl	_170-_101,_171-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,6,33
+	.dl	_171-_101,_172-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,8,33
+	.dl	_172-_101,_173-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,10,33
+	.dl	_173-_101,_174-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,12,33
+	.dl	_174-_101,_175-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,14,33
+	.dl	_175-_101,_176-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,16,33
+	.dl	_176-_101,_177-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,18,33
+	.dl	_177-_101,_178-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,20,33
+	.dl	_178-_101,_179-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,22,33
+	.dl	_179-_101,_180-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,24,33
+	.dl	_180-_101,_181-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,22,33
+	.dl	_181-_101,_182-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,20,33
+	.dl	_182-_101,_183-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,18,33
+	.dl	_183-_101,_184-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,16,33
+	.dl	_184-_101,_185-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,14,33
+	.dl	_185-_101,_186-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,12,33
+	.dl	_186-_101,_187-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,10,33
+	.dl	_187-_101,_188-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,8,33
+	.dl	_188-_101,_189-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,6,33
+	.dl	_189-_101,_190-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,4,33
+	.dl	_190-_101,_191-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,2,33
+	.dl	_191-_101,_130-_101
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,0,33
+	.dl	0,0
+_156:
+	.dl	0,0
+_153:
+	.dl	-1,_101,_192-_101,_193-_101
+	.dw	1
+	.db	91
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_frame
+_455:
+	.dl	184
+	.dl	-1
+	.db	3,0,2,2,173,2,15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_456-_460
+_460:
+	.db	146,177,2,0,47
+	.dw	_459-_461
+_461:
+_456:
+	.db	18,49,46,40
+	.dw	_457-_462
+_462:
+	.db	146,178,2,0,47
+	.dw	_459-_463
+_463:
+_457:
+	.db	18,50,46,40
+	.dw	_458-_464
+_464:
+	.db	146,179,2,0,47
+	.dw	_459-_465
+_465:
+_458:
+	.db	146,180,2,0
+_459:
+	.db	22,19,62,36,33,48,34,16,173,2,12,19,146,176,2,0,64,36,146,161,2,0,33,8,15,22,161,2,5,19,146,161,2,4,8
+	.db	162,2,8,166,2,8,177,2,8,178,2,8,179,2,8,180,2,8,0,8,1,8,6,8,7,8,8,8,9,8,10,8,167,2,8,168,2,8,169,2,8,170
+	.db	2,8,171,2,8,172,2,16,174,2,12,19,146,176,2,0,64,36,146,161,2,0,33,16,175,2,12,19,146,176,2,0,64,36,146
+	.db	161,2,2,33,8,176,2
+	; End of section
+
+	.debug		.debug_frame, cluster 'CAN_vInit'
+	.dl	24
+	.dl	_455,_30,_110-_30
+	.db	8,160,2,8,2,8,3,8,4,8,5,0
+	; End of section
+
+	.debug		.debug_frame, cluster '$cocofun_2'
+	.dl	32
+	.dl	_455,_2,_140-_2
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster '$cocofun_1'
+	.dl	32
+	.dl	_455,_53,_135-_53
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'CAN_vGetMsgObj'
+	.dl	20
+	.dl	_455,_65,_115-_65
+	.db	8,160,2,8,5,0,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'CAN_vTransmit'
+	.dl	24
+	.dl	_455,_77,_120-_77
+	.db	8,160,2,8,3,8,4,8,5,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'CAN_vLoadData'
+	.dl	20
+	.dl	_455,_89,_125-_89
+	.db	8,160,2,8,5,0,0,0
+	; End of section
+
+	.debug		.debug_frame
+_466:
+	.dl	120
+	.dl	-1
+	.db	3,0,2,2,173,2,15,11,146,176,2,0,64,36,146,161,2,6,33,17,173,2,125,8,15,22,161,2,5,19,146,161,2,6,8,162
+	.db	2,8,166,2,8,160,2,8,177,2,8,178,2,8,179,2,8,180,2,8,0,8,1,8,2,8,3,8,4,8,5,8,6,8,7,8,8,8,9,8,10,8,11,8
+	.db	12,8,13,8,14,8,167,2,8,168,2,8,169,2,8,170,2,8,171,2,8,172,2,17,174,2,125,17,175,2,126,8,176,2,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'CAN_viSRN0'
+	.dl	700
+	.dl	_466,_101,_130-_101
+	.db	4
+	.dl	(_168-_101)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,8,33,22,161,2,5,19,146,161,2,8,4
+	.dl	(_169-_168)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,10,33,22,161,2,5,19,146,161,2,10,4
+	.dl	(_170-_169)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,12,33,22,161,2,5,19,146,161,2,12,17,2,122,4
+	.dl	(_171-_170)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,14,33,22,161,2,5,19,146,161,2,14,17,3,121,4
+	.dl	(_172-_171)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,16,33,22,161,2,5,19,146,161,2,16,17,4,120,4
+	.dl	(_173-_172)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,18,33,22,161,2,5,19,146,161,2,18,17,5,119,4
+	.dl	(_174-_173)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,20,33,22,161,2,5,19,146,161,2,20,17,8,118,4
+	.dl	(_175-_174)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,22,33,22,161,2,5,19,146,161,2,22,17,9,117,4
+	.dl	(_176-_175)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,24,33,22,161,2,5,19,146,161,2,24,17,11,116,4
+	.dl	(_177-_176)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,26,33,22,161,2,5,19,146,161,2,26,17,12,115,4
+	.dl	(_178-_177)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,28,33,22,161,2,5,19,146,161,2,28,17,13,114,4
+	.dl	(_179-_178)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,30,33,22,161,2,5,19,146,161,2,30,17,14,113,4
+	.dl	(_180-_179)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,28,33,22,161,2,5,19,146,161,2,28,206,4
+	.dl	(_181-_180)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,26,33,22,161,2,5,19,146,161,2,26,205,4
+	.dl	(_182-_181)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,24,33,22,161,2,5,19,146,161,2,24,204,4
+	.dl	(_183-_182)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,22,33,22,161,2,5,19,146,161,2,22,203,4
+	.dl	(_184-_183)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,20,33,22,161,2,5,19,146,161,2,20,201,4
+	.dl	(_185-_184)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,18,33,22,161,2,5,19,146,161,2,18,200,4
+	.dl	(_186-_185)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,16,33,22,161,2,5,19,146,161,2,16,197,4
+	.dl	(_187-_186)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,14,33,22,161,2,5,19,146,161,2,14,196,4
+	.dl	(_188-_187)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,12,33,22,161,2,5,19,146,161,2,12,195,4
+	.dl	(_189-_188)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,10,33,22,161,2,5,19,146,161,2,10,194,4
+	.dl	(_190-_189)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,8,33,22,161,2,5,19,146,161,2,8,4
+	.dl	(_191-_190)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,6,33,22,161,2,5,19,146,161,2,6
+	; End of section
+
+
+; ..\CAN.c	  1638  
+; ..\CAN.c	  1639  
+; ..\CAN.c	  1640  
+; ..\CAN.c	  1641  // USER CODE BEGIN (CAN_General,10)
+; ..\CAN.c	  1642  
+; ..\CAN.c	  1643  // USER CODE END
+; ..\CAN.c	  1644  
+
+	; Module end
+	.end

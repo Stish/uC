@@ -1,0 +1,344 @@
+	; TASKING VX-toolset for C166: C compiler v3.0r3 Build 707
+	; Options: -f cc4468a --dep-file=.INT.obj.d -c99 -Mn --no-tasking-sfr -Cxc2267 --core=xc16x --global-type-checking --tradeoff=4 -g --make-target=INT.obj --language=+cmp14,+div32,-gcc,-volatile,+strings -O2 --source --compact-max-size=200 -o INT.src
+	; Module start
+	.source	'..\\INT.c'
+code_INT_vInit	.section	code, cluster 'INT_vInit', new
+	.global	_INT_vInit
+
+; ..\INT.c	     1  //****************************************************************************
+; ..\INT.c	     2  // @Module        Interrupt Controller (INT)
+; ..\INT.c	     3  // @Filename      INT.c
+; ..\INT.c	     4  // @Project       can_test.dav
+; ..\INT.c	     5  //----------------------------------------------------------------------------
+; ..\INT.c	     6  // @Controller    Infineon XC2267-96F80
+; ..\INT.c	     7  //
+; ..\INT.c	     8  // @Compiler      Tasking Viper
+; ..\INT.c	     9  //
+; ..\INT.c	    10  // @Codegenerator 2.2
+; ..\INT.c	    11  //
+; ..\INT.c	    12  // @Description   This file contains functions that use the INT module.
+; ..\INT.c	    13  //
+; ..\INT.c	    14  //----------------------------------------------------------------------------
+; ..\INT.c	    15  // @Date          26.09.2012 12:39:25
+; ..\INT.c	    16  //
+; ..\INT.c	    17  //****************************************************************************
+; ..\INT.c	    18  
+; ..\INT.c	    19  // USER CODE BEGIN (INT_General,1)
+; ..\INT.c	    20  
+; ..\INT.c	    21  // USER CODE END
+; ..\INT.c	    22  
+; ..\INT.c	    23  
+; ..\INT.c	    24  
+; ..\INT.c	    25  //****************************************************************************
+; ..\INT.c	    26  // @Project Includes
+; ..\INT.c	    27  //****************************************************************************
+; ..\INT.c	    28  
+; ..\INT.c	    29  #include "MAIN.h"
+; ..\INT.c	    30  
+; ..\INT.c	    31  // USER CODE BEGIN (INT_General,2)
+; ..\INT.c	    32  
+; ..\INT.c	    33  // USER CODE END
+; ..\INT.c	    34  
+; ..\INT.c	    35  
+; ..\INT.c	    36  //****************************************************************************
+; ..\INT.c	    37  // @Macros
+; ..\INT.c	    38  //****************************************************************************
+; ..\INT.c	    39  
+; ..\INT.c	    40  // USER CODE BEGIN (INT_General,3)
+; ..\INT.c	    41  
+; ..\INT.c	    42  // USER CODE END
+; ..\INT.c	    43  
+; ..\INT.c	    44  
+; ..\INT.c	    45  //****************************************************************************
+; ..\INT.c	    46  // @Defines
+; ..\INT.c	    47  //****************************************************************************
+; ..\INT.c	    48  
+; ..\INT.c	    49  // USER CODE BEGIN (INT_General,4)
+; ..\INT.c	    50  
+; ..\INT.c	    51  // USER CODE END
+; ..\INT.c	    52  
+; ..\INT.c	    53  
+; ..\INT.c	    54  //****************************************************************************
+; ..\INT.c	    55  // @Typedefs
+; ..\INT.c	    56  //****************************************************************************
+; ..\INT.c	    57  
+; ..\INT.c	    58  // USER CODE BEGIN (INT_General,5)
+; ..\INT.c	    59  
+; ..\INT.c	    60  // USER CODE END
+; ..\INT.c	    61  
+; ..\INT.c	    62  
+; ..\INT.c	    63  //****************************************************************************
+; ..\INT.c	    64  // @Imported Global Variables
+; ..\INT.c	    65  //****************************************************************************
+; ..\INT.c	    66  
+; ..\INT.c	    67  // USER CODE BEGIN (INT_General,6)
+; ..\INT.c	    68  
+; ..\INT.c	    69  // USER CODE END
+; ..\INT.c	    70  
+; ..\INT.c	    71  
+; ..\INT.c	    72  //****************************************************************************
+; ..\INT.c	    73  // @Global Variables
+; ..\INT.c	    74  //****************************************************************************
+; ..\INT.c	    75  
+; ..\INT.c	    76  // USER CODE BEGIN (INT_General,7)
+; ..\INT.c	    77  
+; ..\INT.c	    78  // USER CODE END
+; ..\INT.c	    79  
+; ..\INT.c	    80  
+; ..\INT.c	    81  //****************************************************************************
+; ..\INT.c	    82  // @External Prototypes
+; ..\INT.c	    83  //****************************************************************************
+; ..\INT.c	    84  
+; ..\INT.c	    85  // USER CODE BEGIN (INT_General,8)
+; ..\INT.c	    86  
+; ..\INT.c	    87  // USER CODE END
+; ..\INT.c	    88  
+; ..\INT.c	    89  
+; ..\INT.c	    90  
+; ..\INT.c	    91  
+; ..\INT.c	    92  //****************************************************************************
+; ..\INT.c	    93  // @Prototypes Of Local Functions
+; ..\INT.c	    94  //****************************************************************************
+; ..\INT.c	    95  
+; ..\INT.c	    96  // USER CODE BEGIN (INT_General,9)
+; ..\INT.c	    97  
+; ..\INT.c	    98  // USER CODE END
+; ..\INT.c	    99  
+; ..\INT.c	   100  
+; ..\INT.c	   101  //****************************************************************************
+; ..\INT.c	   102  // @Function      void INT_vInit(void) 
+; ..\INT.c	   103  //
+; ..\INT.c	   104  //----------------------------------------------------------------------------
+; ..\INT.c	   105  // @Description   This is the initialization function of the INT function 
+; ..\INT.c	   106  //                library. It is assumed that the SFRs used by this library 
+; ..\INT.c	   107  //                are in reset state. 
+; ..\INT.c	   108  //
+; ..\INT.c	   109  //----------------------------------------------------------------------------
+; ..\INT.c	   110  // @Returnvalue   None
+; ..\INT.c	   111  //
+; ..\INT.c	   112  //----------------------------------------------------------------------------
+; ..\INT.c	   113  // @Parameters    None
+; ..\INT.c	   114  //
+; ..\INT.c	   115  //----------------------------------------------------------------------------
+; ..\INT.c	   116  // @Date          26.09.2012
+; ..\INT.c	   117  //
+; ..\INT.c	   118  //****************************************************************************
+; ..\INT.c	   119  
+; ..\INT.c	   120  // USER CODE BEGIN (Init,1)
+; ..\INT.c	   121  
+; ..\INT.c	   122  // USER CODE END
+; ..\INT.c	   123  
+; ..\INT.c	   124  void INT_vInit(void)
+; Function _INT_vInit
+_3:
+_INT_vInit	.proc	far
+
+; ..\INT.c	   125  {
+; ..\INT.c	   126    // USER CODE BEGIN (Init,2)
+; ..\INT.c	   127  
+; ..\INT.c	   128    // USER CODE END
+; ..\INT.c	   129  
+; ..\INT.c	   130    ///  -----------------------------------------------------------------------
+; ..\INT.c	   131    ///  Configuration of used interrupts :
+; ..\INT.c	   132    ///  -----------------------------------------------------------------------
+; ..\INT.c	   133  
+; ..\INT.c	   134  
+; ..\INT.c	   135    // USER CODE BEGIN (INT_Function,3)
+; ..\INT.c	   136  
+; ..\INT.c	   137    // USER CODE END
+; ..\INT.c	   138  
+; ..\INT.c	   139  } //  End of function INT_vInit
+	ret
+_22:
+	; End of function
+	; End of section
+
+	.calls	'_INT_vInit','',4,0
+	.debug		.debug_info
+_15:
+	.dl	237
+	.dw	3
+	.dl	_16
+	.db	4
+_14:
+	.db	1
+	.db	'..\\INT.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_17
+	.db	2
+	.db	'__codeptr',0,1,1,1
+	.dl	_23-_15
+_23:
+	.db	3
+	.db	'unsigned long int',0,4,7,2
+	.db	'ubyte',0,2,25,24
+	.dl	_24-_15
+_24:
+	.db	3
+	.db	'unsigned char',0,1,8,2
+	.db	'uword',0,2,27,24
+	.dl	_25-_15
+_25:
+	.db	3
+	.db	'unsigned int',0,2,7,2
+	.db	'ulong',0,2,29,24
+	.dl	144
+	.db	0
+	; End of section
+
+	.debug		.debug_abbrev
+_16:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,22,0,3,8,58,15,59,15,57,15,73,19,0,0,3,36,0,3,8,11,15
+	.db	62,15,0,0,0
+	; End of section
+
+	.debug		.debug_line
+_17:
+	.dl	_27-_26
+_26:
+	.dw	3
+	.dl	_29-_28
+_28:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\INT.c',0,0,0,0
+	.db	'..\\XC22xxREGS.h',0,0,0,0,0
+_29:
+_27:
+	; End of section
+
+	.debug		.debug_info, cluster 'INT_vInit'
+_18:
+	.dl	185
+	.dw	3
+	.dl	_19
+	.db	4,1
+	.db	'..\\INT.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_21,_20
+	.db	2
+	.dl	_14
+	.db	3
+	.db	'INT_vInit',0,1,124,6,6,1,1,1
+	.dl	_3,_22,_2
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.dl	_3,_22
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'INT_vInit'
+_19:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,11,0,17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'INT_vInit'
+_20:
+	.dl	_31-_30
+_30:
+	.dw	3
+	.dl	_33-_32
+_32:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\INT.c',0,0,0,0,0
+_33:
+	.db	5,1,7,0,5,2
+	.dl	_3
+	.db	3,138,1,1,7,9
+	.dw	_22-_3
+	.db	0,1,1
+_31:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'INT_vInit'
+_21:
+	.dl	-1,_3,0,_22-_3,0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'INT_vInit'
+_2:
+	.dl	-1,_3,_3-_3,_22-_3
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_4-_8
+_8:
+	.db	146,177,2,0,47
+	.dw	_7-_9
+_9:
+_4:
+	.db	18,49,46,40
+	.dw	_5-_10
+_10:
+	.db	146,178,2,0,47
+	.dw	_7-_11
+_11:
+_5:
+	.db	18,50,46,40
+	.dw	_6-_12
+_12:
+	.db	146,179,2,0,47
+	.dw	_7-_13
+_13:
+_6:
+	.db	146,180,2,0
+_7:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_frame
+_34:
+	.dl	184
+	.dl	-1
+	.db	3,0,2,2,173,2,15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_35-_39
+_39:
+	.db	146,177,2,0,47
+	.dw	_38-_40
+_40:
+_35:
+	.db	18,49,46,40
+	.dw	_36-_41
+_41:
+	.db	146,178,2,0,47
+	.dw	_38-_42
+_42:
+_36:
+	.db	18,50,46,40
+	.dw	_37-_43
+_43:
+	.db	146,179,2,0,47
+	.dw	_38-_44
+_44:
+_37:
+	.db	146,180,2,0
+_38:
+	.db	22,19,62,36,33,48,34,16,173,2,12,19,146,176,2,0,64,36,146,161,2,0,33,8,15,22,161,2,5,19,146,161,2,4,8
+	.db	162,2,8,166,2,8,177,2,8,178,2,8,179,2,8,180,2,8,0,8,1,8,6,8,7,8,8,8,9,8,10,8,167,2,8,168,2,8,169,2,8,170
+	.db	2,8,171,2,8,172,2,16,174,2,12,19,146,176,2,0,64,36,146,161,2,0,33,16,175,2,12,19,146,176,2,0,64,36,146
+	.db	161,2,2,33,8,176,2
+	; End of section
+
+	.debug		.debug_frame, cluster 'INT_vInit'
+	.dl	32
+	.dl	_34,_3,_22-_3
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,0
+	; End of section
+
+
+; ..\INT.c	   140  
+; ..\INT.c	   141  
+; ..\INT.c	   142  
+; ..\INT.c	   143  
+; ..\INT.c	   144  // USER CODE BEGIN (INT_General,10)
+; ..\INT.c	   145  
+; ..\INT.c	   146  // USER CODE END
+; ..\INT.c	   147  
+
+	; Module end
+	.end

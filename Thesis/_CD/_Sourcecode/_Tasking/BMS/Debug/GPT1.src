@@ -1,0 +1,865 @@
+	; TASKING VX-toolset for C166: C compiler v3.0r3 Build 707
+	; Options: -f cc4416a --dep-file=.GPT1.obj.d -c99 -Mn --no-tasking-sfr -Cxc2267 --core=xc16x --global-type-checking --tradeoff=4 -g --make-target=GPT1.obj --language=+cmp14,+div32,-gcc,-volatile,+strings -O2 --source --compact-max-size=200 -o GPT1.src
+	; Module start
+	.source	'..\\GPT1.c'
+code_GPT1_vInit	.section	code, cluster 'GPT1_vInit', new
+	.global	_GPT1_vInit
+
+; ..\GPT1.c	     1  //****************************************************************************
+; ..\GPT1.c	     2  // @Module        General Purpose Timer Unit (GPT1)
+; ..\GPT1.c	     3  // @Filename      GPT1.c
+; ..\GPT1.c	     4  // @Project       can_test.dav
+; ..\GPT1.c	     5  //----------------------------------------------------------------------------
+; ..\GPT1.c	     6  // @Controller    Infineon XC2267-96F80
+; ..\GPT1.c	     7  //
+; ..\GPT1.c	     8  // @Compiler      Tasking Viper
+; ..\GPT1.c	     9  //
+; ..\GPT1.c	    10  // @Codegenerator 2.2
+; ..\GPT1.c	    11  //
+; ..\GPT1.c	    12  // @Description   This file contains functions that use the GPT1 module.
+; ..\GPT1.c	    13  //
+; ..\GPT1.c	    14  //----------------------------------------------------------------------------
+; ..\GPT1.c	    15  // @Date          26.09.2012 12:39:23
+; ..\GPT1.c	    16  //
+; ..\GPT1.c	    17  //****************************************************************************
+; ..\GPT1.c	    18  
+; ..\GPT1.c	    19  // USER CODE BEGIN (GPT1_General,1)
+; ..\GPT1.c	    20  
+; ..\GPT1.c	    21  // USER CODE END
+; ..\GPT1.c	    22  
+; ..\GPT1.c	    23  
+; ..\GPT1.c	    24  
+; ..\GPT1.c	    25  //****************************************************************************
+; ..\GPT1.c	    26  // @Project Includes
+; ..\GPT1.c	    27  //****************************************************************************
+; ..\GPT1.c	    28  
+; ..\GPT1.c	    29  #include "MAIN.h"
+; ..\GPT1.c	    30  
+; ..\GPT1.c	    31  // USER CODE BEGIN (GPT1_General,2)
+; ..\GPT1.c	    32  
+; ..\GPT1.c	    33  // USER CODE END
+; ..\GPT1.c	    34  
+; ..\GPT1.c	    35  
+; ..\GPT1.c	    36  //****************************************************************************
+; ..\GPT1.c	    37  // @Macros
+; ..\GPT1.c	    38  //****************************************************************************
+; ..\GPT1.c	    39  
+; ..\GPT1.c	    40  // USER CODE BEGIN (GPT1_General,3)
+; ..\GPT1.c	    41  
+; ..\GPT1.c	    42  // USER CODE END
+; ..\GPT1.c	    43  
+; ..\GPT1.c	    44  
+; ..\GPT1.c	    45  //****************************************************************************
+; ..\GPT1.c	    46  // @Defines
+; ..\GPT1.c	    47  //****************************************************************************
+; ..\GPT1.c	    48  
+; ..\GPT1.c	    49  // USER CODE BEGIN (GPT1_General,4)
+; ..\GPT1.c	    50  
+; ..\GPT1.c	    51  // USER CODE END
+; ..\GPT1.c	    52  
+; ..\GPT1.c	    53  
+; ..\GPT1.c	    54  //****************************************************************************
+; ..\GPT1.c	    55  // @Typedefs
+; ..\GPT1.c	    56  //****************************************************************************
+; ..\GPT1.c	    57  
+; ..\GPT1.c	    58  // USER CODE BEGIN (GPT1_General,5)
+; ..\GPT1.c	    59  
+; ..\GPT1.c	    60  // USER CODE END
+; ..\GPT1.c	    61  
+; ..\GPT1.c	    62  
+; ..\GPT1.c	    63  //****************************************************************************
+; ..\GPT1.c	    64  // @Imported Global Variables
+; ..\GPT1.c	    65  //****************************************************************************
+; ..\GPT1.c	    66  
+; ..\GPT1.c	    67  // USER CODE BEGIN (GPT1_General,6)
+; ..\GPT1.c	    68  
+; ..\GPT1.c	    69  // USER CODE END
+; ..\GPT1.c	    70  
+; ..\GPT1.c	    71  
+; ..\GPT1.c	    72  //****************************************************************************
+; ..\GPT1.c	    73  // @Global Variables
+; ..\GPT1.c	    74  //****************************************************************************
+; ..\GPT1.c	    75  
+; ..\GPT1.c	    76  // USER CODE BEGIN (GPT1_General,7)
+; ..\GPT1.c	    77  
+; ..\GPT1.c	    78  // USER CODE END
+; ..\GPT1.c	    79  
+; ..\GPT1.c	    80  
+; ..\GPT1.c	    81  //****************************************************************************
+; ..\GPT1.c	    82  // @External Prototypes
+; ..\GPT1.c	    83  //****************************************************************************
+; ..\GPT1.c	    84  
+; ..\GPT1.c	    85  // USER CODE BEGIN (GPT1_General,8)
+; ..\GPT1.c	    86  
+; ..\GPT1.c	    87  // USER CODE END
+; ..\GPT1.c	    88  
+; ..\GPT1.c	    89  
+; ..\GPT1.c	    90  //****************************************************************************
+; ..\GPT1.c	    91  // @Prototypes Of Local Functions
+; ..\GPT1.c	    92  //****************************************************************************
+; ..\GPT1.c	    93  
+; ..\GPT1.c	    94  // USER CODE BEGIN (GPT1_General,9)
+; ..\GPT1.c	    95  
+; ..\GPT1.c	    96  // USER CODE END
+; ..\GPT1.c	    97  
+; ..\GPT1.c	    98  
+; ..\GPT1.c	    99  //****************************************************************************
+; ..\GPT1.c	   100  // @Function      void GPT1_vInit(void) 
+; ..\GPT1.c	   101  //
+; ..\GPT1.c	   102  //----------------------------------------------------------------------------
+; ..\GPT1.c	   103  // @Description   This is the initialization function of the GPT1 function 
+; ..\GPT1.c	   104  //                library. It is assumed that the SFRs used by this library 
+; ..\GPT1.c	   105  //                are in reset state. 
+; ..\GPT1.c	   106  //
+; ..\GPT1.c	   107  //----------------------------------------------------------------------------
+; ..\GPT1.c	   108  // @Returnvalue   None
+; ..\GPT1.c	   109  //
+; ..\GPT1.c	   110  //----------------------------------------------------------------------------
+; ..\GPT1.c	   111  // @Parameters    None
+; ..\GPT1.c	   112  //
+; ..\GPT1.c	   113  //----------------------------------------------------------------------------
+; ..\GPT1.c	   114  // @Date          26.09.2012
+; ..\GPT1.c	   115  //
+; ..\GPT1.c	   116  //****************************************************************************
+; ..\GPT1.c	   117  
+; ..\GPT1.c	   118  // USER CODE BEGIN (Init,1)
+; ..\GPT1.c	   119  
+; ..\GPT1.c	   120  // USER CODE END
+; ..\GPT1.c	   121  
+; ..\GPT1.c	   122  void GPT1_vInit(void)
+; Function _GPT1_vInit
+_3:
+_GPT1_vInit	.proc	far
+
+; ..\GPT1.c	   123  {
+; ..\GPT1.c	   124    // USER CODE BEGIN (Init,2)
+; ..\GPT1.c	   125  
+; ..\GPT1.c	   126    // USER CODE END
+; ..\GPT1.c	   127    ///  -----------------------------------------------------------------------
+; ..\GPT1.c	   128    ///  Configuration of Timer Block Prescaler 1:
+; ..\GPT1.c	   129    ///  -----------------------------------------------------------------------
+; ..\GPT1.c	   130    GPT12E_KSCCFG  =  0x0003;      // Module Enable
+	movw	0xfe1c,#0x3
+_63:
+
+; ..\GPT1.c	   131  
+; ..\GPT1.c	   132    _nop();  // one cycle delay 
+	nop
+_64:
+
+; ..\GPT1.c	   133  
+; ..\GPT1.c	   134    _nop();  // one cycle delay 
+	nop
+_65:
+
+; ..\GPT1.c	   135  
+; ..\GPT1.c	   136  
+; ..\GPT1.c	   137  
+; ..\GPT1.c	   138    ///  -----------------------------------------------------------------------
+; ..\GPT1.c	   139    ///  Configuration of Timer Block Prescaler 1:
+; ..\GPT1.c	   140    ///  -----------------------------------------------------------------------
+; ..\GPT1.c	   141    ///  - prescaler for timer block 1 is 8
+; ..\GPT1.c	   142  
+; ..\GPT1.c	   143  
+; ..\GPT1.c	   144    ///  -----------------------------------------------------------------------
+; ..\GPT1.c	   145    ///  Configuration of the GPT1 Core Timer 3:
+; ..\GPT1.c	   146    ///  -----------------------------------------------------------------------
+; ..\GPT1.c	   147    ///  - timer 3 works in timer mode
+; ..\GPT1.c	   148    ///  - external up/down control is disabled
+; ..\GPT1.c	   149    ///  - prescaler factor is 8
+; ..\GPT1.c	   150    ///  - up/down control bit is reset
+; ..\GPT1.c	   151    ///  - alternate output function T3OUT (P7.0) is disabled
+; ..\GPT1.c	   152    ///  - timer 3 output toggle latch (T3OTL) is set to 0
+; ..\GPT1.c	   153    ///  - timer 3 run bit is reset
+; ..\GPT1.c	   154  
+; ..\GPT1.c	   155    GPT12E_T3CON   =  0x0000;      // load timer 3 control register
+	movw	0xff42,ZEROS
+_66:
+
+; ..\GPT1.c	   156    GPT12E_T3      =  0x0000;      // load timer 3 register
+	movw	0xfe42,ZEROS
+_67:
+
+; ..\GPT1.c	   157    ///  - prescaler for timer block 1 is 8
+; ..\GPT1.c	   158  
+; ..\GPT1.c	   159    ///  -----------------------------------------------------------------------
+; ..\GPT1.c	   160    ///  Configuration of the GPT1 Auxiliary Timer 2:
+; ..\GPT1.c	   161    ///  -----------------------------------------------------------------------
+; ..\GPT1.c	   162    ///  - timer 2 works in timer mode
+; ..\GPT1.c	   163    ///  - external up/down control is disabled
+; ..\GPT1.c	   164    ///  - prescaler factor is 128
+; ..\GPT1.c	   165    ///  - up/down control bit is reset
+; ..\GPT1.c	   166  
+; ..\GPT1.c	   167    GPT12E_T2CON   =  0x0004;      // load timer 2 control register
+	movw	0xff40,#0x4
+_68:
+
+; ..\GPT1.c	   168    GPT12E_T2      =  0x0BDC;      // load timer 2 register
+	movw	0xfe40,#0xbdc
+_69:
+
+; ..\GPT1.c	   169    ///  - prescaler for timer block 1 is 8
+; ..\GPT1.c	   170  
+; ..\GPT1.c	   171    ///  -----------------------------------------------------------------------
+; ..\GPT1.c	   172    ///  Configuration of the GPT1 Auxiliary Timer 4:
+; ..\GPT1.c	   173    ///  -----------------------------------------------------------------------
+; ..\GPT1.c	   174    ///  - timer 4 works in timer mode
+; ..\GPT1.c	   175    ///  - external up/down control is disabled
+; ..\GPT1.c	   176    ///  - prescaler factor is 8
+; ..\GPT1.c	   177    ///  - up/down control bit is reset
+; ..\GPT1.c	   178    ///  - timer 4 run bit is reset
+; ..\GPT1.c	   179  
+; ..\GPT1.c	   180    GPT12E_T4CON   =  0x0000;      // load timer 4 control register
+	movw	0xff44,ZEROS
+_70:
+
+; ..\GPT1.c	   181    GPT12E_T4      =  0x0000;      // load timer 4 register
+	movw	0xfe44,ZEROS
+_71:
+
+; ..\GPT1.c	   182    ///  - prescaler for timer block 1 is 8
+; ..\GPT1.c	   183  
+; ..\GPT1.c	   184    ///  -----------------------------------------------------------------------
+; ..\GPT1.c	   185    ///  Configuration of the used GPT1 Port Pins:
+; ..\GPT1.c	   186    ///  -----------------------------------------------------------------------
+; ..\GPT1.c	   187  
+; ..\GPT1.c	   188  
+; ..\GPT1.c	   189    ///  -----------------------------------------------------------------------
+; ..\GPT1.c	   190    ///  Configuration of the used GPT1 Interrupts:
+; ..\GPT1.c	   191    ///  -----------------------------------------------------------------------
+; ..\GPT1.c	   192    ///  timer 2 service request node configuration:
+; ..\GPT1.c	   193    ///  - timer 2 interrupt priority level (ILVL) = 15
+; ..\GPT1.c	   194    ///  - timer 2 interrupt group level (GLVL) = 0
+; ..\GPT1.c	   195    ///  - timer 2 group priority extension (GPX) = 0
+; ..\GPT1.c	   196  
+; ..\GPT1.c	   197    GPT12E_T2IC    =  0x007C;     
+	movw	0xff60,#0x7c
+_72:
+
+; ..\GPT1.c	   198  
+; ..\GPT1.c	   199    ///  Use PEC channel 4 for GPT1 T2 INT:
+; ..\GPT1.c	   200    ///  - normal interrupt
+; ..\GPT1.c	   201    ///  - pointers are not modified
+; ..\GPT1.c	   202    ///  - transfer a word
+; ..\GPT1.c	   203    ///  - service End of PEC interrrupt by a EOP interrupt node is disabled
+; ..\GPT1.c	   204    ///  - channel link mode is disabled
+; ..\GPT1.c	   205  
+; ..\GPT1.c	   206    PECC4          =  0x0000;      // load PECC4 control register
+	movw	0xfec8,ZEROS
+_73:
+
+; ..\GPT1.c	   207  
+; ..\GPT1.c	   208  
+; ..\GPT1.c	   209  
+; ..\GPT1.c	   210    // USER CODE BEGIN (GPT1_Function,3)
+; ..\GPT1.c	   211  
+; ..\GPT1.c	   212    // USER CODE END
+; ..\GPT1.c	   213  
+; ..\GPT1.c	   214    GPT12E_T2CON_T2R  =  1;        // set timer 2 run bit
+	bset	0xff40.6
+_74:
+
+; ..\GPT1.c	   215  
+; ..\GPT1.c	   216  } //  End of function GPT1_viTmr4
+	ret
+_24:
+	; End of function
+	; End of section
+
+code_GPT1_viTmr2	.section	code, cluster 'GPT1_viTmr2', new
+	.global	_GPT1_viTmr2
+
+; ..\GPT1.c	   217  
+; ..\GPT1.c	   218  
+; ..\GPT1.c	   219  //****************************************************************************
+; ..\GPT1.c	   220  // @Function      void GPT1_viTmr2(void) 
+; ..\GPT1.c	   221  //
+; ..\GPT1.c	   222  //----------------------------------------------------------------------------
+; ..\GPT1.c	   223  // @Description   This is the interrupt service routine for the GPT1 timer 2. 
+; ..\GPT1.c	   224  //                It is called up in the case of over or underflow of the 
+; ..\GPT1.c	   225  //                timer 2 register.
+; ..\GPT1.c	   226  //                If the incremental interface mode is selected and the 
+; ..\GPT1.c	   227  //                interrupt for this mode is not disabled it is called up if 
+; ..\GPT1.c	   228  //                count edge or count direction was detected.
+; ..\GPT1.c	   229  //                
+; ..\GPT1.c	   230  //                Please note that you have to add application specific code 
+; ..\GPT1.c	   231  //                to this function.
+; ..\GPT1.c	   232  //
+; ..\GPT1.c	   233  //----------------------------------------------------------------------------
+; ..\GPT1.c	   234  // @Returnvalue   None
+; ..\GPT1.c	   235  //
+; ..\GPT1.c	   236  //----------------------------------------------------------------------------
+; ..\GPT1.c	   237  // @Parameters    None
+; ..\GPT1.c	   238  //
+; ..\GPT1.c	   239  //----------------------------------------------------------------------------
+; ..\GPT1.c	   240  // @Date          26.09.2012
+; ..\GPT1.c	   241  //
+; ..\GPT1.c	   242  //****************************************************************************
+; ..\GPT1.c	   243  
+; ..\GPT1.c	   244  // USER CODE BEGIN (Tmr2,1)
+; ..\GPT1.c	   245  
+; ..\GPT1.c	   246  // USER CODE END
+; ..\GPT1.c	   247  
+; ..\GPT1.c	   248  _interrupt(T2INT)  void GPT1_viTmr2(void)
+; Function _GPT1_viTmr2
+_15:
+_GPT1_viTmr2	.proc	intno GPT1_viTmr2_trap = 32
+	push	MDH
+_30:
+	push	MDL
+_31:
+	push	r2
+_32:
+	push	r3
+_33:
+	push	r4
+_34:
+	push	r5
+_35:
+	push	r11
+_36:
+	push	r12
+_37:
+	push	r13
+_38:
+	push	r14
+_39:
+
+; ..\GPT1.c	   249  {
+; ..\GPT1.c	   250    // USER CODE BEGIN (Tmr2,2)
+; ..\GPT1.c	   251  
+; ..\GPT1.c	   252    // USER CODE END
+; ..\GPT1.c	   253  
+; ..\GPT1.c	   254  
+; ..\GPT1.c	   255    // USER CODE BEGIN (Tmr2,5)
+; ..\GPT1.c	   256  #if BMC_ID == 1
+; ..\GPT1.c	   257  	CAN_vLoadData(0, ucaCellVolts14);
+; ..\GPT1.c	   258  	CAN_vLoadData(1, ucaCellVolts58);
+; ..\GPT1.c	   259  	CAN_vTransmit(0);
+; ..\GPT1.c	   260  	CAN_vTransmit(1);
+; ..\GPT1.c	   261  	CAN_vLoadData(6, ucaBMCStatus);
+; ..\GPT1.c	   262  	CAN_vTransmit(6);
+; ..\GPT1.c	   263  #endif
+; ..\GPT1.c	   264  #if BMC_ID == 2
+; ..\GPT1.c	   265  	CAN_vLoadData(2, ucaCellVolts14);
+; ..\GPT1.c	   266  	CAN_vLoadData(3, ucaCellVolts58);
+; ..\GPT1.c	   267  	CAN_vTransmit(2);
+; ..\GPT1.c	   268  	CAN_vTransmit(3);
+; ..\GPT1.c	   269  	CAN_vLoadData(7, ucaBMCStatus);
+; ..\GPT1.c	   270  	CAN_vTransmit(7);
+; ..\GPT1.c	   271  #endif
+; ..\GPT1.c	   272  #if BMC_ID == 3
+; ..\GPT1.c	   273  	CAN_vLoadData(4, ucaCellVolts14);
+	movw	r3,#_ucaCellVolts14
+	movb	rl2,#0x4
+	call	_CAN_vLoadData
+_79:
+
+; ..\GPT1.c	   274  	CAN_vLoadData(5, ucaCellVolts58);
+	movw	r3,#_ucaCellVolts58
+	movb	rl2,#0x5
+	call	_CAN_vLoadData
+_80:
+
+; ..\GPT1.c	   275  	CAN_vTransmit(4);
+	movb	rl2,#0x4
+	call	_CAN_vTransmit
+_81:
+
+; ..\GPT1.c	   276  	CAN_vTransmit(5);
+	movb	rl2,#0x5
+	call	_CAN_vTransmit
+_82:
+
+; ..\GPT1.c	   277  	CAN_vLoadData(8, ucaBMCStatus);
+	movw	r3,#_ucaBMCStatus
+	movb	rl2,#0x8
+	call	_CAN_vLoadData
+_83:
+
+; ..\GPT1.c	   278  	CAN_vTransmit(8);
+	movb	rl2,#0x8
+	call	_CAN_vTransmit
+_84:
+
+; ..\GPT1.c	   279  #endif
+; ..\GPT1.c	   280  	ucLTCEnableADC = 0x01;
+	movb	rh4,#0x1
+	movb	_ucLTCEnableADC,rh4
+_85:
+
+; ..\GPT1.c	   281    // USER CODE END
+; ..\GPT1.c	   282  
+; ..\GPT1.c	   283  } //  End of function GPT1_viTmr2
+	pop	r14
+_40:
+	pop	r13
+_41:
+	pop	r12
+_42:
+	pop	r11
+_43:
+	pop	r5
+_44:
+	pop	r4
+_45:
+	pop	r3
+_46:
+	pop	r2
+_47:
+	pop	MDL
+_48:
+	pop	MDH
+_49:
+	reti
+_29:
+	; End of function
+	; End of section
+
+	.calls	'_GPT1_viTmr2','_CAN_vLoadData'
+	.calls	'_GPT1_viTmr2','_CAN_vTransmit'
+	.calls	'_GPT1_vInit','',4,0
+	.calls	'_GPT1_viTmr2','',26,0
+	.extern	_ucaCellVolts14 : nearbyte
+	.extern	_ucaCellVolts58 : nearbyte
+	.extern	_ucaBMCStatus : nearbyte
+	.extern	_ucLTCEnableADC : nearbyte
+	.extern	_CAN_vTransmit : far
+	.extern	_CAN_vLoadData : far
+	.debug		.debug_info
+_17:
+	.dl	470
+	.dw	3
+	.dl	_18
+	.db	4
+_16:
+	.db	1
+	.db	'..\\GPT1.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_19
+	.db	2
+	.db	'__nop',0,6,1,1,1,1,3
+	.db	'CAN_vTransmit',0,1,170,1,6,6,1,1,1,1,4
+	.db	'ubObjNr',0,1,170,1,26
+	.dl	_50-_17
+	.db	0
+_50:
+	.db	5
+	.db	'unsigned char',0,1,8,3
+	.db	'CAN_vLoadData',0,1,171,1,6,6,1,1,1,1,4
+	.db	'ubObjNr',0,1,171,1,26
+	.dl	181
+	.db	4
+	.db	'ubpubData',0,1,171,1,42
+	.dl	_51-_17
+	.db	0
+_51:
+	.db	6,2
+	.dl	181
+	.db	7
+	.db	'__codeptr',0,2,1,1
+	.dl	_52-_17
+_52:
+	.db	5
+	.db	'unsigned long int',0,4,7,8
+	.db	'ucaCellVolts14',0,3,89,22,2
+	.dl	_53-_17
+	.db	1,1
+_53:
+	.db	9,8
+	.dl	181
+	.db	10,7,0,8
+	.db	'ucaCellVolts58',0,3,90,22,2
+	.dl	330
+	.db	1,1,8
+	.db	'ucaBMCStatus',0,3,92,22,2
+	.dl	330
+	.db	1,1,8
+	.db	'ucLTCEnableADC',0,3,101,22,2
+	.dl	181
+	.db	1,1,7
+	.db	'ubyte',0,4,25,24
+	.dl	181
+	.db	7
+	.db	'uword',0,4,27,24
+	.dl	_54-_17
+_54:
+	.db	5
+	.db	'unsigned int',0,2,7,7
+	.db	'ulong',0,4,29,24
+	.dl	283
+	.db	0
+	; End of section
+
+	.debug		.debug_abbrev
+_18:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,46,0,3,8,51,15,54,15,39,12,63,12,60,12,0,0,3,46,1,3,8
+	.db	58,15,59,15,57,15,51,15,54,15,39,12,63,12,60,12,0,0,4,5,0,3,8,58,15,59,15,57,15,73,19,0,0,5,36,0,3,8,11
+	.db	15,62,15,0,0,6,15,0,51,15,73,19,0,0,7,22,0,3,8,58,15,59,15,57,15,73,19,0,0,8,52,0,3,8,58,15,59,15,57,15
+	.db	51,15,73,19,63,12,60,12,0,0,9,1,1,11,15,73,19,0,0,10,33,0,47,15,0,0,0
+	; End of section
+
+	.debug		.debug_line
+_19:
+	.dl	_56-_55
+_55:
+	.dw	3
+	.dl	_58-_57
+_57:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\CAN.h',0,0,0,0
+	.db	'..\\GPT1.c',0,0,0,0
+	.db	'..\\MAIN.h',0,0,0,0
+	.db	'..\\XC22xxREGS.h',0,0,0,0,0
+_58:
+_56:
+	; End of section
+
+	.debug		.debug_info, cluster 'GPT1_vInit'
+_20:
+	.dl	187
+	.dw	3
+	.dl	_21
+	.db	4,1
+	.db	'..\\GPT1.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_23,_22
+	.db	2
+	.dl	_16
+	.db	3
+	.db	'GPT1_vInit',0,1,122,6,6,1,1,1
+	.dl	_3,_24,_2
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.dl	_3,_24
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'GPT1_vInit'
+_21:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,11,0,17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'GPT1_vInit'
+_22:
+	.dl	_60-_59
+_59:
+	.dw	3
+	.dl	_62-_61
+_61:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\GPT1.c',0,0,0,0,0
+_62:
+	.db	5,27,7,0,5,2
+	.dl	_3
+	.db	3,129,1,1,5,9,9
+	.dw	_63-_3
+	.db	3,2,1,9
+	.dw	_64-_63
+	.db	3,2,1,5,27,9
+	.dw	_65-_64
+	.db	3,21,1,9
+	.dw	_66-_65
+	.db	3,1,1,9
+	.dw	_67-_66
+	.db	3,11,1,9
+	.dw	_68-_67
+	.db	3,1,1,9
+	.dw	_69-_68
+	.db	3,12,1,9
+	.dw	_70-_69
+	.db	3,1,1,9
+	.dw	_71-_70
+	.db	3,16,1,9
+	.dw	_72-_71
+	.db	3,9,1,5,25,9
+	.dw	_73-_72
+	.db	3,8,1,5,1,9
+	.dw	_74-_73
+	.db	3,2,1,7,9
+	.dw	_24-_74
+	.db	0,1,1
+_60:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'GPT1_vInit'
+_23:
+	.dl	-1,_3,0,_24-_3,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'GPT1_viTmr2'
+_25:
+	.dl	179
+	.dw	3
+	.dl	_26
+	.db	4,1
+	.db	'..\\GPT1.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_28,_27
+	.db	2
+	.dl	_16
+	.db	3
+	.db	'GPT1_viTmr2',0,1,248,1,25,6,101,1,1
+	.dl	_15,_29,_14
+	.db	2,145,0,4
+	.dl	_15,_29
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'GPT1_viTmr2'
+_26:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,11,0,17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'GPT1_viTmr2'
+_27:
+	.dl	_76-_75
+_75:
+	.dw	3
+	.dl	_78-_77
+_77:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\GPT1.c',0,0,0,0,0
+_78:
+	.db	5,25,7,0,5,2
+	.dl	_15
+	.db	3,247,1,1,5,34,9
+	.dw	_39-_15
+	.db	3,25,1,9
+	.dw	_79-_39
+	.db	3,1,1,5,18,9
+	.dw	_80-_79
+	.db	3,1,1,9
+	.dw	_81-_80
+	.db	3,1,1,5,32,9
+	.dw	_82-_81
+	.db	3,1,1,5,18,9
+	.dw	_83-_82
+	.db	3,1,1,5,23,9
+	.dw	_84-_83
+	.db	3,2,1,5,1,9
+	.dw	_85-_84
+	.db	3,3,1,9
+	.dw	_29-_85
+	.db	0,1,1
+_76:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'GPT1_viTmr2'
+_28:
+	.dl	-1,_15,0,_29-_15,0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'GPT1_vInit'
+_2:
+	.dl	-1,_3,_3-_3,_24-_3
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_4-_8
+_8:
+	.db	146,177,2,0,47
+	.dw	_7-_9
+_9:
+_4:
+	.db	18,49,46,40
+	.dw	_5-_10
+_10:
+	.db	146,178,2,0,47
+	.dw	_7-_11
+_11:
+_5:
+	.db	18,50,46,40
+	.dw	_6-_12
+_12:
+	.db	146,179,2,0,47
+	.dw	_7-_13
+_13:
+_6:
+	.db	146,180,2,0
+_7:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'GPT1_viTmr2'
+_14:
+	.dl	-1,_15,_15-_15,_30-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,0,33
+	.dl	_30-_15,_31-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,2,33
+	.dl	_31-_15,_32-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,4,33
+	.dl	_32-_15,_33-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,6,33
+	.dl	_33-_15,_34-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,8,33
+	.dl	_34-_15,_35-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,10,33
+	.dl	_35-_15,_36-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,12,33
+	.dl	_36-_15,_37-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,14,33
+	.dl	_37-_15,_38-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,16,33
+	.dl	_38-_15,_39-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,18,33
+	.dl	_39-_15,_40-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,20,33
+	.dl	_40-_15,_41-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,18,33
+	.dl	_41-_15,_42-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,16,33
+	.dl	_42-_15,_43-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,14,33
+	.dl	_43-_15,_44-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,12,33
+	.dl	_44-_15,_45-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,10,33
+	.dl	_45-_15,_46-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,8,33
+	.dl	_46-_15,_47-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,6,33
+	.dl	_47-_15,_48-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,4,33
+	.dl	_48-_15,_49-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,2,33
+	.dl	_49-_15,_29-_15
+	.dw	11
+	.db	146,176,2,0,64,36,146,161,2,0,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_frame
+_86:
+	.dl	184
+	.dl	-1
+	.db	3,0,2,2,173,2,15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_87-_91
+_91:
+	.db	146,177,2,0,47
+	.dw	_90-_92
+_92:
+_87:
+	.db	18,49,46,40
+	.dw	_88-_93
+_93:
+	.db	146,178,2,0,47
+	.dw	_90-_94
+_94:
+_88:
+	.db	18,50,46,40
+	.dw	_89-_95
+_95:
+	.db	146,179,2,0,47
+	.dw	_90-_96
+_96:
+_89:
+	.db	146,180,2,0
+_90:
+	.db	22,19,62,36,33,48,34,16,173,2,12,19,146,176,2,0,64,36,146,161,2,0,33,8,15,22,161,2,5,19,146,161,2,4,8
+	.db	162,2,8,166,2,8,177,2,8,178,2,8,179,2,8,180,2,8,0,8,1,8,6,8,7,8,8,8,9,8,10,8,167,2,8,168,2,8,169,2,8,170
+	.db	2,8,171,2,8,172,2,16,174,2,12,19,146,176,2,0,64,36,146,161,2,0,33,16,175,2,12,19,146,176,2,0,64,36,146
+	.db	161,2,2,33,8,176,2
+	; End of section
+
+	.debug		.debug_frame, cluster 'GPT1_vInit'
+	.dl	32
+	.dl	_86,_3,_24-_3
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,0
+	; End of section
+
+	.debug		.debug_frame
+_97:
+	.dl	120
+	.dl	-1
+	.db	3,0,2,2,173,2,15,11,146,176,2,0,64,36,146,161,2,6,33,17,173,2,125,8,15,22,161,2,5,19,146,161,2,6,8,162
+	.db	2,8,166,2,8,160,2,8,177,2,8,178,2,8,179,2,8,180,2,8,0,8,1,8,2,8,3,8,4,8,5,8,6,8,7,8,8,8,9,8,10,8,11,8
+	.db	12,8,13,8,14,8,167,2,8,168,2,8,169,2,8,170,2,8,171,2,8,172,2,17,174,2,125,17,175,2,126,8,176,2,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'GPT1_viTmr2'
+	.dl	584
+	.dl	_97,_15,_29-_15
+	.db	4
+	.dl	(_30-_15)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,8,33,22,161,2,5,19,146,161,2,8,4
+	.dl	(_31-_30)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,10,33,22,161,2,5,19,146,161,2,10,4
+	.dl	(_32-_31)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,12,33,22,161,2,5,19,146,161,2,12,17,2,122,4
+	.dl	(_33-_32)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,14,33,22,161,2,5,19,146,161,2,14,17,3,121,4
+	.dl	(_34-_33)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,16,33,22,161,2,5,19,146,161,2,16,17,4,120,4
+	.dl	(_35-_34)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,18,33,22,161,2,5,19,146,161,2,18,17,5,119,4
+	.dl	(_36-_35)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,20,33,22,161,2,5,19,146,161,2,20,17,11,118,4
+	.dl	(_37-_36)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,22,33,22,161,2,5,19,146,161,2,22,17,12,117,4
+	.dl	(_38-_37)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,24,33,22,161,2,5,19,146,161,2,24,17,13,116,4
+	.dl	(_39-_38)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,26,33,22,161,2,5,19,146,161,2,26,17,14,115,4
+	.dl	(_40-_39)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,24,33,22,161,2,5,19,146,161,2,24,206,4
+	.dl	(_41-_40)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,22,33,22,161,2,5,19,146,161,2,22,205,4
+	.dl	(_42-_41)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,20,33,22,161,2,5,19,146,161,2,20,204,4
+	.dl	(_43-_42)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,18,33,22,161,2,5,19,146,161,2,18,203,4
+	.dl	(_44-_43)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,16,33,22,161,2,5,19,146,161,2,16,197,4
+	.dl	(_45-_44)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,14,33,22,161,2,5,19,146,161,2,14,196,4
+	.dl	(_46-_45)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,12,33,22,161,2,5,19,146,161,2,12,195,4
+	.dl	(_47-_46)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,10,33,22,161,2,5,19,146,161,2,10,194,4
+	.dl	(_48-_47)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,8,33,22,161,2,5,19,146,161,2,8,4
+	.dl	(_49-_48)/2
+	.db	15,11,146,176,2,0,64,36,146,161,2,6,33,22,161,2,5,19,146,161,2,6
+	; End of section
+
+
+; ..\GPT1.c	   284  
+; ..\GPT1.c	   285  
+; ..\GPT1.c	   286  
+; ..\GPT1.c	   287  
+; ..\GPT1.c	   288  // USER CODE BEGIN (GPT1_General,10)
+; ..\GPT1.c	   289  
+; ..\GPT1.c	   290  // USER CODE END
+; ..\GPT1.c	   291  
+
+	; Module end
+	.end

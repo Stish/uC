@@ -1,0 +1,533 @@
+	; TASKING VX-toolset for C166: C compiler v3.0r3 Build 707
+	; Options: -f cc4280a --dep-file=.IO.obj.d -c99 -Mn --no-tasking-sfr -Cxc2267 --core=xc16x --global-type-checking --tradeoff=4 -g --make-target=IO.obj --language=+cmp14,+div32,-gcc,-volatile,+strings -O2 --source --compact-max-size=200 -o IO.src
+	; Module start
+	.source	'..\\IO.c'
+code_IO_vInit	.section	code, cluster 'IO_vInit', new
+	.global	_IO_vInit
+
+; ..\IO.c	     1  //****************************************************************************
+; ..\IO.c	     2  // @Module        Parallel Ports
+; ..\IO.c	     3  // @Filename      IO.c
+; ..\IO.c	     4  // @Project       can_test.dav
+; ..\IO.c	     5  //----------------------------------------------------------------------------
+; ..\IO.c	     6  // @Controller    Infineon XC2267-96F80
+; ..\IO.c	     7  //
+; ..\IO.c	     8  // @Compiler      Tasking Viper
+; ..\IO.c	     9  //
+; ..\IO.c	    10  // @Codegenerator 2.2
+; ..\IO.c	    11  //
+; ..\IO.c	    12  // @Description   This file contains functions that use the IO module.
+; ..\IO.c	    13  //
+; ..\IO.c	    14  //----------------------------------------------------------------------------
+; ..\IO.c	    15  // @Date          26.09.2012 12:39:23
+; ..\IO.c	    16  //
+; ..\IO.c	    17  //****************************************************************************
+; ..\IO.c	    18  
+; ..\IO.c	    19  // USER CODE BEGIN (IO_General,1)
+; ..\IO.c	    20  
+; ..\IO.c	    21  // USER CODE END
+; ..\IO.c	    22  
+; ..\IO.c	    23  
+; ..\IO.c	    24  
+; ..\IO.c	    25  //****************************************************************************
+; ..\IO.c	    26  // @Project Includes
+; ..\IO.c	    27  //****************************************************************************
+; ..\IO.c	    28  
+; ..\IO.c	    29  #include "MAIN.h"
+; ..\IO.c	    30  
+; ..\IO.c	    31  // USER CODE BEGIN (IO_General,2)
+; ..\IO.c	    32  
+; ..\IO.c	    33  // USER CODE END
+; ..\IO.c	    34  
+; ..\IO.c	    35  
+; ..\IO.c	    36  //****************************************************************************
+; ..\IO.c	    37  // @Macros
+; ..\IO.c	    38  //****************************************************************************
+; ..\IO.c	    39  
+; ..\IO.c	    40  // USER CODE BEGIN (IO_General,3)
+; ..\IO.c	    41  
+; ..\IO.c	    42  // USER CODE END
+; ..\IO.c	    43  
+; ..\IO.c	    44  
+; ..\IO.c	    45  //****************************************************************************
+; ..\IO.c	    46  // @Defines
+; ..\IO.c	    47  //****************************************************************************
+; ..\IO.c	    48  
+; ..\IO.c	    49  // USER CODE BEGIN (IO_General,4)
+; ..\IO.c	    50  
+; ..\IO.c	    51  // USER CODE END
+; ..\IO.c	    52  
+; ..\IO.c	    53  
+; ..\IO.c	    54  //****************************************************************************
+; ..\IO.c	    55  // @Typedefs
+; ..\IO.c	    56  //****************************************************************************
+; ..\IO.c	    57  
+; ..\IO.c	    58  // USER CODE BEGIN (IO_General,5)
+; ..\IO.c	    59  
+; ..\IO.c	    60  // USER CODE END
+; ..\IO.c	    61  
+; ..\IO.c	    62  
+; ..\IO.c	    63  //****************************************************************************
+; ..\IO.c	    64  // @Imported Global Variables
+; ..\IO.c	    65  //****************************************************************************
+; ..\IO.c	    66  
+; ..\IO.c	    67  // USER CODE BEGIN (IO_General,6)
+; ..\IO.c	    68  
+; ..\IO.c	    69  // USER CODE END
+; ..\IO.c	    70  
+; ..\IO.c	    71  
+; ..\IO.c	    72  //****************************************************************************
+; ..\IO.c	    73  // @Global Variables
+; ..\IO.c	    74  //****************************************************************************
+; ..\IO.c	    75  
+; ..\IO.c	    76  // USER CODE BEGIN (IO_General,7)
+; ..\IO.c	    77  
+; ..\IO.c	    78  // USER CODE END
+; ..\IO.c	    79  
+; ..\IO.c	    80  
+; ..\IO.c	    81  //****************************************************************************
+; ..\IO.c	    82  // @External Prototypes
+; ..\IO.c	    83  //****************************************************************************
+; ..\IO.c	    84  
+; ..\IO.c	    85  // USER CODE BEGIN (IO_General,8)
+; ..\IO.c	    86  
+; ..\IO.c	    87  // USER CODE END
+; ..\IO.c	    88  
+; ..\IO.c	    89  
+; ..\IO.c	    90  //****************************************************************************
+; ..\IO.c	    91  // @Prototypes Of Local Functions
+; ..\IO.c	    92  //****************************************************************************
+; ..\IO.c	    93  
+; ..\IO.c	    94  // USER CODE BEGIN (IO_General,9)
+; ..\IO.c	    95  
+; ..\IO.c	    96  // USER CODE END
+; ..\IO.c	    97  
+; ..\IO.c	    98  
+; ..\IO.c	    99  //****************************************************************************
+; ..\IO.c	   100  // @Function      void IO_vInit(void) 
+; ..\IO.c	   101  //
+; ..\IO.c	   102  //----------------------------------------------------------------------------
+; ..\IO.c	   103  // @Description   This is the initialization function of the IO function 
+; ..\IO.c	   104  //                library. It is assumed that the SFRs used by this library 
+; ..\IO.c	   105  //                are in reset state. 
+; ..\IO.c	   106  //
+; ..\IO.c	   107  //----------------------------------------------------------------------------
+; ..\IO.c	   108  // @Returnvalue   None
+; ..\IO.c	   109  //
+; ..\IO.c	   110  //----------------------------------------------------------------------------
+; ..\IO.c	   111  // @Parameters    None
+; ..\IO.c	   112  //
+; ..\IO.c	   113  //----------------------------------------------------------------------------
+; ..\IO.c	   114  // @Date          26.09.2012
+; ..\IO.c	   115  //
+; ..\IO.c	   116  //****************************************************************************
+; ..\IO.c	   117  
+; ..\IO.c	   118  // USER CODE BEGIN (IO_Function,1)
+; ..\IO.c	   119  
+; ..\IO.c	   120  // USER CODE END
+; ..\IO.c	   121  
+; ..\IO.c	   122  void IO_vInit(void)
+; Function _IO_vInit
+_3:
+_IO_vInit	.proc	far
+
+; ..\IO.c	   123  {
+; ..\IO.c	   124    // USER CODE BEGIN (IO_Function,2)
+; ..\IO.c	   125  
+; ..\IO.c	   126    // USER CODE END
+; ..\IO.c	   127  
+; ..\IO.c	   128  
+; ..\IO.c	   129    ///  -----------------------------------------------------------------------
+; ..\IO.c	   130    ///  Configuration of Port P0:
+; ..\IO.c	   131    ///  -----------------------------------------------------------------------
+; ..\IO.c	   132    ///  P0.0 is used as general input
+; ..\IO.c	   133    ///  - pull device is tristate 
+; ..\IO.c	   134    ///  P0.1 is used as general purpose output
+; ..\IO.c	   135    ///  - push/pull output is selected
+; ..\IO.c	   136    ///  - the pin status is low level
+; ..\IO.c	   137    ///  P0.2 is used as general purpose output
+; ..\IO.c	   138    ///  - push/pull output is selected
+; ..\IO.c	   139    ///  - the pin status is low level
+; ..\IO.c	   140    ///  P0.3 is used as general purpose output
+; ..\IO.c	   141    ///  - push/pull output is selected
+; ..\IO.c	   142    ///  - the pin status is high level
+; ..\IO.c	   143  
+; ..\IO.c	   144    ///  P0.0 - P0.3 output driver characteristic: strong driver
+; ..\IO.c	   145    ///  P0.4 - P0.7 output driver characteristic: strong driver
+; ..\IO.c	   146  
+; ..\IO.c	   147    ///  P0.0 - P0.3 output edge characteristic: sharp edge mode
+; ..\IO.c	   148    ///  P0.4 - P0.7 output edge characteristic: sharp edge mode
+; ..\IO.c	   149  
+; ..\IO.c	   150    P0_OUT         =  0x0008;      // load data output register
+	movw	0xffa2,#0x8
+_34:
+
+; ..\IO.c	   151    P0_IOCR01      =  0x0080;      // load port control register 1
+	movw	r11,#0x80
+	movw	0xe802,r11
+_35:
+
+; ..\IO.c	   152    P0_IOCR02      =  0x0080;      // load port control register 2
+	movw	0xe804,r11
+_36:
+
+; ..\IO.c	   153    P0_IOCR03      =  0x0080;      // load port control register 3
+	movw	0xe806,r11
+_37:
+
+; ..\IO.c	   154  
+; ..\IO.c	   155    ///  -----------------------------------------------------------------------
+; ..\IO.c	   156    ///  Configuration of Port P1:
+; ..\IO.c	   157    ///  -----------------------------------------------------------------------
+; ..\IO.c	   158    ///  - no pin of port P1 is used
+; ..\IO.c	   159  
+; ..\IO.c	   160  
+; ..\IO.c	   161    ///  -----------------------------------------------------------------------
+; ..\IO.c	   162    ///  Configuration of Port P2:
+; ..\IO.c	   163    ///  -----------------------------------------------------------------------
+; ..\IO.c	   164    ///  P2.0 is used as alternate input for the CAN0 Receive input(RXDC0C)
+; ..\IO.c	   165    ///  P2.1 is used as alternate output for the CAN0 Transmit output(TXDC0C)
+; ..\IO.c	   166    ///  - push/pull output is selected
+; ..\IO.c	   167  
+; ..\IO.c	   168    ///  P2.0 - P2.3 output driver characteristic: strong driver
+; ..\IO.c	   169    ///  P2.4 - P2.7 output driver characteristic: strong driver
+; ..\IO.c	   170    ///  P2.8 - P2.12 output driver characteristic: strong driver
+; ..\IO.c	   171  
+; ..\IO.c	   172    ///  P2.0 - P2.3 output edge characteristic: sharp edge mode
+; ..\IO.c	   173    ///  P2.4 - P2.7 output edge characteristic: sharp edge mode
+; ..\IO.c	   174    ///  P2.8 - P2.12 output edge characteristic: sharp edge mode
+; ..\IO.c	   175  
+; ..\IO.c	   176  
+; ..\IO.c	   177    ///  -----------------------------------------------------------------------
+; ..\IO.c	   178    ///  Configuration of Port P4:
+; ..\IO.c	   179    ///  -----------------------------------------------------------------------
+; ..\IO.c	   180    ///  - no pin of port P4 is used
+; ..\IO.c	   181  
+; ..\IO.c	   182  
+; ..\IO.c	   183    ///  -----------------------------------------------------------------------
+; ..\IO.c	   184    ///  Configuration of Port P5:
+; ..\IO.c	   185    ///  -----------------------------------------------------------------------
+; ..\IO.c	   186    ///  - no pin of port P5 is used
+; ..\IO.c	   187    ///  - Port5 Data register P5(Read only)
+; ..\IO.c	   188  
+; ..\IO.c	   189  
+; ..\IO.c	   190    ///  -----------------------------------------------------------------------
+; ..\IO.c	   191    ///  Configuration of Port P6:
+; ..\IO.c	   192    ///  -----------------------------------------------------------------------
+; ..\IO.c	   193    ///  - no pin of port P6 is used
+; ..\IO.c	   194  
+; ..\IO.c	   195  
+; ..\IO.c	   196    ///  -----------------------------------------------------------------------
+; ..\IO.c	   197    ///  Configuration of Port P7:
+; ..\IO.c	   198    ///  -----------------------------------------------------------------------
+; ..\IO.c	   199    ///  - no pin of port P7 is used
+; ..\IO.c	   200  
+; ..\IO.c	   201  
+; ..\IO.c	   202    ///  -----------------------------------------------------------------------
+; ..\IO.c	   203    ///  Configuration of Port P10:
+; ..\IO.c	   204    ///  -----------------------------------------------------------------------
+; ..\IO.c	   205    ///  P10.0 is used as general purpose output
+; ..\IO.c	   206    ///  - push/pull output is selected
+; ..\IO.c	   207    ///  - the pin status is high level
+; ..\IO.c	   208    ///  P10.1 is used as general purpose output
+; ..\IO.c	   209    ///  - push/pull output is selected
+; ..\IO.c	   210    ///  - the pin status is high level
+; ..\IO.c	   211    ///  P10.2 is used as general purpose output
+; ..\IO.c	   212    ///  - push/pull output is selected
+; ..\IO.c	   213    ///  - the pin status is high level
+; ..\IO.c	   214    ///  P10.3 is used as general purpose output
+; ..\IO.c	   215    ///  - push/pull output is selected
+; ..\IO.c	   216    ///  - the pin status is high level
+; ..\IO.c	   217    ///  P10.4 is used as general purpose output
+; ..\IO.c	   218    ///  - push/pull output is selected
+; ..\IO.c	   219    ///  - the pin status is high level
+; ..\IO.c	   220    ///  P10.5 is used as general purpose output
+; ..\IO.c	   221    ///  - push/pull output is selected
+; ..\IO.c	   222    ///  - the pin status is high level
+; ..\IO.c	   223    ///  P10.6 is used as general purpose output
+; ..\IO.c	   224    ///  - push/pull output is selected
+; ..\IO.c	   225    ///  - the pin status is high level
+; ..\IO.c	   226    ///  P10.7 is used as general purpose output
+; ..\IO.c	   227    ///  - push/pull output is selected
+; ..\IO.c	   228    ///  - the pin status is high level
+; ..\IO.c	   229  
+; ..\IO.c	   230    ///  P10.0 - P10.3 output driver characteristic: strong driver
+; ..\IO.c	   231    ///  P10.4 - P10.7 output driver characteristic: strong driver
+; ..\IO.c	   232    ///  P10.8 - P10.11 output driver characteristic: strong driver
+; ..\IO.c	   233    ///  P10.12 - P10.15 output driver characteristic: strong driver
+; ..\IO.c	   234  
+; ..\IO.c	   235    ///  P10.0 - P10.3 output edge characteristic: sharp edge mode
+; ..\IO.c	   236    ///  P10.4 - P10.7 output edge characteristic: sharp edge mode
+; ..\IO.c	   237    ///  P10.8 - P10.11 output edge characteristic: sharp edge mode
+; ..\IO.c	   238    ///  P10.12 - P10.15 output edge characteristic: sharp edge mode
+; ..\IO.c	   239  
+; ..\IO.c	   240    P10_OUT        =  0x00FF;      // load data output register
+	movw	0xffb6,#0xff
+_38:
+
+; ..\IO.c	   241    P10_IOCR00     =  0x0080;      // load port control register 0
+	movw	0xe940,r11
+_39:
+
+; ..\IO.c	   242    P10_IOCR01     =  0x0080;      // load port control register 1
+	movw	0xe942,r11
+_40:
+
+; ..\IO.c	   243    P10_IOCR02     =  0x0080;      // load port control register 2
+	movw	0xe944,r11
+_41:
+
+; ..\IO.c	   244    P10_IOCR03     =  0x0080;      // load port control register 3
+	movw	0xe946,r11
+_42:
+
+; ..\IO.c	   245    P10_IOCR04     =  0x0080;      // load port control register 4
+	movw	0xe948,r11
+_43:
+
+; ..\IO.c	   246    P10_IOCR05     =  0x0080;      // load port control register 5
+	movw	0xe94a,r11
+_44:
+
+; ..\IO.c	   247    P10_IOCR06     =  0x0080;      // load port control register 6
+	movw	0xe94c,r11
+_45:
+
+; ..\IO.c	   248    P10_IOCR07     =  0x0080;      // load port control register 7
+	movw	0xe94e,r11
+_46:
+
+; ..\IO.c	   249  
+; ..\IO.c	   250    ///  -----------------------------------------------------------------------
+; ..\IO.c	   251    ///  Configuration of Port P15:
+; ..\IO.c	   252    ///  -----------------------------------------------------------------------
+; ..\IO.c	   253    ///  - no pin of port P15 is used
+; ..\IO.c	   254    ///  - Port15 Data register P15(Read only)
+; ..\IO.c	   255  
+; ..\IO.c	   256  
+; ..\IO.c	   257  
+; ..\IO.c	   258    // USER CODE BEGIN (IO_Function,3)
+; ..\IO.c	   259  
+; ..\IO.c	   260    // USER CODE END
+; ..\IO.c	   261  
+; ..\IO.c	   262  } //  End of function IO_vInit
+	ret
+_22:
+	; End of function
+	; End of section
+
+	.calls	'_IO_vInit','',4,0
+	.debug		.debug_info
+_15:
+	.dl	236
+	.dw	3
+	.dl	_16
+	.db	4
+_14:
+	.db	1
+	.db	'..\\IO.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_17
+	.db	2
+	.db	'__codeptr',0,1,1,1
+	.dl	_23-_15
+_23:
+	.db	3
+	.db	'unsigned long int',0,4,7,2
+	.db	'ubyte',0,2,25,24
+	.dl	_24-_15
+_24:
+	.db	3
+	.db	'unsigned char',0,1,8,2
+	.db	'uword',0,2,27,24
+	.dl	_25-_15
+_25:
+	.db	3
+	.db	'unsigned int',0,2,7,2
+	.db	'ulong',0,2,29,24
+	.dl	143
+	.db	0
+	; End of section
+
+	.debug		.debug_abbrev
+_16:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,22,0,3,8,58,15,59,15,57,15,73,19,0,0,3,36,0,3,8,11,15
+	.db	62,15,0,0,0
+	; End of section
+
+	.debug		.debug_line
+_17:
+	.dl	_27-_26
+_26:
+	.dw	3
+	.dl	_29-_28
+_28:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\IO.c',0,0,0,0
+	.db	'..\\XC22xxREGS.h',0,0,0,0,0
+_29:
+_27:
+	; End of section
+
+	.debug		.debug_info, cluster 'IO_vInit'
+_18:
+	.dl	183
+	.dw	3
+	.dl	_19
+	.db	4,1
+	.db	'..\\IO.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_21,_20
+	.db	2
+	.dl	_14
+	.db	3
+	.db	'IO_vInit',0,1,122,6,6,1,1,1
+	.dl	_3,_22,_2
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.dl	_3,_22
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'IO_vInit'
+_19:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,11,0,17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'IO_vInit'
+_20:
+	.dl	_31-_30
+_30:
+	.dw	3
+	.dl	_33-_32
+_32:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\IO.c',0,0,0,0,0
+_33:
+	.db	5,27,7,0,5,2
+	.dl	_3
+	.db	3,149,1,1,9
+	.dw	_34-_3
+	.db	3,1,1,9
+	.dw	_35-_34
+	.db	3,1,1,9
+	.dw	_36-_35
+	.db	3,1,1,9
+	.dw	_37-_36
+	.db	3,215,0,1,9
+	.dw	_38-_37
+	.db	3,1,1,9
+	.dw	_39-_38
+	.db	3,1,1,9
+	.dw	_40-_39
+	.db	3,1,1,9
+	.dw	_41-_40
+	.db	3,1,1,9
+	.dw	_42-_41
+	.db	3,1,1,9
+	.dw	_43-_42
+	.db	3,1,1,9
+	.dw	_44-_43
+	.db	3,1,1,9
+	.dw	_45-_44
+	.db	3,1,1,5,1,9
+	.dw	_46-_45
+	.db	3,14,1,7,9
+	.dw	_22-_46
+	.db	0,1,1
+_31:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'IO_vInit'
+_21:
+	.dl	-1,_3,0,_22-_3,0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'IO_vInit'
+_2:
+	.dl	-1,_3,_3-_3,_22-_3
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_4-_8
+_8:
+	.db	146,177,2,0,47
+	.dw	_7-_9
+_9:
+_4:
+	.db	18,49,46,40
+	.dw	_5-_10
+_10:
+	.db	146,178,2,0,47
+	.dw	_7-_11
+_11:
+_5:
+	.db	18,50,46,40
+	.dw	_6-_12
+_12:
+	.db	146,179,2,0,47
+	.dw	_7-_13
+_13:
+_6:
+	.db	146,180,2,0
+_7:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_frame
+_47:
+	.dl	184
+	.dl	-1
+	.db	3,0,2,2,173,2,15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_48-_52
+_52:
+	.db	146,177,2,0,47
+	.dw	_51-_53
+_53:
+_48:
+	.db	18,49,46,40
+	.dw	_49-_54
+_54:
+	.db	146,178,2,0,47
+	.dw	_51-_55
+_55:
+_49:
+	.db	18,50,46,40
+	.dw	_50-_56
+_56:
+	.db	146,179,2,0,47
+	.dw	_51-_57
+_57:
+_50:
+	.db	146,180,2,0
+_51:
+	.db	22,19,62,36,33,48,34,16,173,2,12,19,146,176,2,0,64,36,146,161,2,0,33,8,15,22,161,2,5,19,146,161,2,4,8
+	.db	162,2,8,166,2,8,177,2,8,178,2,8,179,2,8,180,2,8,0,8,1,8,6,8,7,8,8,8,9,8,10,8,167,2,8,168,2,8,169,2,8,170
+	.db	2,8,171,2,8,172,2,16,174,2,12,19,146,176,2,0,64,36,146,161,2,0,33,16,175,2,12,19,146,176,2,0,64,36,146
+	.db	161,2,2,33,8,176,2
+	; End of section
+
+	.debug		.debug_frame, cluster 'IO_vInit'
+	.dl	32
+	.dl	_47,_3,_22-_3
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,12,8,13,8,14,0,0,0
+	; End of section
+
+
+; ..\IO.c	   263  
+; ..\IO.c	   264  
+; ..\IO.c	   265  
+; ..\IO.c	   266  
+; ..\IO.c	   267  // USER CODE BEGIN (IO_General,10)
+; ..\IO.c	   268  
+; ..\IO.c	   269  // USER CODE END
+; ..\IO.c	   270  
+
+	; Module end
+	.end

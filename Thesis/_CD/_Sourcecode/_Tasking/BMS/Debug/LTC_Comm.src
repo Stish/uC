@@ -1,0 +1,3905 @@
+	; TASKING VX-toolset for C166: C compiler v3.0r3 Build 707
+	; Options: -f cc4204a --dep-file=.LTC_Comm.obj.d -c99 -Mn --no-tasking-sfr -Cxc2267 --core=xc16x --global-type-checking --tradeoff=4 -g --make-target=LTC_Comm.obj --language=+cmp14,+div32,-gcc,-volatile,+strings -O2 --source --compact-max-size=200 -o LTC_Comm.src
+	; Module start
+	.source	'..\\LTC_Comm.c'
+code_LTC_read	.section	code, cluster 'LTC_read', new
+	.global	_LTC_read
+
+; ..\LTC_Comm.c	     1  #include "MAIN.h"
+; ..\LTC_Comm.c	     2  
+; ..\LTC_Comm.c	     3  extern unsigned char LTC_data_read[17] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+; ..\LTC_Comm.c	     4  extern unsigned char LTC_CRC_PEC = 0x74;
+; ..\LTC_Comm.c	     5  extern unsigned char LTC_CFG1R0 = 0x69;
+; ..\LTC_Comm.c	     6  extern unsigned char LTC_CFG1R1 = 0x00;
+; ..\LTC_Comm.c	     7  extern unsigned char LTC_CFG1R2 = 0x00;
+; ..\LTC_Comm.c	     8  extern unsigned char LTC_CFG1R3 = 0x00;
+; ..\LTC_Comm.c	     9  extern unsigned char LTC_CFG1R4 = 0x00;
+; ..\LTC_Comm.c	    10  extern unsigned char LTC_CFG1R5 = 0x00;
+; ..\LTC_Comm.c	    11  
+; ..\LTC_Comm.c	    12  /*
+; ..\LTC_Comm.c	    13   * LTC_Comm.c
+; ..\LTC_Comm.c	    14   *
+; ..\LTC_Comm.c	    15   *  Created on: Jul 23, 2012
+; ..\LTC_Comm.c	    16   *      Author: Alexander Wegner
+; ..\LTC_Comm.c	    17   */
+; ..\LTC_Comm.c	    18  
+; ..\LTC_Comm.c	    19  void LTC_read (unsigned char *data, unsigned char length)
+; Function _LTC_read
+_24:
+_LTC_read	.proc	far
+
+; ..\LTC_Comm.c	    20  {
+; ..\LTC_Comm.c	    21  	for (unsigned char byte = 0; byte <= length-1; byte++)
+	movbz	r13,rl3
+_351:
+	cmpw	r13,#0x0
+	jmp	cc_sle,_7
+_3:
+
+; ..\LTC_Comm.c	    22  	{
+; ..\LTC_Comm.c	    23  		for (unsigned char bit = 0; bit <= 7; bit++)
+	movw	r3,r2
+_652:
+	addw	r2,#0x1
+_653:
+	movw	r4,#0x0
+_4:
+
+; ..\LTC_Comm.c	    24  		{
+; ..\LTC_Comm.c	    25  			LTC_SCK_LOW;
+	movw	r11,#0x400
+	call	_$cocofun_7
+	movw	r5,#0x80
+	movbz	r11,rl4
+	ashr	r5,r11
+_654:
+
+; ..\LTC_Comm.c	    26  			LTC_wait();
+; ..\LTC_Comm.c	    27  			if (LTC_SDO_READ == 0x01)
+	jnb	0xff80.0,_5
+_655:
+
+; ..\LTC_Comm.c	    28  			{
+; ..\LTC_Comm.c	    29  				data[byte] = data[byte] | (0x80 >> bit);
+	orb	rl5,[r3]
+	jmp	_6
+_5:
+
+; ..\LTC_Comm.c	    30  			}
+; ..\LTC_Comm.c	    31  			else
+; ..\LTC_Comm.c	    32  			{
+; ..\LTC_Comm.c	    33  				data[byte] = data[byte] & ~(0x80 >> bit);
+	cplb	rl5
+	andb	rl5,[r3]
+_6:
+	movb	[r3],rl5
+_656:
+
+; ..\LTC_Comm.c	    34  			}
+; ..\LTC_Comm.c	    35  			LTC_SCK_HIGH;
+	movw	r11,#0x4
+	call	_$cocofun_7
+_657:
+	cmpi1	r4,#0x7
+	jmp	cc_ult,_4
+_336:
+	subw	r13,#0x1
+	jmp	cc_ne,_3
+_7:
+
+; ..\LTC_Comm.c	    36  			LTC_wait();
+; ..\LTC_Comm.c	    37  		}
+; ..\LTC_Comm.c	    38  	}
+; ..\LTC_Comm.c	    39  }
+	ret
+_260:
+	; End of function
+	; End of section
+
+code__cocofun_7	.section	code, cluster '$cocofun_7', new
+; Function _$cocofun_7
+_36:
+_$cocofun_7	.proc	far
+; Function body _$cocofun_7, coco_iter:1
+	movw	0xe9c0,r11
+_719:
+	jmp	_LTC_wait
+_295:
+	; End of function
+	; End of section
+
+code_LTC_send	.section	code, cluster 'LTC_send', new
+	.global	_LTC_send
+
+; ..\LTC_Comm.c	    40  
+; ..\LTC_Comm.c	    41  void LTC_send (unsigned char data)
+; Function _LTC_send
+_48:
+_LTC_send	.proc	far
+
+; ..\LTC_Comm.c	    42  {
+; ..\LTC_Comm.c	    43  	for (unsigned char i = 0; i <= 7; i++)
+	movw	r4,#0x0
+_8:
+
+; ..\LTC_Comm.c	    44  	{
+; ..\LTC_Comm.c	    45  		LTC_SCK_LOW;
+	movw	r11,#0x400
+	movw	0xe9c0,r11
+_352:
+
+; ..\LTC_Comm.c	    46  		if (data & 0x0080 >> i)
+	movbz	r11,rl2
+_353:
+	movw	r12,#0x80
+	movbz	r13,rl4
+	ashr	r12,r13
+	andw	r11,r12
+	jmp	cc_eq,_9
+_643:
+
+; ..\LTC_Comm.c	    47  		{
+; ..\LTC_Comm.c	    48  			LTC_SDI_HIGH;
+	movw	r11,#0x2
+_354:
+	jmp	_10
+_9:
+
+; ..\LTC_Comm.c	    49  		}
+; ..\LTC_Comm.c	    50  		else
+; ..\LTC_Comm.c	    51  		{
+; ..\LTC_Comm.c	    52  			LTC_SDI_LOW;
+	movw	r11,#0x200
+_10:
+	call	_$cocofun_5
+_355:
+	cmpi1	r4,#0x7
+	jmp	cc_ult,_8
+_328:
+
+; ..\LTC_Comm.c	    53  		}
+; ..\LTC_Comm.c	    54  		LTC_wait();
+; ..\LTC_Comm.c	    55  		LTC_SCK_HIGH;
+; ..\LTC_Comm.c	    56  		LTC_wait();
+; ..\LTC_Comm.c	    57  	}
+; ..\LTC_Comm.c	    58  }
+	ret
+_250:
+	; End of function
+	; End of section
+
+code__cocofun_5	.section	code, cluster '$cocofun_5', new
+; Function _$cocofun_5
+_60:
+_$cocofun_5	.proc	far
+; Function body _$cocofun_5, coco_iter:0
+	call	_$cocofun_7
+_708:
+	movw	r11,#0x4
+_709:
+	jmp	_$cocofun_7
+_285:
+	; End of function
+	; End of section
+
+code_LTC_wait	.section	code, cluster 'LTC_wait', new
+	.global	_LTC_wait
+
+; ..\LTC_Comm.c	    59  
+; ..\LTC_Comm.c	    60  void LTC_wait (void)
+; Function _LTC_wait
+_72:
+_LTC_wait	.proc	far
+
+; ..\LTC_Comm.c	    61  {
+; ..\LTC_Comm.c	    62  	unsigned int x = 0;
+; ..\LTC_Comm.c	    63  
+; ..\LTC_Comm.c	    64  	while (x <= 5000)
+	movw	r11,#0x1388
+_11:
+
+; ..\LTC_Comm.c	    65  	{
+; ..\LTC_Comm.c	    66  		x++;
+; ..\LTC_Comm.c	    67  		IO_vTogglePin(IO_P10_7);
+	movw	r12,#0x8080
+	movw	0xe9e8,r12
+_637:
+	subw	r11,#0x1
+	jmp	cc_uge,_11
+_638:
+
+; ..\LTC_Comm.c	    68  	}
+; ..\LTC_Comm.c	    69  }
+	ret
+_245:
+	; End of function
+	; End of section
+
+code_LTC_Init	.section	code, cluster 'LTC_Init', new
+	.global	_LTC_Init
+
+; ..\LTC_Comm.c	    70  
+; ..\LTC_Comm.c	    71  void LTC_Init (void)
+; Function _LTC_Init
+_84:
+_LTC_Init	.proc	far
+
+; ..\LTC_Comm.c	    72  {
+; ..\LTC_Comm.c	    73  	// CS low - Starting SPI communication
+; ..\LTC_Comm.c	    74  	LTC_CS_LOW;
+	jmp	_$cocofun_2
+_255:
+	; End of function
+	; End of section
+
+code__cocofun_2	.section	code, cluster '$cocofun_2', new
+; Function _$cocofun_2
+_96:
+_$cocofun_2	.proc	far
+; Function body _$cocofun_2, coco_iter:0
+	call	_$cocofun_8
+_673:
+
+; ..\LTC_Comm.c	    75  	LTC_wait();
+; ..\LTC_Comm.c	    76  	// Sending config commands
+; ..\LTC_Comm.c	    77  	LTC_send(0x01);		// WRCFG
+	movb	rl2,#0x1
+	call	_LTC_send
+_674:
+
+; ..\LTC_Comm.c	    78  	LTC_send(0xC7);		// WRCFG PEC
+	movb	rl2,#0xc7
+	call	_LTC_send
+_675:
+
+; ..\LTC_Comm.c	    79  	LTC_send(LTC_CFG1R0);	// Command byte 0
+	movb	rl2,_LTC_CFG1R0
+	call	_LTC_send
+_676:
+
+; ..\LTC_Comm.c	    80  	LTC_send(LTC_CFG1R1);	// Command byte 1
+	movb	rl2,_LTC_CFG1R1
+	call	_LTC_send
+_677:
+
+; ..\LTC_Comm.c	    81  	LTC_send(LTC_CFG1R2);	// Command byte 2
+	movb	rl2,_LTC_CFG1R2
+	call	_LTC_send
+_678:
+
+; ..\LTC_Comm.c	    82  	LTC_send(LTC_CFG1R3);	// Command byte 3
+	movb	rl2,_LTC_CFG1R3
+	call	_LTC_send
+_679:
+
+; ..\LTC_Comm.c	    83  	LTC_send(LTC_CFG1R4);	// Command byte 4
+	movb	rl2,_LTC_CFG1R4
+	call	_LTC_send
+_680:
+
+; ..\LTC_Comm.c	    84  	LTC_send(LTC_CFG1R5);	// Command byte 5
+	movb	rl2,_LTC_CFG1R5
+	call	_LTC_send
+_681:
+
+; ..\LTC_Comm.c	    85  	LTC_send(LTC_CRC_PEC);	// Command bytes PEC
+	movb	rl2,_LTC_CRC_PEC
+	call	_LTC_send
+_682:
+
+; ..\LTC_Comm.c	    86  	// CS high - Ending SPI communication
+; ..\LTC_Comm.c	    87  	LTC_wait();
+	call	_$cocofun_9
+_683:
+
+; ..\LTC_Comm.c	    88  	LTC_CS_HIGH;
+; ..\LTC_Comm.c	    89  	LTC_wait();
+; ..\LTC_Comm.c	    90  	// CS low - Starting SPI communication
+; ..\LTC_Comm.c	    91  	LTC_CS_LOW;
+	call	_$cocofun_8
+_684:
+
+; ..\LTC_Comm.c	    92  	LTC_wait();
+; ..\LTC_Comm.c	    93  	// Sending STCVAD command for ADC start
+; ..\LTC_Comm.c	    94  	LTC_send(0x010);	// STCVAD
+	movb	rl2,#0x10
+	call	_LTC_send
+_685:
+
+; ..\LTC_Comm.c	    95  	LTC_send(0x0B0);	// STCVAD PEC
+	movb	rl2,#0xb0
+	call	_LTC_send
+_686:
+
+; ..\LTC_Comm.c	    96  	// CS high - Ending SPI communication
+; ..\LTC_Comm.c	    97  	LTC_wait();
+	jmp	_$cocofun_9
+_270:
+	; End of function
+	; End of section
+
+code__cocofun_9	.section	code, cluster '$cocofun_9', new
+; Function _$cocofun_9
+_108:
+_$cocofun_9	.proc	far
+; Function body _$cocofun_9, coco_iter:2
+	call	_LTC_wait
+_729:
+	movw	r11,#0x8
+_730:
+	jmp	_$cocofun_7
+_305:
+	; End of function
+	; End of section
+
+code__cocofun_8	.section	code, cluster '$cocofun_8', new
+; Function _$cocofun_8
+_120:
+_$cocofun_8	.proc	far
+; Function body _$cocofun_8, coco_iter:2
+	movw	r11,#0x800
+_724:
+	jmp	_$cocofun_7
+_300:
+	; End of function
+	; End of section
+
+code_LTC_getCellVoltages	.section	code, cluster 'LTC_getCellVoltages', new
+	.global	_LTC_getCellVoltages
+
+; ..\LTC_Comm.c	    98  	LTC_CS_HIGH;
+; ..\LTC_Comm.c	    99  	LTC_wait();
+; ..\LTC_Comm.c	   100  }
+; ..\LTC_Comm.c	   101  
+; ..\LTC_Comm.c	   102  void LTC_getCellVoltages (void)
+; Function _LTC_getCellVoltages
+_132:
+_LTC_getCellVoltages	.proc	far
+
+; ..\LTC_Comm.c	   103  {
+; ..\LTC_Comm.c	   104  	// CS low - Starting SPI communication
+; ..\LTC_Comm.c	   105  	LTC_CS_LOW;
+	call	_$cocofun_2
+_613:
+
+; ..\LTC_Comm.c	   106  	LTC_wait();
+; ..\LTC_Comm.c	   107  	// Sending config commands
+; ..\LTC_Comm.c	   108  	LTC_send(0x01);		// WRCFG
+; ..\LTC_Comm.c	   109  	LTC_send(0xC7);		// WRCFG PEC
+; ..\LTC_Comm.c	   110  	LTC_send(LTC_CFG1R0);	// Command byte 0
+; ..\LTC_Comm.c	   111  	LTC_send(LTC_CFG1R1);	// Command byte 1
+; ..\LTC_Comm.c	   112  	LTC_send(LTC_CFG1R2);	// Command byte 2
+; ..\LTC_Comm.c	   113  	LTC_send(LTC_CFG1R3);	// Command byte 3
+; ..\LTC_Comm.c	   114  	LTC_send(LTC_CFG1R4);	// Command byte 4
+; ..\LTC_Comm.c	   115  	LTC_send(LTC_CFG1R5);	// Command byte 5
+; ..\LTC_Comm.c	   116  	LTC_send(LTC_CRC_PEC);	// Command bytes PEC
+; ..\LTC_Comm.c	   117  	// CS high - Ending SPI communication
+; ..\LTC_Comm.c	   118  	LTC_wait();
+; ..\LTC_Comm.c	   119  	LTC_CS_HIGH;
+; ..\LTC_Comm.c	   120  	LTC_wait();
+; ..\LTC_Comm.c	   121  	// CS low - Starting SPI communication
+; ..\LTC_Comm.c	   122  	LTC_CS_LOW;
+; ..\LTC_Comm.c	   123  	LTC_wait();
+; ..\LTC_Comm.c	   124  	// Sending STCVAD command for ADC start
+; ..\LTC_Comm.c	   125  	LTC_send(0x010);	// STCVAD
+; ..\LTC_Comm.c	   126  	LTC_send(0x0B0);	// STCVAD PEC
+; ..\LTC_Comm.c	   127  	//LTC_send(0x020);	// STOWAD
+; ..\LTC_Comm.c	   128  	//LTC_send(0x020);	// STOWAD PEC
+; ..\LTC_Comm.c	   129  	// CS high - Ending SPI communication
+; ..\LTC_Comm.c	   130  	LTC_wait();
+; ..\LTC_Comm.c	   131  	LTC_CS_HIGH;
+; ..\LTC_Comm.c	   132  	LTC_wait();
+; ..\LTC_Comm.c	   133  	// CS low - Starting SPI communication
+; ..\LTC_Comm.c	   134  	LTC_CS_LOW;
+	call	_$cocofun_8
+_614:
+
+; ..\LTC_Comm.c	   135  	LTC_wait();
+; ..\LTC_Comm.c	   136  	// Sending RDCVA for reading cell voltages 1 to 4
+; ..\LTC_Comm.c	   137  	LTC_send(0x06);		// RDCVA command
+	movb	rl2,#0x6
+	call	_LTC_send
+_615:
+
+; ..\LTC_Comm.c	   138  	LTC_send(0xD2);		// RDCVA PEC
+	movb	rl2,#0xd2
+	call	_$cocofun_3
+_359:
+
+; ..\LTC_Comm.c	   139  	// SDI low for reading data on SDI
+; ..\LTC_Comm.c	   140  	LTC_SDI_LOW;
+; ..\LTC_Comm.c	   141  	LTC_wait();
+; ..\LTC_Comm.c	   142  	// Reading SDI and save data to a byte array
+; ..\LTC_Comm.c	   143  	LTC_read(LTC_data_read, 6);
+; ..\LTC_Comm.c	   144  	// PEC from LTC
+; ..\LTC_Comm.c	   145  	for (unsigned int i = 1; i <= (1*8); i++)
+; ..\LTC_Comm.c	   146  	{
+; ..\LTC_Comm.c	   147  		LTC_SCK_Strope();
+; ..\LTC_Comm.c	   148  	}
+; ..\LTC_Comm.c	   149  	// CS high - Ending SPI communication
+; ..\LTC_Comm.c	   150  	LTC_wait();
+; ..\LTC_Comm.c	   151  	LTC_CS_HIGH;
+; ..\LTC_Comm.c	   152  	LTC_wait();
+; ..\LTC_Comm.c	   153  	// Saving data to CAN messages
+; ..\LTC_Comm.c	   154  	// Cell voltage 01
+; ..\LTC_Comm.c	   155  	ucaCellVolts14[0] = LTC_data_read[0];
+	movb	_ucaCellVolts14,rh4
+_616:
+
+; ..\LTC_Comm.c	   156  	ucaCellVolts14[1] = 0x00 | (LTC_data_read[1] & 0x0f);
+	movb	rh4,_LTC_data_read+0x1
+	movb	rl4,#0xf
+	andb	rl4,rh4
+	movb	_ucaCellVolts14+0x1,rl4
+_617:
+
+; ..\LTC_Comm.c	   157  	// Cell voltage 02
+; ..\LTC_Comm.c	   158  	ucaCellVolts14[2] = 0x00 | ((LTC_data_read[1] & 0xf0) >> 4) | ((LTC_data_read[2] & 0x0f) << 4);
+	movb	rl4,_LTC_data_read+0x2
+	call	_$cocofun_4
+	movb	_ucaCellVolts14+0x2,rl5
+_618:
+
+; ..\LTC_Comm.c	   159  	ucaCellVolts14[3] = 0x00 | ((LTC_data_read[2] & 0xf0) >> 4);
+	call	_$cocofun_6
+	movb	_ucaCellVolts14+0x3,rl4
+_619:
+
+; ..\LTC_Comm.c	   160  	// Cell voltage 03
+; ..\LTC_Comm.c	   161  	ucaCellVolts14[4] = LTC_data_read[3];
+	movb	rh4,_LTC_data_read+0x3
+	movb	_ucaCellVolts14+0x4,rh4
+_620:
+
+; ..\LTC_Comm.c	   162  	ucaCellVolts14[5] = 0x00 | (LTC_data_read[4] & 0x0f);
+	movb	rh4,_LTC_data_read+0x4
+	movb	rl4,#0xf
+	andb	rl4,rh4
+	movb	_ucaCellVolts14+0x5,rl4
+_621:
+
+; ..\LTC_Comm.c	   163  	// Cell voltage 04
+; ..\LTC_Comm.c	   164  	ucaCellVolts14[6] = 0x00 | ((LTC_data_read[4] & 0xf0) >> 4) | ((LTC_data_read[5] & 0x0f) << 4);
+	movb	rl4,_LTC_data_read+0x5
+	call	_$cocofun_4
+	movb	_ucaCellVolts14+0x6,rl5
+_622:
+
+; ..\LTC_Comm.c	   165  	ucaCellVolts14[7] = 0x00 | ((LTC_data_read[5] & 0xf0) >> 4);
+	call	_$cocofun_6
+	movb	_ucaCellVolts14+0x7,rl4
+_623:
+
+; ..\LTC_Comm.c	   166  	// CS low - Starting SPI communication
+; ..\LTC_Comm.c	   167  	LTC_CS_LOW;
+	call	_$cocofun_8
+_624:
+
+; ..\LTC_Comm.c	   168  	LTC_wait();
+; ..\LTC_Comm.c	   169  	// Sending RDCVB for reading cell voltages 5 to 8
+; ..\LTC_Comm.c	   170  	LTC_send(0x008);		// RDCVB command
+	movb	rl2,#0x8
+	call	_LTC_send
+_360:
+
+; ..\LTC_Comm.c	   171  	LTC_send(0x0F8);		// RDCVB PEC
+	movb	rl2,#0xf8
+	call	_$cocofun_3
+_358:
+
+; ..\LTC_Comm.c	   172  	// SDI low for reading data on SDI
+; ..\LTC_Comm.c	   173  	LTC_SDI_LOW;
+; ..\LTC_Comm.c	   174  	LTC_wait();
+; ..\LTC_Comm.c	   175  	// Reading SDI and save data to a byte array
+; ..\LTC_Comm.c	   176  	LTC_read(LTC_data_read, 6);
+; ..\LTC_Comm.c	   177  	// PEC from LTC
+; ..\LTC_Comm.c	   178  	for (unsigned int i = 1; i <= (1*8); i++)
+; ..\LTC_Comm.c	   179  	{
+; ..\LTC_Comm.c	   180  		LTC_SCK_Strope();
+; ..\LTC_Comm.c	   181  	}
+; ..\LTC_Comm.c	   182  	// CS high - Ending SPI communication
+; ..\LTC_Comm.c	   183  	LTC_wait();
+; ..\LTC_Comm.c	   184  	LTC_CS_HIGH;
+; ..\LTC_Comm.c	   185  	LTC_wait();
+; ..\LTC_Comm.c	   186  	// Saving data to CAN messages
+; ..\LTC_Comm.c	   187  	// Cell voltage 05
+; ..\LTC_Comm.c	   188  	ucaCellVolts58[0] = LTC_data_read[0];
+	movb	_ucaCellVolts58,rh4
+_625:
+
+; ..\LTC_Comm.c	   189  	ucaCellVolts58[1] = 0x00 | (LTC_data_read[1] & 0x0f);
+	movb	rh4,_LTC_data_read+0x1
+	movb	rl4,#0xf
+	andb	rl4,rh4
+	movb	_ucaCellVolts58+0x1,rl4
+_626:
+
+; ..\LTC_Comm.c	   190  
+; ..\LTC_Comm.c	   191  	ucaCellVolts58[2] = 0x00 | ((LTC_data_read[1] & 0xf0) >> 4) | ((LTC_data_read[2] & 0x0f) << 4);
+	movb	rl4,_LTC_data_read+0x2
+	call	_$cocofun_4
+	movb	_ucaCellVolts58+0x2,rl5
+_627:
+
+; ..\LTC_Comm.c	   192  	ucaCellVolts58[3] = 0x00 | ((LTC_data_read[2] & 0xf0) >> 4);
+	call	_$cocofun_6
+	movb	_ucaCellVolts58+0x3,rl4
+_628:
+
+; ..\LTC_Comm.c	   193  	//LTC_wait();
+; ..\LTC_Comm.c	   194  }
+	ret
+_235:
+	; End of function
+	; End of section
+
+code__cocofun_6	.section	code, cluster '$cocofun_6', new
+; Function _$cocofun_6
+_144:
+_$cocofun_6	.proc	far
+; Function body _$cocofun_6, coco_iter:0
+	movbz	r4,rl4
+	shr	r4,#0x4
+	andb	rl4,#0xf
+_714:
+	ret
+_290:
+	; End of function
+	; End of section
+
+code__cocofun_4	.section	code, cluster '$cocofun_4', new
+; Function _$cocofun_4
+_156:
+_$cocofun_4	.proc	far
+; Function body _$cocofun_4, coco_iter:0
+	movbz	r5,rh4
+	shr	r5,#0x4
+	andb	rl5,#0xf
+	movb	rl2,#0xf
+	andb	rl2,rl4
+	shl	r2,#0x4
+	orb	rl5,rl2
+_703:
+	ret
+_280:
+	; End of function
+	; End of section
+
+code__cocofun_3	.section	code, cluster '$cocofun_3', new
+; Function _$cocofun_3
+_168:
+_$cocofun_3	.proc	far
+; Function body _$cocofun_3, coco_iter:0
+	call	_LTC_send
+_691:
+	movw	r11,#0x200
+_697:
+	call	_$cocofun_7
+_692:
+	movw	r2,#_LTC_data_read
+	movb	rl3,#0x6
+	call	_LTC_read
+_693:
+	movw	r13,#0x1
+_12:
+	call	_LTC_SCK_Strope
+_694:
+	cmpi1	r13,#0x8
+	jmp	cc_ult,_12
+_695:
+	call	_$cocofun_9
+_696:
+	movb	rh4,_LTC_data_read
+_698:
+	ret
+_275:
+	; End of function
+	; End of section
+
+code_LTC_SCK_Strope	.section	code, cluster 'LTC_SCK_Strope', new
+	.global	_LTC_SCK_Strope
+
+; ..\LTC_Comm.c	   195  
+; ..\LTC_Comm.c	   196  void LTC_SCK_Strope (void)
+; Function _LTC_SCK_Strope
+_180:
+_LTC_SCK_Strope	.proc	far
+
+; ..\LTC_Comm.c	   197  {
+; ..\LTC_Comm.c	   198  	LTC_SCK_LOW;
+	movw	r11,#0x400
+	jmp	_$cocofun_5
+_240:
+	; End of function
+	; End of section
+
+code_LTC_CalcPec	.section	code, cluster 'LTC_CalcPec', new
+	.global	_LTC_CalcPec
+
+; ..\LTC_Comm.c	   199  	LTC_wait();
+; ..\LTC_Comm.c	   200  	LTC_SCK_HIGH;
+; ..\LTC_Comm.c	   201  	LTC_wait();
+; ..\LTC_Comm.c	   202  }
+; ..\LTC_Comm.c	   203  
+; ..\LTC_Comm.c	   204  void LTC_CalcPec(void)
+; Function _LTC_CalcPec
+_192:
+_LTC_CalcPec	.proc	far
+	call	__save_1
+_361:
+
+; ..\LTC_Comm.c	   205  {
+; ..\LTC_Comm.c	   206  	#define DATA_BYTES 6
+; ..\LTC_Comm.c	   207  
+; ..\LTC_Comm.c	   208  	unsigned char PEC = 0x41;
+	movb	rh6,#0x41
+_392:
+
+; ..\LTC_Comm.c	   209  	unsigned char DIN = 0x00;
+; ..\LTC_Comm.c	   210  	unsigned char IN0 = 0x00;
+; ..\LTC_Comm.c	   211  	unsigned char IN1 = 0x00;
+; ..\LTC_Comm.c	   212  	unsigned char IN2 = 0x00;
+; ..\LTC_Comm.c	   213  
+; ..\LTC_Comm.c	   214  	unsigned long long value = 0x00;
+; ..\LTC_Comm.c	   215  	value = ((long long)LTC_CFG1R0 << 40) | ((long long)LTC_CFG1R1 << 32) | ((long long)LTC_CFG1R2 << 24) | ((long long)LTC_CFG1R3 << 16) | ((long long)LTC_CFG1R4 << 8) | (LTC_CFG1R5 << 0);
+	movbz	r4,_LTC_CFG1R0
+	movw	r7,#0x0
+	movb	rh0,rl7
+	movb	rl0,rh4
+	movb	rh4,rl4
+	movb	rl4,#0x0
+	movw	r11,#0x0
+	movw	r12,#0x0
+	movbz	r13,_LTC_CFG1R1
+	orw	r4,r13
+	movbz	r5,_LTC_CFG1R2
+	movb	rh3,rl7
+	movb	rl3,rh7
+	movb	rh2,rl7
+	movb	rl2,rh5
+	movb	rh5,rl5
+	movb	rl5,#0x0
+	orw	r12,r5
+	orw	r4,r2
+	orw	r0,r3
+	movbz	r13,_LTC_CFG1R3
+	orw	r12,r13
+	movbz	r1,_LTC_CFG1R4
+	movw	r5,r7
+	movw	r2,r7
+	movw	r3,r7
+	movb	rh3,rl3
+	movb	rl3,rh2
+	movb	rh2,rl2
+	movb	rl2,rh5
+	movb	rh5,rl5
+	movb	rl5,rh1
+	movb	rh1,rl1
+	movb	rl1,#0x0
+	orw	r11,r1
+	orw	r12,r5
+	orw	r4,r2
+	orw	r0,r3
+	movbz	r13,_LTC_CFG1R5
+	orw	r11,r13
+	movw	r13,r4
+
+; ..\LTC_Comm.c	   216  
+; ..\LTC_Comm.c	   217  
+; ..\LTC_Comm.c	   218  
+; ..\LTC_Comm.c	   219  	for (unsigned char i = 0; i <= (8 * DATA_BYTES) - 1; i++)
+_14:
+
+; ..\LTC_Comm.c	   220  	{
+; ..\LTC_Comm.c	   221  		if (((long long)0x80 << (8*(DATA_BYTES - 1)) >> i) & value)
+; ..\LTC_Comm.c	   222  		{
+; ..\LTC_Comm.c	   223  			DIN = 1;
+	movw	r9,#_$1$cst
+	movbz	r4,rl7
+	movw	r14,[r9+]
+	movw	r5,[r9+]
+	movw	r2,[r9+]
+	movw	r3,[r9+]
+	jmp	_15
+_16:
+	shr	r14,#0x1
+	bmov	r14.15,r5.0
+	shr	r5,#0x1
+	bmov	r5.15,r2.0
+	shr	r2,#0x1
+	bmov	r2.15,r3.0
+	ashr	r3,#0x1
+_15:
+	cmpd1	r4,#0x0
+	jmp	cc_ne,_16
+	andw	r5,r12
+	andw	r2,r13
+	andw	r3,r0
+	movb	rh4,#0x0
+_382:
+	andw	r14,r11
+	subcw	r5,#0x0
+	subcw	r2,#0x0
+	subcw	r3,#0x0
+	jmp	cc_eq,_17
+	movb	rh4,#0x1
+_17:
+
+; ..\LTC_Comm.c	   224  		}
+; ..\LTC_Comm.c	   225  		else
+; ..\LTC_Comm.c	   226  		{
+; ..\LTC_Comm.c	   227  			DIN = 0;
+; ..\LTC_Comm.c	   228  		}
+; ..\LTC_Comm.c	   229  		//DIN = ((0x80 >> i) & value) >> i;
+; ..\LTC_Comm.c	   230  
+; ..\LTC_Comm.c	   231  		IN0 = (((DIN << 7) ^ PEC) >> 7) & 0x01;
+	movbz	r5,rh4
+_384:
+	shl	r5,#0x7
+	movbz	r14,rh6
+_389:
+	xorw	r5,r14
+	ashr	r5,#0x7
+	andb	rl5,#0x1
+_662:
+
+; ..\LTC_Comm.c	   232  		IN1 = (IN0 ^ PEC) & 0x01;
+	movb	rl4,rl5
+_385:
+	xorb	rl4,rh6
+	andb	rl4,#0x1
+_663:
+
+; ..\LTC_Comm.c	   233  		IN2 = (((IN0 << 1) ^ PEC) >> 1)  & 0x01;
+	movbz	r2,rl5
+_386:
+	shl	r2,#0x1
+	xorw	r2,r14
+	ashr	r2,#0x1
+	andb	rl2,#0x1
+_664:
+
+; ..\LTC_Comm.c	   234  
+; ..\LTC_Comm.c	   235  		PEC = (PEC << 1);
+	addb	rh6,rh6
+_390:
+	movb	rh4,rh6
+_383:
+	bclr	r4.10
+_665:
+
+; ..\LTC_Comm.c	   236  		if (IN2 == 0x01)
+	cmpb	rl2,#0x1
+	jmp	cc_ne,_18
+_666:
+
+; ..\LTC_Comm.c	   237  		{
+; ..\LTC_Comm.c	   238  			PEC = PEC | (0x01 << 2);
+	movb	rh4,rh6
+	bset	r4.10
+_18:
+
+; ..\LTC_Comm.c	   239  		}
+; ..\LTC_Comm.c	   240  		else
+	movb	rh6,rh4
+	bclr	r6.9
+_391:
+
+; ..\LTC_Comm.c	   241  		{
+; ..\LTC_Comm.c	   242  			PEC = PEC & ~(0x01 << 2);
+; ..\LTC_Comm.c	   243  		}
+; ..\LTC_Comm.c	   244  
+; ..\LTC_Comm.c	   245  		if (IN1 == 0x01)
+	cmpb	rl4,#0x1
+	jmp	cc_ne,_20
+_387:
+
+; ..\LTC_Comm.c	   246  		{
+; ..\LTC_Comm.c	   247  			PEC = PEC | (0x01 << 1);
+	movb	rh6,rh4
+_388:
+	bset	r6.9
+_20:
+
+; ..\LTC_Comm.c	   248  		}
+; ..\LTC_Comm.c	   249  		else
+; ..\LTC_Comm.c	   250  		{
+; ..\LTC_Comm.c	   251  			PEC = PEC & ~(0x01 << 1);
+; ..\LTC_Comm.c	   252  		}
+; ..\LTC_Comm.c	   253  
+; ..\LTC_Comm.c	   254  		if (IN0 == 0x01)
+	cmpb	rl5,#0x1
+	jmp	cc_ne,_22
+_667:
+
+; ..\LTC_Comm.c	   255  		{
+; ..\LTC_Comm.c	   256  			PEC = PEC | 0x01;
+	bset	r6.8
+_22:
+	cmpi1	r7,#0x2f
+	jmp	cc_ult,_14
+_348:
+
+; ..\LTC_Comm.c	   257  		}
+; ..\LTC_Comm.c	   258  	}
+; ..\LTC_Comm.c	   259  	LTC_CRC_PEC = PEC;
+	movb	_LTC_CRC_PEC,rh6
+_668:
+
+; ..\LTC_Comm.c	   260  }
+	jmp	__restore_2
+_265:
+	; End of function
+	; End of section
+
+code__restore_2	.section	code, cluster '_restore_2', new
+; Function __restore_2
+_204:
+__restore_2	.proc	far
+	movw	r9,[r15+]
+_393:
+	movw	r7,[r15+]
+_404:
+	movw	r6,[r15+]
+_415:
+	movw	r1,[r15+]
+_426:
+	movw	r0,[r15+]
+_437:
+	ret
+_339:
+	; End of function
+	; End of section
+
+code__save_1	.section	code, cluster '_save_1', new
+; Function __save_1
+_216:
+__save_1	.proc	far
+	movw	[-r15],r0
+_498:
+	movw	[-r15],r1
+_509:
+	movw	[-r15],r6
+_520:
+	movw	[-r15],r7
+_531:
+	movw	[-r15],r9
+_542:
+	ret
+_340:
+	; End of function
+	; End of section
+
+near_LTC_data_read	.section	near, byte, init, cluster 'LTC_data_read', new
+	.global	_LTC_data_read
+_LTC_data_read	.label	nearbyte
+	.db	0x0
+	.db	0x0
+	.db	0x0
+	.db	0x0
+	.db	0x0
+	.db	0x0
+	.db	0x0
+	.db	0x0
+	.db	0x0
+	.db	0x0
+	.db	0x0
+	.db	0x0
+	.db	0x0
+	.db	0x0
+	.db	0x0
+	.db	0x0
+	.db	0x0
+	; End of section
+
+near_LTC_CRC_PEC	.section	near, byte, init, cluster 'LTC_CRC_PEC', new
+	.global	_LTC_CRC_PEC
+_LTC_CRC_PEC	.label	nearbyte
+	.db	0x74
+	; End of section
+
+near_LTC_CFG1R0	.section	near, byte, init, cluster 'LTC_CFG1R0', new
+	.global	_LTC_CFG1R0
+_LTC_CFG1R0	.label	nearbyte
+	.db	0x69
+	; End of section
+
+near_LTC_CFG1R1	.section	near, byte, init, cluster 'LTC_CFG1R1', new
+	.global	_LTC_CFG1R1
+_LTC_CFG1R1	.label	nearbyte
+	.db	0x0
+	; End of section
+
+near_LTC_CFG1R2	.section	near, byte, init, cluster 'LTC_CFG1R2', new
+	.global	_LTC_CFG1R2
+_LTC_CFG1R2	.label	nearbyte
+	.db	0x0
+	; End of section
+
+near_LTC_CFG1R3	.section	near, byte, init, cluster 'LTC_CFG1R3', new
+	.global	_LTC_CFG1R3
+_LTC_CFG1R3	.label	nearbyte
+	.db	0x0
+	; End of section
+
+near_LTC_CFG1R4	.section	near, byte, init, cluster 'LTC_CFG1R4', new
+	.global	_LTC_CFG1R4
+_LTC_CFG1R4	.label	nearbyte
+	.db	0x0
+	; End of section
+
+near_LTC_CFG1R5	.section	near, byte, init, cluster 'LTC_CFG1R5', new
+	.global	_LTC_CFG1R5
+_LTC_CFG1R5	.label	nearbyte
+	.db	0x0
+	; End of section
+
+near__1_cst	.section	near, romdata, new
+_$1$cst	.label	nearword
+	.dl	0x0
+	.dl	0x8000
+	; End of section
+
+	.calls	'_LTC_read','_$cocofun_7'
+	.calls	'_$cocofun_7','_LTC_wait'
+	.calls	'_LTC_send','_$cocofun_5'
+	.calls	'_$cocofun_5','_$cocofun_7'
+	.calls	'_LTC_Init','_$cocofun_2'
+	.calls	'_$cocofun_2','_$cocofun_8'
+	.calls	'_$cocofun_2','_LTC_send'
+	.calls	'_$cocofun_2','_$cocofun_9'
+	.calls	'_$cocofun_9','_LTC_wait'
+	.calls	'_$cocofun_9','_$cocofun_7'
+	.calls	'_$cocofun_8','_$cocofun_7'
+	.calls	'_LTC_getCellVoltages','_$cocofun_2'
+	.calls	'_LTC_getCellVoltages','_$cocofun_8'
+	.calls	'_LTC_getCellVoltages','_LTC_send'
+	.calls	'_LTC_getCellVoltages','_$cocofun_3'
+	.calls	'_LTC_getCellVoltages','_$cocofun_4'
+	.calls	'_LTC_getCellVoltages','_$cocofun_6'
+	.calls	'_$cocofun_3','_LTC_send'
+	.calls	'_$cocofun_3','_$cocofun_7'
+	.calls	'_$cocofun_3','_LTC_read'
+	.calls	'_$cocofun_3','_LTC_SCK_Strope'
+	.calls	'_$cocofun_3','_$cocofun_9'
+	.calls	'_LTC_SCK_Strope','_$cocofun_5'
+	.calls	'_LTC_CalcPec','__save_1'
+	.calls	'_LTC_CalcPec','__restore_2'
+	.calls	'_LTC_read','',4,0
+	.calls	'_$cocofun_7','',4,0
+	.calls	'_LTC_send','',4,0
+	.calls	'_$cocofun_5','',4,0
+	.calls	'_LTC_wait','',4,0
+	.calls	'_LTC_Init','',4,0
+	.calls	'_$cocofun_2','',4,0
+	.calls	'_$cocofun_9','',4,0
+	.calls	'_$cocofun_8','',4,0
+	.calls	'_LTC_getCellVoltages','',4,0
+	.calls	'_$cocofun_6','',4,0
+	.calls	'_$cocofun_4','',4,0
+	.calls	'_$cocofun_3','',4,0
+	.calls	'_LTC_SCK_Strope','',4,0
+	.calls	'_LTC_CalcPec','',4,0
+	.calls	'__restore_2','',4,-10
+	.calls	'__save_1','',4,10
+	.extern	_ucaCellVolts14 : nearbyte
+	.extern	_ucaCellVolts58 : nearbyte
+	.debug		.debug_info
+_228:
+	.dl	344
+	.dw	3
+	.dl	_229
+	.db	4
+_227:
+	.db	1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_230
+_323:
+	.db	2
+	.db	'unsigned int',0,2,7
+_325:
+	.db	2
+	.db	'unsigned char',0,1,8
+_331:
+	.db	3,2
+	.dl	147
+_346:
+	.db	2
+	.db	'unsigned long long int',0,8,7,4
+	.db	'__codeptr',0,1,1,1
+	.dl	_603-_228
+_603:
+	.db	2
+	.db	'unsigned long int',0,4,7,5
+	.db	'ucaCellVolts14',0,2,89,22,2
+	.dl	_604-_228
+	.db	1,1
+_604:
+	.db	6,8
+	.dl	147
+	.db	7,7,0,5
+	.db	'ucaCellVolts58',0,2,90,22,2
+	.dl	261
+	.db	1,1,4
+	.db	'ubyte',0,3,25,24
+	.dl	147
+	.db	4
+	.db	'uword',0,3,27,24
+	.dl	131
+	.db	4
+	.db	'ulong',0,3,29,24
+	.dl	214
+_350:
+	.db	6,17
+	.dl	147
+	.db	7,16,0,0
+	; End of section
+
+	.debug		.debug_abbrev
+_229:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,36,0,3,8,11,15,62,15,0,0,3,15,0,51,15,73,19,0,0,4,22,0
+	.db	3,8,58,15,59,15,57,15,73,19,0,0,5,52,0,3,8,58,15,59,15,57,15,51,15,73,19,63,12,60,12,0,0,6,1,1,11,15,73
+	.db	19,0,0,7,33,0,47,15,0,0,0
+	; End of section
+
+	.debug		.debug_line
+_230:
+	.dl	_606-_605
+_605:
+	.dw	3
+	.dl	_608-_607
+_607:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0
+	.db	'..\\MAIN.h',0,0,0,0
+	.db	'..\\XC22xxREGS.h',0,0,0,0,0
+_608:
+	.db	5,1,7,0,5,2
+	.dl	_204
+	.db	3,131,2,1,9
+	.dw	_339-_204
+	.db	0,1,1,5,6,7,0,5,2
+	.dl	_216
+	.db	3,203,1,1,9
+	.dw	_340-_216
+	.db	0,1,1
+_606:
+	; End of section
+
+	.debug		.debug_info, cluster 'LTC_getCellVoltages'
+_231:
+	.dl	196
+	.dw	3
+	.dl	_232
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_234,_233
+	.db	2
+	.dl	_227
+	.db	3
+	.db	'LTC_getCellVoltages',0,1,102,6,6,1,1,1
+	.dl	_132,_235,_131
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.dl	_322
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'LTC_getCellVoltages'
+_232:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,11,0,85,6,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'LTC_getCellVoltages'
+_233:
+	.dl	_610-_609
+_609:
+	.dw	3
+	.dl	_612-_611
+_611:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0,0
+_612:
+	.db	5,12,7,0,5,2
+	.dl	_132
+	.db	3,232,0,1,9
+	.dw	_613-_132
+	.db	3,29,1,5,16,9
+	.dw	_614-_613
+	.db	3,3,1,9
+	.dw	_615-_614
+	.db	3,1,1,5,38,9
+	.dw	_359-_615
+	.db	3,17,1,5,54,9
+	.dw	_616-_359
+	.db	3,1,1,5,96,9
+	.dw	_617-_616
+	.db	3,2,1,5,61,9
+	.dw	_618-_617
+	.db	3,1,1,5,38,9
+	.dw	_619-_618
+	.db	3,2,1,5,54,9
+	.dw	_620-_619
+	.db	3,1,1,5,96,9
+	.dw	_621-_620
+	.db	3,2,1,5,61,9
+	.dw	_622-_621
+	.db	3,1,1,5,12,9
+	.dw	_623-_622
+	.db	3,2,1,5,17,9
+	.dw	_624-_623
+	.db	3,3,1,9
+	.dw	_360-_624
+	.db	3,1,1,5,38,9
+	.dw	_358-_360
+	.db	3,17,1,5,54,9
+	.dw	_625-_358
+	.db	3,1,1,5,96,9
+	.dw	_626-_625
+	.db	3,2,1,5,61,9
+	.dw	_627-_626
+	.db	3,1,1,5,1,9
+	.dw	_628-_627
+	.db	3,2,1,7,9
+	.dw	_235-_628
+	.db	0,1,1
+_610:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'LTC_getCellVoltages'
+_234:
+	.dl	-1,_132,0,_235-_132,0,0
+_322:
+	.dl	-1,_132,0,_235-_132,-1,_144,0,_290-_144,-1,_156,0,_280-_156,-1,_168,0,_275-_168,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'LTC_SCK_Strope'
+_236:
+	.dl	196
+	.dw	3
+	.dl	_237
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_239,_238
+	.db	2
+	.dl	_227
+	.db	3
+	.db	'LTC_SCK_Strope',0,1,196,1,6,6,1,1,1
+	.dl	_180,_240,_179
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.dl	_180,_240
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'LTC_SCK_Strope'
+_237:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,11,0,17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'LTC_SCK_Strope'
+_238:
+	.dl	_630-_629
+_629:
+	.dw	3
+	.dl	_632-_631
+_631:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0,0
+_632:
+	.db	5,13,7,0,5,2
+	.dl	_180
+	.db	3,197,1,1,5,1,9
+	.dw	_240-_180
+	.db	3,4,0,1,1
+_630:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'LTC_SCK_Strope'
+_239:
+	.dl	-1,_180,0,_240-_180,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'LTC_wait'
+_241:
+	.dl	205
+	.dw	3
+	.dl	_242
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_244,_243
+	.db	2
+	.dl	_227
+	.db	3
+	.db	'LTC_wait',0,1,60,6,6,1,1,1
+	.dl	_72,_245,_71
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.dl	_72,_245
+	.db	5
+	.db	'x',0,1,62,15,2
+	.dl	_323,_324
+	.db	0,0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'LTC_wait'
+_242:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,11,1,17,1,18,1,0,0,5,52,0,3,8,58,15,59,15,57,15,51,15,73,16
+	.db	2,6,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'LTC_wait'
+_243:
+	.dl	_634-_633
+_633:
+	.dw	3
+	.dl	_636-_635
+_635:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0,0
+_636:
+	.db	5,18,7,0,5,2
+	.dl	_72
+	.db	3,63,1,5,26,9
+	.dw	_11-_72
+	.db	3,3,1,5,18,9
+	.dw	_637-_11
+	.db	3,125,1,5,1,9
+	.dw	_638-_637
+	.db	3,5,1,7,9
+	.dw	_245-_638
+	.db	0,1,1
+_634:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'LTC_wait'
+_244:
+	.dl	-1,_72,0,_245-_72,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'LTC_send'
+_246:
+	.dl	228
+	.dw	3
+	.dl	_247
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_249,_248
+	.db	2
+	.dl	_227
+	.db	3
+	.db	'LTC_send',0,1,41,6,6,1,1,1
+	.dl	_48,_250,_47
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'data',0,1,41,30
+	.dl	_325,_326
+	.db	5
+	.dl	_48,_250
+	.db	6
+	.dl	_327
+	.db	7
+	.db	'i',0,1,43,21,2
+	.dl	_325,_329
+	.db	0,0,0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'LTC_send'
+_247:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0
+	.db	0,6,11,1,85,6,0,0,7,52,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'LTC_send'
+_248:
+	.dl	_640-_639
+_639:
+	.dw	3
+	.dl	_642-_641
+_641:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0,0
+_642:
+	.db	5,34,7,0,5,2
+	.dl	_48
+	.db	3,42,1,5,14,9
+	.dw	_8-_48
+	.db	3,2,1,5,3,9
+	.dw	_352-_8
+	.db	3,1,1,5,16,9
+	.dw	_643-_352
+	.db	3,2,1,5,15,9
+	.dw	_9-_643
+	.db	3,4,1,5,34,9
+	.dw	_355-_9
+	.db	3,119,1,5,1,9
+	.dw	_328-_355
+	.db	3,15,1,7,9
+	.dw	_250-_328
+	.db	0,1,1
+_640:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'LTC_send'
+_249:
+	.dl	-1,_48,0,_250-_48,0,0
+_327:
+	.dl	-1,_48,0,_328-_48,-1,_60,0,_285-_60,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'LTC_Init'
+_251:
+	.dl	185
+	.dw	3
+	.dl	_252
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_254,_253
+	.db	2
+	.dl	_227
+	.db	3
+	.db	'LTC_Init',0,1,71,6,6,1,1,1
+	.dl	_84,_255,_83
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.dl	_330
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'LTC_Init'
+_252:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,11,0,85,6,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'LTC_Init'
+_253:
+	.dl	_645-_644
+_644:
+	.dw	3
+	.dl	_647-_646
+_646:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0,0
+_647:
+	.db	5,12,7,0,5,2
+	.dl	_84
+	.db	3,201,0,1,5,1,9
+	.dw	_255-_84
+	.db	3,26,0,1,1
+_645:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'LTC_Init'
+_254:
+	.dl	-1,_84,0,_255-_84,0,0
+_330:
+	.dl	-1,_84,0,_255-_84,-1,_96,0,_270-_96,-1,_108,0,_305-_108,-1,_120,0,_300-_120,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'LTC_read'
+_256:
+	.dl	277
+	.dw	3
+	.dl	_257
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_259,_258
+	.db	2
+	.dl	_227
+	.db	3
+	.db	'LTC_read',0,1,19,6,6,1,1,1
+	.dl	_24,_260,_23
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'data',0,1,19,31
+	.dl	_331,_332
+	.db	4
+	.db	'length',0,1,19,51
+	.dl	_325,_333
+	.db	5
+	.dl	_24,_260
+	.db	5
+	.dl	_24,_7
+	.db	6
+	.db	'byte',0,1,21,21,2
+	.dl	_325,_334
+	.db	7
+	.dl	_335
+	.db	6
+	.db	'bit',0,1,23,22,2
+	.dl	_325,_337
+	.db	0,0,0,0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'LTC_read'
+_257:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0
+	.db	0,6,52,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,7,11,1,85,6,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'LTC_read'
+_258:
+	.dl	_649-_648
+_648:
+	.dw	3
+	.dl	_651-_650
+_650:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0,0
+_651:
+	.db	5,47,7,0,5,2
+	.dl	_24
+	.db	3,20,1,5,46,9
+	.dw	_3-_24
+	.db	3,2,1,5,53,9
+	.dw	_652-_3
+	.db	3,126,1,5,39,9
+	.dw	_653-_652
+	.db	3,2,1,5,15,9
+	.dw	_4-_653
+	.db	3,2,1,5,4,9
+	.dw	_654-_4
+	.db	3,2,1,5,44,7,9
+	.dw	_655-_654
+	.db	3,2,1,5,45,9
+	.dw	_5-_655
+	.db	3,4,1,5,16,9
+	.dw	_656-_5
+	.db	3,2,1,5,39,9
+	.dw	_657-_656
+	.db	3,116,1,5,47,9
+	.dw	_336-_657
+	.db	3,126,1,5,1,9
+	.dw	_7-_336
+	.db	3,18,1,7,9
+	.dw	_260-_7
+	.db	0,1,1
+_649:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'LTC_read'
+_259:
+	.dl	-1,_24,0,_260-_24,0,0
+_335:
+	.dl	-1,_24,_3-_24,_336-_24,-1,_36,0,_295-_36,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'LTC_CalcPec'
+_261:
+	.dl	326
+	.dw	3
+	.dl	_262
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_264,_263
+	.db	2
+	.dl	_227
+	.db	3
+	.db	'LTC_CalcPec',0,1,204,1,6,6,1,1,1
+	.dl	_192,_265,_191
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.dl	_338
+	.db	5
+	.db	'PEC',0,1,208,1,16,2
+	.dl	_325,_341
+	.db	5
+	.db	'DIN',0,1,209,1,16,2
+	.dl	_325,_342
+	.db	5
+	.db	'IN0',0,1,210,1,16,2
+	.dl	_325,_343
+	.db	5
+	.db	'IN1',0,1,211,1,16,2
+	.dl	_325,_344
+	.db	5
+	.db	'IN2',0,1,212,1,16,2
+	.dl	_325,_345
+	.db	5
+	.db	'value',0,1,214,1,21,2
+	.dl	_346,_347
+	.db	6
+	.dl	_14,_348
+	.db	5
+	.db	'i',0,1,219,1,21,2
+	.dl	_325,_349
+	.db	0,0,0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'LTC_CalcPec'
+_262:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,11,1,85,6,0,0,5,52,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6
+	.db	0,0,6,11,1,17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'LTC_CalcPec'
+_263:
+	.dl	_659-_658
+_658:
+	.dw	3
+	.dl	_661-_660
+_660:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0,0
+_661:
+	.db	5,6,7,0,5,2
+	.dl	_192
+	.db	3,203,1,1,5,20,9
+	.dw	_361-_192
+	.db	3,4,1,5,186,1,9
+	.dw	_392-_361
+	.db	3,7,1,5,11,9
+	.dw	_14-_392
+	.db	3,8,1,5,41,9
+	.dw	_17-_14
+	.db	3,8,1,5,27,9
+	.dw	_662-_17
+	.db	3,1,1,5,42,9
+	.dw	_663-_662
+	.db	3,1,1,5,19,9
+	.dw	_664-_663
+	.db	3,2,1,5,3,9
+	.dw	_665-_664
+	.db	3,1,1,5,27,9
+	.dw	_666-_665
+	.db	3,2,1,5,3,9
+	.dw	_18-_666
+	.db	3,2,1,9
+	.dw	_391-_18
+	.db	3,5,1,5,27,9
+	.dw	_387-_391
+	.db	3,2,1,5,3,9
+	.dw	_20-_387
+	.db	3,7,1,5,20,9
+	.dw	_667-_20
+	.db	3,2,1,5,53,9
+	.dw	_22-_667
+	.db	3,91,1,5,19,9
+	.dw	_348-_22
+	.db	3,40,1,5,1,9
+	.dw	_668-_348
+	.db	3,1,1,9
+	.dw	_265-_668
+	.db	0,1,1
+_659:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'LTC_CalcPec'
+_264:
+	.dl	-1,_192,0,_265-_192,0,0
+_338:
+	.dl	-1,_192,0,_265-_192,-1,_204,0,_339-_204,-1,_216,0,_340-_216,0,0
+	; End of section
+
+	.debug		.debug_info, cluster '$cocofun_2'
+_266:
+	.dl	179
+	.dw	3
+	.dl	_267
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_269,_268
+	.db	2
+	.dl	_227
+	.db	3
+	.db	'.cocofun_2',0,1,1,1,6,1
+	.dl	_96,_270,_95
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster '$cocofun_2'
+_267:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,0,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,17,1,18,1,64,6,42,9,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster '$cocofun_2'
+_268:
+	.dl	_670-_669
+_669:
+	.dw	3
+	.dl	_672-_671
+_671:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0,0
+_672:
+	.db	5,12,7,0,5,2
+	.dl	_96
+	.db	3,201,0,1,5,16,9
+	.dw	_673-_96
+	.db	3,3,1,9
+	.dw	_674-_673
+	.db	3,1,1,5,22,9
+	.dw	_675-_674
+	.db	3,1,1,9
+	.dw	_676-_675
+	.db	3,1,1,9
+	.dw	_677-_676
+	.db	3,1,1,9
+	.dw	_678-_677
+	.db	3,1,1,9
+	.dw	_679-_678
+	.db	3,1,1,9
+	.dw	_680-_679
+	.db	3,1,1,5,23,9
+	.dw	_681-_680
+	.db	3,1,1,5,12,9
+	.dw	_682-_681
+	.db	3,2,1,9
+	.dw	_683-_682
+	.db	3,4,1,5,17,9
+	.dw	_684-_683
+	.db	3,3,1,9
+	.dw	_685-_684
+	.db	3,1,1,5,12,9
+	.dw	_686-_685
+	.db	3,2,1,9
+	.dw	_270-_686
+	.db	0,1,1,5,12,0,5,2
+	.dl	_96
+	.db	3,201,0,1,5,16,9
+	.dw	_673-_96
+	.db	3,34,1,9
+	.dw	_674-_673
+	.db	3,1,1,5,22,9
+	.dw	_675-_674
+	.db	3,1,1,9
+	.dw	_676-_675
+	.db	3,1,1,9
+	.dw	_677-_676
+	.db	3,1,1,9
+	.dw	_678-_677
+	.db	3,1,1,9
+	.dw	_679-_678
+	.db	3,1,1,9
+	.dw	_680-_679
+	.db	3,1,1,5,23,9
+	.dw	_681-_680
+	.db	3,1,1,5,12,9
+	.dw	_682-_681
+	.db	3,99,1,9
+	.dw	_683-_682
+	.db	3,4,1,5,17,9
+	.dw	_684-_683
+	.db	3,34,1,9
+	.dw	_685-_684
+	.db	3,1,1,5,12,9
+	.dw	_686-_685
+	.db	3,99,1,9
+	.dw	_270-_686
+	.db	0,1,1
+_670:
+	; End of section
+
+	.debug		.debug_ranges, cluster '$cocofun_2'
+_269:
+	.dl	-1,_96,0,_270-_96,0,0
+	; End of section
+
+	.debug		.debug_info, cluster '$cocofun_3'
+_271:
+	.dl	179
+	.dw	3
+	.dl	_272
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_274,_273
+	.db	2
+	.dl	_227
+	.db	3
+	.db	'.cocofun_3',0,1,1,1,6,1
+	.dl	_168,_275,_167
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster '$cocofun_3'
+_272:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,0,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,17,1,18,1,64,6,42,9,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster '$cocofun_3'
+_273:
+	.dl	_688-_687
+_687:
+	.dw	3
+	.dl	_690-_689
+_689:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0,0
+_690:
+	.db	5,16,7,0,5,2
+	.dl	_168
+	.db	3,137,1,1,5,13,9
+	.dw	_691-_168
+	.db	3,2,1,5,28,9
+	.dw	_692-_691
+	.db	3,3,1,5,37,9
+	.dw	_693-_692
+	.db	3,2,1,5,19,9
+	.dw	_12-_693
+	.db	3,2,1,5,37,9
+	.dw	_694-_12
+	.db	3,126,1,5,12,9
+	.dw	_695-_694
+	.db	3,5,1,5,38,9
+	.dw	_696-_695
+	.db	3,5,1,9
+	.dw	_275-_696
+	.db	0,1,1,5,17,0,5,2
+	.dl	_168
+	.db	3,170,1,1,5,13,9
+	.dw	_691-_168
+	.db	3,2,1,9
+	.dw	_697-_691
+	.db	3,95,1,5,28,9
+	.dw	_692-_697
+	.db	3,36,1,5,37,9
+	.dw	_693-_692
+	.db	3,2,1,5,19,9
+	.dw	_12-_693
+	.db	3,2,1,5,37,9
+	.dw	_694-_12
+	.db	3,126,1,5,12,9
+	.dw	_695-_694
+	.db	3,100,1,5,38,9
+	.dw	_696-_695
+	.db	3,38,1,9
+	.dw	_698-_696
+	.db	3,95,1,7,9
+	.dw	_275-_698
+	.db	0,1,1
+_688:
+	; End of section
+
+	.debug		.debug_ranges, cluster '$cocofun_3'
+_274:
+	.dl	-1,_168,0,_275-_168,0,0
+	; End of section
+
+	.debug		.debug_info, cluster '$cocofun_4'
+_276:
+	.dl	179
+	.dw	3
+	.dl	_277
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_279,_278
+	.db	2
+	.dl	_227
+	.db	3
+	.db	'.cocofun_4',0,1,1,1,6,1
+	.dl	_156,_280,_155
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster '$cocofun_4'
+_277:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,0,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,17,1,18,1,64,6,42,9,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster '$cocofun_4'
+_278:
+	.dl	_700-_699
+_699:
+	.dw	3
+	.dl	_702-_701
+_701:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0,0
+_702:
+	.db	5,96,7,0,5,2
+	.dl	_156
+	.db	3,157,1,1,9
+	.dw	_280-_156
+	.db	0,1,1,5,96,0,5,2
+	.dl	_156
+	.db	3,163,1,1,9
+	.dw	_703-_156
+	.db	3,122,1,7,9
+	.dw	_280-_703
+	.db	0,1,1,5,96,0,5,2
+	.dl	_156
+	.db	3,190,1,1,9
+	.dw	_703-_156
+	.db	3,95,1,7,9
+	.dw	_280-_703
+	.db	0,1,1
+_700:
+	; End of section
+
+	.debug		.debug_ranges, cluster '$cocofun_4'
+_279:
+	.dl	-1,_156,0,_280-_156,0,0
+	; End of section
+
+	.debug		.debug_info, cluster '$cocofun_5'
+_281:
+	.dl	179
+	.dw	3
+	.dl	_282
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_284,_283
+	.db	2
+	.dl	_227
+	.db	3
+	.db	'.cocofun_5',0,1,1,1,6,1
+	.dl	_60,_285,_59
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster '$cocofun_5'
+_282:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,0,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,17,1,18,1,64,6,42,9,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster '$cocofun_5'
+_283:
+	.dl	_705-_704
+_704:
+	.dw	3
+	.dl	_707-_706
+_706:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0,0
+_707:
+	.db	5,15,7,0,5,2
+	.dl	_60
+	.db	3,51,1,9
+	.dw	_708-_60
+	.db	3,3,1,9
+	.dw	_285-_708
+	.db	0,1,1,5,15,0,5,2
+	.dl	_60
+	.db	3,51,1,5,14,9
+	.dw	_708-_60
+	.db	3,148,1,1,5,15,9
+	.dw	_709-_708
+	.db	3,239,126,1,9
+	.dw	_285-_709
+	.db	0,1,1
+_705:
+	; End of section
+
+	.debug		.debug_ranges, cluster '$cocofun_5'
+_284:
+	.dl	-1,_60,0,_285-_60,0,0
+	; End of section
+
+	.debug		.debug_info, cluster '$cocofun_6'
+_286:
+	.dl	179
+	.dw	3
+	.dl	_287
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_289,_288
+	.db	2
+	.dl	_227
+	.db	3
+	.db	'.cocofun_6',0,1,1,1,6,1
+	.dl	_144,_290,_143
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster '$cocofun_6'
+_287:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,0,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,17,1,18,1,64,6,42,9,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster '$cocofun_6'
+_288:
+	.dl	_711-_710
+_710:
+	.dw	3
+	.dl	_713-_712
+_712:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0,0
+_713:
+	.db	5,61,7,0,5,2
+	.dl	_144
+	.db	3,158,1,1,9
+	.dw	_290-_144
+	.db	0,1,1,5,61,0,5,2
+	.dl	_144
+	.db	3,164,1,1,9
+	.dw	_714-_144
+	.db	3,122,1,7,9
+	.dw	_290-_714
+	.db	0,1,1,5,61,0,5,2
+	.dl	_144
+	.db	3,191,1,1,9
+	.dw	_714-_144
+	.db	3,95,1,7,9
+	.dw	_290-_714
+	.db	0,1,1
+_711:
+	; End of section
+
+	.debug		.debug_ranges, cluster '$cocofun_6'
+_289:
+	.dl	-1,_144,0,_290-_144,0,0
+	; End of section
+
+	.debug		.debug_info, cluster '$cocofun_7'
+_291:
+	.dl	179
+	.dw	3
+	.dl	_292
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_294,_293
+	.db	2
+	.dl	_227
+	.db	3
+	.db	'.cocofun_7',0,1,1,1,6,1
+	.dl	_36,_295,_35
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster '$cocofun_7'
+_292:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,0,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,17,1,18,1,64,6,42,9,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster '$cocofun_7'
+_293:
+	.dl	_716-_715
+_715:
+	.dw	3
+	.dl	_718-_717
+_717:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0,0
+_718:
+	.db	5,15,7,0,5,2
+	.dl	_36
+	.db	3,24,1,5,14,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,16,0,5,2
+	.dl	_36
+	.db	3,34,1,5,14,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,15,0,5,2
+	.dl	_36
+	.db	3,51,1,5,13,9
+	.dw	_719-_36
+	.db	3,2,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,13,0,5,2
+	.dl	_36
+	.db	3,197,1,1,5,12,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,15,0,5,2
+	.dl	_36
+	.db	3,54,1,5,13,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,14,0,5,2
+	.dl	_36
+	.db	3,199,1,1,5,12,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,12,0,5,2
+	.dl	_36
+	.db	3,201,0,1,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,12,0,5,2
+	.dl	_36
+	.db	3,232,0,1,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,13,0,5,2
+	.dl	_36
+	.db	3,215,0,1,5,12,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,13,0,5,2
+	.dl	_36
+	.db	3,246,0,1,5,12,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,12,0,5,2
+	.dl	_36
+	.db	3,218,0,1,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,12,0,5,2
+	.dl	_36
+	.db	3,249,0,1,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,13,0,5,2
+	.dl	_36
+	.db	3,225,0,1,5,12,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,13,0,5,2
+	.dl	_36
+	.db	3,130,1,1,5,12,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,12,0,5,2
+	.dl	_36
+	.db	3,133,1,1,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,12,0,5,2
+	.dl	_36
+	.db	3,166,1,1,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,13,0,5,2
+	.dl	_36
+	.db	3,139,1,1,5,12,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,13,0,5,2
+	.dl	_36
+	.db	3,172,1,1,5,12,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,13,0,5,2
+	.dl	_36
+	.db	3,150,1,1,5,12,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1,5,13,0,5,2
+	.dl	_36
+	.db	3,183,1,1,5,12,9
+	.dw	_719-_36
+	.db	3,1,1,9
+	.dw	_295-_719
+	.db	0,1,1
+_716:
+	; End of section
+
+	.debug		.debug_ranges, cluster '$cocofun_7'
+_294:
+	.dl	-1,_36,0,_295-_36,0,0
+	; End of section
+
+	.debug		.debug_info, cluster '$cocofun_8'
+_296:
+	.dl	179
+	.dw	3
+	.dl	_297
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_299,_298
+	.db	2
+	.dl	_227
+	.db	3
+	.db	'.cocofun_8',0,1,1,1,6,1
+	.dl	_120,_300,_119
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster '$cocofun_8'
+_297:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,0,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,17,1,18,1,64,6,42,9,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster '$cocofun_8'
+_298:
+	.dl	_721-_720
+_720:
+	.dw	3
+	.dl	_723-_722
+_722:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0,0
+_723:
+	.db	5,12,7,0,5,2
+	.dl	_120
+	.db	3,201,0,1,9
+	.dw	_300-_120
+	.db	0,1,1,5,12,0,5,2
+	.dl	_120
+	.db	3,232,0,1,9
+	.dw	_724-_120
+	.db	3,114,1,9
+	.dw	_300-_724
+	.db	0,1,1,5,12,0,5,2
+	.dl	_120
+	.db	3,218,0,1,9
+	.dw	_724-_120
+	.db	3,43,1,9
+	.dw	_300-_724
+	.db	0,1,1,5,12,0,5,2
+	.dl	_120
+	.db	3,249,0,1,9
+	.dw	_724-_120
+	.db	3,45,1,9
+	.dw	_300-_724
+	.db	0,1,1,5,12,0,5,2
+	.dl	_120
+	.db	3,133,1,1,9
+	.dw	_724-_120
+	.db	3,68,1,9
+	.dw	_300-_724
+	.db	0,1,1,5,12,0,5,2
+	.dl	_120
+	.db	3,166,1,1,9
+	.dw	_724-_120
+	.db	3,163,127,1,9
+	.dw	_300-_724
+	.db	0,1,1
+_721:
+	; End of section
+
+	.debug		.debug_ranges, cluster '$cocofun_8'
+_299:
+	.dl	-1,_120,0,_300-_120,0,0
+	; End of section
+
+	.debug		.debug_info, cluster '$cocofun_9'
+_301:
+	.dl	179
+	.dw	3
+	.dl	_302
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1
+	.dl	_304,_303
+	.db	2
+	.dl	_227
+	.db	3
+	.db	'.cocofun_9',0,1,1,1,6,1
+	.dl	_108,_305,_107
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster '$cocofun_9'
+_302:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,0,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,17,1,18,1,64,6,42,9,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster '$cocofun_9'
+_303:
+	.dl	_726-_725
+_725:
+	.dw	3
+	.dl	_728-_727
+_727:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'..\\LTC_Comm.c',0,0,0,0,0
+_728:
+	.db	5,12,7,0,5,2
+	.dl	_108
+	.db	3,214,0,1,5,13,9
+	.dw	_729-_108
+	.db	3,1,1,9
+	.dw	_305-_729
+	.db	0,1,1,5,12,0,5,2
+	.dl	_108
+	.db	3,245,0,1,5,13,9
+	.dw	_729-_108
+	.db	3,1,1,9
+	.dw	_730-_729
+	.db	3,107,1,9
+	.dw	_305-_730
+	.db	0,1,1,5,12,0,5,2
+	.dl	_108
+	.db	3,224,0,1,5,13,9
+	.dw	_729-_108
+	.db	3,1,1,9
+	.dw	_730-_729
+	.db	3,53,1,9
+	.dw	_305-_730
+	.db	0,1,1,5,12,0,5,2
+	.dl	_108
+	.db	3,129,1,1,5,13,9
+	.dw	_729-_108
+	.db	3,1,1,9
+	.dw	_730-_729
+	.db	3,85,1,9
+	.dw	_305-_730
+	.db	0,1,1,5,12,0,5,2
+	.dl	_108
+	.db	3,149,1,1,5,13,9
+	.dw	_729-_108
+	.db	3,1,1,9
+	.dw	_730-_729
+	.db	3,65,1,9
+	.dw	_305-_730
+	.db	0,1,1,5,12,0,5,2
+	.dl	_108
+	.db	3,182,1,1,5,13,9
+	.dw	_729-_108
+	.db	3,1,1,9
+	.dw	_730-_729
+	.db	3,160,127,1,9
+	.dw	_305-_730
+	.db	0,1,1
+_726:
+	; End of section
+
+	.debug		.debug_ranges, cluster '$cocofun_9'
+_304:
+	.dl	-1,_108,0,_305-_108,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'LTC_data_read'
+_306:
+	.dl	159
+	.dw	3
+	.dl	_307
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1,2
+	.dl	_227
+	.db	3
+	.db	'LTC_data_read',0,1,3,22,2
+	.dl	_350
+	.db	1,5,3
+	.dl	_LTC_data_read
+	.db	0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'LTC_data_read'
+_307:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,51,15,73,16,63
+	.db	12,2,9,0,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'LTC_CRC_PEC'
+_308:
+	.dl	157
+	.dw	3
+	.dl	_309
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1,2
+	.dl	_227
+	.db	3
+	.db	'LTC_CRC_PEC',0,1,4,22,2
+	.dl	_325
+	.db	1,5,3
+	.dl	_LTC_CRC_PEC
+	.db	0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'LTC_CRC_PEC'
+_309:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,51,15,73,16,63
+	.db	12,2,9,0,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'LTC_CFG1R0'
+_310:
+	.dl	156
+	.dw	3
+	.dl	_311
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1,2
+	.dl	_227
+	.db	3
+	.db	'LTC_CFG1R0',0,1,5,22,2
+	.dl	_325
+	.db	1,5,3
+	.dl	_LTC_CFG1R0
+	.db	0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'LTC_CFG1R0'
+_311:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,51,15,73,16,63
+	.db	12,2,9,0,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'LTC_CFG1R1'
+_312:
+	.dl	156
+	.dw	3
+	.dl	_313
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1,2
+	.dl	_227
+	.db	3
+	.db	'LTC_CFG1R1',0,1,6,22,2
+	.dl	_325
+	.db	1,5,3
+	.dl	_LTC_CFG1R1
+	.db	0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'LTC_CFG1R1'
+_313:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,51,15,73,16,63
+	.db	12,2,9,0,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'LTC_CFG1R2'
+_314:
+	.dl	156
+	.dw	3
+	.dl	_315
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1,2
+	.dl	_227
+	.db	3
+	.db	'LTC_CFG1R2',0,1,7,22,2
+	.dl	_325
+	.db	1,5,3
+	.dl	_LTC_CFG1R2
+	.db	0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'LTC_CFG1R2'
+_315:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,51,15,73,16,63
+	.db	12,2,9,0,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'LTC_CFG1R3'
+_316:
+	.dl	156
+	.dw	3
+	.dl	_317
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1,2
+	.dl	_227
+	.db	3
+	.db	'LTC_CFG1R3',0,1,8,22,2
+	.dl	_325
+	.db	1,5,3
+	.dl	_LTC_CFG1R3
+	.db	0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'LTC_CFG1R3'
+_317:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,51,15,73,16,63
+	.db	12,2,9,0,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'LTC_CFG1R4'
+_318:
+	.dl	156
+	.dw	3
+	.dl	_319
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1,2
+	.dl	_227
+	.db	3
+	.db	'LTC_CFG1R4',0,1,9,22,2
+	.dl	_325
+	.db	1,5,3
+	.dl	_LTC_CFG1R4
+	.db	0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'LTC_CFG1R4'
+_319:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,51,15,73,16,63
+	.db	12,2,9,0,0,0
+	; End of section
+
+	.debug		.debug_info, cluster 'LTC_CFG1R5'
+_320:
+	.dl	156
+	.dw	3
+	.dl	_321
+	.db	4,1
+	.db	'..\\LTC_Comm.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'D:\\Work\\_Bachelorarbeit\\_Software\\_Tasking\\can_test\\Debug\\',0,12,1,2
+	.dl	_227
+	.db	3
+	.db	'LTC_CFG1R5',0,1,10,22,2
+	.dl	_325
+	.db	1,5,3
+	.dl	_LTC_CFG1R5
+	.db	0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'LTC_CFG1R5'
+_321:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,51,15,73,16,63
+	.db	12,2,9,0,0,0
+	; End of section
+
+	.debug		.debug_loc, cluster '$cocofun_2'
+_95:
+	.dl	-1,_96,_96-_96,_270-_96
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_97-_101
+_101:
+	.db	146,177,2,0,47
+	.dw	_100-_102
+_102:
+_97:
+	.db	18,49,46,40
+	.dw	_98-_103
+_103:
+	.db	146,178,2,0,47
+	.dw	_100-_104
+_104:
+_98:
+	.db	18,50,46,40
+	.dw	_99-_105
+_105:
+	.db	146,179,2,0,47
+	.dw	_100-_106
+_106:
+_99:
+	.db	146,180,2,0
+_100:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster '$cocofun_3'
+_167:
+	.dl	-1,_168,_168-_168,_275-_168
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_169-_173
+_173:
+	.db	146,177,2,0,47
+	.dw	_172-_174
+_174:
+_169:
+	.db	18,49,46,40
+	.dw	_170-_175
+_175:
+	.db	146,178,2,0,47
+	.dw	_172-_176
+_176:
+_170:
+	.db	18,50,46,40
+	.dw	_171-_177
+_177:
+	.db	146,179,2,0,47
+	.dw	_172-_178
+_178:
+_171:
+	.db	146,180,2,0
+_172:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster '$cocofun_4'
+_155:
+	.dl	-1,_156,_156-_156,_280-_156
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_157-_161
+_161:
+	.db	146,177,2,0,47
+	.dw	_160-_162
+_162:
+_157:
+	.db	18,49,46,40
+	.dw	_158-_163
+_163:
+	.db	146,178,2,0,47
+	.dw	_160-_164
+_164:
+_158:
+	.db	18,50,46,40
+	.dw	_159-_165
+_165:
+	.db	146,179,2,0,47
+	.dw	_160-_166
+_166:
+_159:
+	.db	146,180,2,0
+_160:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster '$cocofun_5'
+_59:
+	.dl	-1,_60,_60-_60,_285-_60
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_61-_65
+_65:
+	.db	146,177,2,0,47
+	.dw	_64-_66
+_66:
+_61:
+	.db	18,49,46,40
+	.dw	_62-_67
+_67:
+	.db	146,178,2,0,47
+	.dw	_64-_68
+_68:
+_62:
+	.db	18,50,46,40
+	.dw	_63-_69
+_69:
+	.db	146,179,2,0,47
+	.dw	_64-_70
+_70:
+_63:
+	.db	146,180,2,0
+_64:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster '$cocofun_6'
+_143:
+	.dl	-1,_144,_144-_144,_290-_144
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_145-_149
+_149:
+	.db	146,177,2,0,47
+	.dw	_148-_150
+_150:
+_145:
+	.db	18,49,46,40
+	.dw	_146-_151
+_151:
+	.db	146,178,2,0,47
+	.dw	_148-_152
+_152:
+_146:
+	.db	18,50,46,40
+	.dw	_147-_153
+_153:
+	.db	146,179,2,0,47
+	.dw	_148-_154
+_154:
+_147:
+	.db	146,180,2,0
+_148:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster '$cocofun_7'
+_35:
+	.dl	-1,_36,_36-_36,_295-_36
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_37-_41
+_41:
+	.db	146,177,2,0,47
+	.dw	_40-_42
+_42:
+_37:
+	.db	18,49,46,40
+	.dw	_38-_43
+_43:
+	.db	146,178,2,0,47
+	.dw	_40-_44
+_44:
+_38:
+	.db	18,50,46,40
+	.dw	_39-_45
+_45:
+	.db	146,179,2,0,47
+	.dw	_40-_46
+_46:
+_39:
+	.db	146,180,2,0
+_40:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster '$cocofun_8'
+_119:
+	.dl	-1,_120,_120-_120,_300-_120
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_121-_125
+_125:
+	.db	146,177,2,0,47
+	.dw	_124-_126
+_126:
+_121:
+	.db	18,49,46,40
+	.dw	_122-_127
+_127:
+	.db	146,178,2,0,47
+	.dw	_124-_128
+_128:
+_122:
+	.db	18,50,46,40
+	.dw	_123-_129
+_129:
+	.db	146,179,2,0,47
+	.dw	_124-_130
+_130:
+_123:
+	.db	146,180,2,0
+_124:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster '$cocofun_9'
+_107:
+	.dl	-1,_108,_108-_108,_305-_108
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_109-_113
+_113:
+	.db	146,177,2,0,47
+	.dw	_112-_114
+_114:
+_109:
+	.db	18,49,46,40
+	.dw	_110-_115
+_115:
+	.db	146,178,2,0,47
+	.dw	_112-_116
+_116:
+_110:
+	.db	18,50,46,40
+	.dw	_111-_117
+_117:
+	.db	146,179,2,0,47
+	.dw	_112-_118
+_118:
+_111:
+	.db	146,180,2,0
+_112:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'LTC_CalcPec'
+_342:
+	.dl	-1,_192,_382-_192,_383-_192
+	.dw	4
+	.db	84,157,8,8
+	.dl	0,0
+_343:
+	.dl	-1,_192,_384-_192,_265-_192
+	.dw	4
+	.db	85,157,8,0
+	.dl	0,0
+_344:
+	.dl	-1,_192,_385-_192,_265-_192
+	.dw	4
+	.db	84,157,8,0
+	.dl	0,0
+_345:
+	.dl	-1,_192,_386-_192,_265-_192
+	.dw	4
+	.db	82,157,8,0
+	.dl	0,0
+_191:
+	.dl	-1,_192,_192-_192,_361-_192
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_193-_197
+_197:
+	.db	146,177,2,0,47
+	.dw	_196-_198
+_198:
+_193:
+	.db	18,49,46,40
+	.dw	_194-_199
+_199:
+	.db	146,178,2,0,47
+	.dw	_196-_200
+_200:
+_194:
+	.db	18,50,46,40
+	.dw	_195-_201
+_201:
+	.db	146,179,2,0,47
+	.dw	_196-_202
+_202:
+_195:
+	.db	146,180,2,0
+_196:
+	.db	22,19,62,36,33
+	.dl	_361-_192,_265-_192
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_362-_366
+_366:
+	.db	146,177,2,0,47
+	.dw	_365-_367
+_367:
+_362:
+	.db	18,49,46,40
+	.dw	_363-_368
+_368:
+	.db	146,178,2,0,47
+	.dw	_365-_369
+_369:
+_363:
+	.db	18,50,46,40
+	.dw	_364-_370
+_370:
+	.db	146,179,2,0,47
+	.dw	_365-_371
+_371:
+_364:
+	.db	146,180,2,0
+_365:
+	.db	22,19,62,36,33,58,34
+	.dl	0,0
+_341:
+	.dl	-1,_192,_387-_192,_388-_192
+	.dw	4
+	.db	84,157,8,8
+	.dl	_389-_192,_390-_192
+	.dw	1
+	.db	94
+	.dl	_383-_192,_391-_192
+	.dw	4
+	.db	84,157,8,8
+	.dl	_392-_192,_265-_192
+	.dw	4
+	.db	86,157,8,8
+	.dl	0,0
+_349:
+	.dl	0,0
+_347:
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'LTC_Init'
+_83:
+	.dl	-1,_84,_84-_84,_255-_84
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_85-_89
+_89:
+	.db	146,177,2,0,47
+	.dw	_88-_90
+_90:
+_85:
+	.db	18,49,46,40
+	.dw	_86-_91
+_91:
+	.db	146,178,2,0,47
+	.dw	_88-_92
+_92:
+_86:
+	.db	18,50,46,40
+	.dw	_87-_93
+_93:
+	.db	146,179,2,0,47
+	.dw	_88-_94
+_94:
+_87:
+	.db	146,180,2,0
+_88:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'LTC_SCK_Strope'
+_179:
+	.dl	-1,_180,_180-_180,_240-_180
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_181-_185
+_185:
+	.db	146,177,2,0,47
+	.dw	_184-_186
+_186:
+_181:
+	.db	18,49,46,40
+	.dw	_182-_187
+_187:
+	.db	146,178,2,0,47
+	.dw	_184-_188
+_188:
+_182:
+	.db	18,50,46,40
+	.dw	_183-_189
+_189:
+	.db	146,179,2,0,47
+	.dw	_184-_190
+_190:
+_183:
+	.db	146,180,2,0
+_184:
+	.db	22,19,62,36,33
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'LTC_getCellVoltages'
+_131:
+	.dl	-1,_132,_132-_132,_235-_132
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_133-_137
+_137:
+	.db	146,177,2,0,47
+	.dw	_136-_138
+_138:
+_133:
+	.db	18,49,46,40
+	.dw	_134-_139
+_139:
+	.db	146,178,2,0,47
+	.dw	_136-_140
+_140:
+_134:
+	.db	18,50,46,40
+	.dw	_135-_141
+_141:
+	.db	146,179,2,0,47
+	.dw	_136-_142
+_142:
+_135:
+	.db	146,180,2,0
+_136:
+	.db	22,19,62,36,33
+	.dl	0,0
+_357:
+	.dl	-1,_132,_120-_132,_300-_132
+	.dw	1
+	.db	93
+	.dl	_108-_132,_305-_132
+	.dw	1
+	.db	93
+	.dl	_12-_132,_275-_132
+	.dw	1
+	.db	93
+	.dl	_36-_132,_295-_132
+	.dw	1
+	.db	93
+	.dl	_359-_132,_360-_132
+	.dw	1
+	.db	93
+	.dl	_156-_132,_280-_132
+	.dw	1
+	.db	93
+	.dl	_144-_132,_290-_132
+	.dw	1
+	.db	93
+	.dl	0,0
+_356:
+	.dl	-1,_132,_156-_132,_280-_132
+	.dw	1
+	.db	93
+	.dl	_108-_132,_305-_132
+	.dw	1
+	.db	93
+	.dl	_358-_132,_235-_132
+	.dw	1
+	.db	93
+	.dl	_36-_132,_295-_132
+	.dw	1
+	.db	93
+	.dl	_12-_132,_275-_132
+	.dw	1
+	.db	93
+	.dl	_144-_132,_290-_132
+	.dw	1
+	.db	93
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'LTC_read'
+_23:
+	.dl	-1,_24,_24-_24,_260-_24
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_25-_29
+_29:
+	.db	146,177,2,0,47
+	.dw	_28-_30
+_30:
+_25:
+	.db	18,49,46,40
+	.dw	_26-_31
+_31:
+	.db	146,178,2,0,47
+	.dw	_28-_32
+_32:
+_26:
+	.db	18,50,46,40
+	.dw	_27-_33
+_33:
+	.db	146,179,2,0,47
+	.dw	_28-_34
+_34:
+_27:
+	.db	146,180,2,0
+_28:
+	.db	22,19,62,36,33
+	.dl	0,0
+_337:
+	.dl	0,0
+_334:
+	.dl	-1,_24,_336-_24,_260-_24
+	.dw	1
+	.db	93
+	.dl	_351-_24,_4-_24
+	.dw	1
+	.db	93
+	.dl	0,0
+_332:
+	.dl	-1,_24,_24-_24,_4-_24
+	.dw	1
+	.db	82
+	.dl	0,0
+_333:
+	.dl	-1,_24,_24-_24,_3-_24
+	.dw	4
+	.db	83,157,8,0
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'LTC_send'
+_47:
+	.dl	-1,_48,_48-_48,_250-_48
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_49-_53
+_53:
+	.db	146,177,2,0,47
+	.dw	_52-_54
+_54:
+_49:
+	.db	18,49,46,40
+	.dw	_50-_55
+_55:
+	.db	146,178,2,0,47
+	.dw	_52-_56
+_56:
+_50:
+	.db	18,50,46,40
+	.dw	_51-_57
+_57:
+	.db	146,179,2,0,47
+	.dw	_52-_58
+_58:
+_51:
+	.db	146,180,2,0
+_52:
+	.db	22,19,62,36,33
+	.dl	0,0
+_326:
+	.dl	-1,_48,_352-_48,_353-_48
+	.dw	4
+	.db	82,157,8,0
+	.dl	_353-_48,_354-_48
+	.dw	1
+	.db	91
+	.dl	_9-_48,_355-_48
+	.dw	1
+	.db	91
+	.dl	_48-_48,_8-_48
+	.dw	4
+	.db	82,157,8,0
+	.dl	0,0
+_329:
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'LTC_wait'
+_71:
+	.dl	-1,_72,_72-_72,_245-_72
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_73-_77
+_77:
+	.db	146,177,2,0,47
+	.dw	_76-_78
+_78:
+_73:
+	.db	18,49,46,40
+	.dw	_74-_79
+_79:
+	.db	146,178,2,0,47
+	.dw	_76-_80
+_80:
+_74:
+	.db	18,50,46,40
+	.dw	_75-_81
+_81:
+	.db	146,179,2,0,47
+	.dw	_76-_82
+_82:
+_75:
+	.db	146,180,2,0
+_76:
+	.db	22,19,62,36,33
+	.dl	0,0
+_324:
+	.dl	-1,_72,_11-_72,_245-_72
+	.dw	1
+	.db	91
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster '_restore_2'
+_203:
+	.dl	-1,_204,_204-_204,_393-_204
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_205-_209
+_209:
+	.db	146,177,2,0,47
+	.dw	_208-_210
+_210:
+_205:
+	.db	18,49,46,40
+	.dw	_206-_211
+_211:
+	.db	146,178,2,0,47
+	.dw	_208-_212
+_212:
+_206:
+	.db	18,50,46,40
+	.dw	_207-_213
+_213:
+	.db	146,179,2,0,47
+	.dw	_208-_214
+_214:
+_207:
+	.db	146,180,2,0
+_208:
+	.db	22,19,62,36,33
+	.dl	_393-_204,_404-_204
+	.dw	61
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_394-_398
+_398:
+	.db	146,177,2,0,47
+	.dw	_397-_399
+_399:
+_394:
+	.db	18,49,46,40
+	.dw	_395-_400
+_400:
+	.db	146,178,2,0,47
+	.dw	_397-_401
+_401:
+_395:
+	.db	18,50,46,40
+	.dw	_396-_402
+_402:
+	.db	146,179,2,0,47
+	.dw	_397-_403
+_403:
+_396:
+	.db	146,180,2,0
+_397:
+	.db	22,19,62,36,33,9,-2,34
+	.dl	_404-_204,_415-_204
+	.dw	61
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_405-_409
+_409:
+	.db	146,177,2,0,47
+	.dw	_408-_410
+_410:
+_405:
+	.db	18,49,46,40
+	.dw	_406-_411
+_411:
+	.db	146,178,2,0,47
+	.dw	_408-_412
+_412:
+_406:
+	.db	18,50,46,40
+	.dw	_407-_413
+_413:
+	.db	146,179,2,0,47
+	.dw	_408-_414
+_414:
+_407:
+	.db	146,180,2,0
+_408:
+	.db	22,19,62,36,33,9,-4,34
+	.dl	_415-_204,_426-_204
+	.dw	61
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_416-_420
+_420:
+	.db	146,177,2,0,47
+	.dw	_419-_421
+_421:
+_416:
+	.db	18,49,46,40
+	.dw	_417-_422
+_422:
+	.db	146,178,2,0,47
+	.dw	_419-_423
+_423:
+_417:
+	.db	18,50,46,40
+	.dw	_418-_424
+_424:
+	.db	146,179,2,0,47
+	.dw	_419-_425
+_425:
+_418:
+	.db	146,180,2,0
+_419:
+	.db	22,19,62,36,33,9,-6,34
+	.dl	_426-_204,_437-_204
+	.dw	61
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_427-_431
+_431:
+	.db	146,177,2,0,47
+	.dw	_430-_432
+_432:
+_427:
+	.db	18,49,46,40
+	.dw	_428-_433
+_433:
+	.db	146,178,2,0,47
+	.dw	_430-_434
+_434:
+_428:
+	.db	18,50,46,40
+	.dw	_429-_435
+_435:
+	.db	146,179,2,0,47
+	.dw	_430-_436
+_436:
+_429:
+	.db	146,180,2,0
+_430:
+	.db	22,19,62,36,33,9,-8,34
+	.dl	_437-_204,_339-_204
+	.dw	61
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_438-_442
+_442:
+	.db	146,177,2,0,47
+	.dw	_441-_443
+_443:
+_438:
+	.db	18,49,46,40
+	.dw	_439-_444
+_444:
+	.db	146,178,2,0,47
+	.dw	_441-_445
+_445:
+_439:
+	.db	18,50,46,40
+	.dw	_440-_446
+_446:
+	.db	146,179,2,0,47
+	.dw	_441-_447
+_447:
+_440:
+	.db	146,180,2,0
+_441:
+	.db	22,19,62,36,33,9,-10,34
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster '_save_1'
+_215:
+	.dl	-1,_216,_216-_216,_498-_216
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_217-_221
+_221:
+	.db	146,177,2,0,47
+	.dw	_220-_222
+_222:
+_217:
+	.db	18,49,46,40
+	.dw	_218-_223
+_223:
+	.db	146,178,2,0,47
+	.dw	_220-_224
+_224:
+_218:
+	.db	18,50,46,40
+	.dw	_219-_225
+_225:
+	.db	146,179,2,0,47
+	.dw	_220-_226
+_226:
+_219:
+	.db	146,180,2,0
+_220:
+	.db	22,19,62,36,33
+	.dl	_498-_216,_509-_216
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_499-_503
+_503:
+	.db	146,177,2,0,47
+	.dw	_502-_504
+_504:
+_499:
+	.db	18,49,46,40
+	.dw	_500-_505
+_505:
+	.db	146,178,2,0,47
+	.dw	_502-_506
+_506:
+_500:
+	.db	18,50,46,40
+	.dw	_501-_507
+_507:
+	.db	146,179,2,0,47
+	.dw	_502-_508
+_508:
+_501:
+	.db	146,180,2,0
+_502:
+	.db	22,19,62,36,33,50,34
+	.dl	_509-_216,_520-_216
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_510-_514
+_514:
+	.db	146,177,2,0,47
+	.dw	_513-_515
+_515:
+_510:
+	.db	18,49,46,40
+	.dw	_511-_516
+_516:
+	.db	146,178,2,0,47
+	.dw	_513-_517
+_517:
+_511:
+	.db	18,50,46,40
+	.dw	_512-_518
+_518:
+	.db	146,179,2,0,47
+	.dw	_513-_519
+_519:
+_512:
+	.db	146,180,2,0
+_513:
+	.db	22,19,62,36,33,52,34
+	.dl	_520-_216,_531-_216
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_521-_525
+_525:
+	.db	146,177,2,0,47
+	.dw	_524-_526
+_526:
+_521:
+	.db	18,49,46,40
+	.dw	_522-_527
+_527:
+	.db	146,178,2,0,47
+	.dw	_524-_528
+_528:
+_522:
+	.db	18,50,46,40
+	.dw	_523-_529
+_529:
+	.db	146,179,2,0,47
+	.dw	_524-_530
+_530:
+_523:
+	.db	146,180,2,0
+_524:
+	.db	22,19,62,36,33,54,34
+	.dl	_531-_216,_542-_216
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_532-_536
+_536:
+	.db	146,177,2,0,47
+	.dw	_535-_537
+_537:
+_532:
+	.db	18,49,46,40
+	.dw	_533-_538
+_538:
+	.db	146,178,2,0,47
+	.dw	_535-_539
+_539:
+_533:
+	.db	18,50,46,40
+	.dw	_534-_540
+_540:
+	.db	146,179,2,0,47
+	.dw	_535-_541
+_541:
+_534:
+	.db	146,180,2,0
+_535:
+	.db	22,19,62,36,33,56,34
+	.dl	_542-_216,_340-_216
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_543-_547
+_547:
+	.db	146,177,2,0,47
+	.dw	_546-_548
+_548:
+_543:
+	.db	18,49,46,40
+	.dw	_544-_549
+_549:
+	.db	146,178,2,0,47
+	.dw	_546-_550
+_550:
+_544:
+	.db	18,50,46,40
+	.dw	_545-_551
+_551:
+	.db	146,179,2,0,47
+	.dw	_546-_552
+_552:
+_545:
+	.db	146,180,2,0
+_546:
+	.db	22,19,62,36,33,58,34
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_frame
+_731:
+	.dl	184
+	.dl	-1
+	.db	3,0,2,2,173,2,15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_732-_736
+_736:
+	.db	146,177,2,0,47
+	.dw	_735-_737
+_737:
+_732:
+	.db	18,49,46,40
+	.dw	_733-_738
+_738:
+	.db	146,178,2,0,47
+	.dw	_735-_739
+_739:
+_733:
+	.db	18,50,46,40
+	.dw	_734-_740
+_740:
+	.db	146,179,2,0,47
+	.dw	_735-_741
+_741:
+_734:
+	.db	146,180,2,0
+_735:
+	.db	22,19,62,36,33,48,34,16,173,2,12,19,146,176,2,0,64,36,146,161,2,0,33,8,15,22,161,2,5,19,146,161,2,4,8
+	.db	162,2,8,166,2,8,177,2,8,178,2,8,179,2,8,180,2,8,0,8,1,8,6,8,7,8,8,8,9,8,10,8,167,2,8,168,2,8,169,2,8,170
+	.db	2,8,171,2,8,172,2,16,174,2,12,19,146,176,2,0,64,36,146,161,2,0,33,16,175,2,12,19,146,176,2,0,64,36,146
+	.db	161,2,2,33,8,176,2
+	; End of section
+
+	.debug		.debug_frame, cluster 'LTC_read'
+	.dl	20
+	.dl	_731,_24,_260-_24
+	.db	8,160,2,8,14,0,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster '$cocofun_7'
+	.dl	32
+	.dl	_731,_36,_295-_36
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'LTC_send'
+	.dl	24
+	.dl	_731,_48,_250-_48
+	.db	8,160,2,8,3,8,5,8,14,0,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster '$cocofun_5'
+	.dl	32
+	.dl	_731,_60,_285-_60
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'LTC_wait'
+	.dl	28
+	.dl	_731,_72,_245-_72
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,13,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'LTC_Init'
+	.dl	24
+	.dl	_731,_84,_255-_84
+	.db	8,160,2,8,3,8,5,8,14,0,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster '$cocofun_2'
+	.dl	32
+	.dl	_731,_96,_270-_96
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster '$cocofun_9'
+	.dl	32
+	.dl	_731,_108,_305-_108
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster '$cocofun_8'
+	.dl	32
+	.dl	_731,_120,_300-_120
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'LTC_getCellVoltages'
+	.dl	20
+	.dl	_731,_132,_235-_132
+	.db	8,160,2,8,14,0,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster '$cocofun_6'
+	.dl	32
+	.dl	_731,_144,_290-_144
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster '$cocofun_4'
+	.dl	32
+	.dl	_731,_156,_280-_156
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster '$cocofun_3'
+	.dl	32
+	.dl	_731,_168,_275-_168
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'LTC_SCK_Strope'
+	.dl	28
+	.dl	_731,_180,_240-_180
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,13,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'LTC_CalcPec'
+	.dl	88
+	.dl	_731,_192,_265-_192
+	.db	8,160,2,4
+	.dl	(_361-_192)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_372-_376
+_376:
+	.db	146,177,2,0,47
+	.dw	_375-_377
+_377:
+_372:
+	.db	18,49,46,40
+	.dw	_373-_378
+_378:
+	.db	146,178,2,0,47
+	.dw	_375-_379
+_379:
+_373:
+	.db	18,50,46,40
+	.dw	_374-_380
+_380:
+	.db	146,179,2,0,47
+	.dw	_375-_381
+_381:
+_374:
+	.db	146,180,2,0
+_375:
+	.db	22,19,62,36,33,58,34,22,15,3,19,127,10
+	; End of section
+
+	.debug		.debug_frame, cluster '_restore_2'
+	.dl	408
+	.dl	_731,_204,_339-_204
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,4
+	.dl	(_393-_204)/2
+	.db	15,61,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_448-_452
+_452:
+	.db	146,177,2,0,47
+	.dw	_451-_453
+_453:
+_448:
+	.db	18,49,46,40
+	.dw	_449-_454
+_454:
+	.db	146,178,2,0,47
+	.dw	_451-_455
+_455:
+_449:
+	.db	18,50,46,40
+	.dw	_450-_456
+_456:
+	.db	146,179,2,0,47
+	.dw	_451-_457
+_457:
+_450:
+	.db	146,180,2,0
+_451:
+	.db	22,19,62,36,33,9,-2,34,22,15,3,19,127,126,201,4
+	.dl	(_404-_393)/2
+	.db	15,61,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_458-_462
+_462:
+	.db	146,177,2,0,47
+	.dw	_461-_463
+_463:
+_458:
+	.db	18,49,46,40
+	.dw	_459-_464
+_464:
+	.db	146,178,2,0,47
+	.dw	_461-_465
+_465:
+_459:
+	.db	18,50,46,40
+	.dw	_460-_466
+_466:
+	.db	146,179,2,0,47
+	.dw	_461-_467
+_467:
+_460:
+	.db	146,180,2,0
+_461:
+	.db	22,19,62,36,33,9,-4,34,22,15,3,19,127,124,199,4
+	.dl	(_415-_404)/2
+	.db	15,61,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_468-_472
+_472:
+	.db	146,177,2,0,47
+	.dw	_471-_473
+_473:
+_468:
+	.db	18,49,46,40
+	.dw	_469-_474
+_474:
+	.db	146,178,2,0,47
+	.dw	_471-_475
+_475:
+_469:
+	.db	18,50,46,40
+	.dw	_470-_476
+_476:
+	.db	146,179,2,0,47
+	.dw	_471-_477
+_477:
+_470:
+	.db	146,180,2,0
+_471:
+	.db	22,19,62,36,33,9,-6,34,22,15,3,19,127,122,198,4
+	.dl	(_426-_415)/2
+	.db	15,61,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_478-_482
+_482:
+	.db	146,177,2,0,47
+	.dw	_481-_483
+_483:
+_478:
+	.db	18,49,46,40
+	.dw	_479-_484
+_484:
+	.db	146,178,2,0,47
+	.dw	_481-_485
+_485:
+_479:
+	.db	18,50,46,40
+	.dw	_480-_486
+_486:
+	.db	146,179,2,0,47
+	.dw	_481-_487
+_487:
+_480:
+	.db	146,180,2,0
+_481:
+	.db	22,19,62,36,33,9,-8,34,22,15,3,19,127,120,193,4
+	.dl	(_437-_426)/2
+	.db	15,61,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_488-_492
+_492:
+	.db	146,177,2,0,47
+	.dw	_491-_493
+_493:
+_488:
+	.db	18,49,46,40
+	.dw	_489-_494
+_494:
+	.db	146,178,2,0,47
+	.dw	_491-_495
+_495:
+_489:
+	.db	18,50,46,40
+	.dw	_490-_496
+_496:
+	.db	146,179,2,0,47
+	.dw	_491-_497
+_497:
+_490:
+	.db	146,180,2,0
+_491:
+	.db	22,19,62,36,33,9,-10,34,22,15,3,19,127,118,192,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster '_save_1'
+	.dl	408
+	.dl	_731,_216,_340-_216
+	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,4
+	.dl	(_498-_216)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_553-_557
+_557:
+	.db	146,177,2,0,47
+	.dw	_556-_558
+_558:
+_553:
+	.db	18,49,46,40
+	.dw	_554-_559
+_559:
+	.db	146,178,2,0,47
+	.dw	_556-_560
+_560:
+_554:
+	.db	18,50,46,40
+	.dw	_555-_561
+_561:
+	.db	146,179,2,0,47
+	.dw	_556-_562
+_562:
+_555:
+	.db	146,180,2,0
+_556:
+	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,128,4,4
+	.dl	(_509-_498)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_563-_567
+_567:
+	.db	146,177,2,0,47
+	.dw	_566-_568
+_568:
+_563:
+	.db	18,49,46,40
+	.dw	_564-_569
+_569:
+	.db	146,178,2,0,47
+	.dw	_566-_570
+_570:
+_564:
+	.db	18,50,46,40
+	.dw	_565-_571
+_571:
+	.db	146,179,2,0,47
+	.dw	_566-_572
+_572:
+_565:
+	.db	146,180,2,0
+_566:
+	.db	22,19,62,36,33,52,34,22,15,3,19,127,4,129,3,4
+	.dl	(_520-_509)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_573-_577
+_577:
+	.db	146,177,2,0,47
+	.dw	_576-_578
+_578:
+_573:
+	.db	18,49,46,40
+	.dw	_574-_579
+_579:
+	.db	146,178,2,0,47
+	.dw	_576-_580
+_580:
+_574:
+	.db	18,50,46,40
+	.dw	_575-_581
+_581:
+	.db	146,179,2,0,47
+	.dw	_576-_582
+_582:
+_575:
+	.db	146,180,2,0
+_576:
+	.db	22,19,62,36,33,54,34,22,15,3,19,127,6,134,2,4
+	.dl	(_531-_520)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_583-_587
+_587:
+	.db	146,177,2,0,47
+	.dw	_586-_588
+_588:
+_583:
+	.db	18,49,46,40
+	.dw	_584-_589
+_589:
+	.db	146,178,2,0,47
+	.dw	_586-_590
+_590:
+_584:
+	.db	18,50,46,40
+	.dw	_585-_591
+_591:
+	.db	146,179,2,0,47
+	.dw	_586-_592
+_592:
+_585:
+	.db	146,180,2,0
+_586:
+	.db	22,19,62,36,33,56,34,22,15,3,19,127,8,135,1,4
+	.dl	(_542-_531)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_593-_597
+_597:
+	.db	146,177,2,0,47
+	.dw	_596-_598
+_598:
+_593:
+	.db	18,49,46,40
+	.dw	_594-_599
+_599:
+	.db	146,178,2,0,47
+	.dw	_596-_600
+_600:
+_594:
+	.db	18,50,46,40
+	.dw	_595-_601
+_601:
+	.db	146,179,2,0,47
+	.dw	_596-_602
+_602:
+_595:
+	.db	146,180,2,0
+_596:
+	.db	22,19,62,36,33,58,34,22,15,3,19,127,10,137,0,0,0
+	; End of section
+
+
+; ..\LTC_Comm.c	   261  
+
+	; Module end
+	.end

@@ -1,0 +1,1405 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapfile>
+
+<mapfile>
+	<part>
+		<name>Tool and Invocation</name>
+		<table>
+			<row>tool;TASKING VX-toolset for C166: Linker Locator v3.0r3 Build 156</row>
+			<row>path;C:\Program Files\TASKING\C166-VX v3.0r3\bin\lk166</row>
+			<row>arguments;-f cc5240a </row>
+			<row>file:cc5240a;-o can_test.elf -d../can_test.lsl -DXC2267_96F -D__CPU__=xc2267 -D__CPU_XC2267__ --global-type-checking -OtZxycL --map-file=can_test.mapxml:XML -mcrfiklSmNduQ --error-limit=42 -DXC2267_96F --dep-file=.can_test.elf.d --make-target=can_test.elf CAN.obj cstart.obj GPT1.obj GPT2.obj INT.obj IO.obj LTC_Comm.obj MAIN.obj SCS.obj -lcn -lfpn -lrtn -LC:\Program" "Files\TASKING\C166-VX" "v3.0r3\lib\2 </row>
+			<row>task;task1</row>
+		</table>
+	</part>
+	<part>
+		<name>Used Resources</name>
+		<part>
+			<name>Memory usage in bytes</name>
+			<table>
+				<column>
+					<name>Memory</name>
+				</column>
+				<column>
+					<name>Code</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Data</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Reserved</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Free</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Total</name>
+					<alignment>right</alignment>
+				</column>
+				<row>spe:DPRAM;0x0;0x0004e;0x00220;0x00592;0x00800</row>
+				<row>spe:DSRAM;0x0;0x0;0x0;0x04000;0x04000</row>
+				<row>spe:Flash;0x00fbc;0x000b0;0x01000;0xbdf94;0xc0000</row>
+				<row>spe:PSRAM;0x0;0x0;0x03ffc;0x0c004;0x10000</row>
+				<row>Total;0x00fbc;0x000fe;0x0521c;0xce52a;0xd4800</row>
+			</table>
+		</part>
+		<part>
+			<name>Space usage in bytes</name>
+			<table>
+				<column>
+					<name>Space</name>
+				</column>
+				<column>
+					<name>Native used Rom</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Native used Ram</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Foreign used</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name> Reserved</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Free Rom</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name> Free Ram</name>
+					<alignment>right</alignment>
+				</column>
+				<column>
+					<name>Total</name>
+					<alignment>right</alignment>
+				</column>
+				<row>spe:xc16x:bit;0x0;0x0;0x0;0x0;0x0;0x00100;0x00100</row>
+				<row>spe:xc16x:bita;0x0;0x0;0x0;0x0;0x0;0x00100;0x00100</row>
+				<row>spe:xc16x:code;0x00fbc;0x0;0x000b0;0x04ffc;0xbdf94;0x0c004;0xd0000</row>
+				<row>spe:xc16x:far;0x0003c;0x0;0x0107e;0x0521c;0xbdf94;0x10596;0xd4800</row>
+				<row>spe:xc16x:huge;0x0;0x0;0x010ba;0x0521c;0xbdf94;0x10596;0xd4800</row>
+				<row>spe:xc16x:iram;0x0;0x0;0x0004e;0x00220;0x0;0x00592;0x00800</row>
+				<row>spe:xc16x:near;0x00008;0x0004e;0x00200;0x0421c;0x03df8;0x04596;0x0c800</row>
+				<row>spe:xc16x:shuge;0x0006c;0x0;0x0104e;0x0521c;0xbdf94;0x10596;0xd4800</row>
+				<row>Total;0x0106c;0x0004e;-;-;-;-;-</row>
+				<row>Largest gap;-;-;-;-;0xb0000;0x0c002;-</row>
+			</table>
+			<footNote>Multiple address spaces may be mapped at the same (physical) memory address ranges. Physical memory allocated (i.e. used) for sections in the given space are called "Native used Rom" and "Native used Ram" whereas memory allocated by other spaces is called "Foreign used" memory.</footNote>
+		</part>
+		<part>
+			<name>Estimated stack usage</name>
+			<table>
+				<column>
+					<name>Stack Name</name>
+				</column>
+				<column>
+					<name>Used</name>
+				</column>
+				<row>system_stack;0x00000066</row>
+				<row>user_stack;0x00000028</row>
+				<row>recursive ;no</row>
+			</table>
+		</part>
+	</part>
+	<part>
+		<name>Processed Files</name>
+		<table>
+			<column>
+				<name>File</name>
+			</column>
+			<column>
+				<name>From archive</name>
+			</column>
+			<column>
+				<name>Symbol causing the extraction</name>
+			</column>
+			<row>CAN.obj;;</row>
+			<row>GPT1.obj;;</row>
+			<row>GPT2.obj;;</row>
+			<row>INT.obj;;</row>
+			<row>IO.obj;;</row>
+			<row>LTC_Comm.obj;;</row>
+			<row>MAIN.obj;;</row>
+			<row>SCS.obj;;</row>
+			<row>_Exit.obj;c166cn.lib;__Exit</row>
+			<row>_cptable_clr_bit.obj;c166cn.lib;__cptable_clr_bit</row>
+			<row>_cptable_clr_huge.obj;c166cn.lib;__cptable_clr_huge</row>
+			<row>_cptable_clr_near.obj;c166cn.lib;__cptable_clr_near</row>
+			<row>_cptable_clr_shuge.obj;c166cn.lib;__cptable_clr_shuge</row>
+			<row>_cptable_cpy_bit.obj;c166cn.lib;__cptable_cpy_bit</row>
+			<row>_cptable_cpy_huge.obj;c166cn.lib;__cptable_cpy_huge</row>
+			<row>_cptable_cpy_near.obj;c166cn.lib;__cptable_cpy_near</row>
+			<row>_cptable_cpy_shuge.obj;c166cn.lib;__cptable_cpy_shuge</row>
+			<row>_dcti.obj;c166cn.lib;__dcti</row>
+			<row>_init.obj;c166cn.lib;__init</row>
+			<row>cstart.obj;;</row>
+			<row>icall.obj;c166rtn.lib;__icall</row>
+			<row>vectab.obj;c166cn.lib;__vector_template</row>
+		</table>
+	</part>
+	<part>
+		<name>Link Result</name>
+		<table>
+			<column>
+				<name>[in] File</name>
+			</column>
+			<column>
+				<name>[in] Section</name>
+			</column>
+			<column>
+				<name>[in] Size (MAU)</name>
+			</column>
+			<column>
+				<name>[out] Offset</name>
+			</column>
+			<column>
+				<name>[out] Section</name>
+			</column>
+			<column>
+				<name>[out] Size (MAU)</name>
+			</column>
+			<row>cstart.obj;_$cstart_rb (55);0x00000020;0x0;_$cstart_rb (410);0x00000020</row>
+			<row>_cptable_clr_bit.obj;_cptable_clr_bit_libc (399);0x0;0x0;_cptable_clr_bit_libc (399);0x0</row>
+			<row>_cptable_clr_huge.obj;_cptable_clr_huge_libc (402);0x0;0x0;_cptable_clr_huge_libc (402);0x0</row>
+			<row>_cptable_clr_near.obj;_cptable_clr_near_libc (400);0x00000018;0x0;_cptable_clr_near_libc (400);0x00000018</row>
+			<row>_cptable_clr_shuge.obj;_cptable_clr_shuge_libc (401);0x0;0x0;_cptable_clr_shuge_libc (401);0x0</row>
+			<row>_cptable_cpy_bit.obj;_cptable_cpy_bit_libc (403);0x0;0x0;_cptable_cpy_bit_libc (403);0x0</row>
+			<row>_cptable_cpy_huge.obj;_cptable_cpy_huge_libc (406);0x0;0x0;_cptable_cpy_huge_libc (406);0x0</row>
+			<row>_cptable_cpy_near.obj;_cptable_cpy_near_libc (404);0x0000001a;0x0;_cptable_cpy_near_libc (404);0x0000001a</row>
+			<row>_cptable_cpy_shuge.obj;_cptable_cpy_shuge_libc (405);0x0;0x0;_cptable_cpy_shuge_libc (405);0x0</row>
+			<row>_dcti.obj;_dcti_libc (388);0x0;0x0;_dcti_libc (388);0x0</row>
+			<row>_init.obj;_init_clr_table_libc (387);0x0000001c;0x0;_init_clr_table_libc (387);0x0000001c</row>
+			<row>_init.obj;_init_cpy_table_libc (386);0x00000020;0x0;_init_cpy_table_libc (386);0x00000020</row>
+			<row>_init.obj;_init_libc (384);0x000000c6;0x0;_init_libc (384);0x000000c6</row>
+			<row>_init.obj;_init_switch_table_libc (385);0x00000008;0x0;_init_switch_table_libc (385);0x00000008</row>
+			<row>CAN.obj;code_CAN_vGetMsgObj (4);0x000000f4;0x0;code_CAN_vGetMsgObj (4);0x000000f4</row>
+			<row>CAN.obj;code_CAN_vInit (1);0x00000476;0x0;code_CAN_vInit (1);0x00000476</row>
+			<row>CAN.obj;code_CAN_vLoadData (6);0x0000005c;0x0;code_CAN_vLoadData (6);0x0000005c</row>
+			<row>CAN.obj;code_CAN_vTransmit (5);0x00000014;0x0;code_CAN_vTransmit (5);0x00000014</row>
+			<row>CAN.obj;code_CAN_viSRN0 (7);0x000000ce;0x0;code_CAN_viSRN0 (7);0x000000ce</row>
+			<row>GPT1.obj;code_GPT1_vInit (67);0x0000002c;0x0;code_GPT1_vInit (67);0x0000002c</row>
+			<row>GPT1.obj;code_GPT1_viTmr2 (68);0x00000060;0x0;code_GPT1_viTmr2 (68);0x00000060</row>
+			<row>GPT2.obj;code_GPT2_vInit (86);0x0000002c;0x0;code_GPT2_vInit (86);0x0000002c</row>
+			<row>GPT2.obj;code_GPT2_viTmr5 (87);0x00000006;0x0;code_GPT2_viTmr5 (87);0x00000006</row>
+			<row>INT.obj;code_INT_vInit (105);0x00000002;0x0;code_INT_vInit (105);0x00000002</row>
+			<row>IO.obj;code_IO_vInit (116);0x0000003a;0x0;code_IO_vInit (116);0x0000003a</row>
+			<row>LTC_Comm.obj;code_LTC_CalcPec (149);0x000000ec;0x0;code_LTC_CalcPec (149);0x000000ec</row>
+			<row>LTC_Comm.obj;code_LTC_Init (132);0x00000004;0x0;code_LTC_Init (132);0x00000004</row>
+			<row>LTC_Comm.obj;code_LTC_SCK_Strope (148);0x00000008;0x0;code_LTC_SCK_Strope (148);0x00000008</row>
+			<row>LTC_Comm.obj;code_LTC_getCellVoltages (143);0x0000009a;0x0;code_LTC_getCellVoltages (143);0x0000009a</row>
+			<row>LTC_Comm.obj;code_LTC_read (127);0x0000003a;0x0;code_LTC_read (127);0x0000003a</row>
+			<row>LTC_Comm.obj;code_LTC_send (130);0x0000002a;0x0;code_LTC_send (130);0x0000002a</row>
+			<row>LTC_Comm.obj;code_LTC_wait (129);0x00000012;0x0;code_LTC_wait (129);0x00000012</row>
+			<row>MAIN.obj;code_MAIN_vChangeFreq (269);0x00000020;0x0;code_MAIN_vChangeFreq (269);0x00000020</row>
+			<row>MAIN.obj;code_MAIN_vInit (267);0x00000026;0x0;code_MAIN_vInit (267);0x00000026</row>
+			<row>MAIN.obj;code_MAIN_vLockProtecReg (270);0x00000018;0x0;code_MAIN_vLockProtecReg (270);0x00000018</row>
+			<row>MAIN.obj;code_MAIN_vUnlockProtecReg (268);0x0000000a;0x0;code_MAIN_vUnlockProtecReg (268);0x0000000a</row>
+			<row>SCS.obj;code_SCS_CountClocksWithTimer (346);0x00000058;0x0;code_SCS_CountClocksWithTimer (346);0x00000058</row>
+			<row>SCS.obj;code_SCS_StartXtalOsc (345);0x0000001e;0x0;code_SCS_StartXtalOsc (345);0x0000001e</row>
+			<row>SCS.obj;code_SCS_SwitchSystemClock (348);0x00000070;0x0;code_SCS_SwitchSystemClock (348);0x00000070</row>
+			<row>SCS.obj;code_SCS_SwitchToHighPrecBandgap (349);0x00000006;0x0;code_SCS_SwitchToHighPrecBandgap (349);0x00000006</row>
+			<row>CAN.obj;code__cocofun_1 (3);0x00000016;0x0;code__cocofun_1 (3);0x00000016</row>
+			<row>MAIN.obj;code__cocofun_1 (271);0x00000018;0x0;code__cocofun_1 (271);0x00000018</row>
+			<row>SCS.obj;code__cocofun_1 (347);0x0000000e;0x0;code__cocofun_1 (347);0x0000000e</row>
+			<row>CAN.obj;code__cocofun_2 (2);0x0000000e;0x0;code__cocofun_2 (2);0x0000000e</row>
+			<row>LTC_Comm.obj;code__cocofun_2 (133);0x00000066;0x0;code__cocofun_2 (133);0x00000066</row>
+			<row>MAIN.obj;code__cocofun_2 (272);0x00000010;0x0;code__cocofun_2 (272);0x00000010</row>
+			<row>LTC_Comm.obj;code__cocofun_3 (147);0x0000002a;0x0;code__cocofun_3 (147);0x0000002a</row>
+			<row>LTC_Comm.obj;code__cocofun_4 (146);0x00000012;0x0;code__cocofun_4 (146);0x00000012</row>
+			<row>LTC_Comm.obj;code__cocofun_5 (131);0x0000000a;0x0;code__cocofun_5 (131);0x0000000a</row>
+			<row>LTC_Comm.obj;code__cocofun_6 (145);0x0000000a;0x0;code__cocofun_6 (145);0x0000000a</row>
+			<row>LTC_Comm.obj;code__cocofun_7 (128);0x00000008;0x0;code__cocofun_7 (128);0x00000008</row>
+			<row>LTC_Comm.obj;code__cocofun_8 (142);0x00000008;0x0;code__cocofun_8 (142);0x00000008</row>
+			<row>LTC_Comm.obj;code__cocofun_9 (141);0x0000000a;0x0;code__cocofun_9 (141);0x0000000a</row>
+			<row>cstart.obj;code__cstart (56);0x00000052;0x0;code__cstart (56);0x00000052</row>
+			<row>LTC_Comm.obj;code__restore_2 (150);0x0000000c;0x0;code__restore_2 (150);0x0000000c</row>
+			<row>LTC_Comm.obj;code__save_1 (151);0x0000000c;0x0;code__save_1 (151);0x0000000c</row>
+			<row>_Exit.obj;code_libc (390);0x00000002;0x0;code_libc (390);0x00000002</row>
+			<row>icall.obj;code_librt (407);0x00000006;0x0;code_librt (407);0x00000006</row>
+			<row>MAIN.obj;code_main (273);0x0000002a;0x0;code_main (273);0x0000002a</row>
+			<row>LTC_Comm.obj;near_LTC_CFG1R0 (134);0x00000001;0x0;near_LTC_CFG1R0 (134);0x00000001</row>
+			<row>LTC_Comm.obj;near_LTC_CFG1R1 (135);0x00000001;0x0;near_LTC_CFG1R1 (135);0x00000001</row>
+			<row>LTC_Comm.obj;near_LTC_CFG1R2 (136);0x00000001;0x0;near_LTC_CFG1R2 (136);0x00000001</row>
+			<row>LTC_Comm.obj;near_LTC_CFG1R3 (137);0x00000001;0x0;near_LTC_CFG1R3 (137);0x00000001</row>
+			<row>LTC_Comm.obj;near_LTC_CFG1R4 (138);0x00000001;0x0;near_LTC_CFG1R4 (138);0x00000001</row>
+			<row>LTC_Comm.obj;near_LTC_CFG1R5 (139);0x00000001;0x0;near_LTC_CFG1R5 (139);0x00000001</row>
+			<row>LTC_Comm.obj;near_LTC_CRC_PEC (140);0x00000001;0x0;near_LTC_CRC_PEC (140);0x00000001</row>
+			<row>LTC_Comm.obj;near_LTC_data_read (144);0x00000011;0x0;near_LTC_data_read (144);0x00000011</row>
+			<row>LTC_Comm.obj;near__1_cst (152);0x00000008;0x0;near__1_cst (152);0x00000008</row>
+			<row>MAIN.obj;near_canBMCCommands (280);0x00000014;0x0;near_canBMCCommands (280);0x00000014</row>
+			<row>MAIN.obj;near_ucBalanceCell (281);0x00000008;0x0;near_ucBalanceCell (281);0x00000008</row>
+			<row>MAIN.obj;near_ucLTCEnableADC (274);0x00000001;0x0;near_ucLTCEnableADC (274);0x00000001</row>
+			<row>MAIN.obj;near_ucSPIWaitCnt (279);0x00000001;0x0;near_ucSPIWaitCnt (279);0x00000001</row>
+			<row>MAIN.obj;near_ucaBMCStatus (278);0x00000008;0x0;near_ucaBMCStatus (278);0x00000008</row>
+			<row>MAIN.obj;near_ucaCellVolts14 (276);0x00000008;0x0;near_ucaCellVolts14 (276);0x00000008</row>
+			<row>MAIN.obj;near_ucaCellVolts58 (277);0x00000008;0x0;near_ucaCellVolts58 (277);0x00000008</row>
+		</table>
+	</part>
+	<part>
+		<name>Cross References</name>
+		<table>
+			<column>
+				<name>Definition file</name>
+			</column>
+			<column>
+				<name>Definition section</name>
+			</column>
+			<column>
+				<name>Symbol</name>
+			</column>
+			<column>
+				<name>Referenced in</name>
+			</column>
+			<row>CAN.obj;code_CAN_vInit (1);_CAN_vInit;MAIN.obj</row>
+			<row>CAN.obj;code_CAN_vLoadData (6);_CAN_vLoadData;GPT1.obj</row>
+			<row>CAN.obj;code_CAN_vTransmit (5);_CAN_vTransmit;GPT1.obj</row>
+			<row>GPT1.obj;code_GPT1_vInit (67);_GPT1_vInit;MAIN.obj</row>
+			<row>GPT2.obj;code_GPT2_vInit (86);_GPT2_vInit;MAIN.obj</row>
+			<row>INT.obj;code_INT_vInit (105);_INT_vInit;MAIN.obj</row>
+			<row>IO.obj;code_IO_vInit (116);_IO_vInit;MAIN.obj</row>
+			<row>LTC_Comm.obj;code_LTC_CalcPec (149);_LTC_CalcPec;CAN.obj</row>
+			<row>LTC_Comm.obj;code_LTC_Init (132);_LTC_Init;MAIN.obj</row>
+			<row>LTC_Comm.obj;code_LTC_getCellVoltages (143);_LTC_getCellVoltages;MAIN.obj</row>
+			<row>LTC_Comm.obj;near_LTC_CFG1R1 (135);_LTC_CFG1R1;CAN.obj</row>
+			<row>MAIN.obj;code_main (273);_main;cstart.obj</row>
+			<row>MAIN.obj;near_canBMCCommands (280);_canBMCCommands;CAN.obj</row>
+			<row>MAIN.obj;near_ucBalanceCell (281);_ucBalanceCell;CAN.obj</row>
+			<row>MAIN.obj;near_ucLTCEnableADC (274);_ucLTCEnableADC;GPT1.obj</row>
+			<row>MAIN.obj;near_ucSPIWaitCnt (279);_ucSPIWaitCnt;GPT2.obj</row>
+			<row>MAIN.obj;near_ucaBMCStatus (278);_ucaBMCStatus;GPT1.obj</row>
+			<row>MAIN.obj;near_ucaCellVolts14 (276);_ucaCellVolts14;GPT1.obj, LTC_Comm.obj</row>
+			<row>MAIN.obj;near_ucaCellVolts58 (277);_ucaCellVolts58;GPT1.obj, LTC_Comm.obj</row>
+			<row>SCS.obj;code_SCS_StartXtalOsc (345);_SCS_StartXtalOsc;MAIN.obj</row>
+			<row>SCS.obj;code_SCS_SwitchSystemClock (348);_SCS_SwitchSystemClock;MAIN.obj</row>
+			<row>SCS.obj;code_SCS_SwitchToHighPrecBandgap (349);_SCS_SwitchToHighPrecBandgap;MAIN.obj</row>
+			<row>_Exit.obj;code_libc (390);__Exit;cstart.obj</row>
+			<row>_Exit.obj;code_libc (390);_exit;cstart.obj</row>
+			<row>_cptable_clr_bit.obj;_cptable_clr_bit_libc (399);__cptable_clr_bit;_init.obj</row>
+			<row>_cptable_clr_huge.obj;_cptable_clr_huge_libc (402);__cptable_clr_huge;_init.obj</row>
+			<row>_cptable_clr_near.obj;_cptable_clr_near_libc (400);__cptable_clr_near;_init.obj</row>
+			<row>_cptable_clr_shuge.obj;_cptable_clr_shuge_libc (401);__cptable_clr_shuge;_init.obj</row>
+			<row>_cptable_cpy_bit.obj;_cptable_cpy_bit_libc (403);__cptable_cpy_bit;_init.obj</row>
+			<row>_cptable_cpy_huge.obj;_cptable_cpy_huge_libc (406);__cptable_cpy_huge;_init.obj</row>
+			<row>_cptable_cpy_near.obj;_cptable_cpy_near_libc (404);__cptable_cpy_near;_init.obj</row>
+			<row>_cptable_cpy_shuge.obj;_cptable_cpy_shuge_libc (405);__cptable_cpy_shuge;_init.obj</row>
+			<row>_dcti.obj;_dcti_libc (388);__dcti;_init.obj</row>
+			<row>_init.obj;_init_libc (384);__init;cstart.obj</row>
+			<row>cstart.obj;code__cstart (56);__cstart;, MAIN.obj</row>
+			<row>icall.obj;code_librt (407);__icall;_init.obj</row>
+		</table>
+	</part>
+	<part>
+		<name>Call Graph</name>
+		<tree>
+			<name>__cstart</name>
+			<child>
+				<name>_main</name>
+				<child>
+					<name>_LTC_Init</name>
+					<child>
+						<name>LTC_Comm.c:_$cocofun_2 *</name>
+					</child>
+				</child>
+				<child>
+					<name>_LTC_getCellVoltages</name>
+					<child>
+						<name>LTC_Comm.c:_$cocofun_2 *</name>
+					</child>
+					<child>
+						<name>LTC_Comm.c:_$cocofun_8 *</name>
+					</child>
+					<child>
+						<name>LTC_Comm.c:_$cocofun_3</name>
+						<child>
+							<name>LTC_Comm.c:_$cocofun_7 *</name>
+						</child>
+						<child>
+							<name>LTC_Comm.c:_$cocofun_9 *</name>
+						</child>
+						<child>
+							<name>_LTC_read</name>
+							<child>
+								<name>LTC_Comm.c:_$cocofun_7 *</name>
+							</child>
+						</child>
+						<child>
+							<name>_LTC_send *</name>
+						</child>
+						<child>
+							<name>_LTC_SCK_Strope</name>
+							<child>
+								<name>LTC_Comm.c:_$cocofun_5 *</name>
+							</child>
+						</child>
+					</child>
+					<child>
+						<name>LTC_Comm.c:_$cocofun_4</name>
+					</child>
+					<child>
+						<name>LTC_Comm.c:_$cocofun_6</name>
+					</child>
+					<child>
+						<name>_LTC_send *</name>
+					</child>
+				</child>
+				<child>
+					<name>_MAIN_vInit</name>
+					<child>
+						<name>_CAN_vInit</name>
+						<child>
+							<name>CAN.c:_$cocofun_2 *</name>
+						</child>
+						<child>
+							<name>CAN.c:_$cocofun_1</name>
+							<child>
+								<name>CAN.c:_$cocofun_2 *</name>
+							</child>
+						</child>
+					</child>
+					<child>
+						<name>_GPT1_vInit</name>
+					</child>
+					<child>
+						<name>_GPT2_vInit</name>
+					</child>
+					<child>
+						<name>_INT_vInit</name>
+					</child>
+					<child>
+						<name>_IO_vInit</name>
+					</child>
+					<child>
+						<name>_MAIN_vUnlockProtecReg</name>
+						<child>
+							<name>MAIN.c:_$cocofun_1 *</name>
+						</child>
+					</child>
+					<child>
+						<name>_MAIN_vChangeFreq</name>
+						<child>
+							<name>_SCS_StartXtalOsc</name>
+							<child>
+								<name>SCS.c:_$cocofun_1 *</name>
+							</child>
+							<child>
+								<name>_SCS_CountClocksWithTimer</name>
+							</child>
+						</child>
+						<child>
+							<name>_SCS_SwitchSystemClock</name>
+							<child>
+								<name>SCS.c:_$cocofun_1 *</name>
+							</child>
+						</child>
+						<child>
+							<name>_SCS_SwitchToHighPrecBandgap</name>
+						</child>
+					</child>
+					<child>
+						<name>_MAIN_vLockProtecReg</name>
+						<child>
+							<name>MAIN.c:_$cocofun_1 *</name>
+						</child>
+						<child>
+							<name>MAIN.c:_$cocofun_2 *</name>
+						</child>
+					</child>
+				</child>
+			</child>
+			<child>
+				<name>__init</name>
+				<child>
+					<name>__INDIRECT__</name>
+					<child>
+						<name>__cptable_clr_bit</name>
+					</child>
+					<child>
+						<name>__cptable_clr_near</name>
+					</child>
+					<child>
+						<name>__cptable_clr_shuge</name>
+					</child>
+					<child>
+						<name>__cptable_clr_huge</name>
+					</child>
+					<child>
+						<name>__cptable_cpy_bit</name>
+					</child>
+					<child>
+						<name>__cptable_cpy_near</name>
+					</child>
+					<child>
+						<name>__cptable_cpy_shuge</name>
+					</child>
+					<child>
+						<name>__cptable_cpy_huge</name>
+					</child>
+				</child>
+				<child>
+					<name>__dcti</name>
+				</child>
+				<child>
+					<name>__icall</name>
+				</child>
+			</child>
+			<child>
+				<name>__Exit</name>
+			</child>
+		</tree>
+		<tree>
+			<name>MAIN.c:_$cocofun_2</name>
+		</tree>
+		<tree>
+			<name>SCS.c:_$cocofun_1</name>
+		</tree>
+		<tree>
+			<name>MAIN.c:_$cocofun_1</name>
+			<child>
+				<name>MAIN.c:_$cocofun_2 *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>CAN.c:_$cocofun_2</name>
+		</tree>
+		<tree>
+			<name>LTC_Comm.c:_$cocofun_5</name>
+			<child>
+				<name>LTC_Comm.c:_$cocofun_7 *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>_LTC_send</name>
+			<child>
+				<name>LTC_Comm.c:_$cocofun_5 *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>LTC_Comm.c:_$cocofun_9</name>
+			<child>
+				<name>LTC_Comm.c:_$cocofun_7 *</name>
+			</child>
+			<child>
+				<name>_LTC_wait *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>_LTC_wait</name>
+		</tree>
+		<tree>
+			<name>LTC_Comm.c:_$cocofun_7</name>
+			<child>
+				<name>_LTC_wait *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>LTC_Comm.c:_$cocofun_8</name>
+			<child>
+				<name>LTC_Comm.c:_$cocofun_7 *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>LTC_Comm.c:_$cocofun_2</name>
+			<child>
+				<name>LTC_Comm.c:_$cocofun_8 *</name>
+			</child>
+			<child>
+				<name>LTC_Comm.c:_$cocofun_9 *</name>
+			</child>
+			<child>
+				<name>_LTC_send *</name>
+			</child>
+		</tree>
+		<tree>
+			<name>_GPT2_viTmr5</name>
+		</tree>
+		<tree>
+			<name>_GPT1_viTmr2</name>
+			<child>
+				<name>_CAN_vTransmit</name>
+			</child>
+			<child>
+				<name>_CAN_vLoadData</name>
+			</child>
+		</tree>
+		<tree>
+			<name>_CAN_viSRN0</name>
+			<child>
+				<name>_CAN_vGetMsgObj</name>
+			</child>
+			<child>
+				<name>_LTC_CalcPec</name>
+				<child>
+					<name>LTC_Comm.c:__save_1</name>
+				</child>
+				<child>
+					<name>LTC_Comm.c:__restore_2</name>
+				</child>
+			</child>
+		</tree>
+	</part>
+	<part>
+		<name>Overlay</name>
+	</part>
+	<part>
+		<name>Locate Result</name>
+		<part>
+			<name>Task entry address</name>
+			<table>
+				<row>symbol;__cstart</row>
+			</table>
+		</part>
+		<part>
+			<name>Sections</name>
+			<table>
+				<column>
+					<name>Chip</name>
+				</column>
+				<column>
+					<name>Group</name>
+				</column>
+				<column>
+					<name>Section</name>
+				</column>
+				<column>
+					<name>Size (MAU)</name>
+				</column>
+				<column>
+					<name>Address</name>
+				</column>
+				<column>
+					<name>Chip addr</name>
+				</column>
+				<row>spe:DPRAM;;_$cstart_rb (410);0x00000020;0x0000f600;0x0</row>
+				<row>spe:DPRAM;;near_canBMCCommands (280);0x00000014;0x0000f620;0x00000020</row>
+				<row>spe:DPRAM;;near_LTC_data_read (144);0x00000011;0x0000f634;0x00000034</row>
+				<row>spe:DPRAM;;near_ucaCellVolts14 (276);0x00000008;0x0000f645;0x00000045</row>
+				<row>spe:DPRAM;;near_ucaCellVolts58 (277);0x00000008;0x0000f64d;0x0000004d</row>
+				<row>spe:DPRAM;;near_ucaBMCStatus (278);0x00000008;0x0000f655;0x00000055</row>
+				<row>spe:DPRAM;;near_ucBalanceCell (281);0x00000008;0x0000f65d;0x0000005d</row>
+				<row>spe:DPRAM;;near_LTC_CFG1R0 (134);0x00000001;0x0000f665;0x00000065</row>
+				<row>spe:DPRAM;;near_LTC_CFG1R1 (135);0x00000001;0x0000f666;0x00000066</row>
+				<row>spe:DPRAM;;near_LTC_CFG1R2 (136);0x00000001;0x0000f667;0x00000067</row>
+				<row>spe:DPRAM;;near_LTC_CFG1R3 (137);0x00000001;0x0000f668;0x00000068</row>
+				<row>spe:DPRAM;;near_LTC_CFG1R4 (138);0x00000001;0x0000f669;0x00000069</row>
+				<row>spe:DPRAM;;near_LTC_CFG1R5 (139);0x00000001;0x0000f66a;0x0000006a</row>
+				<row>spe:DPRAM;;near_LTC_CRC_PEC (140);0x00000001;0x0000f66b;0x0000006b</row>
+				<row>spe:DPRAM;;near_ucSPIWaitCnt (279);0x00000001;0x0000f66c;0x0000006c</row>
+				<row>spe:DPRAM;;near_ucLTCEnableADC (274);0x00000001;0x0000f66d;0x0000006d</row>
+				<row>spe:DPRAM;;system_stack (432);0x00000200;0x0000fa00;0x00000400</row>
+				<row>spe:Flash;;.vector.0 (563);0x00000004;0x00c00000;0x0</row>
+				<row>spe:Flash;;.vector.1 (562);0x00000004;0x00c00004;0x00000004</row>
+				<row>spe:Flash;;.vector.2 (561);0x00000004;0x00c00008;0x00000008</row>
+				<row>spe:Flash;;.vector.3 (560);0x00000004;0x00c0000c;0x0000000c</row>
+				<row>spe:Flash;;.vector.4 (559);0x00000004;0x00c00010;0x00000010</row>
+				<row>spe:Flash;;.vector.5 (558);0x00000004;0x00c00014;0x00000014</row>
+				<row>spe:Flash;;.vector.6 (557);0x00000004;0x00c00018;0x00000018</row>
+				<row>spe:Flash;;.vector.7 (556);0x00000004;0x00c0001c;0x0000001c</row>
+				<row>spe:Flash;;.vector.8 (555);0x00000004;0x00c00020;0x00000020</row>
+				<row>spe:Flash;;.vector.9 (554);0x00000004;0x00c00024;0x00000024</row>
+				<row>spe:Flash;;.vector.10 (553);0x00000004;0x00c00028;0x00000028</row>
+				<row>spe:Flash;;.vector.11 (552);0x00000004;0x00c0002c;0x0000002c</row>
+				<row>spe:Flash;;.vector.12 (551);0x00000004;0x00c00030;0x00000030</row>
+				<row>spe:Flash;;.vector.13 (550);0x00000004;0x00c00034;0x00000034</row>
+				<row>spe:Flash;;.vector.14 (549);0x00000004;0x00c00038;0x00000038</row>
+				<row>spe:Flash;;.vector.15 (548);0x00000004;0x00c0003c;0x0000003c</row>
+				<row>spe:Flash;;.vector.16 (547);0x00000004;0x00c00040;0x00000040</row>
+				<row>spe:Flash;;.vector.17 (546);0x00000004;0x00c00044;0x00000044</row>
+				<row>spe:Flash;;.vector.18 (545);0x00000004;0x00c00048;0x00000048</row>
+				<row>spe:Flash;;.vector.19 (544);0x00000004;0x00c0004c;0x0000004c</row>
+				<row>spe:Flash;;.vector.20 (543);0x00000004;0x00c00050;0x00000050</row>
+				<row>spe:Flash;;.vector.21 (542);0x00000004;0x00c00054;0x00000054</row>
+				<row>spe:Flash;;.vector.22 (541);0x00000004;0x00c00058;0x00000058</row>
+				<row>spe:Flash;;.vector.23 (540);0x00000004;0x00c0005c;0x0000005c</row>
+				<row>spe:Flash;;.vector.24 (539);0x00000004;0x00c00060;0x00000060</row>
+				<row>spe:Flash;;.vector.25 (538);0x00000004;0x00c00064;0x00000064</row>
+				<row>spe:Flash;;.vector.26 (537);0x00000004;0x00c00068;0x00000068</row>
+				<row>spe:Flash;;.vector.27 (536);0x00000004;0x00c0006c;0x0000006c</row>
+				<row>spe:Flash;;.vector.28 (535);0x00000004;0x00c00070;0x00000070</row>
+				<row>spe:Flash;;.vector.29 (534);0x00000004;0x00c00074;0x00000074</row>
+				<row>spe:Flash;;.vector.30 (533);0x00000004;0x00c00078;0x00000078</row>
+				<row>spe:Flash;;.vector.31 (532);0x00000004;0x00c0007c;0x0000007c</row>
+				<row>spe:Flash;;.vector.32 (531);0x00000004;0x00c00080;0x00000080</row>
+				<row>spe:Flash;;.vector.33 (530);0x00000004;0x00c00084;0x00000084</row>
+				<row>spe:Flash;;.vector.34 (529);0x00000004;0x00c00088;0x00000088</row>
+				<row>spe:Flash;;.vector.35 (528);0x00000004;0x00c0008c;0x0000008c</row>
+				<row>spe:Flash;;.vector.36 (527);0x00000004;0x00c00090;0x00000090</row>
+				<row>spe:Flash;;.vector.37 (526);0x00000004;0x00c00094;0x00000094</row>
+				<row>spe:Flash;;.vector.38 (525);0x00000004;0x00c00098;0x00000098</row>
+				<row>spe:Flash;;.vector.39 (524);0x00000004;0x00c0009c;0x0000009c</row>
+				<row>spe:Flash;;.vector.40 (523);0x00000004;0x00c000a0;0x000000a0</row>
+				<row>spe:Flash;;.vector.41 (522);0x00000004;0x00c000a4;0x000000a4</row>
+				<row>spe:Flash;;.vector.42 (521);0x00000004;0x00c000a8;0x000000a8</row>
+				<row>spe:Flash;;.vector.43 (520);0x00000004;0x00c000ac;0x000000ac</row>
+				<row>spe:Flash;;.vector.44 (519);0x00000004;0x00c000b0;0x000000b0</row>
+				<row>spe:Flash;;.vector.45 (518);0x00000004;0x00c000b4;0x000000b4</row>
+				<row>spe:Flash;;.vector.46 (517);0x00000004;0x00c000b8;0x000000b8</row>
+				<row>spe:Flash;;.vector.47 (516);0x00000004;0x00c000bc;0x000000bc</row>
+				<row>spe:Flash;;.vector.48 (515);0x00000004;0x00c000c0;0x000000c0</row>
+				<row>spe:Flash;;.vector.49 (514);0x00000004;0x00c000c4;0x000000c4</row>
+				<row>spe:Flash;;.vector.50 (513);0x00000004;0x00c000c8;0x000000c8</row>
+				<row>spe:Flash;;.vector.51 (512);0x00000004;0x00c000cc;0x000000cc</row>
+				<row>spe:Flash;;.vector.52 (511);0x00000004;0x00c000d0;0x000000d0</row>
+				<row>spe:Flash;;.vector.53 (510);0x00000004;0x00c000d4;0x000000d4</row>
+				<row>spe:Flash;;.vector.54 (509);0x00000004;0x00c000d8;0x000000d8</row>
+				<row>spe:Flash;;.vector.55 (508);0x00000004;0x00c000dc;0x000000dc</row>
+				<row>spe:Flash;;.vector.56 (507);0x00000004;0x00c000e0;0x000000e0</row>
+				<row>spe:Flash;;.vector.57 (506);0x00000004;0x00c000e4;0x000000e4</row>
+				<row>spe:Flash;;.vector.58 (505);0x00000004;0x00c000e8;0x000000e8</row>
+				<row>spe:Flash;;.vector.59 (504);0x00000004;0x00c000ec;0x000000ec</row>
+				<row>spe:Flash;;.vector.60 (503);0x00000004;0x00c000f0;0x000000f0</row>
+				<row>spe:Flash;;.vector.61 (502);0x00000004;0x00c000f4;0x000000f4</row>
+				<row>spe:Flash;;.vector.62 (501);0x00000004;0x00c000f8;0x000000f8</row>
+				<row>spe:Flash;;.vector.63 (500);0x00000004;0x00c000fc;0x000000fc</row>
+				<row>spe:Flash;;.vector.64 (499);0x00000004;0x00c00100;0x00000100</row>
+				<row>spe:Flash;;.vector.65 (498);0x00000004;0x00c00104;0x00000104</row>
+				<row>spe:Flash;;.vector.66 (497);0x00000004;0x00c00108;0x00000108</row>
+				<row>spe:Flash;;.vector.67 (496);0x00000004;0x00c0010c;0x0000010c</row>
+				<row>spe:Flash;;.vector.68 (495);0x00000004;0x00c00110;0x00000110</row>
+				<row>spe:Flash;;.vector.69 (494);0x00000004;0x00c00114;0x00000114</row>
+				<row>spe:Flash;;.vector.70 (493);0x00000004;0x00c00118;0x00000118</row>
+				<row>spe:Flash;;.vector.71 (492);0x00000004;0x00c0011c;0x0000011c</row>
+				<row>spe:Flash;;.vector.72 (491);0x00000004;0x00c00120;0x00000120</row>
+				<row>spe:Flash;;.vector.73 (490);0x00000004;0x00c00124;0x00000124</row>
+				<row>spe:Flash;;.vector.74 (489);0x00000004;0x00c00128;0x00000128</row>
+				<row>spe:Flash;;.vector.75 (488);0x00000004;0x00c0012c;0x0000012c</row>
+				<row>spe:Flash;;.vector.76 (487);0x00000004;0x00c00130;0x00000130</row>
+				<row>spe:Flash;;.vector.77 (486);0x00000004;0x00c00134;0x00000134</row>
+				<row>spe:Flash;;.vector.78 (485);0x00000004;0x00c00138;0x00000138</row>
+				<row>spe:Flash;;.vector.79 (484);0x00000004;0x00c0013c;0x0000013c</row>
+				<row>spe:Flash;;.vector.80 (483);0x00000004;0x00c00140;0x00000140</row>
+				<row>spe:Flash;;.vector.81 (482);0x00000004;0x00c00144;0x00000144</row>
+				<row>spe:Flash;;.vector.82 (481);0x00000004;0x00c00148;0x00000148</row>
+				<row>spe:Flash;;.vector.83 (480);0x00000004;0x00c0014c;0x0000014c</row>
+				<row>spe:Flash;;.vector.84 (479);0x00000004;0x00c00150;0x00000150</row>
+				<row>spe:Flash;;.vector.85 (478);0x00000004;0x00c00154;0x00000154</row>
+				<row>spe:Flash;;.vector.86 (477);0x00000004;0x00c00158;0x00000158</row>
+				<row>spe:Flash;;.vector.87 (476);0x00000004;0x00c0015c;0x0000015c</row>
+				<row>spe:Flash;;.vector.88 (475);0x00000004;0x00c00160;0x00000160</row>
+				<row>spe:Flash;;.vector.89 (474);0x00000004;0x00c00164;0x00000164</row>
+				<row>spe:Flash;;.vector.90 (473);0x00000004;0x00c00168;0x00000168</row>
+				<row>spe:Flash;;.vector.91 (472);0x00000004;0x00c0016c;0x0000016c</row>
+				<row>spe:Flash;;.vector.92 (471);0x00000004;0x00c00170;0x00000170</row>
+				<row>spe:Flash;;.vector.93 (470);0x00000004;0x00c00174;0x00000174</row>
+				<row>spe:Flash;;.vector.94 (469);0x00000004;0x00c00178;0x00000178</row>
+				<row>spe:Flash;;.vector.95 (468);0x00000004;0x00c0017c;0x0000017c</row>
+				<row>spe:Flash;;.vector.96 (467);0x00000004;0x00c00180;0x00000180</row>
+				<row>spe:Flash;;.vector.97 (466);0x00000004;0x00c00184;0x00000184</row>
+				<row>spe:Flash;;.vector.98 (465);0x00000004;0x00c00188;0x00000188</row>
+				<row>spe:Flash;;.vector.99 (464);0x00000004;0x00c0018c;0x0000018c</row>
+				<row>spe:Flash;;.vector.100 (463);0x00000004;0x00c00190;0x00000190</row>
+				<row>spe:Flash;;.vector.101 (462);0x00000004;0x00c00194;0x00000194</row>
+				<row>spe:Flash;;.vector.102 (461);0x00000004;0x00c00198;0x00000198</row>
+				<row>spe:Flash;;.vector.103 (460);0x00000004;0x00c0019c;0x0000019c</row>
+				<row>spe:Flash;;.vector.104 (459);0x00000004;0x00c001a0;0x000001a0</row>
+				<row>spe:Flash;;.vector.105 (458);0x00000004;0x00c001a4;0x000001a4</row>
+				<row>spe:Flash;;.vector.106 (457);0x00000004;0x00c001a8;0x000001a8</row>
+				<row>spe:Flash;;.vector.107 (456);0x00000004;0x00c001ac;0x000001ac</row>
+				<row>spe:Flash;;.vector.108 (455);0x00000004;0x00c001b0;0x000001b0</row>
+				<row>spe:Flash;;.vector.109 (454);0x00000004;0x00c001b4;0x000001b4</row>
+				<row>spe:Flash;;.vector.110 (453);0x00000004;0x00c001b8;0x000001b8</row>
+				<row>spe:Flash;;.vector.111 (452);0x00000004;0x00c001bc;0x000001bc</row>
+				<row>spe:Flash;;.vector.112 (451);0x00000004;0x00c001c0;0x000001c0</row>
+				<row>spe:Flash;;.vector.113 (450);0x00000004;0x00c001c4;0x000001c4</row>
+				<row>spe:Flash;;.vector.114 (449);0x00000004;0x00c001c8;0x000001c8</row>
+				<row>spe:Flash;;.vector.115 (448);0x00000004;0x00c001cc;0x000001cc</row>
+				<row>spe:Flash;;.vector.116 (447);0x00000004;0x00c001d0;0x000001d0</row>
+				<row>spe:Flash;;.vector.117 (446);0x00000004;0x00c001d4;0x000001d4</row>
+				<row>spe:Flash;;.vector.118 (445);0x00000004;0x00c001d8;0x000001d8</row>
+				<row>spe:Flash;;.vector.119 (444);0x00000004;0x00c001dc;0x000001dc</row>
+				<row>spe:Flash;;.vector.120 (443);0x00000004;0x00c001e0;0x000001e0</row>
+				<row>spe:Flash;;.vector.121 (442);0x00000004;0x00c001e4;0x000001e4</row>
+				<row>spe:Flash;;.vector.122 (441);0x00000004;0x00c001e8;0x000001e8</row>
+				<row>spe:Flash;;.vector.123 (440);0x00000004;0x00c001ec;0x000001ec</row>
+				<row>spe:Flash;;.vector.124 (439);0x00000004;0x00c001f0;0x000001f0</row>
+				<row>spe:Flash;;.vector.125 (438);0x00000004;0x00c001f4;0x000001f4</row>
+				<row>spe:Flash;;.vector.126 (437);0x00000004;0x00c001f8;0x000001f8</row>
+				<row>spe:Flash;;.vector.127 (436);0x00000004;0x00c001fc;0x000001fc</row>
+				<row>spe:Flash;;near__1_cst (152);0x00000008;0x00c00200;0x00000200</row>
+				<row>spe:Flash;;_init_switch_table_libc (385);0x00000008;0x00c04000;0x00004000</row>
+				<row>spe:Flash;;[near_LTC_data_read] (426);0x00000011;0x00c04008;0x00004008</row>
+				<row>spe:Flash;;[near_ucaCellVolts14] (427);0x00000008;0x00c04019;0x00004019</row>
+				<row>spe:Flash;;[near_ucaCellVolts58] (428);0x00000008;0x00c04021;0x00004021</row>
+				<row>spe:Flash;;[near_ucaBMCStatus] (429);0x00000008;0x00c04029;0x00004029</row>
+				<row>spe:Flash;;[near_ucBalanceCell] (431);0x00000008;0x00c04031;0x00004031</row>
+				<row>spe:Flash;;[near_LTC_CFG1R0] (419);0x00000001;0x00c04039;0x00004039</row>
+				<row>spe:Flash;;[near_LTC_CFG1R1] (420);0x00000001;0x00c0403a;0x0000403a</row>
+				<row>spe:Flash;;[near_LTC_CFG1R2] (421);0x00000001;0x00c0403b;0x0000403b</row>
+				<row>spe:Flash;;[near_LTC_CFG1R3] (422);0x00000001;0x00c0403c;0x0000403c</row>
+				<row>spe:Flash;;[near_LTC_CFG1R4] (423);0x00000001;0x00c0403d;0x0000403d</row>
+				<row>spe:Flash;;[near_LTC_CFG1R5] (424);0x00000001;0x00c0403e;0x0000403e</row>
+				<row>spe:Flash;;[near_LTC_CRC_PEC] (425);0x00000001;0x00c0403f;0x0000403f</row>
+				<row>spe:Flash;;[near_ucSPIWaitCnt] (430);0x00000001;0x00c04040;0x00004040</row>
+				<row>spe:Flash;;_dcti_libc (388);0x0;0x00c04042;0x00004042</row>
+				<row>spe:Flash;;_cptable_clr_bit_libc (399);0x0;0x00c04042;0x00004042</row>
+				<row>spe:Flash;;_cptable_clr_shuge_libc (401);0x0;0x00c04042;0x00004042</row>
+				<row>spe:Flash;;_cptable_clr_huge_libc (402);0x0;0x00c04042;0x00004042</row>
+				<row>spe:Flash;;_cptable_cpy_bit_libc (403);0x0;0x00c04042;0x00004042</row>
+				<row>spe:Flash;;_cptable_cpy_shuge_libc (405);0x0;0x00c04042;0x00004042</row>
+				<row>spe:Flash;;_cptable_cpy_huge_libc (406);0x0;0x00c04042;0x00004042</row>
+				<row>spe:Flash;;table (433);0x0000002b;0x00c04042;0x00004042</row>
+				<row>spe:Flash;;code_CAN_vInit (1);0x00000476;0x00c0406e;0x0000406e</row>
+				<row>spe:Flash;;code_CAN_vGetMsgObj (4);0x000000f4;0x00c044e4;0x000044e4</row>
+				<row>spe:Flash;;code_LTC_CalcPec (149);0x000000ec;0x00c045d8;0x000045d8</row>
+				<row>spe:Flash;;code_CAN_viSRN0 (7);0x000000ce;0x00c046c4;0x000046c4</row>
+				<row>spe:Flash;;_init_libc (384);0x000000c6;0x00c04792;0x00004792</row>
+				<row>spe:Flash;;code_LTC_getCellVoltages (143);0x0000009a;0x00c04858;0x00004858</row>
+				<row>spe:Flash;;code_SCS_SwitchSystemClock (348);0x00000070;0x00c048f2;0x000048f2</row>
+				<row>spe:Flash;;code__cocofun_2 (133);0x00000066;0x00c04962;0x00004962</row>
+				<row>spe:Flash;;code_GPT1_viTmr2 (68);0x00000060;0x00c049c8;0x000049c8</row>
+				<row>spe:Flash;;code_CAN_vLoadData (6);0x0000005c;0x00c04a28;0x00004a28</row>
+				<row>spe:Flash;;code_SCS_CountClocksWithTimer (346);0x00000058;0x00c04a84;0x00004a84</row>
+				<row>spe:Flash;;code__cstart (56);0x00000052;0x00c04adc;0x00004adc</row>
+				<row>spe:Flash;;code_IO_vInit (116);0x0000003a;0x00c04b2e;0x00004b2e</row>
+				<row>spe:Flash;;code_LTC_read (127);0x0000003a;0x00c04b68;0x00004b68</row>
+				<row>spe:Flash;;code_GPT1_vInit (67);0x0000002c;0x00c04ba2;0x00004ba2</row>
+				<row>spe:Flash;;code_GPT2_vInit (86);0x0000002c;0x00c04bce;0x00004bce</row>
+				<row>spe:Flash;;code_LTC_send (130);0x0000002a;0x00c04bfa;0x00004bfa</row>
+				<row>spe:Flash;;code__cocofun_3 (147);0x0000002a;0x00c04c24;0x00004c24</row>
+				<row>spe:Flash;;code_main (273);0x0000002a;0x00c04c4e;0x00004c4e</row>
+				<row>spe:Flash;;code_MAIN_vInit (267);0x00000026;0x00c04c78;0x00004c78</row>
+				<row>spe:Flash;;code_MAIN_vChangeFreq (269);0x00000020;0x00c04c9e;0x00004c9e</row>
+				<row>spe:Flash;;code_SCS_StartXtalOsc (345);0x0000001e;0x00c04cbe;0x00004cbe</row>
+				<row>spe:Flash;;_cptable_cpy_near_libc (404);0x0000001a;0x00c04cdc;0x00004cdc</row>
+				<row>spe:Flash;;code_MAIN_vLockProtecReg (270);0x00000018;0x00c04cf6;0x00004cf6</row>
+				<row>spe:Flash;;code__cocofun_1 (271);0x00000018;0x00c04d0e;0x00004d0e</row>
+				<row>spe:Flash;;_cptable_clr_near_libc (400);0x00000018;0x00c04d26;0x00004d26</row>
+				<row>spe:Flash;;code__cocofun_1 (3);0x00000016;0x00c04d3e;0x00004d3e</row>
+				<row>spe:Flash;;code_CAN_vTransmit (5);0x00000014;0x00c04d54;0x00004d54</row>
+				<row>spe:Flash;;code_LTC_wait (129);0x00000012;0x00c04d68;0x00004d68</row>
+				<row>spe:Flash;;code__cocofun_4 (146);0x00000012;0x00c04d7a;0x00004d7a</row>
+				<row>spe:Flash;;code__cocofun_2 (272);0x00000010;0x00c04d8c;0x00004d8c</row>
+				<row>spe:Flash;;code__cocofun_2 (2);0x0000000e;0x00c04d9c;0x00004d9c</row>
+				<row>spe:Flash;;code__cocofun_1 (347);0x0000000e;0x00c04daa;0x00004daa</row>
+				<row>spe:Flash;;code__restore_2 (150);0x0000000c;0x00c04db8;0x00004db8</row>
+				<row>spe:Flash;;code__save_1 (151);0x0000000c;0x00c04dc4;0x00004dc4</row>
+				<row>spe:Flash;;code__cocofun_5 (131);0x0000000a;0x00c04dd0;0x00004dd0</row>
+				<row>spe:Flash;;code__cocofun_9 (141);0x0000000a;0x00c04dda;0x00004dda</row>
+				<row>spe:Flash;;code__cocofun_6 (145);0x0000000a;0x00c04de4;0x00004de4</row>
+				<row>spe:Flash;;code_MAIN_vUnlockProtecReg (268);0x0000000a;0x00c04dee;0x00004dee</row>
+				<row>spe:Flash;;code__cocofun_7 (128);0x00000008;0x00c04df8;0x00004df8</row>
+				<row>spe:Flash;;code__cocofun_8 (142);0x00000008;0x00c04e00;0x00004e00</row>
+				<row>spe:Flash;;code_LTC_SCK_Strope (148);0x00000008;0x00c04e08;0x00004e08</row>
+				<row>spe:Flash;;code_GPT2_viTmr5 (87);0x00000006;0x00c04e10;0x00004e10</row>
+				<row>spe:Flash;;code_SCS_SwitchToHighPrecBandgap (349);0x00000006;0x00c04e16;0x00004e16</row>
+				<row>spe:Flash;;code_librt (407);0x00000006;0x00c04e1c;0x00004e1c</row>
+				<row>spe:Flash;;code_LTC_Init (132);0x00000004;0x00c04e22;0x00004e22</row>
+				<row>spe:Flash;;code_INT_vInit (105);0x00000002;0x00c04e26;0x00004e26</row>
+				<row>spe:Flash;;code_libc (390);0x00000002;0x00c04e28;0x00004e28</row>
+				<row>spe:Flash;;_init_cpy_table_libc (386);0x00000020;0x00c0c002;0x0000c002</row>
+				<row>spe:Flash;;_init_clr_table_libc (387);0x0000001c;0x00c0c022;0x0000c022</row>
+				<row>spe:Flash;;$reserved (435);0x00001000;0x00c0f000;0x0000f000</row>
+				<row>spe:PSRAM;;user_stack (415);0x00003ffc;0x00e00002;0x00000002</row>
+			</table>
+		</part>
+		<part>
+			<name>Symbols</name>
+			<table>
+				<column>
+					<name>Address</name>
+				</column>
+				<column>
+					<name>Name</name>
+				</column>
+				<row>0x0;_cstart_trap</row>
+				<row>0x0;__INDIRECT__</row>
+				<row>0x0;__lc_vector_target</row>
+				<row>0x00000020;GPT1_viTmr2_trap</row>
+				<row>0x00000023;GPT2_viTmr5_trap</row>
+				<row>0x00000040;CAN_viSRN0_trap</row>
+				<row>0x00008000;__lc_base_dpp2</row>
+				<row>0x0000f620;_canBMCCommands</row>
+				<row>0x0000f634;_LTC_data_read</row>
+				<row>0x0000f645;_ucaCellVolts14</row>
+				<row>0x0000f64d;_ucaCellVolts58</row>
+				<row>0x0000f655;_ucaBMCStatus</row>
+				<row>0x0000f65d;_ucBalanceCell</row>
+				<row>0x0000f665;_LTC_CFG1R0</row>
+				<row>0x0000f666;_LTC_CFG1R1</row>
+				<row>0x0000f667;_LTC_CFG1R2</row>
+				<row>0x0000f668;_LTC_CFG1R3</row>
+				<row>0x0000f669;_LTC_CFG1R4</row>
+				<row>0x0000f66a;_LTC_CFG1R5</row>
+				<row>0x0000f66b;_LTC_CRC_PEC</row>
+				<row>0x0000f66c;_ucSPIWaitCnt</row>
+				<row>0x0000f66d;_ucLTCEnableADC</row>
+				<row>0x0000fa00;__lc_ue_system_stack</row>
+				<row>0x0000fc00;__lc_ub_system_stack</row>
+				<row>0x00c00000;__lc_vector_table</row>
+				<row>0x00c00000;__lc_base_dpp0</row>
+				<row>0x00c00000;__lc_vb_vector_table_0</row>
+				<row>0x00c00004;.vector.1_loop</row>
+				<row>0x00c00008;.vector.2_loop</row>
+				<row>0x00c0000c;.vector.3_loop</row>
+				<row>0x00c00010;.vector.4_loop</row>
+				<row>0x00c00014;.vector.5_loop</row>
+				<row>0x00c00018;.vector.6_loop</row>
+				<row>0x00c0001c;.vector.7_loop</row>
+				<row>0x00c00020;.vector.8_loop</row>
+				<row>0x00c00024;.vector.9_loop</row>
+				<row>0x00c00028;.vector.10_loop</row>
+				<row>0x00c0002c;.vector.11_loop</row>
+				<row>0x00c00030;.vector.12_loop</row>
+				<row>0x00c00034;.vector.13_loop</row>
+				<row>0x00c00038;.vector.14_loop</row>
+				<row>0x00c0003c;.vector.15_loop</row>
+				<row>0x00c00040;.vector.16_loop</row>
+				<row>0x00c00044;.vector.17_loop</row>
+				<row>0x00c00048;.vector.18_loop</row>
+				<row>0x00c0004c;.vector.19_loop</row>
+				<row>0x00c00050;.vector.20_loop</row>
+				<row>0x00c00054;.vector.21_loop</row>
+				<row>0x00c00058;.vector.22_loop</row>
+				<row>0x00c0005c;.vector.23_loop</row>
+				<row>0x00c00060;.vector.24_loop</row>
+				<row>0x00c00064;.vector.25_loop</row>
+				<row>0x00c00068;.vector.26_loop</row>
+				<row>0x00c0006c;.vector.27_loop</row>
+				<row>0x00c00070;.vector.28_loop</row>
+				<row>0x00c00074;.vector.29_loop</row>
+				<row>0x00c00078;.vector.30_loop</row>
+				<row>0x00c0007c;.vector.31_loop</row>
+				<row>0x00c00084;.vector.33_loop</row>
+				<row>0x00c00088;.vector.34_loop</row>
+				<row>0x00c00090;.vector.36_loop</row>
+				<row>0x00c00094;.vector.37_loop</row>
+				<row>0x00c00098;.vector.38_loop</row>
+				<row>0x00c0009c;.vector.39_loop</row>
+				<row>0x00c000a0;.vector.40_loop</row>
+				<row>0x00c000a4;.vector.41_loop</row>
+				<row>0x00c000a8;.vector.42_loop</row>
+				<row>0x00c000ac;.vector.43_loop</row>
+				<row>0x00c000b0;.vector.44_loop</row>
+				<row>0x00c000b4;.vector.45_loop</row>
+				<row>0x00c000b8;.vector.46_loop</row>
+				<row>0x00c000bc;.vector.47_loop</row>
+				<row>0x00c000c0;.vector.48_loop</row>
+				<row>0x00c000c4;.vector.49_loop</row>
+				<row>0x00c000c8;.vector.50_loop</row>
+				<row>0x00c000cc;.vector.51_loop</row>
+				<row>0x00c000d0;.vector.52_loop</row>
+				<row>0x00c000d4;.vector.53_loop</row>
+				<row>0x00c000d8;.vector.54_loop</row>
+				<row>0x00c000dc;.vector.55_loop</row>
+				<row>0x00c000e0;.vector.56_loop</row>
+				<row>0x00c000e4;.vector.57_loop</row>
+				<row>0x00c000e8;.vector.58_loop</row>
+				<row>0x00c000ec;.vector.59_loop</row>
+				<row>0x00c000f0;.vector.60_loop</row>
+				<row>0x00c000f4;.vector.61_loop</row>
+				<row>0x00c000f8;.vector.62_loop</row>
+				<row>0x00c000fc;.vector.63_loop</row>
+				<row>0x00c00104;.vector.65_loop</row>
+				<row>0x00c00108;.vector.66_loop</row>
+				<row>0x00c0010c;.vector.67_loop</row>
+				<row>0x00c00110;.vector.68_loop</row>
+				<row>0x00c00114;.vector.69_loop</row>
+				<row>0x00c00118;.vector.70_loop</row>
+				<row>0x00c0011c;.vector.71_loop</row>
+				<row>0x00c00120;.vector.72_loop</row>
+				<row>0x00c00124;.vector.73_loop</row>
+				<row>0x00c00128;.vector.74_loop</row>
+				<row>0x00c0012c;.vector.75_loop</row>
+				<row>0x00c00130;.vector.76_loop</row>
+				<row>0x00c00134;.vector.77_loop</row>
+				<row>0x00c00138;.vector.78_loop</row>
+				<row>0x00c0013c;.vector.79_loop</row>
+				<row>0x00c00140;.vector.80_loop</row>
+				<row>0x00c00144;.vector.81_loop</row>
+				<row>0x00c00148;.vector.82_loop</row>
+				<row>0x00c0014c;.vector.83_loop</row>
+				<row>0x00c00150;.vector.84_loop</row>
+				<row>0x00c00154;.vector.85_loop</row>
+				<row>0x00c00158;.vector.86_loop</row>
+				<row>0x00c0015c;.vector.87_loop</row>
+				<row>0x00c00160;.vector.88_loop</row>
+				<row>0x00c00164;.vector.89_loop</row>
+				<row>0x00c00168;.vector.90_loop</row>
+				<row>0x00c0016c;.vector.91_loop</row>
+				<row>0x00c00170;.vector.92_loop</row>
+				<row>0x00c00174;.vector.93_loop</row>
+				<row>0x00c00178;.vector.94_loop</row>
+				<row>0x00c0017c;.vector.95_loop</row>
+				<row>0x00c00180;.vector.96_loop</row>
+				<row>0x00c00184;.vector.97_loop</row>
+				<row>0x00c00188;.vector.98_loop</row>
+				<row>0x00c0018c;.vector.99_loop</row>
+				<row>0x00c00190;.vector.100_loop</row>
+				<row>0x00c00194;.vector.101_loop</row>
+				<row>0x00c00198;.vector.102_loop</row>
+				<row>0x00c0019c;.vector.103_loop</row>
+				<row>0x00c001a0;.vector.104_loop</row>
+				<row>0x00c001a4;.vector.105_loop</row>
+				<row>0x00c001a8;.vector.106_loop</row>
+				<row>0x00c001ac;.vector.107_loop</row>
+				<row>0x00c001b0;.vector.108_loop</row>
+				<row>0x00c001b4;.vector.109_loop</row>
+				<row>0x00c001b8;.vector.110_loop</row>
+				<row>0x00c001bc;.vector.111_loop</row>
+				<row>0x00c001c0;.vector.112_loop</row>
+				<row>0x00c001c4;.vector.113_loop</row>
+				<row>0x00c001c8;.vector.114_loop</row>
+				<row>0x00c001cc;.vector.115_loop</row>
+				<row>0x00c001d0;.vector.116_loop</row>
+				<row>0x00c001d4;.vector.117_loop</row>
+				<row>0x00c001d8;.vector.118_loop</row>
+				<row>0x00c001dc;.vector.119_loop</row>
+				<row>0x00c001e0;.vector.120_loop</row>
+				<row>0x00c001e4;.vector.121_loop</row>
+				<row>0x00c001e8;.vector.122_loop</row>
+				<row>0x00c001ec;.vector.123_loop</row>
+				<row>0x00c001f0;.vector.124_loop</row>
+				<row>0x00c001f4;.vector.125_loop</row>
+				<row>0x00c001f8;.vector.126_loop</row>
+				<row>0x00c001fc;.vector.127_loop</row>
+				<row>0x00c04042;__lc_copy_table</row>
+				<row>0x00c04042;__dcti</row>
+				<row>0x00c04042;__cptable_clr_bit</row>
+				<row>0x00c04042;__cptable_clr_shuge</row>
+				<row>0x00c04042;__cptable_clr_huge</row>
+				<row>0x00c04042;__cptable_cpy_bit</row>
+				<row>0x00c04042;__cptable_cpy_shuge</row>
+				<row>0x00c04042;__cptable_cpy_huge</row>
+				<row>0x00c04042;__lc_ub_table</row>
+				<row>0x00c0406e;_CAN_vInit</row>
+				<row>0x00c044e4;_CAN_vGetMsgObj</row>
+				<row>0x00c045d8;_LTC_CalcPec</row>
+				<row>0x00c046c4;_CAN_viSRN0</row>
+				<row>0x00c046c4;.vector.64</row>
+				<row>0x00c04792;__init</row>
+				<row>0x00c04858;_LTC_getCellVoltages</row>
+				<row>0x00c048f2;_SCS_SwitchSystemClock</row>
+				<row>0x00c049c8;_GPT1_viTmr2</row>
+				<row>0x00c049c8;.vector.32</row>
+				<row>0x00c04a28;_CAN_vLoadData</row>
+				<row>0x00c04a84;_SCS_CountClocksWithTimer</row>
+				<row>0x00c04adc;__cstart</row>
+				<row>0x00c04adc;.vector.0</row>
+				<row>0x00c04b2e;_IO_vInit</row>
+				<row>0x00c04b68;_LTC_read</row>
+				<row>0x00c04ba2;_GPT1_vInit</row>
+				<row>0x00c04bce;_GPT2_vInit</row>
+				<row>0x00c04bfa;_LTC_send</row>
+				<row>0x00c04c4e;_main</row>
+				<row>0x00c04c78;_MAIN_vInit</row>
+				<row>0x00c04c9e;_MAIN_vChangeFreq</row>
+				<row>0x00c04cbe;_SCS_StartXtalOsc</row>
+				<row>0x00c04cdc;__cptable_cpy_near</row>
+				<row>0x00c04cf6;_MAIN_vLockProtecReg</row>
+				<row>0x00c04d26;__cptable_clr_near</row>
+				<row>0x00c04d54;_CAN_vTransmit</row>
+				<row>0x00c04d68;_LTC_wait</row>
+				<row>0x00c04dee;_MAIN_vUnlockProtecReg</row>
+				<row>0x00c04e08;_LTC_SCK_Strope</row>
+				<row>0x00c04e10;_GPT2_viTmr5</row>
+				<row>0x00c04e10;.vector.35</row>
+				<row>0x00c04e16;_SCS_SwitchToHighPrecBandgap</row>
+				<row>0x00c04e1c;__icall</row>
+				<row>0x00c04e22;_LTC_Init</row>
+				<row>0x00c04e26;_INT_vInit</row>
+				<row>0x00c04e28;__Exit</row>
+				<row>0x00c04e28;_exit</row>
+				<row>0x00e00000;__lc_base_dpp1</row>
+				<row>0x00e03ffe;__lc_ub_user_stack</row>
+			</table>
+		</part>
+	</part>
+	<part>
+		<name>Locate Rules</name>
+		<table>
+			<column>
+				<name>Address space</name>
+			</column>
+			<column>
+				<name>Type</name>
+			</column>
+			<column>
+				<name>Properties</name>
+			</column>
+			<column>
+				<name>Prio</name>
+				<alignment>right</alignment>
+			</column>
+			<column>
+				<name>Sections</name>
+			</column>
+			<row>spe:xc16x:code;absolute;0x00c001fc;1;.vector.127 (436)</row>
+			<row>spe:xc16x:code;absolute;0x00c001f8;1;.vector.126 (437)</row>
+			<row>spe:xc16x:code;absolute;0x00c001f4;1;.vector.125 (438)</row>
+			<row>spe:xc16x:code;absolute;0x00c001f0;1;.vector.124 (439)</row>
+			<row>spe:xc16x:code;absolute;0x00c001ec;1;.vector.123 (440)</row>
+			<row>spe:xc16x:code;absolute;0x00c001e8;1;.vector.122 (441)</row>
+			<row>spe:xc16x:code;absolute;0x00c001e4;1;.vector.121 (442)</row>
+			<row>spe:xc16x:code;absolute;0x00c001e0;1;.vector.120 (443)</row>
+			<row>spe:xc16x:code;absolute;0x00c001dc;1;.vector.119 (444)</row>
+			<row>spe:xc16x:code;absolute;0x00c001d8;1;.vector.118 (445)</row>
+			<row>spe:xc16x:code;absolute;0x00c001d4;1;.vector.117 (446)</row>
+			<row>spe:xc16x:code;absolute;0x00c001d0;1;.vector.116 (447)</row>
+			<row>spe:xc16x:code;absolute;0x00c001cc;1;.vector.115 (448)</row>
+			<row>spe:xc16x:code;absolute;0x00c001c8;1;.vector.114 (449)</row>
+			<row>spe:xc16x:code;absolute;0x00c001c4;1;.vector.113 (450)</row>
+			<row>spe:xc16x:code;absolute;0x00c001c0;1;.vector.112 (451)</row>
+			<row>spe:xc16x:code;absolute;0x00c001bc;1;.vector.111 (452)</row>
+			<row>spe:xc16x:code;absolute;0x00c001b8;1;.vector.110 (453)</row>
+			<row>spe:xc16x:code;absolute;0x00c001b4;1;.vector.109 (454)</row>
+			<row>spe:xc16x:code;absolute;0x00c001b0;1;.vector.108 (455)</row>
+			<row>spe:xc16x:code;absolute;0x00c001ac;1;.vector.107 (456)</row>
+			<row>spe:xc16x:code;absolute;0x00c001a8;1;.vector.106 (457)</row>
+			<row>spe:xc16x:code;absolute;0x00c001a4;1;.vector.105 (458)</row>
+			<row>spe:xc16x:code;absolute;0x00c001a0;1;.vector.104 (459)</row>
+			<row>spe:xc16x:code;absolute;0x00c0019c;1;.vector.103 (460)</row>
+			<row>spe:xc16x:code;absolute;0x00c00198;1;.vector.102 (461)</row>
+			<row>spe:xc16x:code;absolute;0x00c00194;1;.vector.101 (462)</row>
+			<row>spe:xc16x:code;absolute;0x00c00190;1;.vector.100 (463)</row>
+			<row>spe:xc16x:code;absolute;0x00c0018c;1;.vector.99 (464)</row>
+			<row>spe:xc16x:code;absolute;0x00c00188;1;.vector.98 (465)</row>
+			<row>spe:xc16x:code;absolute;0x00c00184;1;.vector.97 (466)</row>
+			<row>spe:xc16x:code;absolute;0x00c00180;1;.vector.96 (467)</row>
+			<row>spe:xc16x:code;absolute;0x00c0017c;1;.vector.95 (468)</row>
+			<row>spe:xc16x:code;absolute;0x00c00178;1;.vector.94 (469)</row>
+			<row>spe:xc16x:code;absolute;0x00c00174;1;.vector.93 (470)</row>
+			<row>spe:xc16x:code;absolute;0x00c00170;1;.vector.92 (471)</row>
+			<row>spe:xc16x:code;absolute;0x00c0016c;1;.vector.91 (472)</row>
+			<row>spe:xc16x:code;absolute;0x00c00168;1;.vector.90 (473)</row>
+			<row>spe:xc16x:code;absolute;0x00c00164;1;.vector.89 (474)</row>
+			<row>spe:xc16x:code;absolute;0x00c00160;1;.vector.88 (475)</row>
+			<row>spe:xc16x:code;absolute;0x00c0015c;1;.vector.87 (476)</row>
+			<row>spe:xc16x:code;absolute;0x00c00158;1;.vector.86 (477)</row>
+			<row>spe:xc16x:code;absolute;0x00c00154;1;.vector.85 (478)</row>
+			<row>spe:xc16x:code;absolute;0x00c00150;1;.vector.84 (479)</row>
+			<row>spe:xc16x:code;absolute;0x00c0014c;1;.vector.83 (480)</row>
+			<row>spe:xc16x:code;absolute;0x00c00148;1;.vector.82 (481)</row>
+			<row>spe:xc16x:code;absolute;0x00c00144;1;.vector.81 (482)</row>
+			<row>spe:xc16x:code;absolute;0x00c00140;1;.vector.80 (483)</row>
+			<row>spe:xc16x:code;absolute;0x00c0013c;1;.vector.79 (484)</row>
+			<row>spe:xc16x:code;absolute;0x00c00138;1;.vector.78 (485)</row>
+			<row>spe:xc16x:code;absolute;0x00c00134;1;.vector.77 (486)</row>
+			<row>spe:xc16x:code;absolute;0x00c00130;1;.vector.76 (487)</row>
+			<row>spe:xc16x:code;absolute;0x00c0012c;1;.vector.75 (488)</row>
+			<row>spe:xc16x:code;absolute;0x00c00128;1;.vector.74 (489)</row>
+			<row>spe:xc16x:code;absolute;0x00c00124;1;.vector.73 (490)</row>
+			<row>spe:xc16x:code;absolute;0x00c00120;1;.vector.72 (491)</row>
+			<row>spe:xc16x:code;absolute;0x00c0011c;1;.vector.71 (492)</row>
+			<row>spe:xc16x:code;absolute;0x00c00118;1;.vector.70 (493)</row>
+			<row>spe:xc16x:code;absolute;0x00c00114;1;.vector.69 (494)</row>
+			<row>spe:xc16x:code;absolute;0x00c00110;1;.vector.68 (495)</row>
+			<row>spe:xc16x:code;absolute;0x00c0010c;1;.vector.67 (496)</row>
+			<row>spe:xc16x:code;absolute;0x00c00108;1;.vector.66 (497)</row>
+			<row>spe:xc16x:code;absolute;0x00c00104;1;.vector.65 (498)</row>
+			<row>spe:xc16x:code;absolute;0x00c00100;1;.vector.64 (499)</row>
+			<row>spe:xc16x:code;absolute;0x00c000fc;1;.vector.63 (500)</row>
+			<row>spe:xc16x:code;absolute;0x00c000f8;1;.vector.62 (501)</row>
+			<row>spe:xc16x:code;absolute;0x00c000f4;1;.vector.61 (502)</row>
+			<row>spe:xc16x:code;absolute;0x00c000f0;1;.vector.60 (503)</row>
+			<row>spe:xc16x:code;absolute;0x00c000ec;1;.vector.59 (504)</row>
+			<row>spe:xc16x:code;absolute;0x00c000e8;1;.vector.58 (505)</row>
+			<row>spe:xc16x:code;absolute;0x00c000e4;1;.vector.57 (506)</row>
+			<row>spe:xc16x:code;absolute;0x00c000e0;1;.vector.56 (507)</row>
+			<row>spe:xc16x:code;absolute;0x00c000dc;1;.vector.55 (508)</row>
+			<row>spe:xc16x:code;absolute;0x00c000d8;1;.vector.54 (509)</row>
+			<row>spe:xc16x:code;absolute;0x00c000d4;1;.vector.53 (510)</row>
+			<row>spe:xc16x:code;absolute;0x00c000d0;1;.vector.52 (511)</row>
+			<row>spe:xc16x:code;absolute;0x00c000cc;1;.vector.51 (512)</row>
+			<row>spe:xc16x:code;absolute;0x00c000c8;1;.vector.50 (513)</row>
+			<row>spe:xc16x:code;absolute;0x00c000c4;1;.vector.49 (514)</row>
+			<row>spe:xc16x:code;absolute;0x00c000c0;1;.vector.48 (515)</row>
+			<row>spe:xc16x:code;absolute;0x00c000bc;1;.vector.47 (516)</row>
+			<row>spe:xc16x:code;absolute;0x00c000b8;1;.vector.46 (517)</row>
+			<row>spe:xc16x:code;absolute;0x00c000b4;1;.vector.45 (518)</row>
+			<row>spe:xc16x:code;absolute;0x00c000b0;1;.vector.44 (519)</row>
+			<row>spe:xc16x:code;absolute;0x00c000ac;1;.vector.43 (520)</row>
+			<row>spe:xc16x:code;absolute;0x00c000a8;1;.vector.42 (521)</row>
+			<row>spe:xc16x:code;absolute;0x00c000a4;1;.vector.41 (522)</row>
+			<row>spe:xc16x:code;absolute;0x00c000a0;1;.vector.40 (523)</row>
+			<row>spe:xc16x:code;absolute;0x00c0009c;1;.vector.39 (524)</row>
+			<row>spe:xc16x:code;absolute;0x00c00098;1;.vector.38 (525)</row>
+			<row>spe:xc16x:code;absolute;0x00c00094;1;.vector.37 (526)</row>
+			<row>spe:xc16x:code;absolute;0x00c00090;1;.vector.36 (527)</row>
+			<row>spe:xc16x:code;absolute;0x00c0008c;1;.vector.35 (528)</row>
+			<row>spe:xc16x:code;absolute;0x00c00088;1;.vector.34 (529)</row>
+			<row>spe:xc16x:code;absolute;0x00c00084;1;.vector.33 (530)</row>
+			<row>spe:xc16x:code;absolute;0x00c00080;1;.vector.32 (531)</row>
+			<row>spe:xc16x:code;absolute;0x00c0007c;1;.vector.31 (532)</row>
+			<row>spe:xc16x:code;absolute;0x00c00078;1;.vector.30 (533)</row>
+			<row>spe:xc16x:code;absolute;0x00c00074;1;.vector.29 (534)</row>
+			<row>spe:xc16x:code;absolute;0x00c00070;1;.vector.28 (535)</row>
+			<row>spe:xc16x:code;absolute;0x00c0006c;1;.vector.27 (536)</row>
+			<row>spe:xc16x:code;absolute;0x00c00068;1;.vector.26 (537)</row>
+			<row>spe:xc16x:code;absolute;0x00c00064;1;.vector.25 (538)</row>
+			<row>spe:xc16x:code;absolute;0x00c00060;1;.vector.24 (539)</row>
+			<row>spe:xc16x:code;absolute;0x00c0005c;1;.vector.23 (540)</row>
+			<row>spe:xc16x:code;absolute;0x00c00058;1;.vector.22 (541)</row>
+			<row>spe:xc16x:code;absolute;0x00c00054;1;.vector.21 (542)</row>
+			<row>spe:xc16x:code;absolute;0x00c00050;1;.vector.20 (543)</row>
+			<row>spe:xc16x:code;absolute;0x00c0004c;1;.vector.19 (544)</row>
+			<row>spe:xc16x:code;absolute;0x00c00048;1;.vector.18 (545)</row>
+			<row>spe:xc16x:code;absolute;0x00c00044;1;.vector.17 (546)</row>
+			<row>spe:xc16x:code;absolute;0x00c00040;1;.vector.16 (547)</row>
+			<row>spe:xc16x:code;absolute;0x00c0003c;1;.vector.15 (548)</row>
+			<row>spe:xc16x:code;absolute;0x00c00038;1;.vector.14 (549)</row>
+			<row>spe:xc16x:code;absolute;0x00c00034;1;.vector.13 (550)</row>
+			<row>spe:xc16x:code;absolute;0x00c00030;1;.vector.12 (551)</row>
+			<row>spe:xc16x:code;absolute;0x00c0002c;1;.vector.11 (552)</row>
+			<row>spe:xc16x:code;absolute;0x00c00028;1;.vector.10 (553)</row>
+			<row>spe:xc16x:code;absolute;0x00c00024;1;.vector.9 (554)</row>
+			<row>spe:xc16x:code;absolute;0x00c00020;1;.vector.8 (555)</row>
+			<row>spe:xc16x:code;absolute;0x00c0001c;1;.vector.7 (556)</row>
+			<row>spe:xc16x:code;absolute;0x00c00018;1;.vector.6 (557)</row>
+			<row>spe:xc16x:code;absolute;0x00c00014;1;.vector.5 (558)</row>
+			<row>spe:xc16x:code;absolute;0x00c00010;1;.vector.4 (559)</row>
+			<row>spe:xc16x:code;absolute;0x00c0000c;1;.vector.3 (560)</row>
+			<row>spe:xc16x:code;absolute;0x00c00008;1;.vector.2 (561)</row>
+			<row>spe:xc16x:code;absolute;0x00c00004;1;.vector.1 (562)</row>
+			<row>spe:xc16x:code;absolute;0x00c00000;1;.vector.0 (563)</row>
+			<row>spe:xc16x:huge;absolute;0x00c0f000;1;$reserved (435)</row>
+			<row>spe:xc16x:shuge;ranged page;0x0000f200..0x0000fc00(0x10000, [0x1..0xffff]);1;system_stack (432)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.127 (436)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.126 (437)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.125 (438)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.124 (439)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.123 (440)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.122 (441)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.121 (442)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.120 (443)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.119 (444)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.118 (445)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.117 (446)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.116 (447)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.115 (448)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.114 (449)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.113 (450)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.112 (451)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.111 (452)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.110 (453)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.109 (454)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.108 (455)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.107 (456)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.106 (457)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.105 (458)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.104 (459)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.103 (460)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.102 (461)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.101 (462)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.100 (463)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.99 (464)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.98 (465)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.97 (466)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.96 (467)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.95 (468)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.94 (469)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.93 (470)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.92 (471)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.91 (472)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.90 (473)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.89 (474)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.88 (475)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.87 (476)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.86 (477)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.85 (478)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.84 (479)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.83 (480)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.82 (481)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.81 (482)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.80 (483)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.79 (484)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.78 (485)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.77 (486)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.76 (487)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.75 (488)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.74 (489)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.73 (490)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.72 (491)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.71 (492)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.70 (493)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.69 (494)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.68 (495)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.67 (496)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.66 (497)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.65 (498)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.64 (499)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.63 (500)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.62 (501)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.61 (502)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.60 (503)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.59 (504)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.58 (505)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.57 (506)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.56 (507)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.55 (508)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.54 (509)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.53 (510)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.52 (511)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.51 (512)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.50 (513)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.49 (514)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.48 (515)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.47 (516)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.46 (517)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.45 (518)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.44 (519)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.43 (520)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.42 (521)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.41 (522)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.40 (523)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.39 (524)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.38 (525)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.37 (526)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.36 (527)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.35 (528)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.34 (529)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.33 (530)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.32 (531)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.31 (532)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.30 (533)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.29 (534)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.28 (535)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.27 (536)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.26 (537)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.25 (538)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.24 (539)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.23 (540)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.22 (541)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.21 (542)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.20 (543)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.19 (544)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.18 (545)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.17 (546)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.16 (547)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.15 (548)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.14 (549)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.13 (550)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.12 (551)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.11 (552)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.10 (553)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.9 (554)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.8 (555)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.7 (556)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.6 (557)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.5 (558)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.4 (559)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.3 (560)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.2 (561)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.1 (562)</row>
+			<row>spe:xc16x:code;ranged;0x00c00000..0x00c10000;1;.vector.0 (563)</row>
+			<row>spe:xc16x:iram;unrestricted;;1;_$cstart_rb (410)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near_canBMCCommands (280)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near_LTC_data_read (144)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near__1_cst (152)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near_ucaCellVolts14 (276)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near_ucaCellVolts58 (277)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near_ucaBMCStatus (278)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near_ucBalanceCell (281)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near_LTC_CFG1R0 (134)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near_LTC_CFG1R1 (135)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near_LTC_CFG1R2 (136)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near_LTC_CFG1R3 (137)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near_LTC_CFG1R4 (138)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near_LTC_CFG1R5 (139)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near_LTC_CRC_PEC (140)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near_ucSPIWaitCnt (279)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;near_ucLTCEnableADC (274)</row>
+			<row>spe:xc16x:near;page;(0x4000, [0x1..0x3fff]);1;user_stack (415)</row>
+			<row>spe:xc16x:far;page;(0x4000, [0x1..0x3fff]);1;_init_cpy_table_libc (386)</row>
+			<row>spe:xc16x:far;page;(0x4000, [0x1..0x3fff]);1;_init_clr_table_libc (387)</row>
+			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;_init_switch_table_libc (385)</row>
+			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;[near_LTC_data_read] (426)</row>
+			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;[near_ucaCellVolts14] (427)</row>
+			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;[near_ucaCellVolts58] (428)</row>
+			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;[near_ucaBMCStatus] (429)</row>
+			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;[near_ucBalanceCell] (431)</row>
+			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;[near_LTC_CFG1R0] (419)</row>
+			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;[near_LTC_CFG1R1] (420)</row>
+			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;[near_LTC_CFG1R2] (421)</row>
+			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;[near_LTC_CFG1R3] (422)</row>
+			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;[near_LTC_CFG1R4] (423)</row>
+			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;[near_LTC_CFG1R5] (424)</row>
+			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;[near_LTC_CRC_PEC] (425)</row>
+			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;[near_ucSPIWaitCnt] (430)</row>
+			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;table (433)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_CAN_vInit (1)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_CAN_vGetMsgObj (4)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_LTC_CalcPec (149)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_CAN_viSRN0 (7)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;_init_libc (384)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_LTC_getCellVoltages (143)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_SCS_SwitchSystemClock (348)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__cocofun_2 (133)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_GPT1_viTmr2 (68)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_CAN_vLoadData (6)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_SCS_CountClocksWithTimer (346)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__cstart (56)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_IO_vInit (116)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_LTC_read (127)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_GPT1_vInit (67)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_GPT2_vInit (86)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_LTC_send (130)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__cocofun_3 (147)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_main (273)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_MAIN_vInit (267)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_MAIN_vChangeFreq (269)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_SCS_StartXtalOsc (345)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;_cptable_cpy_near_libc (404)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_MAIN_vLockProtecReg (270)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__cocofun_1 (271)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;_cptable_clr_near_libc (400)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__cocofun_1 (3)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_CAN_vTransmit (5)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_LTC_wait (129)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__cocofun_4 (146)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__cocofun_2 (272)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__cocofun_2 (2)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__cocofun_1 (347)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__restore_2 (150)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__save_1 (151)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__cocofun_5 (131)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__cocofun_9 (141)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__cocofun_6 (145)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_MAIN_vUnlockProtecReg (268)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__cocofun_7 (128)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code__cocofun_8 (142)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_LTC_SCK_Strope (148)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_GPT2_viTmr5 (87)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_SCS_SwitchToHighPrecBandgap (349)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_librt (407)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_LTC_Init (132)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_INT_vInit (105)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;code_libc (390)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;_dcti_libc (388)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;_cptable_clr_bit_libc (399)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;_cptable_clr_shuge_libc (401)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;_cptable_clr_huge_libc (402)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;_cptable_cpy_bit_libc (403)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;_cptable_cpy_shuge_libc (405)</row>
+			<row>spe:xc16x:code;page;(0x10000, [0x0..0x10000]);1;_cptable_cpy_huge_libc (406)</row>
+			<row>spe:xc16x:near;ballooned;;1;user_stack (415)</row>
+		</table>
+	</part>
+	<part>
+		<name>Removed Sections</name>
+		<table>
+			<column>
+				<name>Section</name>
+			</column>
+			<column>
+				<name>File</name>
+			</column>
+			<column>
+				<name>Library</name>
+			</column>
+			<column>
+				<name>Symbol</name>
+			</column>
+			<column>
+				<name>Reason</name>
+			</column>
+			<row>near_test_data_msg (275);MAIN.obj;;_test_data_msg;unreferenced</row>
+		</table>
+	</part>
+</mapfile>
